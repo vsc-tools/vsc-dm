@@ -9,10 +9,12 @@
 #define SRC_VISITORBASE_H_
 #include "IVisitor.h"
 #include "expr/ExprVisitorBase.h"
+#include "DataModelVisitorBase.h"
 
 namespace vsc {
 
 class VisitorBase : public virtual IVisitor,
+	public virtual DataModelVisitorBase,
 	public virtual ExprVisitorBase {
 public:
 	VisitorBase();
