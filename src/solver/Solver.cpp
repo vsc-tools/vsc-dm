@@ -23,6 +23,10 @@ bool Solver::randomize(
 		uint64_t								seed,
 		const std::vector<FieldSP>				&fields,
 		const std::vector<ConstraintBlockSP>	&constraints) {
+	// First, analyze to determine which fields require solving,
+	// and which do not
+	ISolverDataUP solver_d(m_backend->createSolverInst());
+
 	return true;
 }
 

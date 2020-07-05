@@ -15,6 +15,8 @@ public:
 
 	BoolectorSolverInst() {
 		m_btor = boolector_new();
+		boolector_set_opt(m_btor, BTOR_OPT_INCREMENTAL, 1);
+		boolector_set_opt(m_btor, BTOR_OPT_MODEL_GEN, 1);
 	}
 
 	virtual ~BoolectorSolverInst() {
