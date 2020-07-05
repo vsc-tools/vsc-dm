@@ -25,7 +25,7 @@ import os
 
 def process_dir(d):
     for l in os.listdir(d):
-        if l.endswith(".cpp") or l.endsWith(".h"):
+        if l.endswith(".cpp") or l.endswith(".h"):
             has_license = False
             has_copyright = False
             content = ""
@@ -59,12 +59,12 @@ def process_dir(d):
             process_dir(os.path.join(d, l))
     
 def main():
-    psk_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-    psk_srcdir = os.path.join(psk_dir, "src")
-    psk_vedir = os.path.join(psk_dir, "ve")
+    libvsc_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+    libvsc_srcdir = os.path.join(libvsc_dir, "src")
+    libvsc_testdir = os.path.join(libvsc_dir, "test")
   
-    process_dir(psk_srcdir)
-    process_dir(psk_vedir)
+    process_dir(libvsc_srcdir)
+    process_dir(libvsc_testdir)
   
 if __name__ == "__main__":
   main()
