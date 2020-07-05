@@ -41,4 +41,4 @@ add_executable(libvsc_tests ${libvsc_tests_SRC})
 target_include_directories(libvsc_tests PUBLIC
     "${source_dir}/googletest/include"
     )
-target_link_libraries(libvsc_tests vsc libgtest libgmock)
+target_link_libraries(libvsc_tests vsc libgtest libgmock ${Boolector_LIBRARIES})

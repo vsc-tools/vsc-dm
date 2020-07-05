@@ -7,6 +7,8 @@
 
 #include "TestSmoke.h"
 
+#include "vsc.h"
+
 namespace vsc {
 
 TestSmoke::TestSmoke() {
@@ -20,6 +22,14 @@ TestSmoke::~TestSmoke() {
 
 TEST_F(TestSmoke, smoke) {
 	fprintf(stdout, "Hello\n");
+	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
+
+	vsc::Solver *solver = Solver::inst();
+
+	std::vector<FieldSP> fields = {a};
+	std::vector<ConstraintBlockSP> constraints = {};
+
+	solver->randomize(0, fields, constraints);
 }
 
 } /* namespace vsc */

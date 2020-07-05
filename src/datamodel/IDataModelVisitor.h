@@ -10,10 +10,14 @@
 
 namespace vsc {
 
+class FieldScalar;
+
 class IDataModelVisitor {
 public:
 
 	virtual ~IDataModelVisitor() { }
+
+	virtual void visitFieldScalar(FieldScalar *f) = 0;
 
 };
 
