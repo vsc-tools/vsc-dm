@@ -47,7 +47,7 @@ public:
 
 	Expr *rhs() const { return m_rhs.get(); }
 
-	virtual void accept(IExprVisitor *v) { v->visitExprBin(this); }
+	virtual void accept(IVisitor *v) { v->visitExprBin(this); }
 
 private:
 	ExprSP				m_lhs;

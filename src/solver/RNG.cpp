@@ -29,7 +29,7 @@
 
 namespace vsc {
 
-RNG::RNG() {
+RNG::RNG(uint64_t seed) {
 	// TODO Auto-generated constructor stub
 
 }

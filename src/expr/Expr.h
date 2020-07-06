@@ -28,7 +28,7 @@
 #ifndef SRC_EXPR_EXPR_H_
 #define SRC_EXPR_EXPR_H_
 #include <memory>
-#include "IExprVisitor.h"
+#include "IVisitor.h"
 
 namespace vsc {
 
@@ -38,7 +38,7 @@ public:
 
 	virtual ~Expr();
 
-	virtual void accept(IExprVisitor *v) = 0;
+	virtual void accept(IVisitor *v) = 0;
 
 };
 

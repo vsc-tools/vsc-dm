@@ -51,7 +51,7 @@ private:
 	bool							m_is_rand_sz;
 };
 
-typedef std::shared_ptr<FieldList> FieldArraySP;
+typedef std::shared_ptr<FieldList> FieldListSP;
 
 } /* namespace vsc */
 

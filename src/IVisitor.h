@@ -27,18 +27,54 @@
 
 #ifndef SRC_IVISITOR_H_
 #define SRC_IVISITOR_H_
-#include "expr/IExprVisitor.h"
-#include "IDataModelVisitor.h"
 
 namespace vsc {
 
-class IVisitor :
-		public virtual IDataModelVisitor,
-		public virtual IExprVisitor {
+class ConstraintBlock;
+class ConstraintIf;
+class ConstraintScope;
+class ConstraintStmt;
+class ConstraintStmtExpr;
+
+class ExprBin;
+class ExprCond;
+class ExprDynamicConstraintRef;
+class ExprFieldRef;
+class ExprListSubscript;
+
+class FieldComposite;
+class FieldScalar;
+
+class IVisitor {
 public:
 
 	virtual ~IVisitor() { }
 
+	virtual void visitConstraintBlock(ConstraintBlock *c) = 0;
+
+	virtual void visitConstraintIf(ConstraintIf *c) = 0;
+
+	virtual void visitConstraintScope(ConstraintScope *c) = 0;
+
+	virtual void visitConstraintStmtEnter(ConstraintStmt *c) = 0;
+
+	virtual void visitConstraintStmtLeave(ConstraintStmt *c) = 0;
+
+	virtual void visitConstraintStmtExpr(ConstraintStmtExpr *c) = 0;
+
+	virtual void visitExprBin(ExprBin *e) = 0;
+
+	virtual void visitExprCond(ExprCond *e) = 0;
+
+	virtual void visitExprDynamicConstraintRef(ExprDynamicConstraintRef *e) = 0;
+
+	virtual void visitExprFieldRef(ExprFieldRef *e) = 0;
+
+	virtual void visitExprListSubscript(ExprListSubscript *e) = 0;
+
+	virtual void visitFieldComposite(FieldComposite *f) = 0;
+
+	virtual void visitFieldScalar(FieldScalar *f) = 0;
 
 };
 

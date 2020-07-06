@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,26 +18,53 @@
  */
 
 /*
- * DataModelVisitorBase.h
+ * SolveSet.h
  *
- *  Created on: Jul 4, 2020
+ *  Created on: Jul 5, 2020
  *      Author: ballance
  */
 
-#ifndef SRC_DATAMODEL_DATAMODELVISITORBASE_H_
-#define SRC_DATAMODEL_DATAMODELVISITORBASE_H_
-#include "IDataModelVisitor.h"
+#ifndef SRC_SOLVER_SOLVEGROUPSET_H_
+#define SRC_SOLVER_SOLVEGROUPSET_H_
+#include <vector>
+#include "SolveGroup.h"
+#include "datamodel/Field.h"
 
 namespace vsc {
 
-class DataModelVisitorBase : public virtual IDataModelVisitor {
+/**
+ * A SolveSet captures relational information about a set of
+ * constraints and fields being solved together
+ *
+ */
+class SolveGroupSet {
 public:
-	DataModelVisitorBase();
+	SolveGroupSet();
 
-	virtual ~DataModelVisitorBase();
+	virtual ~SolveGroupSet();
+
+	const std::vector<SolveGroupUP> &solvegroups() const {
+		return m_solvegroups;
+	}
+
+	const std::vector<FieldSP> &unconstrained() const {
+		return m_unconstrained;
+	}
+
+	void addSolveGroup(SolveGroup *g) {
+		m_solvegroups.push_back(SolveGroupUP(g));
+	}
+
+	void addUnconstrained(FieldSP f) {
+		m_unconstrained.push_back(f);
+	}
+
+private:
+	std::vector<SolveGroupUP>				m_solvegroups;
+	std::vector<FieldSP>					m_unconstrained;
 
 };
 
 } /* namespace vsc */
 
-#endif /* SRC_DATAMODEL_DATAMODELVISITORBASE_H_ */
+#endif /* SRC_SOLVER_SOLVEGROUPSET_H_ */

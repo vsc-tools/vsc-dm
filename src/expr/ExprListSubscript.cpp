@@ -19,22 +19,24 @@
  */
 
 /*
- * DataModelVisitorBase.cpp
+ * ExprArraySubscript.cpp
  *
  *  Created on: Jul 4, 2020
  *      Author: ballance
  */
 
-#include "DataModelVisitorBase.h"
+#include "ExprListSubscript.h"
 
 namespace vsc {
 
-DataModelVisitorBase::DataModelVisitorBase() {
+ExprListSubscript::ExprListSubscript(
+		FieldList			*lhs,
+		Expr				*rhs) : m_lhs(lhs), m_rhs(rhs) {
 	// TODO Auto-generated constructor stub
 
 }
 
-DataModelVisitorBase::~DataModelVisitorBase() {
+ExprListSubscript::~ExprListSubscript() {
 	// TODO Auto-generated destructor stub
 }
 

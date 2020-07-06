@@ -29,7 +29,7 @@
 #define SRC_DATAMODEL_FIELD_H_
 #include <string>
 #include <memory>
-#include "IDataModelVisitor.h"
+#include "IVisitor.h"
 #include "solver/ISolverData.h"
 
 namespace vsc {
@@ -67,7 +67,7 @@ public:
 
 	virtual void set_used_rand(bool used_rand, int32_t level=0);
 
-	virtual void accept(IDataModelVisitor *v) = 0;
+	virtual void accept(IVisitor *v) = 0;
 
 protected:
 	const std::string		m_name;

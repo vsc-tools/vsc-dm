@@ -28,17 +28,55 @@
 #ifndef SRC_VISITORBASE_H_
 #define SRC_VISITORBASE_H_
 #include "IVisitor.h"
-#include "expr/ExprVisitorBase.h"
-#include "DataModelVisitorBase.h"
+
+#include "constraints/ConstraintBlock.h"
+#include "constraints/ConstraintIf.h"
+#include "constraints/ConstraintScope.h"
+#include "constraints/ConstraintStmtExpr.h"
+
+#include "datamodel/FieldComposite.h"
+#include "datamodel/FieldScalar.h"
+
+#include "expr/ExprBin.h"
+#include "expr/ExprCond.h"
+#include "expr/ExprDynamicConstraintRef.h"
+#include "expr/ExprFieldRef.h"
+#include "expr/ExprListSubscript.h"
 
 namespace vsc {
 
-class VisitorBase : public virtual IVisitor,
-	public virtual DataModelVisitorBase,
-	public virtual ExprVisitorBase {
+class VisitorBase : public virtual IVisitor {
 public:
+
 	VisitorBase();
+
 	virtual ~VisitorBase();
+
+	virtual void visitConstraintBlock(ConstraintBlock *c) override;
+
+	virtual void visitConstraintIf(ConstraintIf *c) override;
+
+	virtual void visitConstraintScope(ConstraintScope *c) override;
+
+	virtual void visitConstraintStmtEnter(ConstraintStmt *c) override;
+
+	virtual void visitConstraintStmtLeave(ConstraintStmt *c) override;
+
+	virtual void visitConstraintStmtExpr(ConstraintStmtExpr *c) override;
+
+	virtual void visitExprBin(ExprBin *e) override;
+
+	virtual void visitExprCond(ExprCond *e) override;
+
+	virtual void visitExprDynamicConstraintRef(ExprDynamicConstraintRef *e) override;
+
+	virtual void visitExprFieldRef(ExprFieldRef *e) override;
+
+	virtual void visitExprListSubscript(ExprListSubscript *e) override;
+
+	virtual void visitFieldComposite(FieldComposite *f) override;
+
+	virtual void visitFieldScalar(FieldScalar *f) override;
 };
 
 } /* namespace vsc */

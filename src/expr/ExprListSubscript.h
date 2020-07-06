@@ -19,23 +19,38 @@
  */
 
 /*
- * ExprVisitorBase.cpp
+ * ExprArraySubscript.h
  *
- *  Created on: Jul 3, 2020
+ *  Created on: Jul 4, 2020
  *      Author: ballance
  */
 
-#include "ExprVisitorBase.h"
+#ifndef SRC_EXPR_EXPRLISTSUBSCRIPT_H_
+#define SRC_EXPR_EXPRLISTSUBSCRIPT_H_
+#include "datamodel/FieldList.h"
+#include "Expr.h"
 
 namespace vsc {
 
-ExprVisitorBase::ExprVisitorBase() {
-	// TODO Auto-generated constructor stub
+class ExprListSubscript : public Expr {
+public:
+	ExprListSubscript(
+			FieldList		*lhs,
+			Expr			*rhs);
 
-}
+	virtual ~ExprListSubscript();
 
-ExprVisitorBase::~ExprVisitorBase() {
-	// TODO Auto-generated destructor stub
-}
+	FieldList *lhs() const { return m_lhs.get(); }
+
+	Expr *rhs() const { return m_rhs.get(); }
+
+	virtual void accept(IVisitor *v) { v->visitExprListSubscript(this); }
+
+private:
+	FieldListSP				m_lhs;
+	ExprSP					m_rhs;
+};
 
 } /* namespace vsc */
+
+#endif /* SRC_EXPR_EXPRLISTSUBSCRIPT_H_ */

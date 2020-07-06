@@ -19,28 +19,23 @@
  */
 
 /*
- * IExprVisitor.h
+ * SolveSet.cpp
  *
- *  Created on: Jul 3, 2020
+ *  Created on: Jul 5, 2020
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_IEXPRVISITOR_H_
-#define SRC_EXPR_IEXPRVISITOR_H_
+#include "SolveGroupSet.h"
 
 namespace vsc {
 
-class ExprBin;
-class IExprVisitor {
-public:
-
-	virtual ~IExprVisitor() { }
-
-	virtual void visitExprBin(ExprBin *e) = 0;
-
-};
+SolveGroupSet::SolveGroupSet() {
+	// TODO Auto-generated constructor stub
 
 }
 
+SolveGroupSet::~SolveGroupSet() {
+	// TODO Auto-generated destructor stub
+}
 
-#endif /* SRC_EXPR_IEXPRVISITOR_H_ */
+} /* namespace vsc */

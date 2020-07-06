@@ -28,7 +28,8 @@
 #ifndef SRC_DATAMODEL_FIELDCOMPOSITE_H_
 #define SRC_DATAMODEL_FIELDCOMPOSITE_H_
 #include <vector>
-#include "Field.h"
+#include "datamodel/Field.h"
+#include "constraints/ConstraintBlock.h"
 
 namespace vsc {
 
@@ -42,10 +43,15 @@ public:
 
 	const std::vector<FieldSP> &children() const { return m_children; }
 
+	const std::vector<ConstraintBlockSP> &constraints() const { return m_constraints; }
+
 	virtual void set_used_rand(bool used_rand, int32_t level=0);
 
+	virtual void accept(IVisitor *v) { v->visitFieldComposite(this); }
+
 private:
-	std::vector<FieldSP>			m_children;
+	std::vector<FieldSP>				m_children;
+	std::vector<ConstraintBlockSP>		m_constraints;
 	// TODO: constraint_model
 	// ...
 

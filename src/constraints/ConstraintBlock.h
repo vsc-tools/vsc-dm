@@ -28,13 +28,18 @@
 #ifndef SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
 #define SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
 #include <memory>
+#include "ConstraintScope.h"
 
 namespace vsc {
 
-class ConstraintBlock {
+class ConstraintBlock : public ConstraintScope {
 public:
 	ConstraintBlock();
+
 	virtual ~ConstraintBlock();
+
+	virtual void accept(IVisitor *v) { v->visitConstraintBlock(this); }
+
 };
 
 typedef std::shared_ptr<ConstraintBlock> ConstraintBlockSP;

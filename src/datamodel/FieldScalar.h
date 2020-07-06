@@ -45,7 +45,7 @@ public:
 
 	virtual bool is_signed() const { return m_is_signed; }
 
-	virtual void accept(IDataModelVisitor *v) { v->visitFieldScalar(this); }
+	virtual void accept(IVisitor *v) { v->visitFieldScalar(this); }
 
 private:
 	int32_t							m_width;
