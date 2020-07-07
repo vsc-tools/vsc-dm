@@ -52,4 +52,8 @@ TEST_F(TestSmoke, smoke) {
 	solver->randomize(0, fields, constraints);
 }
 
+TEST_F(TestSmoke, smoke2) {
+
+}
+
 } /* namespace vsc */

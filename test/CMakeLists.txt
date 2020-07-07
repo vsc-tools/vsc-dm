@@ -1,4 +1,6 @@
 
+include(GoogleTest)
+
 find_package(Threads REQUIRED)
 
 include (ExternalProject)
@@ -12,6 +14,8 @@ ExternalProject_Add(
   )
   
 ExternalProject_Get_Property(gtest source_dir binary_dir)
+
+# find_package(Gtest)
 
 add_library(libgtest IMPORTED STATIC GLOBAL)
 add_dependencies(libgtest gtest)
@@ -32,13 +36,15 @@ set_target_properties(libgmock PROPERTIES
 include_directories("${source_dir}/googletest/include"
 				"${source_dir}/googlemock/include")
 
-file(GLOB_RECURSE libvsc_tests_SRC
+file(GLOB_RECURSE test_libvsc_SRC
   "*.h"
   "*.cpp"
   )
-  
-add_executable(libvsc_tests ${libvsc_tests_SRC})
-target_include_directories(libvsc_tests PUBLIC
+
+add_executable(test_libvsc ${test_libvsc_SRC})
+target_include_directories(test_libvsc PUBLIC
     "${source_dir}/googletest/include"
     )
-target_link_libraries(libvsc_tests vsc libgtest libgmock ${Boolector_LIBRARIES})
+target_link_libraries(test_libvsc vsc libgtest libgmock ${Boolector_LIBRARIES})
+
+gtest_discover_tests(test_libvsc)

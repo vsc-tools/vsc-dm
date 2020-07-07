@@ -34,7 +34,7 @@ class ConstraintBlock;
 class ConstraintIf;
 class ConstraintScope;
 class ConstraintStmt;
-class ConstraintStmtExpr;
+class ConstraintExpr;
 
 class ExprBin;
 class ExprCond;
@@ -60,7 +60,7 @@ public:
 
 	virtual void visitConstraintStmtLeave(ConstraintStmt *c) = 0;
 
-	virtual void visitConstraintStmtExpr(ConstraintStmtExpr *c) = 0;
+	virtual void visitConstraintExpr(ConstraintExpr *c) = 0;
 
 	virtual void visitExprBin(ExprBin *e) = 0;
 

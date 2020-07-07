@@ -53,6 +53,8 @@ public:
 
 	void idx(int32_t i) { m_idx = i; }
 
+	bool used_rand() const { return m_used_rand; }
+
 	ISolverData *solver_data() const {
 		return m_solver_data.get();
 	}

@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 find_package(Boolector REQUIRED)
+enable_testing()
 
 add_subdirectory(src)
 add_subdirectory(test)

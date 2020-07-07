@@ -28,18 +28,31 @@ public:
 			const std::vector<ConstraintBlockSP>	&constraints
 			);
 
-	virtual void visitConstraintBlock(ConstraintBlock *c);
+	virtual void visitConstraintBlock(ConstraintBlock *c) override;
 
+	virtual void visitConstraintStmtEnter(ConstraintStmt *c) override;
+
+	virtual void visitConstraintStmtLeave(ConstraintStmt *c) override;
+
+	virtual void visitExprFieldRef(ExprFieldRef *e) override;
+
+	virtual void visitFieldComposite(FieldComposite *f) override;
+
+	virtual void visitFieldScalar(FieldScalar *f) override;
+
+protected:
+
+	void process_fieldref(Field *f);
 
 private:
 	uint32_t							m_pass;
 	bool								m_used_rand;
-	std::set<FieldSP>					m_field_s;
+	std::set<Field *>					m_field_s;
 	ConstraintStmt						*m_active_constraint;
 	SolveGroup							*m_active_solvegroup;
 	std::set<SolveGroup *>				m_solvegroup_s;
-	std::map<FieldSP, SolveGroup *>		m_field_solvegroup_m;
-	std::vector<ConstraintBlock *>		m_constraint_l;
+	std::map<Field *, SolveGroup *>		m_field_solvegroup_m;
+	std::vector<ConstraintStmt *>		m_constraint_l;
 };
 
 } /* namespace vsc */

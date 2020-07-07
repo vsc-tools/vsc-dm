@@ -5,16 +5,16 @@
  *      Author: ballance
  */
 
-#include "ConstraintStmtExpr.h"
+#include "ConstraintExpr.h"
 
 namespace vsc {
 
-ConstraintStmtExpr::ConstraintStmtExpr(Expr *expr) : m_expr(expr) {
+ConstraintExpr::ConstraintExpr(Expr *expr) : m_expr(expr) {
 	// TODO Auto-generated constructor stub
 
 }
 
-ConstraintStmtExpr::~ConstraintStmtExpr() {
+ConstraintExpr::~ConstraintExpr() {
 	// TODO Auto-generated destructor stub
 }
 

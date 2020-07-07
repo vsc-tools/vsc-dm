@@ -67,7 +67,7 @@ void VisitorBase::visitConstraintStmtLeave(ConstraintStmt *c) {
 
 }
 
-void VisitorBase::visitConstraintStmtExpr(ConstraintStmtExpr *c) {
+void VisitorBase::visitConstraintExpr(ConstraintExpr *c) {
 	visitConstraintStmtEnter(c);
 	c->expr()->accept(this);
 	visitConstraintStmtLeave(c);

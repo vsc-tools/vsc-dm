@@ -47,7 +47,7 @@ public:
 		return m_solvegroups;
 	}
 
-	const std::vector<FieldSP> &unconstrained() const {
+	const std::vector<Field *> &unconstrained() const {
 		return m_unconstrained;
 	}
 
@@ -55,13 +55,13 @@ public:
 		m_solvegroups.push_back(SolveGroupUP(g));
 	}
 
-	void addUnconstrained(FieldSP f) {
+	void addUnconstrained(Field *f) {
 		m_unconstrained.push_back(f);
 	}
 
 private:
 	std::vector<SolveGroupUP>				m_solvegroups;
-	std::vector<FieldSP>					m_unconstrained;
+	std::vector<Field *>					m_unconstrained;
 
 };
 

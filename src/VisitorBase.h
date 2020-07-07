@@ -30,10 +30,9 @@
 #include "IVisitor.h"
 
 #include "constraints/ConstraintBlock.h"
+#include "constraints/ConstraintExpr.h"
 #include "constraints/ConstraintIf.h"
 #include "constraints/ConstraintScope.h"
-#include "constraints/ConstraintStmtExpr.h"
-
 #include "datamodel/FieldComposite.h"
 #include "datamodel/FieldScalar.h"
 
@@ -62,7 +61,7 @@ public:
 
 	virtual void visitConstraintStmtLeave(ConstraintStmt *c) override;
 
-	virtual void visitConstraintStmtExpr(ConstraintStmtExpr *c) override;
+	virtual void visitConstraintExpr(ConstraintExpr *c) override;
 
 	virtual void visitExprBin(ExprBin *e) override;
 
