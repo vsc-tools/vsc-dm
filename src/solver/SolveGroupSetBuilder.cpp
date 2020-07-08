@@ -59,6 +59,14 @@ SolveGroupSet *SolveGroupSetBuilder::build(
 }
 
 void SolveGroupSetBuilder::visitConstraintBlock(ConstraintBlock *c) {
+	// TODO: check whether block is enabled
+
+	if (m_used_rand) {
+		m_active_solvegroup = 0;
+		m_constraint_l.push_back(c);
+		VisitorBase::visitConstraintBlock(c);
+		m_constraint_l.clear();
+	}
 }
 
 void SolveGroupSetBuilder::visitConstraintStmtEnter(ConstraintStmt *c) {

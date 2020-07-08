@@ -29,8 +29,13 @@
 
 namespace vsc {
 
-ConstraintBlock::ConstraintBlock() {
-	// TODO Auto-generated constructor stub
+ConstraintBlock::ConstraintBlock(
+		const std::string							&name,
+		std::initializer_list<ConstraintStmt *>		stmts) {
+	for (std::initializer_list<ConstraintStmt *>::iterator it=stmts.begin();
+			it!=stmts.end(); it++) {
+
+	}
 
 }
 

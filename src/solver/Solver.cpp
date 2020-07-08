@@ -45,7 +45,7 @@ bool Solver::randomize(
 		const std::vector<ConstraintBlockSP>	&constraints) {
 	// First, analyze to determine which fields require solving,
 	// and which do not
-	ISolverDataUP solver_d(m_backend->createSolverInst());
+	ISolverInstUP solver_d(m_backend->createSolverInst());
 
 	return true;
 }

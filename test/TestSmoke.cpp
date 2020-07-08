@@ -44,12 +44,34 @@ TEST_F(TestSmoke, smoke) {
 	fprintf(stdout, "Hello\n");
 	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
 
-	vsc::Solver *solver = Solver::inst();
+	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
+	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+			"c",
+			{
+//				Builder::constraint(Builder::gt(a, 0)),
+				new vsc::ConstraintExpr(
+						new vsc::ExprBin(
+								new vsc::ExprFieldRef(a.get()),
+								BinOp_Gt,
+								new vsc::ExprNumericLiteral(0))
+				),
+				new vsc::ConstraintExpr(
+						new vsc::ExprBin(
+								new vsc::ExprFieldRef(a.get()),
+								BinOp_Lt,
+								new vsc::ExprNumericLiteral(10))
+				)
+			}
+			));
 	std::vector<FieldSP> fields = {a};
-	std::vector<ConstraintBlockSP> constraints = {};
+	std::vector<ConstraintBlockSP> constraints = {c};
 
-	solver->randomize(0, fields, constraints);
+	for (uint32_t i=0; i<10; i++) {
+		randomizer->randomize(0, fields, constraints);
+		ASSERT_GT(a->val()->val_u(), 0);
+		ASSERT_LT(a->val()->val_u(), 10);
+	}
 }
 
 TEST_F(TestSmoke, smoke2) {

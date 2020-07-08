@@ -28,13 +28,16 @@
 #ifndef SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
 #define SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
 #include <memory>
+#include <initializer_list>
 #include "ConstraintScope.h"
 
 namespace vsc {
 
 class ConstraintBlock : public ConstraintScope {
 public:
-	ConstraintBlock();
+	ConstraintBlock(
+			const std::string						&name,
+			std::initializer_list<ConstraintStmt *>	constraints);
 
 	virtual ~ConstraintBlock();
 

@@ -9,6 +9,7 @@
 #define SRC_CONSTRAINTS_CONSTRAINTSTMT_H_
 #include <memory>
 #include "IVisitor.h"
+#include "solver/ISolverData.h"
 
 namespace vsc {
 
@@ -18,7 +19,15 @@ public:
 
 	virtual ~ConstraintStmt();
 
+	ISolverData *solver_data() const { return m_solver_data.get(); }
+
+	void solver_data(ISolverData *sd) { m_solver_data = ISolverDataUP(sd); }
+
 	virtual void accept(IVisitor *v) = 0;
+
+private:
+	ISolverDataUP				m_solver_data;
+
 };
 
 typedef std::shared_ptr<ConstraintStmt> ConstraintStmtSP;

@@ -5,27 +5,25 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRFIELDREF_H_
-#define SRC_EXPR_EXPRFIELDREF_H_
+#pragma once
 #include "Expr.h"
 #include "Field.h"
 
 namespace vsc {
 
-class ExprFieldRef {
+class ExprFieldRef : public Expr {
 public:
 	ExprFieldRef(Field	*field);
 
 	virtual ~ExprFieldRef();
 
-	Field *field() const { return m_field.get(); }
+	Field *field() const { return m_field; }
 
 	virtual void accept(IVisitor *v) { v->visitExprFieldRef(this); }
 
 private:
-	FieldSP				m_field;
+	Field				*m_field;
 };
 
 } /* namespace vsc */
 
-#endif /* SRC_EXPR_EXPRFIELDREF_H_ */

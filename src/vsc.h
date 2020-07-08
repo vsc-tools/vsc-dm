@@ -25,14 +25,30 @@
  * Constraints
  ********************************************************************/
 #include "constraints/ConstraintBlock.h"
+#include "constraints/ConstraintExpr.h"
 
+/********************************************************************
+ * Datamodel
+ ********************************************************************/
 #include "datamodel/Field.h"
+#include "datamodel/FieldComposite.h"
 #include "datamodel/FieldScalar.h"
+
+/********************************************************************
+ * Expr
+ ********************************************************************/
+#include "expr/ExprBin.h"
+#include "expr/ExprCond.h"
+#include "expr/ExprDynamicConstraintRef.h"
+#include "expr/ExprFieldRef.h"
+#include "expr/ExprIn.h"
+#include "expr/ExprListSubscript.h"
+#include "expr/ExprNumericLiteral.h"
 
 /********************************************************************
  * Solver
  ********************************************************************/
-#include "solver/Solver.h"
+#include "solver/RandomizerFactory.h"
 
  
  

@@ -97,6 +97,10 @@ void VisitorBase::visitExprListSubscript(ExprListSubscript *e) {
 	e->rhs()->accept(this);
 }
 
+void VisitorBase::visitExprNumericLiteral(ExprNumericLiteral *e) {
+
+}
+
 void VisitorBase::visitFieldComposite(FieldComposite *f) {
 	for (std::vector<FieldSP>::const_iterator it=f->children().begin();
 			it!=f->children().end(); it++) {

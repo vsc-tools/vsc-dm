@@ -25,9 +25,9 @@
  *      Author: ballance
  */
 
-#ifndef SRC_DATAMODEL_FIELDSCALAR_H_
-#define SRC_DATAMODEL_FIELDSCALAR_H_
-#include "Field.h"
+#pragma once
+#include "datamodel/Field.h"
+#include "expr/ExprValNumeric.h"
 
 namespace vsc {
 
@@ -47,13 +47,17 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitFieldScalar(this); }
 
+	virtual ExprValNumericSP val() const {
+		return m_val;
+	}
+
 private:
 	int32_t							m_width;
 	bool							m_is_signed;
+	ExprValNumericSP				m_val;
 
 };
 typedef std::shared_ptr<FieldScalar> FieldScalarSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_DATAMODEL_FIELDSCALAR_H_ */
