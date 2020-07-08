@@ -38,13 +38,18 @@ public:
 			ExprBinOp	op,
 			Expr		*rhs);
 
+	ExprBin(
+			ExprSP		lhs,
+			ExprBinOp	op,
+			ExprSP		rhs);
+
 	virtual ~ExprBin();
 
-	Expr *lhs() const { return m_lhs.get(); }
+	ExprSP lhs() const { return m_lhs; }
 
 	ExprBinOp op() const { return m_op; }
 
-	Expr *rhs() const { return m_rhs.get(); }
+	ExprSP rhs() const { return m_rhs; }
 
 	virtual void accept(IVisitor *v) { v->visitExprBin(this); }
 

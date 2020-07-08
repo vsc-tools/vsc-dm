@@ -38,7 +38,16 @@ public:
 	/**
 	 * Visitor methods to support constraint construction
 	 */
+
+	virtual void visitConstraintExpr(ConstraintExpr *c) override;
+
+	virtual void visitConstraintScope(ConstraintScope *c) override;
+
 	virtual void visitExprBin(ExprBin *e) override;
+
+	virtual void visitExprCond(ExprCond *e) override;
+
+	virtual void visitExprFieldRef(ExprFieldRef *e) override;
 
 	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
 
@@ -54,6 +63,16 @@ private:
 private:
 
 	void expr(Expr *e, BoolectorNode *&node, bool &is_signed, uint32_t &width);
+
+	void mk_bool(BoolectorNode *&node, uint32_t &width);
+
+	void resize(
+			BoolectorNode		*&n1,
+			bool				n1_is_signed,
+			uint32_t			n1_width,
+			BoolectorNode		*&n2,
+			bool				n2_is_signed,
+			uint32_t			n2_width);
 
 	BoolectorSort get_sort(int32_t width);
 

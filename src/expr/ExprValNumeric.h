@@ -11,9 +11,17 @@
 
 namespace vsc {
 
+class ExprValNumeric;
+typedef std::shared_ptr<ExprValNumeric> ExprValNumericSP;
+
 class ExprValNumeric : public ExprVal {
 public:
 	ExprValNumeric();
+
+	ExprValNumeric(
+			uint64_t 	val,
+			uint32_t 	width,
+			bool 		is_signed);
 
 	virtual ~ExprValNumeric();
 
@@ -25,13 +33,55 @@ public:
 		return static_cast<int64_t>(m_val);
 	}
 
+	uint32_t width() const { return m_width; }
+
+	bool is_signed() const { return m_is_signed; }
+
 	virtual void val(uint64_t v) { m_val = v; }
+
+	virtual bool eq(ExprValNumeric *rhs);
+
+	virtual bool ne(ExprValNumeric *rhs);
+
+	virtual bool gt(ExprValNumeric *rhs);
+
+	virtual bool ge(ExprValNumeric *rhs);
+
+	virtual bool lt(ExprValNumeric *rhs);
+
+	virtual bool le(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP add(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP sub(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP div(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP mul(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP mod(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP bit_and(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP bit_or(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP bit_xor(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP sll(ExprValNumeric *rhs);
+
+	virtual ExprValNumericSP srl(ExprValNumeric *rhs);
+
+	static ExprValNumericSP			ZERO;
+	static ExprValNumericSP			ONE;
 
 private:
 	uint64_t		m_val;
+	uint32_t		m_width;
+	bool			m_is_signed;
 };
 
 typedef std::shared_ptr<ExprValNumeric> ExprValNumericSP;
+
 
 } /* namespace vsc */
 

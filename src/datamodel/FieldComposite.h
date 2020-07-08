@@ -47,6 +47,9 @@ public:
 
 	virtual void set_used_rand(bool used_rand, int32_t level=0);
 
+	// TODO: throw exception?
+	virtual ExprValSP val() const { return ExprValSP(0); }
+
 	virtual void accept(IVisitor *v) { v->visitFieldComposite(this); }
 
 private:

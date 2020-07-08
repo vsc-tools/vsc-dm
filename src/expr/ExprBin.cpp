@@ -33,7 +33,13 @@ ExprBin::ExprBin(
 		Expr			*lhs,
 		ExprBinOp		op,
 		Expr			*rhs) : m_lhs(lhs), m_op(op), m_rhs(rhs) {
-	// TODO Auto-generated constructor stub
+
+}
+
+ExprBin::ExprBin(
+		ExprSP			lhs,
+		ExprBinOp		op,
+		ExprSP			rhs) : m_lhs(lhs), m_op(op), m_rhs(rhs) {
 
 }
 

@@ -30,6 +30,7 @@
 #include <string>
 #include <memory>
 #include "IVisitor.h"
+#include "expr/ExprVal.h"
 #include "solver/ISolverData.h"
 
 namespace vsc {
@@ -54,6 +55,8 @@ public:
 	void idx(int32_t i) { m_idx = i; }
 
 	bool used_rand() const { return m_used_rand; }
+
+	virtual ExprValSP val() const = 0;
 
 	ISolverData *solver_data() const {
 		return m_solver_data.get();

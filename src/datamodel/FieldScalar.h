@@ -41,19 +41,21 @@ public:
 
 	virtual ~FieldScalar();
 
-	virtual int32_t width() const { return m_width; }
+	virtual int32_t width() const { return m_val->width(); }
 
-	virtual bool is_signed() const { return m_is_signed; }
+	virtual bool is_signed() const { return m_val->is_signed(); }
+
+	virtual ExprValSP val() const { return m_val; }
+
+	// Provide convenience method for obtaining a numeric value
+	virtual ExprValNumericSP val_num() const { return m_val; }
+
+	virtual void val(ExprValNumericSP v) { m_val = v; }
+
 
 	virtual void accept(IVisitor *v) { v->visitFieldScalar(this); }
 
-	virtual ExprValNumericSP val() const {
-		return m_val;
-	}
-
 private:
-	int32_t							m_width;
-	bool							m_is_signed;
 	ExprValNumericSP				m_val;
 
 };

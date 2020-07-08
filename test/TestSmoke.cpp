@@ -28,6 +28,7 @@
 #include "TestSmoke.h"
 
 #include "vsc.h"
+#include "TestUtil.h"
 
 namespace vsc {
 
@@ -49,19 +50,8 @@ TEST_F(TestSmoke, smoke) {
 	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
 			"c",
 			{
-//				Builder::constraint(Builder::gt(a, 0)),
-				new vsc::ConstraintExpr(
-						new vsc::ExprBin(
-								new vsc::ExprFieldRef(a.get()),
-								BinOp_Gt,
-								new vsc::ExprNumericLiteral(0))
-				),
-				new vsc::ConstraintExpr(
-						new vsc::ExprBin(
-								new vsc::ExprFieldRef(a.get()),
-								BinOp_Lt,
-								new vsc::ExprNumericLiteral(10))
-				)
+				TestUtil::Constraint(TestUtil::Gt(a, 0)),
+				TestUtil::Constraint(TestUtil::Lt(a, 10))
 			}
 			));
 	std::vector<FieldSP> fields = {a};
@@ -69,8 +59,8 @@ TEST_F(TestSmoke, smoke) {
 
 	for (uint32_t i=0; i<10; i++) {
 		randomizer->randomize(0, fields, constraints);
-		ASSERT_GT(a->val()->val_u(), 0);
-		ASSERT_LT(a->val()->val_u(), 10);
+		ASSERT_GT(a->val_num()->val_u(), 0);
+		ASSERT_LT(a->val_num()->val_u(), 10);
 	}
 }
 

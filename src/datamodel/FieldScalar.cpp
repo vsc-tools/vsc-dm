@@ -34,8 +34,7 @@ FieldScalar::FieldScalar(
 		int32_t					width,
 		bool					is_signed,
 		bool					is_rand) : Field(name, is_rand),
-				m_width(width), m_is_signed(is_signed),
-				m_val(new ExprValNumeric()) {
+				m_val(new ExprValNumeric(0, width, is_signed)) {
 	// TODO Auto-generated constructor stub
 
 }
