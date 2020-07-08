@@ -17,6 +17,8 @@ public:
 
 	virtual ~ExprNumericLiteral();
 
+	uint64_t val() const { return m_val; }
+
 	virtual void accept(IVisitor *v) { v->visitExprNumericLiteral(this); }
 
 private:

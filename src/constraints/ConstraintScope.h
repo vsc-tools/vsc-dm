@@ -16,6 +16,9 @@ class ConstraintScope : public ConstraintStmt {
 public:
 	ConstraintScope();
 
+	ConstraintScope(
+			std::initializer_list<ConstraintStmt *> stmts);
+
 	virtual ~ConstraintScope();
 
 	const std::vector<ConstraintStmtSP> &constraints() const {

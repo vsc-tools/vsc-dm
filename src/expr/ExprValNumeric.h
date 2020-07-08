@@ -25,6 +25,8 @@ public:
 		return static_cast<int64_t>(m_val);
 	}
 
+	virtual void val(uint64_t v) { m_val = v; }
+
 private:
 	uint64_t		m_val;
 };

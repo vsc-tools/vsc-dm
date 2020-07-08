@@ -38,6 +38,10 @@ public:
 	/**
 	 * Visitor methods to support constraint construction
 	 */
+	virtual void visitExprBin(ExprBin *e) override;
+
+	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
+
 	virtual void visitFieldScalar(FieldScalar *f) override;
 
 private:
@@ -48,12 +52,19 @@ private:
 	};
 
 private:
+
+	void expr(Expr *e, BoolectorNode *&node, bool &is_signed, uint32_t &width);
+
 	BoolectorSort get_sort(int32_t width);
 
 private:
 	Btor								*m_btor;
 	SolverOp							m_op;
+
+	// Temp data used by builders
 	BoolectorNode						*m_node;
+	bool								m_is_signed;
+
 	std::map<uint32_t, BoolectorSort>	m_sort_m;
 
 };

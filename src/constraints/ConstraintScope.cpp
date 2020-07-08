@@ -14,6 +14,14 @@ ConstraintScope::ConstraintScope() {
 
 }
 
+ConstraintScope::ConstraintScope(
+		std::initializer_list<ConstraintStmt *> stmts) {
+	for (std::initializer_list<ConstraintStmt *>::iterator it=stmts.begin();
+			it!=stmts.end(); it++) {
+		m_constraints.push_back(ConstraintStmtSP(*it));
+	}
+}
+
 ConstraintScope::~ConstraintScope() {
 	// TODO Auto-generated destructor stub
 }
