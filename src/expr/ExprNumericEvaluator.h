@@ -46,6 +46,8 @@ public:
 
 	virtual void visitExprFieldRef(ExprFieldRef *e) override;
 
+	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
+
 private:
 	ExprValSP _eval(ExprSP e);
 

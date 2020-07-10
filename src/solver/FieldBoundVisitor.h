@@ -70,6 +70,8 @@ public:
 	// TODO: FieldEnum
 
 private:
+
+private:
 	uint32_t								m_depth;
 	uint32_t								m_phase;
 	FieldBoundMapUP							m_bounds;

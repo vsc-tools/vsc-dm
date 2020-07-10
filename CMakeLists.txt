@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Boolector REQUIRED)
 enable_testing()
 
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+
 add_subdirectory(src)
 add_subdirectory(test)
 #add_subdirectory(deps)

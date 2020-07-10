@@ -26,6 +26,10 @@
  */
 
 #include "FieldBoundVisitor.h"
+#include "expr/ExprBin.h"
+#include "expr/ExprValNumeric.h"
+#include "solver/FieldBoundMaxPropagator.h"
+#include "solver/IsNonRandVisitor.h"
 
 namespace vsc {
 
@@ -87,6 +91,82 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 	// Simplest relationships are direct with respect to a variable:
 	// <var> <op> <rhs>
 	// <lhs> <op> <var>
+
+	if (m_phase != 1 || m_depth > 0) {
+		// Ignore processing if we're either still collecting fields
+		// or deeper in the expression tree
+		return;
+	}
+	ExprFieldRef *lhs_ref = dynamic_cast<ExprFieldRef *>(e->lhs().get());
+	ExprFieldRef *rhs_ref = dynamic_cast<ExprFieldRef *>(e->rhs().get());
+
+	bool lhs_nonrand = IsNonRandVisitor().is_nonrand(e->lhs());
+	bool rhs_nonrand = IsNonRandVisitor().is_nonrand(e->rhs());
+
+	FieldBoundPropagator *propagator = 0;
+	if (lhs_ref && rhs_ref) {
+		// rhs might be a fieldref too, and we'll check on that later
+		Field *field = lhs_ref->field();
+		FieldBoundInfo *info = m_bounds->find(field)->second.get();
+
+		switch (e->op()) {
+		case BinOp_Lt: {
+
+		} break;
+		case BinOp_Le: {
+
+		} break;
+		case BinOp_Gt: {
+
+		} break;
+		case BinOp_Ge: {
+
+		} break;
+		case BinOp_Eq: {
+
+		} break;
+		case BinOp_Ne: {
+
+		} break;
+		}
+	} else if (lhs_ref && rhs_nonrand) {
+		// LHS is a fieldref and the RHS is non-random
+		FieldBoundInfo *info = m_bounds->find(lhs_ref->field())->second.get();
+		switch (e->op()) {
+		case BinOp_Lt: {
+			propagator = new FieldBoundMaxPropagator(
+					info,
+					ExprSP(new ExprBin(
+							e->rhs(),
+							BinOp_Sub,
+							ExprSP(new ExprNumericLiteral(
+									ExprValNumeric::ONE)))));
+		} break;
+		case BinOp_Le: {
+
+		} break;
+		case BinOp_Gt: {
+
+		} break;
+		case BinOp_Ge: {
+
+		} break;
+		case BinOp_Eq: {
+
+		} break;
+		case BinOp_Ne: {
+
+		} break;
+		}
+
+		if (propagator) {
+			info->add_propagator(propagator);
+			propagator->propagate();
+		}
+	} else if (rhs_ref && lhs_nonrand) {
+		// RHS is a fieldref and the LHS is non-random
+
+	}
 
 }
 

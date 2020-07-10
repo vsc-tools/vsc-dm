@@ -28,21 +28,29 @@
 #ifndef SRC_EXPR_EXPRNUMERICLITERAL_H_
 #define SRC_EXPR_EXPRNUMERICLITERAL_H_
 #include "expr/Expr.h"
+#include "expr/ExprValNumeric.h"
 
 namespace vsc {
 
 class ExprNumericLiteral : public Expr {
 public:
-	ExprNumericLiteral(uint64_t	val);
+	ExprNumericLiteral(ExprValNumericSP		val);
 
 	virtual ~ExprNumericLiteral();
 
-	uint64_t val() const { return m_val; }
+	ExprValSP val() const { return m_val; }
+
+	ExprValNumericSP val_num() const { return m_val; }
+
+	uint64_t val_u() const { return m_val->val_u(); }
+
+	int64_t val_s() const { return m_val->val_s(); }
 
 	virtual void accept(IVisitor *v) { v->visitExprNumericLiteral(this); }
 
 private:
-	uint64_t				m_val;
+
+	ExprValNumericSP		m_val;
 
 };
 

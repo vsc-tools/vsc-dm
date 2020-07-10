@@ -26,6 +26,7 @@
  */
 
 #include "ExprNumericEvaluator.h"
+#include <assert.h>
 
 namespace vsc {
 
@@ -56,6 +57,9 @@ void ExprNumericEvaluator::visitExprBin(ExprBin *e) {
 	// - numeric
 	// - boolean
 	// - etc
+
+	assert(lhs.get());
+	assert(rhs.get());
 
 	// TODO: for now, just assume both are Numeric
 	ExprValNumeric *lhs_n = static_cast<ExprValNumeric *>(lhs.get());
@@ -115,6 +119,10 @@ void ExprNumericEvaluator::visitExprBin(ExprBin *e) {
 
 void ExprNumericEvaluator::visitExprFieldRef(ExprFieldRef *e) {
 	m_val = static_cast<FieldScalar *>(e->field())->val_num();
+}
+
+void ExprNumericEvaluator::visitExprNumericLiteral(ExprNumericLiteral *e) {
+	m_val = e->val_num();
 }
 
 ExprValSP ExprNumericEvaluator::_eval(ExprSP e) {

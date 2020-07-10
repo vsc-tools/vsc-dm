@@ -249,7 +249,7 @@ void SolverInstBoolector::visitExprNumericLiteral(ExprNumericLiteral *e) {
 	case Op_CreateConstraint: {
 		char tmp[65];
 		for (uint32_t i=0; i<64; i++) {
-			tmp[63-i] = (e->val() & (1ULL << i))?'1':'0';
+			tmp[63-i] = (e->val_u() & (1ULL << i))?'1':'0';
 		}
 		tmp[64] = 0;
 		m_node = boolector_const(m_btor, tmp);

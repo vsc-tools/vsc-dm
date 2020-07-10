@@ -29,7 +29,8 @@
 
 namespace vsc {
 
-ExprNumericLiteral::ExprNumericLiteral(uint64_t val) : m_val(val) {
+ExprNumericLiteral::ExprNumericLiteral(
+		ExprValNumericSP	val) : m_val(val) {
 	// TODO Auto-generated constructor stub
 
 }
