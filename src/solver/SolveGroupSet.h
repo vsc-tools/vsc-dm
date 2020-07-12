@@ -24,8 +24,8 @@
  *      Author: ballance
  */
 
-#ifndef SRC_SOLVER_SOLVEGROUPSET_H_
-#define SRC_SOLVER_SOLVEGROUPSET_H_
+#pragma once
+#include <memory>
 #include <vector>
 #include "SolveGroup.h"
 #include "datamodel/Field.h"
@@ -65,6 +65,7 @@ private:
 
 };
 
+typedef std::unique_ptr<SolveGroupSet> SolveGroupSetUP;
+
 } /* namespace vsc */
 
-#endif /* SRC_SOLVER_SOLVEGROUPSET_H_ */

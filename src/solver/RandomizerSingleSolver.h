@@ -26,8 +26,11 @@
  */
 
 #pragma once
+#include "datamodel/FieldScalar.h"
 #include "solver/IRandomizer.h"
 #include "solver/ISolverBackend.h"
+#include "solver/RNG.h"
+#include "solver/SolveGroup.h"
 
 namespace vsc {
 
@@ -38,9 +41,19 @@ public:
 	virtual ~RandomizerSingleSolver();
 
 	virtual bool randomize(
-			uint64_t								seed,
+			uint32_t								seed,
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintBlockSP>	&constraints);
+
+private:
+
+	virtual bool randomize_solvegroup(
+			RNG					&rng,
+			SolveGroup			*group);
+
+	void swizzle_randvars(
+			RNG					&rng,
+			SolveGroup			*group);
 
 private:
 	ISolverBackendUP					m_backend;

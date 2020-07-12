@@ -36,6 +36,8 @@ public:
 	TestUtil();
 	virtual ~TestUtil();
 
+	static uint64_t time_ms();
+
 	static ConstraintStmt *Constraint(
 			Expr				*expr
 			);

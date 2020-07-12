@@ -26,6 +26,11 @@
  */
 
 #include "TestUtil.h"
+#include <inttypes.h>
+#include <math.h>
+#include <stdio.h>
+#include <time.h>
+
 
 namespace vsc {
 
@@ -36,6 +41,27 @@ TestUtil::TestUtil() {
 
 TestUtil::~TestUtil() {
 	// TODO Auto-generated destructor stub
+}
+
+uint64_t TestUtil::time_ms() {
+	uint64_t		ret;
+    long            ms; // Milliseconds
+    time_t          s;  // Seconds
+    struct timespec spec;
+
+    clock_gettime(CLOCK_REALTIME, &spec);
+
+    s  = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6); // Convert nanoseconds to milliseconds
+    if (ms > 999) {
+        s++;
+        ms = 0;
+    }
+
+    ret = s*1000;
+    ret += ms;
+
+    return ret;
 }
 
 vsc::ConstraintStmt *TestUtil::Constraint(

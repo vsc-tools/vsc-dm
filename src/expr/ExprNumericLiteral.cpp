@@ -39,4 +39,9 @@ ExprNumericLiteral::~ExprNumericLiteral() {
 	// TODO Auto-generated destructor stub
 }
 
+ExprSP ExprNumericLiteral::ZERO(new ExprNumericLiteral(
+		ExprValNumericSP(new ExprValNumeric(0, 8, true))));
+ExprSP ExprNumericLiteral::ONE(new ExprNumericLiteral(
+		ExprValNumericSP(new ExprValNumeric(1, 8, true))));
+
 } /* namespace vsc */

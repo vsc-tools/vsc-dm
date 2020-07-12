@@ -27,6 +27,7 @@
 
 #pragma once
 #include <map>
+#include <set>
 #include <vector>
 #include "VisitorBase.h"
 #include "solver/FieldBoundInfo.h"
@@ -45,6 +46,11 @@ public:
 	FieldBoundMap *process(
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintBlockSP>	&constraints);
+
+	FieldBoundMap *process(
+			const std::set<Field *>					&fields,
+			const std::vector<ConstraintStmt *>		&constraints,
+			const std::vector<ConstraintSoft *>		&soft_constraints);
 
 
 	// Visitor Methods

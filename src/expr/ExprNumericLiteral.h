@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRNUMERICLITERAL_H_
-#define SRC_EXPR_EXPRNUMERICLITERAL_H_
+#pragma once
 #include "expr/Expr.h"
 #include "expr/ExprValNumeric.h"
 
@@ -48,6 +47,10 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitExprNumericLiteral(this); }
 
+public:
+	static ExprSP			ZERO;
+	static ExprSP			ONE;
+
 private:
 
 	ExprValNumericSP		m_val;
@@ -56,4 +59,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_EXPR_EXPRNUMERICLITERAL_H_ */

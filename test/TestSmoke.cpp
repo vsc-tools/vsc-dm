@@ -64,6 +64,66 @@ TEST_F(TestSmoke, smoke) {
 	}
 }
 
+TEST_F(TestSmoke, perf) {
+	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
+
+	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
+
+	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+			"c",
+			{
+				TestUtil::Constraint(TestUtil::Gt(a, 0)),
+				TestUtil::Constraint(TestUtil::Lt(a, 10))
+			}
+			));
+	std::vector<FieldSP> fields = {a};
+	std::vector<ConstraintBlockSP> constraints = {c};
+
+	uint32_t count = 1000;
+	uint64_t start = TestUtil::time_ms();
+	for (uint32_t i=0; i<count; i++) {
+		randomizer->randomize(0, fields, constraints);
+		ASSERT_GT(a->val_num()->val_u(), 0);
+		ASSERT_LT(a->val_num()->val_u(), 10);
+	}
+	uint64_t end = TestUtil::time_ms();
+
+	fprintf(stdout, "%d iterations in %d ms\n", count, uint32_t(end-start));
+}
+
+TEST_F(TestSmoke, perf2) {
+
+	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
+
+	std::vector<FieldSP> fields;
+	std::vector<ConstraintBlockSP> constraints;
+
+	for (uint32_t i=0; i<100; i++) {
+		vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
+		vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+				"c",
+				{
+						TestUtil::Constraint(TestUtil::Gt(a, 0)),
+						TestUtil::Constraint(TestUtil::Lt(a, 10))
+				}
+				));
+		fields.push_back(a);
+		constraints.push_back(c);
+	}
+
+	uint32_t count = 1000;
+	uint64_t start = TestUtil::time_ms();
+	for (uint32_t i=0; i<count; i++) {
+		randomizer->randomize(0, fields, constraints);
+//		ASSERT_GT(a->val_num()->val_u(), 0);
+//		ASSERT_LT(a->val_num()->val_u(), 10);
+	}
+	uint64_t end = TestUtil::time_ms();
+
+	fprintf(stdout, "%d iterations in %d ms\n", count, uint32_t(end-start));
+}
+
+
 TEST_F(TestSmoke, smoke2) {
 
 }

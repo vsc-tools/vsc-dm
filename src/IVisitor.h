@@ -33,6 +33,7 @@ namespace vsc {
 class ConstraintBlock;
 class ConstraintIf;
 class ConstraintScope;
+class ConstraintSoft;
 class ConstraintStmt;
 class ConstraintExpr;
 
@@ -56,6 +57,8 @@ public:
 	virtual void visitConstraintIf(ConstraintIf *c) = 0;
 
 	virtual void visitConstraintScope(ConstraintScope *c) = 0;
+
+	virtual void visitConstraintSoft(ConstraintSoft *c) = 0;
 
 	virtual void visitConstraintStmtEnter(ConstraintStmt *c) = 0;
 

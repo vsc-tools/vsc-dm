@@ -33,6 +33,7 @@
 #include "constraints/ConstraintExpr.h"
 #include "constraints/ConstraintIf.h"
 #include "constraints/ConstraintScope.h"
+#include "constraints/ConstraintSoft.h"
 #include "datamodel/FieldComposite.h"
 #include "datamodel/FieldScalar.h"
 
@@ -57,6 +58,8 @@ public:
 	virtual void visitConstraintIf(ConstraintIf *c) override;
 
 	virtual void visitConstraintScope(ConstraintScope *c) override;
+
+	virtual void visitConstraintSoft(ConstraintSoft *c) override;
 
 	virtual void visitConstraintStmtEnter(ConstraintStmt *c) override;
 

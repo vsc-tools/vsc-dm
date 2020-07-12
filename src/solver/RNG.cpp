@@ -29,13 +29,32 @@
 
 namespace vsc {
 
-RNG::RNG(uint64_t seed) {
-	// TODO Auto-generated constructor stub
+RNG::RNG(uint32_t seed) {
+	m_a = 0x5DEECE66DULL;
+	m_c = 0xb;
 
+	m_next = (0x330EULL << 32)
+			| ((uint64_t)(seed & 0xFFFF) << 16)
+			| (seed >> 16);
+	/*
+	m_next[0] = (seed >> 16);
+	m_next[1] = (seed & 0xFFFF);
+	m_next[2] = 0x330E;
+	 */
 }
 
 RNG::~RNG() {
 	// TODO Auto-generated destructor stub
+}
+
+uint32_t RNG::next() {
+	uint64_t		X;
+	uint64_t		tmp;
+
+//	X = (((uint64_t)m_next[2] << 32) | ((uint32_t)m_next[1] << 16) | m_next[0]);
+	m_next = ((m_next * m_a + m_c) & 0xFFFFFFFFFFFF);
+
+	return (m_next >> 16);
 }
 
 } /* namespace vsc */

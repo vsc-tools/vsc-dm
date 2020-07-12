@@ -29,6 +29,8 @@
 #define SRC_SOLVER_SOLVEGROUP_H_
 #include <memory>
 #include <set>
+#include <vector>
+#include "constraints/ConstraintSoft.h"
 #include "datamodel/Field.h"
 
 namespace vsc {
@@ -47,12 +49,24 @@ public:
 		return m_field_s;
 	}
 
-	const std::set<ConstraintStmt *> &constraints() const {
-		return m_constraint_s;
+	const std::vector<Field *> &rand_fields() const {
+		return m_rand_fields;
 	}
 
-	bool addConstraint(ConstraintStmt *c) {
-		return m_constraint_s.insert(c).second;
+	const std::vector<ConstraintSoft *> &soft_constraints() const {
+		return m_soft_constraints;
+	}
+
+	const std::vector<ConstraintStmt *> &constraints() const {
+		return m_constraints;
+	}
+
+	void addSoftConstraint(ConstraintSoft *c) {
+		m_soft_constraints.push_back(c);
+	}
+
+	void addConstraint(ConstraintStmt *c) {
+		m_constraints.push_back(c);
 	}
 
 	bool addField(Field *f) {
@@ -61,7 +75,11 @@ public:
 
 private:
 	std::set<Field *>				m_field_s;
-	std::set<ConstraintStmt *>		m_constraint_s;
+	std::vector<Field *>			m_rand_fields;
+	// regular hard constraints
+	std::vector<ConstraintStmt *>	m_constraints;
+	// soft constraints, arranged in priority order (low..high)
+	std::vector<ConstraintSoft *>	m_soft_constraints;
 };
 
 typedef std::unique_ptr<SolveGroup> SolveGroupUP;

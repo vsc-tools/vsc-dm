@@ -134,7 +134,7 @@ void SolveGroupSetBuilder::process_fieldref(Field *f) {
 				m_field_solvegroup_m.insert({*it, ex_group});
 			}
 
-			for (std::set<ConstraintStmt *>::const_iterator it=m_active_solvegroup->constraints().begin();
+			for (std::vector<ConstraintStmt *>::const_iterator it=m_active_solvegroup->constraints().begin();
 					it!=m_active_solvegroup->constraints().end(); it++) {
 				ex_group->addConstraint(*it);
 			}

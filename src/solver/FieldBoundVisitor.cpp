@@ -29,6 +29,7 @@
 #include "expr/ExprBin.h"
 #include "expr/ExprValNumeric.h"
 #include "solver/FieldBoundMaxPropagator.h"
+#include "solver/FieldBoundMinPropagator.h"
 #include "solver/IsNonRandVisitor.h"
 
 namespace vsc {
@@ -73,6 +74,43 @@ FieldBoundMap *FieldBoundVisitor::process(
 	return m_bounds.release();
 }
 
+FieldBoundMap *FieldBoundVisitor::process(
+			const std::set<Field *>					&fields,
+			const std::vector<ConstraintStmt *>		&constraints,
+			const std::vector<ConstraintSoft *>		&soft_constraints) {
+	m_depth = 0;
+	m_phase = 0;
+	m_bounds = FieldBoundMapUP(new FieldBoundMap());
+
+	for (std::set<Field *>::const_iterator it=fields.begin();
+			it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	m_phase = 1;
+	for (std::set<Field *>::const_iterator it=fields.begin();
+			it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+	for (std::vector<ConstraintStmt *>::const_iterator it=constraints.begin();
+			it!=constraints.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	for (std::vector<ConstraintSoft *>::const_iterator it=soft_constraints.begin();
+			it!=soft_constraints.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	// Finally, update derived calculations
+	for (std::map<Field*,FieldBoundInfoUP>::iterator it=m_bounds->begin();
+			it!=m_bounds->end(); it++) {
+		it->second->update();
+	}
+
+	return m_bounds.release();
+}
+
 void FieldBoundVisitor::visitConstraintIf(ConstraintIf *c) {
 	if (m_phase == 1) {
 		m_depth++;
@@ -104,10 +142,11 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 	bool rhs_nonrand = IsNonRandVisitor().is_nonrand(e->rhs());
 
 	FieldBoundPropagator *propagator = 0;
+	FieldBoundInfo *info = 0;
 	if (lhs_ref && rhs_ref) {
 		// rhs might be a fieldref too, and we'll check on that later
 		Field *field = lhs_ref->field();
-		FieldBoundInfo *info = m_bounds->find(field)->second.get();
+		info = m_bounds->find(field)->second.get();
 
 		switch (e->op()) {
 		case BinOp_Lt: {
@@ -131,7 +170,7 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 		}
 	} else if (lhs_ref && rhs_nonrand) {
 		// LHS is a fieldref and the RHS is non-random
-		FieldBoundInfo *info = m_bounds->find(lhs_ref->field())->second.get();
+		info = m_bounds->find(lhs_ref->field())->second.get();
 		switch (e->op()) {
 		case BinOp_Lt: {
 			propagator = new FieldBoundMaxPropagator(
@@ -139,17 +178,25 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 					ExprSP(new ExprBin(
 							e->rhs(),
 							BinOp_Sub,
-							ExprSP(new ExprNumericLiteral(
-									ExprValNumeric::ONE)))));
+							ExprNumericLiteral::ONE)));
 		} break;
 		case BinOp_Le: {
-
+			propagator = new FieldBoundMaxPropagator(
+					info,
+					e->rhs());
 		} break;
 		case BinOp_Gt: {
-
+			propagator = new FieldBoundMinPropagator(
+					info,
+					ExprSP(new ExprBin(
+							e->rhs(),
+							BinOp_Add,
+							ExprNumericLiteral::ONE)));
 		} break;
 		case BinOp_Ge: {
-
+			propagator = new FieldBoundMinPropagator(
+					info,
+					e->rhs());
 		} break;
 		case BinOp_Eq: {
 
@@ -159,15 +206,15 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 		} break;
 		}
 
-		if (propagator) {
-			info->add_propagator(propagator);
-			propagator->propagate();
-		}
 	} else if (rhs_ref && lhs_nonrand) {
 		// RHS is a fieldref and the LHS is non-random
 
 	}
 
+	if (propagator && info) {
+		info->add_propagator(propagator);
+		propagator->propagate();
+	}
 }
 
 // TODO: ExprIn

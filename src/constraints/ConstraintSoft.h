@@ -40,6 +40,8 @@ public:
 
 	Expr *expr() const { return m_expr.get(); }
 
+	virtual void accept(IVisitor *v) { v->visitConstraintSoft(this); }
+
 private:
 	ExprSP				m_expr;
 };

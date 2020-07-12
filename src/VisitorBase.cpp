@@ -59,12 +59,16 @@ void VisitorBase::visitConstraintScope(ConstraintScope *c) {
 	}
 }
 
-void VisitorBase::visitConstraintStmtEnter(ConstraintStmt *c) {
+void VisitorBase::visitConstraintSoft(ConstraintSoft *c) {
+	c->expr()->accept(this);
+}
 
+void VisitorBase::visitConstraintStmtEnter(ConstraintStmt *c) {
+	(void)c;
 }
 
 void VisitorBase::visitConstraintStmtLeave(ConstraintStmt *c) {
-
+	(void)c;
 }
 
 void VisitorBase::visitConstraintExpr(ConstraintExpr *c) {
@@ -98,7 +102,7 @@ void VisitorBase::visitExprListSubscript(ExprListSubscript *e) {
 }
 
 void VisitorBase::visitExprNumericLiteral(ExprNumericLiteral *e) {
-
+	(void)e;
 }
 
 void VisitorBase::visitFieldComposite(FieldComposite *f) {
@@ -114,7 +118,7 @@ void VisitorBase::visitFieldComposite(FieldComposite *f) {
 }
 
 void VisitorBase::visitFieldScalar(FieldScalar *f) {
-
+	(void)f;
 }
 
 

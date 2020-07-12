@@ -33,14 +33,17 @@ namespace vsc {
 
 class RNG {
 public:
-	RNG(uint64_t seed);
+	RNG(uint32_t seed);
 
 	virtual ~RNG();
 
-	uint64_t next();
+	uint32_t next();
 
 private:
-
+//	uint16_t			m_next[3];
+	uint64_t			m_next;
+	uint16_t			m_c;
+	uint64_t			m_a;
 
 };
 

@@ -27,7 +27,7 @@
 
 #include "solver/FieldBoundMinPropagator.h"
 
-#include "../expr/ExprNumericEvaluator.h"
+#include "expr/ExprNumericEvaluator.h"
 #include "solver/FieldBoundInfo.h"
 
 namespace vsc {
