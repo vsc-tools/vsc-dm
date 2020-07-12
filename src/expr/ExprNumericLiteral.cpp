@@ -30,8 +30,12 @@
 namespace vsc {
 
 ExprNumericLiteral::ExprNumericLiteral(
+		ExprValNumeric	*val) : m_val(val) {
+
+}
+
+ExprNumericLiteral::ExprNumericLiteral(
 		ExprValNumericSP	val) : m_val(val) {
-	// TODO Auto-generated constructor stub
 
 }
 

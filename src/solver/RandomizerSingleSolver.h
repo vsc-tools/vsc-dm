@@ -31,17 +31,19 @@
 #include "solver/ISolverBackend.h"
 #include "solver/RNG.h"
 #include "solver/SolveGroup.h"
+#include "solver/FieldBoundInfo.h"
 
 namespace vsc {
 
 class RandomizerSingleSolver : public IRandomizer {
 public:
-	RandomizerSingleSolver(ISolverBackend *backend);
+	RandomizerSingleSolver(
+			uint32_t			seed,
+			ISolverBackend 		*backend);
 
 	virtual ~RandomizerSingleSolver();
 
 	virtual bool randomize(
-			uint32_t								seed,
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintBlockSP>	&constraints);
 
@@ -53,11 +55,17 @@ private:
 
 	void swizzle_randvars(
 			RNG					&rng,
+			ISolverInstUP		&solver,
 			SolveGroup			*group);
 
+	ExprSP create_rand_domain_constraint(
+			RNG					&rng,
+			Field				*field,
+			FieldBoundInfo		*info);
+
 private:
+	RNG									m_rng;
 	ISolverBackendUP					m_backend;
-	ISolverInstUP						m_solver;
 
 };
 

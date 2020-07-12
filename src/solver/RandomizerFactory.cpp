@@ -43,6 +43,7 @@ RandomizerFactory::~RandomizerFactory() {
 IRandomizer *RandomizerFactory::inst() {
 	if (!m_inst.get()) {
 		m_inst = IRandomizerUP(new RandomizerSingleSolver(
+				0,
 				new SolverBackendBoolector()));
 	}
 	return m_inst.get();

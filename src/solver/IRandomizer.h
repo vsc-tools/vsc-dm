@@ -38,7 +38,6 @@ public:
 	virtual ~IRandomizer() { }
 
 	virtual bool randomize(
-			uint32_t								seed,
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintBlockSP>	&constraints) = 0;
 

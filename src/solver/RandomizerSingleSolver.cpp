@@ -31,7 +31,9 @@
 
 namespace vsc {
 
-RandomizerSingleSolver::RandomizerSingleSolver(ISolverBackend *backend) : m_backend(backend) {
+RandomizerSingleSolver::RandomizerSingleSolver(uint32_t seed, ISolverBackend *backend) :
+		m_rng(seed),
+		m_backend(backend) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -41,11 +43,16 @@ RandomizerSingleSolver::~RandomizerSingleSolver() {
 }
 
 bool RandomizerSingleSolver::randomize(
-			uint32_t								seed,
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintBlockSP>	&constraints) {
-	RNG		rng(seed);
+	RNG		rng(m_rng.next());
 	std::vector<FieldScalar *> rand_fields;
+
+	// Properly toggle the 'used_rand' flag for all top-level fields
+	for (std::vector<FieldSP>::const_iterator it=fields.begin();
+			it!=fields.end(); it++) {
+		(*it)->set_used_rand(true);
+	}
 
 	RandFieldCollector().collect(fields, rand_fields);
 
@@ -95,22 +102,18 @@ bool RandomizerSingleSolver::randomize_solvegroup(
 	bool need_solve = true;
 
 	// Build detailed bounds information for the fields in this solvegroup
-	FieldBoundMapUP bounds(FieldBoundVisitor().process(
-			group->fields(),
-			group->constraints(),
-			group->soft_constraints()));
 
 	// Build out fields
 	for (std::set<Field *>::const_iterator it=group->fields().begin();
 			it!=group->fields().end(); it++) {
-		m_solver->initField(*it);
+		solver->initField(*it);
 	}
 
 	// Build out and assert hard constraints
 	for (std::vector<ConstraintStmt *>::const_iterator it=group->constraints().begin();
 			it!=group->constraints().end(); it++) {
-		m_solver->initConstraint(*it);
-		m_solver->addAssert(*it);
+		solver->initConstraint(*it);
+		solver->addAssert(*it);
 	}
 
 
@@ -119,19 +122,19 @@ bool RandomizerSingleSolver::randomize_solvegroup(
 		// First, build out all soft constraints
 		for (std::vector<ConstraintSoft *>::const_iterator it=group->soft_constraints().begin();
 				it!=group->soft_constraints().end(); it++) {
-			m_solver->initConstraint(*it);
+			solver->initConstraint(*it);
 		}
 
 		uint32_t soft_idx = 0;
 
 		while (soft_idx < group->soft_constraints().size()) {
 			for (uint32_t i=soft_idx; i<group->soft_constraints().size(); i++) {
-				m_solver->addAssume(group->soft_constraints().at(i));
+				solver->addAssume(group->soft_constraints().at(i));
 			}
-			if (m_solver->isSAT()) {
+			if (solver->isSAT()) {
 				// Convert the remaining soft constraints to asserts
 				for (uint32_t i=soft_idx; i<group->soft_constraints().size(); i++) {
-					m_solver->addAssert(group->soft_constraints().at(i));
+					solver->addAssert(group->soft_constraints().at(i));
 				}
 				// Must solve again prior to fixing values
 				need_solve = true;
@@ -148,13 +151,13 @@ bool RandomizerSingleSolver::randomize_solvegroup(
 
 	// Solve to ensure we have a valid constraint problem prior to randomization
 	if (need_solve) {
-		if (!m_solver->isSAT()) {
+		if (!solver->isSAT()) {
 			ret = false;;
 		}
 	}
 
 	if (ret) {
-		swizzle_randvars(rng, group);
+		swizzle_randvars(rng, solver, group);
 	}
 
 //	if (!ret) {
@@ -172,14 +175,78 @@ bool RandomizerSingleSolver::randomize_solvegroup(
 //	ret = m_solver->isSAT();
 
 	// Finally, propagate values to the randomized fields
+	fprintf(stdout, "ret=%d\n", ret);
 	if (ret) {
 		// Propagate values from the solver to the fields
 		for (std::vector<Field *>::const_iterator it=group->rand_fields().begin();
 				it!=group->rand_fields().end(); it++) {
-			m_solver->finalizeField(*it);
+			solver->finalizeField(*it);
 		}
 	}
 
+
+	return ret;
+}
+
+void RandomizerSingleSolver::swizzle_randvars(
+		RNG						&rng,
+		ISolverInstUP			&solver,
+		SolveGroup				*group) {
+	const std::vector<Field *> &fields = group->rand_fields();
+	FieldBoundMapUP bounds(FieldBoundVisitor().process(
+			group->fields(),
+			group->constraints(),
+			group->soft_constraints()));
+	ExprSP e;
+
+	if (fields.size() > 0) {
+		uint32_t target_idx = 0;
+		if (fields.size() > 1) {
+			target_idx = rng.randint_u(0, fields.size()-1);
+		}
+		Field *target = fields.at(target_idx);
+
+		if (bounds->find(target) != bounds->end()) {
+			e = create_rand_domain_constraint(
+					rng, target, bounds->find(target)->second.get());
+		}
+	}
+
+	if (e.get()) {
+		ConstraintExprSP c(new ConstraintExpr(e));
+		solver->initConstraint(c.get());
+		solver->addAssume(c.get());
+		if (solver->isSAT()) {
+			solver->addAssert(c.get());
+			solver->isSAT();
+		}
+	}
+}
+
+ExprSP RandomizerSingleSolver::create_rand_domain_constraint(
+		RNG					&rng,
+		Field				*field,
+		FieldBoundInfo		*info) {
+	const domain_t &domain = info->domain();
+	uint32_t range_idx = rng.randint_u(0, domain.size()-1);
+	const range_t &range = domain.at(range_idx);
+	uint32_t range_sz = (range.second->val_u()-range.first->val_u());
+	ExprSP ret;
+
+	if (range_sz > 64) {
+	} else {
+		// Small range size. Just select a single value
+		uint32_t target_val = rng.randint_u(range.first->val_u(), range.second->val_u());
+
+		fprintf(stdout, "target=%d\n", target_val);
+
+		ret = ExprSP(new ExprBin(
+				new ExprFieldRef(field),
+				BinOp_Eq,
+				new ExprNumericLiteral(
+						new ExprValNumeric(target_val, 32, false))
+				));
+	}
 
 	return ret;
 }

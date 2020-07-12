@@ -69,9 +69,7 @@ public:
 		m_constraints.push_back(c);
 	}
 
-	bool addField(Field *f) {
-		return m_field_s.insert(f).second;
-	}
+	bool addField(Field *f);
 
 private:
 	std::set<Field *>				m_field_s;

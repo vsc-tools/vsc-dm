@@ -36,6 +36,8 @@ class ConstraintExpr : public ConstraintStmt {
 public:
 	ConstraintExpr(Expr *expr);
 
+	ConstraintExpr(ExprSP expr);
+
 	virtual ~ConstraintExpr();
 
 	Expr *expr() const { return m_expr.get(); }
@@ -45,6 +47,8 @@ public:
 private:
 	ExprSP				m_expr;
 };
+
+typedef std::shared_ptr<ConstraintExpr> ConstraintExprSP;
 
 } /* namespace vsc */
 

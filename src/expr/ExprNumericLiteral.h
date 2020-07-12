@@ -33,6 +33,8 @@ namespace vsc {
 
 class ExprNumericLiteral : public Expr {
 public:
+	ExprNumericLiteral(ExprValNumeric *		val);
+
 	ExprNumericLiteral(ExprValNumericSP		val);
 
 	virtual ~ExprNumericLiteral();

@@ -38,4 +38,16 @@ SolveGroup::~SolveGroup() {
 	// TODO Auto-generated destructor stub
 }
 
+bool SolveGroup::addField(Field *f) {
+	bool ret;
+
+	if ((ret = m_field_s.insert(f).second)) {
+		if (f->used_rand()) {
+			m_rand_fields.push_back(f);
+		}
+	}
+
+	return ret;
+}
+
 } /* namespace vsc */

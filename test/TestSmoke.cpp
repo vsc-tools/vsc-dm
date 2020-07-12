@@ -58,7 +58,8 @@ TEST_F(TestSmoke, smoke) {
 	std::vector<ConstraintBlockSP> constraints = {c};
 
 	for (uint32_t i=0; i<10; i++) {
-		randomizer->randomize(0, fields, constraints);
+		randomizer->randomize(fields, constraints);
+		fprintf(stdout, "a=%lld\n", a->val_num()->val_s());
 		ASSERT_GT(a->val_num()->val_u(), 0);
 		ASSERT_LT(a->val_num()->val_u(), 10);
 	}
@@ -82,7 +83,7 @@ TEST_F(TestSmoke, perf) {
 	uint32_t count = 1000;
 	uint64_t start = TestUtil::time_ms();
 	for (uint32_t i=0; i<count; i++) {
-		randomizer->randomize(0, fields, constraints);
+		randomizer->randomize(fields, constraints);
 		ASSERT_GT(a->val_num()->val_u(), 0);
 		ASSERT_LT(a->val_num()->val_u(), 10);
 	}
@@ -114,7 +115,7 @@ TEST_F(TestSmoke, perf2) {
 	uint32_t count = 1000;
 	uint64_t start = TestUtil::time_ms();
 	for (uint32_t i=0; i<count; i++) {
-		randomizer->randomize(0, fields, constraints);
+		randomizer->randomize(fields, constraints);
 //		ASSERT_GT(a->val_num()->val_u(), 0);
 //		ASSERT_LT(a->val_num()->val_u(), 10);
 	}

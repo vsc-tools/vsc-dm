@@ -39,9 +39,13 @@ public:
 
 	uint32_t next();
 
+	uint32_t randint_u(
+			uint32_t	min,
+			uint32_t	max);
+
 private:
-//	uint16_t			m_next[3];
-	uint64_t			m_next;
+	uint16_t			m_next[3];
+//	uint64_t			m_next;
 	uint16_t			m_c;
 	uint64_t			m_a;
 
