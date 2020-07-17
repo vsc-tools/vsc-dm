@@ -42,6 +42,10 @@ public:
 			Expr				*expr
 			);
 
+	static ConstraintStmt *Soft(
+			Expr				*expr
+			);
+
 	static Expr *Gt(
 			FieldScalarSP		f,
 			uint64_t			val);
@@ -53,6 +57,10 @@ public:
 	static Expr *Lt(
 			FieldScalarSP		f,
 			uint64_t			val);
+
+	static Expr *Lt(
+			FieldScalarSP		f1,
+			FieldScalarSP		f2);
 
 	static Expr *Lt(
 			Expr				*lhs,

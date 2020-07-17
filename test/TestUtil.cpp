@@ -70,6 +70,12 @@ vsc::ConstraintStmt *TestUtil::Constraint(
 	return new vsc::ConstraintExpr(expr);
 }
 
+vsc::ConstraintStmt *TestUtil::Soft(
+			vsc::Expr			*expr
+			) {
+	return new vsc::ConstraintSoft(expr);
+}
+
 vsc::Expr *TestUtil::Gt(FieldScalarSP field, uint64_t val) {
 	return new vsc::ExprBin(
 			new vsc::ExprFieldRef(field.get()),
@@ -99,6 +105,16 @@ vsc::Expr *TestUtil::Lt(Expr *lhs, Expr *rhs) {
 			lhs,
 			BinOp_Lt,
 			rhs);
+}
+
+Expr *TestUtil::Lt(
+		FieldScalarSP		f1,
+		FieldScalarSP		f2) {
+	return new vsc::ExprBin(
+			new vsc::ExprFieldRef(f1.get()),
+			BinOp_Lt,
+			new vsc::ExprFieldRef(f2.get())
+	);
 }
 
 ConstraintIf *TestUtil::If(

@@ -56,12 +56,114 @@ TEST_F(TestSmoke, smoke) {
 			));
 	std::vector<FieldSP> fields = {a};
 	std::vector<ConstraintBlockSP> constraints = {c};
+	uint32_t *hist = (uint32_t *)alloca(sizeof(uint32_t)*9);
+	memset(hist, 0, sizeof(uint32_t)*9);
 
-	for (uint32_t i=0; i<10; i++) {
+	for (uint32_t i=0; i<40; i++) {
 		randomizer->randomize(fields, constraints);
 		fprintf(stdout, "a=%lld\n", a->val_num()->val_s());
+		hist[a->val_num()->val_u()-1]++;
 		ASSERT_GT(a->val_num()->val_u(), 0);
 		ASSERT_LT(a->val_num()->val_u(), 10);
+	}
+
+	fprintf(stdout, "hist: ");
+	for (uint32_t i=0; i<9; i++) {
+		fprintf(stdout, "%d ", hist[i]);
+	}
+	fprintf(stdout, "\n");
+}
+
+TEST_F(TestSmoke, smoke_2var) {
+	fprintf(stdout, "Hello\n");
+	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
+	vsc::FieldScalarSP b(new vsc::FieldScalar("b", 32, false, true));
+
+	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
+
+	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+			"c",
+			{
+				TestUtil::Constraint(TestUtil::Gt(a, 0)),
+				TestUtil::Constraint(TestUtil::Lt(a, 10)),
+				TestUtil::Constraint(TestUtil::Gt(b, 0)),
+				TestUtil::Constraint(TestUtil::Lt(b, 10)),
+				TestUtil::Constraint(TestUtil::Lt(a, b))
+			}
+			));
+	std::vector<FieldSP> fields = {a, b};
+	std::vector<ConstraintBlockSP> constraints = {c};
+	uint32_t *hist_a = (uint32_t *)alloca(sizeof(uint32_t)*9);
+	memset(hist_a, 0, sizeof(uint32_t)*9);
+	uint32_t *hist_b = (uint32_t *)alloca(sizeof(uint32_t)*9);
+	memset(hist_b, 0, sizeof(uint32_t)*9);
+
+	for (uint32_t i=0; i<40; i++) {
+		randomizer->randomize(fields, constraints);
+		fprintf(stdout, "a=%lld\n", a->val_num()->val_s());
+		hist_a[a->val_num()->val_u()-1]++;
+		hist_b[b->val_num()->val_u()-1]++;
+		ASSERT_GT(a->val_num()->val_u(), 0);
+		ASSERT_LT(a->val_num()->val_u(), 10);
+		ASSERT_GT(b->val_num()->val_u(), 0);
+		ASSERT_LT(b->val_num()->val_u(), 10);
+		ASSERT_LT(a->val_num()->val_u(), b->val_num()->val_u());
+	}
+
+	fprintf(stdout, "hist_a: ");
+	for (uint32_t i=0; i<9; i++) {
+		fprintf(stdout, "%d ", hist_a[i]);
+	}
+	fprintf(stdout, "\n");
+	fprintf(stdout, "hist_b: ");
+	for (uint32_t i=0; i<9; i++) {
+		fprintf(stdout, "%d ", hist_b[i]);
+	}
+	fprintf(stdout, "\n");
+
+	for (uint32_t i=0; i<8; i++) { // Only values 0..8 will be present
+		ASSERT_NE(hist_a[i], 0);
+	}
+	for (uint32_t i=1; i<9; i++) { // Only values 1..9 will be present
+		ASSERT_NE(hist_b[i], 0);
+	}
+}
+
+
+TEST_F(TestSmoke, smoke_wider) {
+	fprintf(stdout, "Hello\n");
+	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
+
+	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
+
+	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+			"c",
+			{
+				TestUtil::Constraint(TestUtil::Gt(a, 0)),
+				TestUtil::Constraint(TestUtil::Lt(a, 128))
+			}
+			));
+	std::vector<FieldSP> fields = {a};
+	std::vector<ConstraintBlockSP> constraints = {c};
+	uint32_t *hist = (uint32_t *)alloca(sizeof(uint32_t)*127);
+	memset(hist, 0, sizeof(uint32_t)*127);
+
+	for (uint32_t i=0; i<(128*20); i++) {
+		randomizer->randomize(fields, constraints);
+		hist[a->val_num()->val_u()-1]++;
+		ASSERT_GT(a->val_num()->val_u(), 0);
+		ASSERT_LT(a->val_num()->val_u(), 128);
+	}
+
+	fprintf(stdout, "hist: ");
+	for (uint32_t i=0; i<127; i++) {
+		fprintf(stdout, "%d ", hist[i]);
+	}
+	fprintf(stdout, "\n");
+
+	// Confirm that we filled in the range
+	for (uint32_t i=0; i<127; i++) {
+		ASSERT_NE(hist[i], 0);
 	}
 }
 

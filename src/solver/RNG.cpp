@@ -34,12 +34,14 @@ RNG::RNG(uint32_t seed) {
 	m_a = 0x5DEECE66DULL;
 	m_c = 0xb;
 
-//	m_next = (0x330EULL << 32)
-//			| ((uint64_t)(seed & 0xFFFF) << 16)
-//			| (seed >> 16);
-	m_next[0] = (seed >> 16);
-	m_next[1] = (seed & 0xFFFF);
-	m_next[2] = 0x330E;
+	m_gen.seed(seed);
+
+	m_next = (0x330EULL << 32)
+			| ((uint64_t)(seed & 0xFFFF) << 16)
+			| (seed >> 16);
+//	m_next[0] = (seed >> 16);
+//	m_next[1] = (seed & 0xFFFF);
+//	m_next[2] = 0x330E;
 }
 
 RNG::~RNG() {
@@ -52,9 +54,17 @@ uint32_t RNG::next() {
 
 //	X = (((uint64_t)m_next[2] << 32) | ((uint32_t)m_next[1] << 16) | m_next[0]);
 //	m_next = ((m_next * m_a + m_c) & 0xFFFFFFFFFFFF);
+//	m_next = (m_next * m_a + m_c);
+	m_next ^= (m_next >> 12);
+	m_next ^= (m_next << 25);
+	m_next ^= (m_next >> 27);
 
-	uint32_t ret = nrand48(m_next);
+
+
+//	uint32_t ret = nrand48(xsubi);
 //	return (m_next >> 16);
+	return (m_next * 0x2545F4914F6DD1DULL);
+//	return m_gen();
 }
 
 uint32_t RNG::randint_u(
@@ -62,7 +72,7 @@ uint32_t RNG::randint_u(
 			uint32_t	max) {
 	uint32_t n = next();
 	if (min!=max) {
-		return (min + (n%(max-min)));
+		return (min + (n%(max-min+1)));
 	} else {
 		return min;
 	}

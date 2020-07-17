@@ -27,6 +27,7 @@
 #include "constraints/ConstraintBlock.h"
 #include "constraints/ConstraintExpr.h"
 #include "constraints/ConstraintIf.h"
+#include "constraints/ConstraintSoft.h"
 
 /********************************************************************
  * Datamodel

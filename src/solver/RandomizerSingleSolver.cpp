@@ -175,7 +175,6 @@ bool RandomizerSingleSolver::randomize_solvegroup(
 //	ret = m_solver->isSAT();
 
 	// Finally, propagate values to the randomized fields
-	fprintf(stdout, "ret=%d\n", ret);
 	if (ret) {
 		// Propagate values from the solver to the fields
 		for (std::vector<Field *>::const_iterator it=group->rand_fields().begin();
@@ -216,8 +215,7 @@ void RandomizerSingleSolver::swizzle_randvars(
 		ConstraintExprSP c(new ConstraintExpr(e));
 		solver->initConstraint(c.get());
 		solver->addAssume(c.get());
-		if (solver->isSAT()) {
-			solver->addAssert(c.get());
+		if (!solver->isSAT()) {
 			solver->isSAT();
 		}
 	}
@@ -234,6 +232,74 @@ ExprSP RandomizerSingleSolver::create_rand_domain_constraint(
 	ExprSP ret;
 
 	if (range_sz > 64) {
+		// Select a style of randomization
+		uint32_t r_type = rng.randint_u(0, 3);
+		uint32_t single_val = rng.randint_u(
+				range.first->val_u(),
+				range.second->val_u());
+
+		if (r_type >= 0 && r_type <= 2) { // range-based randomization
+			uint32_t bin_sz_h = 1;
+			if (range_sz/128) {
+				bin_sz_h = range_sz/128;
+			}
+
+			uint64_t min, max;
+			switch (r_type) {
+			case 0: { // Center the selected value in the range
+				if ((single_val+bin_sz_h) > range.second->val_u()) {
+					// Position the target range ending at the upper end
+					// of the range
+					min = range.second->val_u()-2*bin_sz_h;
+					max = range.second->val_u();
+				} else {
+					min = single_val - bin_sz_h;
+					max = single_val + bin_sz_h;
+				}
+			} break;
+			case 1: { // Bin starts at selected value
+				if ((single_val+bin_sz_h) > range.second->val_u()) {
+					// Position the target range ending at the upper end
+					// of the range
+					min = range.second->val_u()-2*bin_sz_h;
+					max = range.second->val_u();
+				} else {
+					min = single_val;
+					max = single_val + 2*bin_sz_h;
+				}
+			} break;
+			case 2: { // Bin ends at selected value
+				if (range.first->val_u()+bin_sz_h > single_val) {
+					// Position the target range starting at the minimum
+					min = range.first->val_u();
+					max = range.first->val_u() + 2*bin_sz_h;
+				} else {
+					min = single_val - 2*bin_sz_h;
+					max = single_val;
+				}
+			} break;
+			}
+			ret = ExprSP(new ExprBin(
+					new ExprBin(
+							new ExprFieldRef(field),
+							BinOp_Ge,
+							new ExprNumericLiteral(
+									new ExprValNumeric(min, 64, false))),
+					BinOp_And,
+					new ExprBin(
+							new ExprFieldRef(field),
+							BinOp_Le,
+							new ExprNumericLiteral(
+									new ExprValNumeric(max, 64, false)))
+					));
+		} else { // Single value
+			ret = ExprSP(new ExprBin(
+					new ExprFieldRef(field),
+					BinOp_Eq,
+					new ExprNumericLiteral(
+							new ExprValNumeric(single_val, 32, false))
+					));
+		}
 	} else {
 		// Small range size. Just select a single value
 		uint32_t target_val = rng.randint_u(range.first->val_u(), range.second->val_u());
