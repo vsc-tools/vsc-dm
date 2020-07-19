@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRCOND_H_
-#define SRC_EXPR_EXPRCOND_H_
+#pragma once
 #include "Expr.h"
 
 namespace vsc {
@@ -59,4 +58,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_EXPR_EXPRCOND_H_ */

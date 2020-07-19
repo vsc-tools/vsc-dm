@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRBINOP_H_
-#define SRC_EXPR_EXPRBINOP_H_
+#pragma once
 
 namespace vsc {
 
@@ -54,6 +53,3 @@ const char *toString(ExprBinOp op);
 
 }
 
-
-
-#endif /* SRC_EXPR_EXPRBINOP_H_ */

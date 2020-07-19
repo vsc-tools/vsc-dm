@@ -9,13 +9,13 @@
 
 namespace vsc {
 
-SolverInstCudd::SolverInstCudd() {
-	// TODO Auto-generated constructor stub
-
-}
-
-SolverInstCudd::~SolverInstCudd() {
-	// TODO Auto-generated destructor stub
-}
+//SolverInstCudd::SolverInstCudd() {
+//	// TODO Auto-generated constructor stub
+//
+//}
+//
+//SolverInstCudd::~SolverInstCudd() {
+//	// TODO Auto-generated destructor stub
+//}
 
 } /* namespace vsc */

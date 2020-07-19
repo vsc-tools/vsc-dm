@@ -27,8 +27,8 @@
 
 #ifndef SRC_CONSTRAINTS_CONSTRAINTSOFT_H_
 #define SRC_CONSTRAINTS_CONSTRAINTSOFT_H_
-#include "ConstraintStmt.h"
-#include "Expr.h"
+#include "constraints/ConstraintStmt.h"
+#include "expr/Expr.h"
 
 namespace vsc {
 
