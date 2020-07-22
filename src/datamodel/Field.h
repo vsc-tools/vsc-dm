@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_DATAMODEL_FIELD_H_
-#define SRC_DATAMODEL_FIELD_H_
+#pragma once
 #include <string>
 #include <memory>
 #include "IVisitor.h"
@@ -44,7 +43,13 @@ public:
 
 	const std::string &name() const { return m_name; }
 
+	void set_name(const std::string &name) { m_name = name; }
+
 	std::string fullname() const;
+
+	bool decl_rand() const { return m_decl_rand; }
+
+	void decl_rand(bool r) { m_decl_rand = r; }
 
 	Field *parent() const { return m_parent; }
 
@@ -75,7 +80,7 @@ public:
 	virtual void accept(IVisitor *v) = 0;
 
 protected:
-	const std::string		m_name;
+	std::string				m_name;
 	Field					*m_parent;
 	int32_t					m_idx;
 	bool					m_decl_rand;
@@ -88,4 +93,3 @@ typedef std::shared_ptr<Field> FieldSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_DATAMODEL_FIELD_H_ */

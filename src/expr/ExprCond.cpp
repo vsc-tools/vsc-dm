@@ -34,7 +34,13 @@ ExprCond::ExprCond(
 		Expr		*true_e,
 		Expr		*false_e) : m_cond(cond),
 				m_true_e(true_e), m_false_e(false_e) {
+}
 
+ExprCond::ExprCond(
+		ExprSP		cond,
+		ExprSP		true_e,
+		ExprSP		false_e) : m_cond(cond),
+				m_true_e(true_e), m_false_e(false_e) {
 }
 
 ExprCond::~ExprCond() {

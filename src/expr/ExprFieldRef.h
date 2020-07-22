@@ -26,8 +26,8 @@
  */
 
 #pragma once
-#include "Expr.h"
-#include "Field.h"
+#include "expr/Expr.h"
+#include "datamodel/Field.h"
 
 namespace vsc {
 

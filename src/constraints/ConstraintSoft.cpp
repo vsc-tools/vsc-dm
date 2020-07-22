@@ -30,7 +30,10 @@
 namespace vsc {
 
 ConstraintSoft::ConstraintSoft(Expr *expr) : m_expr(expr) {
-	// TODO Auto-generated constructor stub
+
+}
+
+ConstraintSoft::ConstraintSoft(ExprSP expr) : m_expr(expr) {
 
 }
 

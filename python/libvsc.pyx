@@ -31,12 +31,22 @@ from libcpp cimport bool as bool
 cdef extern from "vsc.h" namespace "vsc":
     cdef cppclass Field:
         Field()
+        const cpp_string &name()
+        void set_name(const cpp_string &)
         const cpp_string &fullname()
+        bool decl_rand()
+        void decl_rand(bool)
         
     cdef cppclass FieldSP:
         FieldSP()
         FieldSP(Field *)
         Field *get()
+        
+    cdef cppclass FieldComposite(Field):
+        FieldComposite(
+            const cpp_string        &name,
+            bool                    is_rand)
+        void add_field(FieldSP field)
         
     cdef cppclass FieldScalar(Field):
         FieldScalar(
@@ -50,8 +60,37 @@ cdef class FieldModel(object):
     def __init__(self):
         pass
     
+    @property
+    def name(self):
+        return self.hndl.get().name().decode()
+    
+    @name.setter
+    def name(self, v):
+        self.hndl.get().set_name(v.encode())
+        
+    @property
+    def decl_rand(self):
+        return self.hndl.get().decl_rand()
+    
+    @decl_rand.setter
+    def decl_rand(self, r):
+        self.hndl.get().decl_rand(r)
+        
+    
     def fullname(self):
         return self.hndl.get().fullname().decode()
+
+cdef class FieldCompositeModel(FieldModel):
+    def __init__(
+            self,
+            str          name,
+            bool         is_rand):
+        self.hndl = FieldSP(new FieldComposite(name.encode(), is_rand))
+        
+    def add_field(self, FieldModel f):
+        cdef FieldComposite *c = (<FieldComposite *>self.hndl.get())
+        c.add_field(f.hndl)
+
 
 cdef class FieldScalarModel(FieldModel):
 

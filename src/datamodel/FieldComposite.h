@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,8 +24,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_DATAMODEL_FIELDCOMPOSITE_H_
-#define SRC_DATAMODEL_FIELDCOMPOSITE_H_
+#pragma once
 #include <vector>
 #include "datamodel/Field.h"
 #include "constraints/ConstraintBlock.h"
@@ -42,6 +40,8 @@ public:
 	virtual ~FieldComposite();
 
 	const std::vector<FieldSP> &children() const { return m_children; }
+
+	void add_field(FieldSP f) { m_children.push_back(f); }
 
 	const std::vector<ConstraintBlockSP> &constraints() const { return m_constraints; }
 
@@ -62,4 +62,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_DATAMODEL_FIELDCOMPOSITE_H_ */

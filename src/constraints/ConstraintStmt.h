@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_CONSTRAINTS_CONSTRAINTSTMT_H_
-#define SRC_CONSTRAINTS_CONSTRAINTSTMT_H_
+#pragma once
 #include <memory>
 #include "IVisitor.h"
 #include "solver/ISolverData.h"
@@ -54,4 +53,3 @@ typedef std::shared_ptr<ConstraintStmt> ConstraintStmtSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_CONSTRAINTS_CONSTRAINTSTMT_H_ */

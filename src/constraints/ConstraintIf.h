@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,8 +24,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_CONSTRAINTS_CONSTRAINTIF_H_
-#define SRC_CONSTRAINTS_CONSTRAINTIF_H_
+#pragma once
 #include "constraints/ConstraintStmt.h"
 #include "expr/Expr.h"
 
@@ -63,4 +61,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_CONSTRAINTS_CONSTRAINTIF_H_ */

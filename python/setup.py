@@ -16,7 +16,7 @@ if 'setuptools.extension' in sys.modules:
     sys.modules['distutils.extension'].Extension = _Extension
     sys.modules['distutils.command.build_ext'].Extension = _Extension
 
-with_cython = False
+ith_cython = False
 if 'sdist' in sys.argv:
     # we need cython here
     with_cython = True

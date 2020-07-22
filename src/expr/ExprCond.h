@@ -39,6 +39,12 @@ public:
 			Expr		*false_e
 			);
 
+	ExprCond(
+			ExprSP		cond,
+			ExprSP		true_e,
+			ExprSP		false_e
+			);
+
 	virtual ~ExprCond();
 
 	Expr *cond() const { return m_cond.get(); }

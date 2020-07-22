@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_CONSTRAINTS_CONSTRAINTSCOPE_H_
-#define SRC_CONSTRAINTS_CONSTRAINTSCOPE_H_
+#pragma once
 #include <vector>
 #include "constraints/ConstraintStmt.h"
 
@@ -61,4 +60,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_CONSTRAINTS_CONSTRAINTSCOPE_H_ */
