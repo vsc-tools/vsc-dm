@@ -29,9 +29,13 @@
 
 namespace vsc {
 
+ConstraintBlock::ConstraintBlock(const std::string	&name) : m_name(name) {
+
+}
+
 ConstraintBlock::ConstraintBlock(
 		const std::string							&name,
-		std::initializer_list<ConstraintStmt *>		stmts) : ConstraintScope(stmts) {
+		std::initializer_list<ConstraintStmt *>		stmts) : ConstraintScope(stmts), m_name(name) {
 
 }
 

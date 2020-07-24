@@ -45,7 +45,7 @@ public:
 
 	virtual bool randomize(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintBlockSP>	&constraints);
+			const std::vector<ConstraintStmtSP>		&constraints);
 
 private:
 

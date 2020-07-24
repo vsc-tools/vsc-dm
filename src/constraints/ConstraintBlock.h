@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
-#define SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_
+#pragma once
 #include <memory>
 #include <initializer_list>
 #include "ConstraintScope.h"
@@ -35,13 +34,20 @@ namespace vsc {
 
 class ConstraintBlock : public ConstraintScope {
 public:
+	ConstraintBlock(const std::string				&name);
+
 	ConstraintBlock(
 			const std::string						&name,
 			std::initializer_list<ConstraintStmt *>	constraints);
 
 	virtual ~ConstraintBlock();
 
+	const std::string &name() const { return m_name; }
+
 	virtual void accept(IVisitor *v) { v->visitConstraintBlock(this); }
+
+private:
+	std::string					m_name;
 
 };
 
@@ -49,4 +55,3 @@ typedef std::shared_ptr<ConstraintBlock> ConstraintBlockSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_CONSTRAINTS_CONSTRAINTBLOCK_H_ */

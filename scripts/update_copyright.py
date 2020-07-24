@@ -51,7 +51,7 @@ def process_dir(d):
                 print("Need to add license on " + l)
                 
                 with open(os.path.join(d, l), "w") as fp:
-                    fp.write(license)
+                    fp.write(license.strip())
                     fp.write("\n")
                     fp.write(content)
                     

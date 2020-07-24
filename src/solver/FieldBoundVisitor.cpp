@@ -45,7 +45,7 @@ FieldBoundVisitor::~FieldBoundVisitor() {
 
 FieldBoundMap *FieldBoundVisitor::process(
 		const std::vector<FieldSP>				&fields,
-		const std::vector<ConstraintBlockSP>	&constraints) {
+		const std::vector<ConstraintStmtSP>		&constraints) {
 	m_depth = 0;
 	m_phase = 0;
 	m_bounds = FieldBoundMapUP(new FieldBoundMap());
@@ -60,7 +60,7 @@ FieldBoundMap *FieldBoundVisitor::process(
 			it!=fields.end(); it++) {
 		(*it)->accept(this);
 	}
-	for (std::vector<ConstraintBlockSP>::const_iterator it=constraints.begin();
+	for (std::vector<ConstraintStmtSP>::const_iterator it=constraints.begin();
 			it!=constraints.end(); it++) {
 		(*it)->accept(this);
 	}

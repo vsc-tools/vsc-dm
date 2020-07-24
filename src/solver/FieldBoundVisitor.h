@@ -45,7 +45,7 @@ public:
 
 	FieldBoundMap *process(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintBlockSP>	&constraints);
+			const std::vector<ConstraintStmtSP>		&constraints);
 
 	FieldBoundMap *process(
 			const std::set<Field *>					&fields,

@@ -41,7 +41,7 @@ SolveGroupSetBuilder::~SolveGroupSetBuilder() {
 
 SolveGroupSet *SolveGroupSetBuilder::build(
 		const std::vector<FieldSP>				&fields,
-		const std::vector<ConstraintBlockSP>	&constraints) {
+		const std::vector<ConstraintStmtSP>		&constraints) {
 
 	// First, collect all fields
 	m_pass = 0;
@@ -57,7 +57,7 @@ SolveGroupSet *SolveGroupSetBuilder::build(
 			it!=fields.end(); it++) {
 		(*it)->accept(this);
 	}
-	for (std::vector<ConstraintBlockSP>::const_iterator it=constraints.begin();
+	for (std::vector<ConstraintStmtSP>::const_iterator it=constraints.begin();
 			it!=constraints.end(); it++) {
 		(*it)->accept(this);
 	}

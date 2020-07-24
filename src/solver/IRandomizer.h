@@ -27,8 +27,9 @@
 
 #pragma once
 #include <memory>
+#include <vector>
 #include "datamodel/Field.h"
-#include "constraints/ConstraintBlock.h"
+#include "constraints/ConstraintStmt.h"
 
 namespace vsc {
 
@@ -39,7 +40,7 @@ public:
 
 	virtual bool randomize(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintBlockSP>	&constraints) = 0;
+			const std::vector<ConstraintStmtSP>		&constraints) = 0;
 
 };
 

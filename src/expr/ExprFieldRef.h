@@ -33,7 +33,9 @@ namespace vsc {
 
 class ExprFieldRef : public Expr {
 public:
-	ExprFieldRef(Field	*field);
+	ExprFieldRef(FieldSP field);
+
+	ExprFieldRef(Field *field);
 
 	virtual ~ExprFieldRef();
 
@@ -42,6 +44,7 @@ public:
 	virtual void accept(IVisitor *v) { v->visitExprFieldRef(this); }
 
 private:
+	FieldSP				m_field_sp;
 	Field				*m_field;
 };
 

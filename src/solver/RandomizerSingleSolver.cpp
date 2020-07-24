@@ -28,6 +28,7 @@
 #include "solver/SolveGroupSetBuilder.h"
 #include "solver/FieldBoundVisitor.h"
 #include "solver/RandFieldCollector.h"
+#include "expr/ExprValNumeric.h"
 
 namespace vsc {
 
@@ -44,7 +45,7 @@ RandomizerSingleSolver::~RandomizerSingleSolver() {
 
 bool RandomizerSingleSolver::randomize(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintBlockSP>	&constraints) {
+			const std::vector<ConstraintStmtSP>		&constraints) {
 	RNG		rng(m_rng.next());
 	std::vector<FieldScalar *> rand_fields;
 
@@ -75,6 +76,20 @@ bool RandomizerSingleSolver::randomize(
 	}
 
 	// TOOD: Assign random values to unconstrained fields
+	for (std::vector<Field *>::const_iterator it=solvegroups->unconstrained().begin();
+			it!=solvegroups->unconstrained().end(); it++) {
+		FieldScalar *fs = static_cast<FieldScalar *>(*it);
+		if (fs->is_signed()) {
+		} else {
+			if (fs->width() > 31) {
+			} else {
+				fs->val(ExprValNumericSP(new ExprValNumeric(
+						rng.randint_u(0, (1 << fs->width())-1),
+						fs->width(),
+						fs->is_signed())));
+			}
+		}
+	}
 
 
 //	for (FieldBoundMap::iterator it=bounds->begin();

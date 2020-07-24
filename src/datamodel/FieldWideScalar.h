@@ -12,7 +12,11 @@ namespace vsc {
 
 class FieldWideScalar : public FieldScalar {
 public:
-	FieldWideScalar();
+	FieldWideScalar(
+			const std::string		&name,
+			int32_t					width,
+			bool					is_signed,
+			bool					is_rand);
 
 	virtual ~FieldWideScalar();
 };

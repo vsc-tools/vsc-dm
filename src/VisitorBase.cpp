@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -103,6 +102,26 @@ void VisitorBase::visitExprListSubscript(ExprListSubscript *e) {
 
 void VisitorBase::visitExprNumericLiteral(ExprNumericLiteral *e) {
 	(void)e;
+}
+
+void VisitorBase::visitExprRange(ExprRange *e) {
+	e->lhs()->accept(this);
+	e->rhs()->accept(this);
+}
+
+void VisitorBase::visitExprRangelist(ExprRangelist *e) {
+	for (std::vector<ExprRangeSP>::const_iterator it=e->ranges().begin();
+			it!=e->ranges().end(); it++) {
+		(*it)->accept(this);
+	}
+}
+
+void VisitorBase::visitExprUnary(ExprUnary *e) {
+	e->rhs()->accept(this);
+}
+
+void VisitorBase::visitExprValLiteral(ExprValLiteral *e) {
+
 }
 
 void VisitorBase::visitFieldComposite(FieldComposite *f) {

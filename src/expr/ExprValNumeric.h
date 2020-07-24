@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRVALNUMERIC_H_
-#define SRC_EXPR_EXPRVALNUMERIC_H_
+#pragma once
 #include "expr/ExprVal.h"
 
 namespace vsc {
@@ -105,4 +104,3 @@ typedef std::shared_ptr<ExprValNumeric> ExprValNumericSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_EXPR_EXPRVALNUMERIC_H_ */

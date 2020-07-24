@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_SOLVER_SOLVEGROUPSETBUILDER_H_
-#define SRC_SOLVER_SOLVEGROUPSETBUILDER_H_
+#pragma once
 #include <vector>
 #include <set>
 #include <map>
@@ -45,7 +44,7 @@ public:
 
 	SolveGroupSet *build(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintBlockSP>	&constraints
+			const std::vector<ConstraintStmtSP>		&constraints
 			);
 
 	virtual void visitConstraintBlock(ConstraintBlock *c) override;
@@ -77,4 +76,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_SOLVER_SOLVEGROUPSETBUILDER_H_ */

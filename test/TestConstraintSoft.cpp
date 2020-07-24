@@ -24,7 +24,7 @@ TEST_F(TestConstraintSoft, smoke) {
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
-	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+	vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 			"c",
 			{
 				TestUtil::Constraint(TestUtil::Gt(a, 0)),
@@ -36,7 +36,7 @@ TEST_F(TestConstraintSoft, smoke) {
 			}
 			));
 	std::vector<FieldSP> fields = {a};
-	std::vector<ConstraintBlockSP> constraints = {c};
+	std::vector<ConstraintStmtSP> constraints = {c};
 	uint32_t *hist = (uint32_t *)alloca(sizeof(uint32_t)*9);
 	memset(hist, 0, sizeof(uint32_t)*9);
 

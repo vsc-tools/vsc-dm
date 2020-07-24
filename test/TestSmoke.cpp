@@ -47,7 +47,7 @@ TEST_F(TestSmoke, smoke) {
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
-	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+	vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 			"c",
 			{
 				TestUtil::Constraint(TestUtil::Gt(a, 0)),
@@ -55,7 +55,7 @@ TEST_F(TestSmoke, smoke) {
 			}
 			));
 	std::vector<FieldSP> fields = {a};
-	std::vector<ConstraintBlockSP> constraints = {c};
+	std::vector<ConstraintStmtSP> constraints = {c};
 	uint32_t *hist = (uint32_t *)alloca(sizeof(uint32_t)*9);
 	memset(hist, 0, sizeof(uint32_t)*9);
 
@@ -81,7 +81,7 @@ TEST_F(TestSmoke, smoke_2var) {
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
-	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+	vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 			"c",
 			{
 				TestUtil::Constraint(TestUtil::Gt(a, 0)),
@@ -92,7 +92,7 @@ TEST_F(TestSmoke, smoke_2var) {
 			}
 			));
 	std::vector<FieldSP> fields = {a, b};
-	std::vector<ConstraintBlockSP> constraints = {c};
+	std::vector<ConstraintStmtSP> constraints = {c};
 	uint32_t *hist_a = (uint32_t *)alloca(sizeof(uint32_t)*9);
 	memset(hist_a, 0, sizeof(uint32_t)*9);
 	uint32_t *hist_b = (uint32_t *)alloca(sizeof(uint32_t)*9);
@@ -136,7 +136,7 @@ TEST_F(TestSmoke, smoke_wider) {
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
-	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+	vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 			"c",
 			{
 				TestUtil::Constraint(TestUtil::Gt(a, 0)),
@@ -144,7 +144,7 @@ TEST_F(TestSmoke, smoke_wider) {
 			}
 			));
 	std::vector<FieldSP> fields = {a};
-	std::vector<ConstraintBlockSP> constraints = {c};
+	std::vector<ConstraintStmtSP> constraints = {c};
 	uint32_t *hist = (uint32_t *)alloca(sizeof(uint32_t)*127);
 	memset(hist, 0, sizeof(uint32_t)*127);
 
@@ -172,7 +172,7 @@ TEST_F(TestSmoke, perf) {
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
-	vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+	vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 			"c",
 			{
 				TestUtil::Constraint(TestUtil::Gt(a, 0)),
@@ -180,7 +180,7 @@ TEST_F(TestSmoke, perf) {
 			}
 			));
 	std::vector<FieldSP> fields = {a};
-	std::vector<ConstraintBlockSP> constraints = {c};
+	std::vector<ConstraintStmtSP> constraints = {c};
 
 	uint32_t count = 1000;
 	uint64_t start = TestUtil::time_ms();
@@ -199,11 +199,11 @@ TEST_F(TestSmoke, perf2) {
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
 
 	std::vector<FieldSP> fields;
-	std::vector<ConstraintBlockSP> constraints;
+	std::vector<ConstraintStmtSP> constraints;
 
 	for (uint32_t i=0; i<100; i++) {
 		vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
-		vsc::ConstraintBlockSP c(new vsc::ConstraintBlock(
+		vsc::ConstraintStmtSP c(new vsc::ConstraintBlock(
 				"c",
 				{
 						TestUtil::Constraint(TestUtil::Gt(a, 0)),

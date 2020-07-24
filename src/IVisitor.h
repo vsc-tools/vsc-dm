@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_IVISITOR_H_
-#define SRC_IVISITOR_H_
+#pragma once
 
 namespace vsc {
 
@@ -43,6 +42,10 @@ class ExprDynamicConstraintRef;
 class ExprFieldRef;
 class ExprListSubscript;
 class ExprNumericLiteral;
+class ExprRange;
+class ExprRangelist;
+class ExprUnary;
+class ExprValLiteral;
 
 class FieldComposite;
 class FieldScalar;
@@ -78,6 +81,14 @@ public:
 
 	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) = 0;
 
+	virtual void visitExprRange(ExprRange *e) = 0;
+
+	virtual void visitExprRangelist(ExprRangelist *e) = 0;
+
+	virtual void visitExprUnary(ExprUnary *e) = 0;
+
+	virtual void visitExprValLiteral(ExprValLiteral *e) = 0;
+
 	virtual void visitFieldComposite(FieldComposite *f) = 0;
 
 	virtual void visitFieldScalar(FieldScalar *f) = 0;
@@ -87,5 +98,3 @@ public:
 }
 
 
-
-#endif /* SRC_IVISITOR_H_ */

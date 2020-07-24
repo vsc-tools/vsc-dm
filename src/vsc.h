@@ -46,6 +46,8 @@
 #include "expr/ExprIn.h"
 #include "expr/ExprListSubscript.h"
 #include "expr/ExprNumericLiteral.h"
+#include "expr/ExprRangelist.h"
+#include "expr/ExprUnary.h"
 #include "expr/ExprValNumeric.h"
 
 /********************************************************************

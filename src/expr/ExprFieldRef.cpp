@@ -29,8 +29,11 @@
 
 namespace vsc {
 
+ExprFieldRef::ExprFieldRef(FieldSP field) : m_field_sp(field), m_field(field.get()) {
+
+}
+
 ExprFieldRef::ExprFieldRef(Field *field) : m_field(field) {
-	// TODO Auto-generated constructor stub
 
 }
 

@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,6 +42,10 @@
 #include "expr/ExprFieldRef.h"
 #include "expr/ExprListSubscript.h"
 #include "expr/ExprNumericLiteral.h"
+#include "expr/ExprRange.h"
+#include "expr/ExprRangelist.h"
+#include "expr/ExprUnary.h"
+#include "expr/ExprValLiteral.h"
 
 namespace vsc {
 
@@ -78,6 +81,14 @@ public:
 	virtual void visitExprListSubscript(ExprListSubscript *e) override;
 
 	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
+
+	virtual void visitExprRange(ExprRange *e) override;
+
+	virtual void visitExprRangelist(ExprRangelist *e) override;
+
+	virtual void visitExprUnary(ExprUnary *e) override;
+
+	virtual void visitExprValLiteral(ExprValLiteral *e) override;
 
 	virtual void visitFieldComposite(FieldComposite *f) override;
 

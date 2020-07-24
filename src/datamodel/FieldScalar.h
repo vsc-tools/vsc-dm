@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -45,10 +44,14 @@ public:
 
 	virtual bool is_signed() const { return m_val->is_signed(); }
 
-	virtual ExprValSP val() const { return m_val; }
+	virtual ExprValSP val() const {
+		return m_val;
+	}
 
 	// Provide convenience method for obtaining a numeric value
-	virtual ExprValNumericSP val_num() const { return m_val; }
+	virtual ExprValNumericSP val_num() const {
+		return m_val;
+	}
 
 	virtual void val(ExprValNumericSP v) { m_val = v; }
 
