@@ -44,6 +44,12 @@ RandomizerSingleSolver::~RandomizerSingleSolver() {
 }
 
 bool RandomizerSingleSolver::randomize(
+			std::initializer_list<FieldSP>			fields,
+			std::initializer_list<ConstraintStmtSP>	constraints) {
+	return randomize(fields, constraints);
+}
+
+bool RandomizerSingleSolver::randomize(
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintStmtSP>		&constraints) {
 	RNG		rng(m_rng.next());

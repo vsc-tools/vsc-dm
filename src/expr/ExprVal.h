@@ -24,13 +24,13 @@
  *      Author: ballance
  */
 
-#ifndef SRC_EXPR_EXPRVAL_H_
-#define SRC_EXPR_EXPRVAL_H_
+#pragma once
 #include <memory>
 
 namespace vsc {
 
 enum ExprValType {
+	ValType_Enum,
 	ValType_Numeric,
 };
 
@@ -51,4 +51,3 @@ typedef std::shared_ptr<ExprVal> ExprValSP;
 
 } /* namespace vsc */
 
-#endif /* SRC_EXPR_EXPRVAL_H_ */

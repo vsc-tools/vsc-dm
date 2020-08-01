@@ -39,6 +39,16 @@ FieldComposite::~FieldComposite() {
 	// TODO Auto-generated destructor stub
 }
 
+ConstraintBlockSP FieldComposite::addConstraint(
+		const std::string						&name,
+		std::initializer_list<ConstraintStmt *> c) {
+	ConstraintBlockSP ret = ConstraintBlockSP(
+			new ConstraintBlock(name, c));
+	m_constraints.push_back(ret);
+
+	return ret;
+}
+
 void FieldComposite::set_used_rand(bool used_rand, int32_t level) {
 	Field::set_used_rand(used_rand, level);
 	for (std::vector<FieldSP>::const_iterator it=m_children.begin();

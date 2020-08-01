@@ -41,7 +41,27 @@ public:
 
 	const std::vector<FieldSP> &children() const { return m_children; }
 
-	void add_field(FieldSP f) { m_children.push_back(f); }
+	FieldSP add_field(FieldSP f) {
+		m_children.push_back(f);
+		return f;
+	}
+
+	FieldSP addField(FieldSP f) {
+		m_children.push_back(f);
+		return f;
+	}
+
+	FieldSP addField(Field *f) {
+		FieldSP ret(f);
+		m_children.push_back(ret);
+		return ret;
+	}
+
+	void addConstraint(ConstraintBlockSP c) { m_constraints.push_back(c); }
+
+	ConstraintBlockSP addConstraint(
+			const std::string						&name,
+			std::initializer_list<ConstraintStmt *> c);
 
 	const std::vector<ConstraintBlockSP> &constraints() const { return m_constraints; }
 
@@ -59,6 +79,8 @@ private:
 	// ...
 
 };
+
+typedef std::shared_ptr<FieldComposite> FieldCompositeSP;
 
 } /* namespace vsc */
 

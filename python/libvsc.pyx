@@ -45,26 +45,54 @@ cdef extern from "vsc.h" namespace "vsc":
         ConstraintStmtSP(ConstraintStmt *)
         ConstraintStmt *get()
         
+    cdef cppclass ConstraintExpr(ConstraintStmt):
+        ConstraintExpr(ExprSP)
+        
     cdef cppclass ConstraintScope(ConstraintStmt):
         ConstraintScope()
         void addConstraint(ConstraintStmtSP)
         
     cdef cppclass ConstraintBlock(ConstraintScope):
         ConstraintBlock(cpp_string)
+        void enabled(bool)
+        bool enabled()
+#    cdef ConstraintBlockSP toConstraintBlock "vsc::ConstraintBlock::toBlock"(ConstraintStmtSP)
+    cdef ConstraintBlockSP toConstraintBlock "std::dynamic_pointer_cast<vsc::ConstraintBlock>"(ConstraintStmtSP)
         
+    cdef cppclass ConstraintBlockSP:
+        ConstraintBlockSP()
+        ConstraintBlockSP(ConstraintBlock *)
+        ConstraintBlock *get()
+
 cdef class ConstraintStmtModel(object):
     cdef ConstraintStmtSP       hndl;
 
     def __init__(self):
         pass
     
+cdef class ConstraintExprModel(ConstraintStmtModel):
+    cdef ExprModel  expr
+
+    def __init__(self, ExprModel expr):
+        self.hndl = ConstraintStmtSP(new ConstraintExpr(expr.hndl))
+        self.expr = expr
+    
 cdef class ConstraintScopeModel(ConstraintStmtModel):
     def __init__(self):
+        super().__init__()
         self.hndl = ConstraintStmtSP(new ConstraintScope())
+        
+    cpdef addConstraint(self, ConstraintStmtModel c):
+        cdef ConstraintScope *s = (<ConstraintScope *>self.hndl.get())
+        s.addConstraint(c.hndl)
     
 cdef class ConstraintBlockModel(ConstraintScopeModel):
     def __init__(self, name):
+        super().__init__()
         self.hndl = ConstraintStmtSP(new ConstraintBlock(name.encode()))
+    cpdef setEnabled(self, bool e):
+        cdef ConstraintBlock *c = (<ConstraintBlock *>self.hndl.get())
+        c.enabled(e)
 
     
 
@@ -92,7 +120,8 @@ cdef extern from "vsc.h" namespace "vsc":
         FieldComposite(
             const cpp_string        &name,
             bool                    is_rand)
-        void add_field(FieldSP field)
+        void addField(FieldSP)
+        void addConstraint(ConstraintBlockSP) 
         
     cdef cppclass FieldScalar(Field):
         FieldScalar(
@@ -134,6 +163,9 @@ cdef class FieldModel(object):
     def val(self, v):
         raise NotImplementedError("FieldModel.val not implemented")
     
+    cpdef accept(self, ModelVisitor v):
+        raise NotImplementedError("accept not implemented in class " + str(type(self)))
+    
 
 cdef class FieldCompositeModel(FieldModel):
     def __init__(
@@ -142,9 +174,16 @@ cdef class FieldCompositeModel(FieldModel):
             bool         is_rand):
         self.hndl = FieldSP(new FieldComposite(name.encode(), is_rand))
         
-    def add_field(self, FieldModel f):
+    cpdef addField(self, FieldModel f):
         cdef FieldComposite *c = (<FieldComposite *>self.hndl.get())
-        c.add_field(f.hndl)
+        c.addField(f.hndl)
+        
+    cpdef addConstraint(self, ConstraintBlockModel c):
+        cdef FieldComposite *fc = (<FieldComposite *>self.hndl.get())
+        fc.addConstraint(toConstraintBlock(c.hndl))
+        
+    cpdef accept(self, ModelVisitor v):
+        v.visitFieldComposite(self);
 
 
 cdef class FieldScalarModel(FieldModel):
@@ -159,8 +198,8 @@ cdef class FieldScalarModel(FieldModel):
         
     @property
     def val(self):
-        ret = ExprValNumericModel()
-        ret.hndl = self.hndl.get().val()
+        cdef ExprValNumeric *v = (<ExprValNumeric *>self.hndl.get().val().get())
+        ret = ExprValNumericModel(v.val_u(), v.is_signed(), v.width())
         return ret
 
     @val.setter
@@ -227,6 +266,9 @@ cdef extern from "vsc.h" namespace "vsc":
     cdef cppclass ExprUnary(Expr):
         ExprUnary(ExprUnaryOp op, ExprSP rhs)
         
+    cdef cppclass ExprValLiteral(Expr):
+        ExprValLiteral(ExprValSP)
+        
     cdef enum ExprValType "vsc::ExprValType":
         Numeric "vsc::ValType_Numeric"
         
@@ -238,7 +280,7 @@ cdef extern from "vsc.h" namespace "vsc":
         ExprValSP(ExprVal *)
         ExprVal *get()
 
-    cdef cppclass ExprValNumeric:
+    cdef cppclass ExprValNumeric(ExprVal):
         ExprValNumeric(
             uint64_t    val,
             uint32_t    width,
@@ -307,6 +349,13 @@ cdef class ExprUnaryModel(ExprModel):
     def __init__(self, ExprUnaryOp op, ExprModel rhs):
         self.hndl = ExprSP(new ExprUnary(op, rhs.hndl)) 
         self.op = op
+        
+cdef class ExprValLiteralModel(ExprModel):
+    cdef ExprValModel        val
+    
+    def __init__(self, ExprValModel val):
+        self.hndl = ExprSP(new ExprValLiteral(val.hndl))
+        self.val  = val
 
 cdef class ExprValModel():
     cdef ExprValSP       hndl
@@ -315,8 +364,8 @@ cdef class ExprValModel():
         pass
         
 cdef class ExprValNumericModel(ExprValModel):
-    def __init__(self):
-        ExprValModel.__init__(self)
+    def __init__(self, uint64_t val, bool is_signed, int width):
+        self.hndl = ExprValSP(new ExprValNumeric(val, is_signed, width))
         
     def __int__(self):
         cdef ExprValNumeric *v = (<ExprValNumeric *>self.hndl.get())
@@ -340,13 +389,26 @@ cdef class Randomizer(object):
         cdef cpp_vector[FieldSP] fields_v;
         cdef cpp_vector[ConstraintStmtSP] constraints_v;
         cdef FieldModel fm
+        cdef ConstraintStmtModel cm
         cdef IRandomizer *rand = RandomizerFactory.inst()
-#        cdef cpp_vector[ConstraintStmtSP] constraints_v;
 
+        # Convert to vectors of native type
         for f in fields:
             fm = f
             fields_v.push_back(fm.hndl)
             
+        for c in constraints:
+            cm = c
+            constraints_v.push_back(cm.hndl)
+            
         if not rand.randomize(fields_v, constraints_v):
             raise Exception("solve failure")
-    
+
+#********************************************************************
+#* Visitor
+#********************************************************************
+cdef class ModelVisitor(object):
+
+    def visitFieldComposite(self, FieldCompositeModel f):
+        pass
+

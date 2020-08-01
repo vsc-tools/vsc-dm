@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,18 +28,39 @@
 
 namespace vsc {
 
-ConstraintBlock::ConstraintBlock(const std::string	&name) : m_name(name) {
+ConstraintBlock::ConstraintBlock(const std::string	&name) :
+		m_name(name), m_enabled(true) {
 
 }
 
 ConstraintBlock::ConstraintBlock(
-		const std::string							&name,
-		std::initializer_list<ConstraintStmt *>		stmts) : ConstraintScope(stmts), m_name(name) {
+		std::initializer_list<ConstraintStmt *>		stmts) :
+				ConstraintScope(stmts), m_name(""), m_enabled(true) {
+}
 
+ConstraintBlock::ConstraintBlock(
+		const std::string							&name,
+		std::initializer_list<ConstraintStmt *>		stmts) :
+				ConstraintScope(stmts), m_name(name), m_enabled(true) {
 }
 
 ConstraintBlock::~ConstraintBlock() {
 	// TODO Auto-generated destructor stub
+}
+
+ConstraintBlockSP ConstraintBlock::toBlock(ConstraintStmtSP c) {
+	return std::dynamic_pointer_cast<ConstraintBlock>(c);
+}
+
+ConstraintBlockSP ConstraintBlock::mk(
+		std::initializer_list<ConstraintStmt *>	c) {
+	return ConstraintBlockSP(new ConstraintBlock(c));
+}
+
+ConstraintBlockSP ConstraintBlock::mk(
+			const std::string						&name,
+			std::initializer_list<ConstraintStmt *>	c) {
+	return ConstraintBlockSP(new ConstraintBlock(name, c));
 }
 
 } /* namespace vsc */

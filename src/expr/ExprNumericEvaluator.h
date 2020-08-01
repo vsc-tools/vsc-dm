@@ -40,6 +40,8 @@ public:
 
 	ExprValSP eval(Expr *e);
 
+	ExprValSP operator ()(Expr *e) { return eval(e); }
+
 	ExprValNumericSP eval_num(Expr *e);
 
 	virtual void visitExprBin(ExprBin *e) override;

@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -41,6 +40,10 @@ public:
 	virtual bool randomize(
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintStmtSP>		&constraints) = 0;
+
+	virtual bool randomize(
+			std::initializer_list<FieldSP>			fields,
+			std::initializer_list<ConstraintStmtSP>	constraints) = 0;
 
 };
 

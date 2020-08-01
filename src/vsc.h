@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,6 +31,7 @@
 /********************************************************************
  * Datamodel
  ********************************************************************/
+#include "datamodel/EnumTypeInfo.h"
 #include "datamodel/Field.h"
 #include "datamodel/FieldComposite.h"
 #include "datamodel/FieldScalar.h"
@@ -48,6 +48,7 @@
 #include "expr/ExprNumericLiteral.h"
 #include "expr/ExprRangelist.h"
 #include "expr/ExprUnary.h"
+#include "expr/ExprValLiteral.h"
 #include "expr/ExprValNumeric.h"
 
 /********************************************************************

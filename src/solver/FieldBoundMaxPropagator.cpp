@@ -26,13 +26,14 @@
 
 #include "FieldBoundMaxPropagator.h"
 
-#include "../expr/ExprNumericEvaluator.h"
+#include "expr/ExprNumericEvaluator.h"
 
 namespace vsc {
 
 FieldBoundMaxPropagator::FieldBoundMaxPropagator(
 		FieldBoundInfo 		*info,
 		ExprSP				max_e) : FieldBoundPropagator(info), m_max_e(max_e) {
+	fprintf(stdout, "FieldBoundMaxPropagator: %p\n", max_e.get());
 
 }
 
@@ -43,7 +44,6 @@ FieldBoundMaxPropagator::~FieldBoundMaxPropagator() {
 void FieldBoundMaxPropagator::propagate() {
 	ExprNumericEvaluator eval;
 	ExprValNumericSP max_v = eval.eval_num(m_max_e.get());
-
 
 	domain_t &domain = m_info->domain();
 	int32_t i=domain.size()-1;

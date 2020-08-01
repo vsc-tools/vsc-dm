@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,6 +31,9 @@
 
 namespace vsc {
 
+class ConstraintBlock;
+typedef std::shared_ptr<ConstraintBlock> ConstraintBlockSP;
+
 class ConstraintBlock : public ConstraintScope {
 public:
 	ConstraintBlock(const std::string				&name);
@@ -40,18 +42,33 @@ public:
 			const std::string						&name,
 			std::initializer_list<ConstraintStmt *>	constraints);
 
+	ConstraintBlock(
+			std::initializer_list<ConstraintStmt *>	constraints);
+
 	virtual ~ConstraintBlock();
 
 	const std::string &name() const { return m_name; }
 
+	void enabled(bool e) { m_enabled = e; }
+
+	bool enabled() const { return m_enabled; }
+
+	static ConstraintBlockSP toBlock(ConstraintStmtSP c);
+
 	virtual void accept(IVisitor *v) { v->visitConstraintBlock(this); }
+
+	static ConstraintBlockSP mk(std::initializer_list<ConstraintStmt *>	c);
+
+	static ConstraintBlockSP mk(
+			const std::string						&name,
+			std::initializer_list<ConstraintStmt *>	c);
 
 private:
 	std::string					m_name;
+	bool						m_enabled;
 
 };
 
-typedef std::shared_ptr<ConstraintBlock> ConstraintBlockSP;
 
 } /* namespace vsc */
 

@@ -45,7 +45,11 @@ public:
 
 	virtual bool randomize(
 			const std::vector<FieldSP>				&fields,
-			const std::vector<ConstraintStmtSP>		&constraints);
+			const std::vector<ConstraintStmtSP>		&constraints) override;
+
+	virtual bool randomize(
+			std::initializer_list<FieldSP>			fields,
+			std::initializer_list<ConstraintStmtSP>	constraints) override;
 
 private:
 
