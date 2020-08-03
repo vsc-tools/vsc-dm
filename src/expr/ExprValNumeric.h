@@ -57,9 +57,13 @@ public:
 
 	virtual void val(uint64_t v) { m_val = v; }
 
-	virtual bool eq(ExprValNumeric *rhs);
+	virtual bool eq(ExprValSP rhs) override;
 
-	virtual bool ne(ExprValNumeric *rhs);
+	virtual bool eq(ExprVal *rhs) override;
+
+	virtual bool ne(ExprValSP rhs) override;
+
+	virtual bool ne(ExprVal *rhs) override;
 
 	virtual bool gt(ExprValNumeric *rhs);
 
@@ -88,6 +92,12 @@ public:
 	virtual ExprValNumericSP sll(ExprValNumeric *rhs);
 
 	virtual ExprValNumericSP srl(ExprValNumeric *rhs);
+
+	virtual std::string toString() const;
+
+	virtual void accept(IVisitor *v) { v->visitExprValNumeric(this); }
+
+	static ExprValNumericSP mk(uint64_t val, uint32_t width, bool is_signed);
 
 	static ExprValNumericSP			ZERO;
 	static ExprValNumericSP			ONE;

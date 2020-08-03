@@ -244,16 +244,21 @@ void SolverInstBoolector::visitExprFieldRef(ExprFieldRef *e) {
 
 }
 
-void SolverInstBoolector::visitExprNumericLiteral(ExprNumericLiteral *e) {
+void SolverInstBoolector::visitExprValLiteral(ExprValLiteral *e) {
 	switch (m_op) {
 	case Op_CreateConstraint: {
-		char tmp[65];
-		for (uint32_t i=0; i<64; i++) {
-			tmp[63-i] = (e->val_u() & (1ULL << i))?'1':'0';
+		switch (e->val()->type()) {
+		case ValType_Numeric: {
+			char tmp[65];
+			uint64_t val = static_cast<ExprValNumeric *>(e->val().get())->val_u();
+			for (uint32_t i=0; i<64; i++) {
+				tmp[63-i] = (val & (1ULL << i))?'1':'0';
+			}
+			tmp[64] = 0;
+			m_node = boolector_const(m_btor, tmp);
+			m_is_signed = false;
+		} break;
 		}
-		tmp[64] = 0;
-		m_node = boolector_const(m_btor, tmp);
-		m_is_signed = false;
 	} break;
 	}
 }

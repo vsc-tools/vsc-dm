@@ -26,6 +26,7 @@
 
 #pragma once
 #include <memory>
+#include "IAccept.h"
 
 namespace vsc {
 
@@ -34,7 +35,10 @@ enum ExprValType {
 	ValType_Numeric,
 };
 
-class ExprVal {
+class ExprVal;
+typedef std::shared_ptr<ExprVal> ExprValSP;
+
+class ExprVal : public IAccept {
 public:
 	ExprVal(ExprValType type);
 
@@ -42,12 +46,21 @@ public:
 
 	ExprValType type() const { return m_type; }
 
+	virtual bool eq(ExprValSP o) = 0;
+
+	virtual bool eq(ExprVal *o) = 0;
+
+	virtual bool ne(ExprValSP o) = 0;
+
+	virtual bool ne(ExprVal *o) = 0;
+
+	virtual std::string toString() const = 0;
+
 private:
 	ExprValType			m_type;
 
 };
 
-typedef std::shared_ptr<ExprVal> ExprValSP;
 
 } /* namespace vsc */
 

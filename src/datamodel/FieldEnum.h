@@ -21,6 +21,7 @@ public:
 	virtual ~FieldEnum();
 
 private:
+	EnumTypeInfoSP					m_info;
 
 };
 

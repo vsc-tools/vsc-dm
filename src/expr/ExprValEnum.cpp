@@ -20,4 +20,10 @@ ExprValEnum::~ExprValEnum() {
 	// TODO Auto-generated destructor stub
 }
 
+std::string ExprValEnum::toString() const {
+	// TODO:
+//	return m_info->;
+	return "unknown";
+}
+
 } /* namespace vsc */

@@ -41,4 +41,8 @@ ExprFieldRef::~ExprFieldRef() {
 	// TODO Auto-generated destructor stub
 }
 
+ExprSP ExprFieldRef::mk(FieldSP field) {
+	return ExprSP(new ExprFieldRef(field));
+}
+
 } /* namespace vsc */

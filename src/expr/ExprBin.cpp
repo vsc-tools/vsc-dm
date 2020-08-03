@@ -47,4 +47,8 @@ ExprBin::~ExprBin() {
 	// TODO Auto-generated destructor stub
 }
 
+ExprSP ExprBin::mk(ExprSP lhs, ExprBinOp op, ExprSP rhs) {
+	return ExprSP(new ExprBin(lhs, op, rhs));
+}
+
 } /* namespace vsc */

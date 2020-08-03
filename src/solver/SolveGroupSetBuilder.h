@@ -48,6 +48,8 @@ public:
 
 	virtual void visitConstraintBlock(ConstraintBlock *c) override;
 
+	virtual void visitConstraintExpr(ConstraintExpr *c) override;
+
 	virtual void visitConstraintStmtEnter(ConstraintStmt *c) override;
 
 	virtual void visitConstraintStmtLeave(ConstraintStmt *c) override;
@@ -64,6 +66,7 @@ protected:
 
 private:
 	uint32_t							m_pass;
+	uint32_t							m_depth;
 	bool								m_used_rand;
 	std::set<Field *>					m_field_s;
 	ConstraintStmt						*m_active_constraint;

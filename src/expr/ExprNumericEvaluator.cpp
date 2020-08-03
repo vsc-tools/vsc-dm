@@ -50,12 +50,8 @@ ExprValNumericSP ExprNumericEvaluator::eval_num(Expr *e) {
 }
 
 void ExprNumericEvaluator::visitExprBin(ExprBin *e) {
-	fprintf(stdout, "--> lhs\n");
 	ExprValSP lhs = _eval(e->lhs());
-	fprintf(stdout, "<-- lhs\n");
-	fprintf(stdout, "--> rhs\n");
 	ExprValSP rhs = _eval(e->rhs());
-	fprintf(stdout, "<-- rhs\n");
 
 	// TODO: determine required argument types
 	// - numeric
@@ -123,12 +119,10 @@ void ExprNumericEvaluator::visitExprBin(ExprBin *e) {
 
 void ExprNumericEvaluator::visitExprFieldRef(ExprFieldRef *e) {
 	m_val = static_cast<FieldScalar *>(e->field())->val_num();
-	fprintf(stdout, "visitExprFieldRef: %p\n", m_val.get());
 }
 
-void ExprNumericEvaluator::visitExprNumericLiteral(ExprNumericLiteral *e) {
-	m_val = e->val_num();
-	fprintf(stdout, "visitExprNumericLiteral: %p\n", m_val.get());
+void ExprNumericEvaluator::visitExprValLiteral(ExprValLiteral *e) {
+	m_val = std::dynamic_pointer_cast<ExprValNumeric>(e->val());
 }
 
 ExprValSP ExprNumericEvaluator::_eval(ExprSP e) {

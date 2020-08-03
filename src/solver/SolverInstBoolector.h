@@ -69,7 +69,7 @@ public:
 
 	virtual void visitExprFieldRef(ExprFieldRef *e) override;
 
-	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
+	virtual void visitExprValLiteral(ExprValLiteral *e) override;
 
 	virtual void visitFieldScalar(FieldScalar *f) override;
 

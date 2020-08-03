@@ -29,7 +29,7 @@
 
 namespace vsc {
 
-SolveGroupSetBuilder::SolveGroupSetBuilder() {
+SolveGroupSetBuilder::SolveGroupSetBuilder() : m_pass(0), m_depth(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -42,8 +42,11 @@ SolveGroupSet *SolveGroupSetBuilder::build(
 		const std::vector<FieldSP>				&fields,
 		const std::vector<ConstraintStmtSP>		&constraints) {
 
+	m_active_solvegroup = 0;
+
 	// First, collect all fields
 	m_pass = 0;
+	m_depth = 0;
 	for (std::vector<FieldSP>::const_iterator it=fields.begin();
 			it!=fields.end(); it++) {
 		(*it)->accept(this);
@@ -88,17 +91,25 @@ void SolveGroupSetBuilder::visitConstraintBlock(ConstraintBlock *c) {
 	}
 }
 
+void SolveGroupSetBuilder::visitConstraintExpr(ConstraintExpr *c) {
+	visitConstraintStmtEnter(c);
+	VisitorBase::visitConstraintExpr(c);
+	visitConstraintStmtLeave(c);
+}
+
 void SolveGroupSetBuilder::visitConstraintStmtEnter(ConstraintStmt *c) {
-	if (m_pass == 1 && m_constraint_l.size() == 1) {
+	if (m_pass == 1 && m_depth == 0) {
 		// Need to make this a UP?
 		m_active_solvegroup = 0;
 	}
+	m_depth++;
 	m_constraint_l.push_back(c);
 }
 
 void SolveGroupSetBuilder::visitConstraintStmtLeave(ConstraintStmt *c) {
 	m_constraint_l.pop_back();
-	if (m_pass == 1 && m_constraint_l.size() == 1) {
+	m_depth--;
+	if (m_pass == 1 && m_depth == 0) {
 		if (m_active_solvegroup) {
 			m_active_solvegroup->addConstraint(c);
 		}
@@ -120,9 +131,7 @@ void SolveGroupSetBuilder::process_fieldref(Field *f) {
 
 		if (!m_active_solvegroup) {
 			m_active_solvegroup = ex_group;
-		} else {
-			assert(m_active_solvegroup != ex_group);
-
+		} else if (m_active_solvegroup != ex_group) {
 			for (std::set<Field *>::const_iterator it=m_active_solvegroup->fields().begin();
 					it!=m_active_solvegroup->fields().end(); it++) {
 				// Relink fields to the new consolidated solvegroup

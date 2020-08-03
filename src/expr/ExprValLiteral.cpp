@@ -39,5 +39,13 @@ ExprValLiteral::~ExprValLiteral() {
 	// TODO Auto-generated destructor stub
 }
 
+ExprSP ExprValLiteral::mk(ExprVal *v) {
+	return ExprSP(new ExprValLiteral(v));
+}
+
+ExprSP ExprValLiteral::mk(ExprValSP v) {
+	return ExprSP(new ExprValLiteral(v));
+}
+
 }
 

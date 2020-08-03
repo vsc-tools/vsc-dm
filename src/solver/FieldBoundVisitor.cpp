@@ -177,7 +177,7 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 					ExprSP(new ExprBin(
 							e->rhs(),
 							BinOp_Sub,
-							ExprNumericLiteral::ONE)));
+							ExprValLiteral::mk(ExprValNumeric::ONE))));
 		} break;
 		case BinOp_Le: {
 			propagator = new FieldBoundMaxPropagator(
@@ -190,7 +190,7 @@ void FieldBoundVisitor::visitExprBin(ExprBin *e) {
 					ExprSP(new ExprBin(
 							e->rhs(),
 							BinOp_Add,
-							ExprNumericLiteral::ONE)));
+							ExprValLiteral::mk(ExprValNumeric::ONE))));
 		} break;
 		case BinOp_Ge: {
 			propagator = new FieldBoundMinPropagator(

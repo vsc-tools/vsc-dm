@@ -41,11 +41,13 @@ class ExprCond;
 class ExprDynamicConstraintRef;
 class ExprFieldRef;
 class ExprListSubscript;
-class ExprNumericLiteral;
 class ExprRange;
 class ExprRangelist;
 class ExprUnary;
 class ExprValLiteral;
+
+class ExprValEnum;
+class ExprValNumeric;
 
 class FieldComposite;
 class FieldScalar;
@@ -79,8 +81,6 @@ public:
 
 	virtual void visitExprListSubscript(ExprListSubscript *e) = 0;
 
-	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) = 0;
-
 	virtual void visitExprRange(ExprRange *e) = 0;
 
 	virtual void visitExprRangelist(ExprRangelist *e) = 0;
@@ -88,6 +88,10 @@ public:
 	virtual void visitExprUnary(ExprUnary *e) = 0;
 
 	virtual void visitExprValLiteral(ExprValLiteral *e) = 0;
+
+	virtual void visitExprValEnum(ExprValEnum *e) = 0;
+
+	virtual void visitExprValNumeric(ExprValNumeric *e) = 0;
 
 	virtual void visitFieldComposite(FieldComposite *f) = 0;
 

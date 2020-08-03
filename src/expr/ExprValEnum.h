@@ -25,6 +25,10 @@ public:
 
 	int64_t val() const { return m_val; }
 
+	virtual std::string toString() const;
+
+	virtual void accept(IVisitor *v) { v->visitExprValEnum(this); }
+
 private:
 	EnumTypeInfo				*m_info;
 	int64_t						m_val;

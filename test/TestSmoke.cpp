@@ -42,7 +42,6 @@ TestSmoke::~TestSmoke() {
 }
 
 TEST_F(TestSmoke, smoke) {
-	fprintf(stdout, "Hello\n");
 	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
@@ -75,7 +74,6 @@ TEST_F(TestSmoke, smoke) {
 }
 
 TEST_F(TestSmoke, smoke_2var) {
-	fprintf(stdout, "Hello\n");
 	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
 	vsc::FieldScalarSP b(new vsc::FieldScalar("b", 32, false, true));
 
@@ -98,9 +96,8 @@ TEST_F(TestSmoke, smoke_2var) {
 	uint32_t *hist_b = (uint32_t *)alloca(sizeof(uint32_t)*9);
 	memset(hist_b, 0, sizeof(uint32_t)*9);
 
-	for (uint32_t i=0; i<40; i++) {
+	for (uint32_t i=0; i<60; i++) {
 		randomizer->randomize(fields, constraints);
-		fprintf(stdout, "a=%lld\n", a->val_num()->val_s());
 		hist_a[a->val_num()->val_u()-1]++;
 		hist_b[b->val_num()->val_u()-1]++;
 		ASSERT_GT(a->val_num()->val_u(), 0);
@@ -131,7 +128,6 @@ TEST_F(TestSmoke, smoke_2var) {
 
 
 TEST_F(TestSmoke, smoke_wider) {
-	fprintf(stdout, "Hello\n");
 	vsc::FieldScalarSP a(new vsc::FieldScalar("a", 32, false, true));
 
 	vsc::IRandomizer *randomizer = RandomizerFactory::inst();
@@ -214,7 +210,7 @@ TEST_F(TestSmoke, perf2) {
 		constraints.push_back(c);
 	}
 
-	uint32_t count = 1000;
+	uint32_t count = 100;
 	uint64_t start = TestUtil::time_ms();
 	for (uint32_t i=0; i<count; i++) {
 		randomizer->randomize(fields, constraints);

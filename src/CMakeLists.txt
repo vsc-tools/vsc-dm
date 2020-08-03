@@ -13,6 +13,7 @@ target_include_directories(vsc PUBLIC
     "${PROJECT_SOURCE_DIR}/src/datamodel"
     "${PROJECT_SOURCE_DIR}/src/expr"
     "${PROJECT_SOURCE_DIR}/src/solver"
+    "${PROJECT_SOURCE_DIR}/src/util"
     ${Boolector_INCLUDE_DIR}
     )
 target_link_libraries(vsc ${Boolector_LIBRARIES})

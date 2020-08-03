@@ -32,6 +32,9 @@
 
 namespace vsc {
 
+class ConstraintExpr;
+typedef std::shared_ptr<ConstraintExpr> ConstraintExprSP;
+
 class ConstraintExpr : public ConstraintStmt {
 public:
 	ConstraintExpr(Expr *expr);
@@ -44,11 +47,12 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitConstraintExpr(this); }
 
+	static ConstraintExprSP mk(ExprSP e);
+
 private:
 	ExprSP				m_expr;
 };
 
-typedef std::shared_ptr<ConstraintExpr> ConstraintExprSP;
 
 } /* namespace vsc */
 

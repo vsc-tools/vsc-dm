@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,6 +38,10 @@ ConstraintExpr::ConstraintExpr(ExprSP expr) : m_expr(expr) {
 
 ConstraintExpr::~ConstraintExpr() {
 	// TODO Auto-generated destructor stub
+}
+
+ConstraintExprSP ConstraintExpr::mk(ExprSP e) {
+	return ConstraintExprSP(new ConstraintExpr(e));
 }
 
 } /* namespace vsc */

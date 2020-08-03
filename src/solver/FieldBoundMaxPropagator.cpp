@@ -33,7 +33,6 @@ namespace vsc {
 FieldBoundMaxPropagator::FieldBoundMaxPropagator(
 		FieldBoundInfo 		*info,
 		ExprSP				max_e) : FieldBoundPropagator(info), m_max_e(max_e) {
-	fprintf(stdout, "FieldBoundMaxPropagator: %p\n", max_e.get());
 
 }
 

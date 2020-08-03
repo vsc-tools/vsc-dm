@@ -43,4 +43,12 @@ FieldScalar::~FieldScalar() {
 	// TODO Auto-generated destructor stub
 }
 
+FieldScalarSP FieldScalar::mk(
+			const std::string 	&name,
+			int32_t				width,
+			bool				is_signed,
+			bool				is_rand) {
+	return FieldScalarSP(new FieldScalar(name, width, is_signed, is_rand));
+}
+
 } /* namespace vsc */

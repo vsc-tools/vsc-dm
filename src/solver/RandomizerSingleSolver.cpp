@@ -304,20 +304,20 @@ ExprSP RandomizerSingleSolver::create_rand_domain_constraint(
 					new ExprBin(
 							new ExprFieldRef(field),
 							BinOp_Ge,
-							new ExprNumericLiteral(
+							new ExprValLiteral(
 									new ExprValNumeric(min, 64, false))),
 					BinOp_And,
 					new ExprBin(
 							new ExprFieldRef(field),
 							BinOp_Le,
-							new ExprNumericLiteral(
+							new ExprValLiteral(
 									new ExprValNumeric(max, 64, false)))
 					));
 		} else { // Single value
 			ret = ExprSP(new ExprBin(
 					new ExprFieldRef(field),
 					BinOp_Eq,
-					new ExprNumericLiteral(
+					new ExprValLiteral(
 							new ExprValNumeric(single_val, 32, false))
 					));
 		}
@@ -325,12 +325,10 @@ ExprSP RandomizerSingleSolver::create_rand_domain_constraint(
 		// Small range size. Just select a single value
 		uint32_t target_val = rng.randint_u(range.first->val_u(), range.second->val_u());
 
-		fprintf(stdout, "target=%d\n", target_val);
-
 		ret = ExprSP(new ExprBin(
 				new ExprFieldRef(field),
 				BinOp_Eq,
-				new ExprNumericLiteral(
+				new ExprValLiteral(
 						new ExprValNumeric(target_val, 32, false))
 				));
 	}

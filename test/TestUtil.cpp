@@ -80,7 +80,7 @@ vsc::Expr *TestUtil::Gt(FieldScalarSP field, uint64_t val) {
 	return new vsc::ExprBin(
 			new vsc::ExprFieldRef(field.get()),
 			BinOp_Gt,
-			new vsc::ExprNumericLiteral(
+			new vsc::ExprValLiteral(
 					ExprValNumericSP(new vsc::ExprValNumeric(val, 64, false)))
 	);
 }
@@ -96,7 +96,7 @@ vsc::Expr *TestUtil::Lt(FieldScalarSP field, uint64_t val) {
 	return new vsc::ExprBin(
 			new vsc::ExprFieldRef(field.get()),
 			BinOp_Lt,
-			new vsc::ExprNumericLiteral(
+			new vsc::ExprValLiteral(
 					ExprValNumericSP(new ExprValNumeric(val, 64, false))));
 }
 

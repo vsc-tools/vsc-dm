@@ -28,12 +28,13 @@
 #include <string>
 #include <memory>
 #include "IVisitor.h"
+#include "IAccept.h"
 #include "expr/ExprVal.h"
 #include "solver/ISolverData.h"
 
 namespace vsc {
 
-class Field {
+class Field : public IAccept {
 public:
 
 	Field(const std::string &name, bool is_rand);
@@ -75,8 +76,6 @@ public:
 	virtual void post_randomize() { }
 
 	virtual void set_used_rand(bool used_rand, int32_t level=0);
-
-	virtual void accept(IVisitor *v) = 0;
 
 protected:
 	std::string				m_name;

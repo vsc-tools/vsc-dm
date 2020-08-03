@@ -43,6 +43,8 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitExprFieldRef(this); }
 
+	static ExprSP mk(FieldSP field);
+
 private:
 	FieldSP				m_field_sp;
 	Field				*m_field;

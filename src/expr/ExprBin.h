@@ -52,6 +52,11 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitExprBin(this); }
 
+	static ExprSP mk(
+			ExprSP		lhs,
+			ExprBinOp	op,
+			ExprSP		rhs);
+
 private:
 	ExprSP				m_lhs;
 	ExprBinOp			m_op;

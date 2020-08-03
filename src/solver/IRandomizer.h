@@ -41,9 +41,11 @@ public:
 			const std::vector<FieldSP>				&fields,
 			const std::vector<ConstraintStmtSP>		&constraints) = 0;
 
+	/*
 	virtual bool randomize(
 			std::initializer_list<FieldSP>			fields,
 			std::initializer_list<ConstraintStmtSP>	constraints) = 0;
+			 */
 
 };
 

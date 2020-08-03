@@ -30,6 +30,9 @@
 
 namespace vsc {
 
+class FieldScalar;
+typedef std::shared_ptr<FieldScalar> FieldScalarSP;
+
 class FieldScalar : public Field {
 public:
 	FieldScalar(
@@ -58,11 +61,16 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitFieldScalar(this); }
 
+	static FieldScalarSP mk(
+			const std::string 	&name,
+			int32_t				width,
+			bool				is_signed,
+			bool				is_rand);
+
 private:
 	ExprValNumericSP				m_val;
 
 };
-typedef std::shared_ptr<FieldScalar> FieldScalarSP;
 
 } /* namespace vsc */
 

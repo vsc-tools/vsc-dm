@@ -49,7 +49,7 @@ public:
 
 	virtual bool randomize(
 			std::initializer_list<FieldSP>			fields,
-			std::initializer_list<ConstraintStmtSP>	constraints) override;
+			std::initializer_list<ConstraintStmtSP>	constraints) /*override*/;
 
 private:
 

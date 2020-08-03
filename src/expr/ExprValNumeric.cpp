@@ -47,12 +47,24 @@ ExprValNumeric::~ExprValNumeric() {
 	// TODO Auto-generated destructor stub
 }
 
-bool ExprValNumeric::eq(ExprValNumeric *rhs) {
-	return m_val == rhs->m_val;
+bool ExprValNumeric::eq(ExprValSP rhs) {
+	return (rhs->type() == ValType_Numeric &&
+			m_val == static_cast<ExprValNumeric *>(rhs.get())->m_val);
 }
 
-bool ExprValNumeric::ne(ExprValNumeric *rhs) {
-	return m_val != rhs->m_val;
+bool ExprValNumeric::eq(ExprVal *rhs) {
+	return (rhs->type() == ValType_Numeric &&
+			m_val == static_cast<ExprValNumeric *>(rhs)->m_val);
+}
+
+bool ExprValNumeric::ne(ExprValSP rhs) {
+	return (rhs->type() == ValType_Numeric &&
+			m_val != static_cast<ExprValNumeric *>(rhs.get())->m_val);
+}
+
+bool ExprValNumeric::ne(ExprVal *rhs) {
+	return (rhs->type() == ValType_Numeric &&
+			m_val != static_cast<ExprValNumeric *>(rhs)->m_val);
 }
 
 bool ExprValNumeric::gt(ExprValNumeric *rhs) {
@@ -211,6 +223,16 @@ ExprValNumericSP ExprValNumeric::srl(ExprValNumeric *rhs) {
 			val_u() >> rhs->val_u(),
 			(rhs->width()>width())?rhs->width():width(),
 			false));
+}
+
+std::string ExprValNumeric::toString() const {
+	char tmp[32];
+	sprintf(tmp, "%lld", m_val);
+	return tmp;
+}
+
+ExprValNumericSP ExprValNumeric::mk(uint64_t val, uint32_t width, bool is_signed) {
+	return ExprValNumericSP(new ExprValNumeric(val, width, is_signed));
 }
 
 ExprValNumericSP ExprValNumeric::ZERO(new ExprValNumeric(0, 8, true));

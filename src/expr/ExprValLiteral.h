@@ -41,6 +41,10 @@ public:
 
 	virtual void accept(IVisitor *v) { v->visitExprValLiteral(this); }
 
+	static ExprSP mk(ExprVal *v);
+
+	static ExprSP mk(ExprValSP v);
+
 private:
 	ExprValSP				m_val;
 

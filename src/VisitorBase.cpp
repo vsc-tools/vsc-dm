@@ -100,10 +100,6 @@ void VisitorBase::visitExprListSubscript(ExprListSubscript *e) {
 	e->rhs()->accept(this);
 }
 
-void VisitorBase::visitExprNumericLiteral(ExprNumericLiteral *e) {
-	(void)e;
-}
-
 void VisitorBase::visitExprRange(ExprRange *e) {
 	e->lhs()->accept(this);
 	e->rhs()->accept(this);
@@ -121,6 +117,14 @@ void VisitorBase::visitExprUnary(ExprUnary *e) {
 }
 
 void VisitorBase::visitExprValLiteral(ExprValLiteral *e) {
+	e->val()->accept(this);
+}
+
+void VisitorBase::visitExprValEnum(ExprValEnum *e) {
+
+}
+
+void VisitorBase::visitExprValNumeric(ExprValNumeric *e) {
 
 }
 

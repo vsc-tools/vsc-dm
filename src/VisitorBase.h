@@ -41,11 +41,13 @@
 #include "expr/ExprDynamicConstraintRef.h"
 #include "expr/ExprFieldRef.h"
 #include "expr/ExprListSubscript.h"
-#include "expr/ExprNumericLiteral.h"
 #include "expr/ExprRange.h"
 #include "expr/ExprRangelist.h"
 #include "expr/ExprUnary.h"
 #include "expr/ExprValLiteral.h"
+
+#include "expr/ExprValEnum.h"
+#include "expr/ExprValNumeric.h"
 
 namespace vsc {
 
@@ -80,8 +82,6 @@ public:
 
 	virtual void visitExprListSubscript(ExprListSubscript *e) override;
 
-	virtual void visitExprNumericLiteral(ExprNumericLiteral *e) override;
-
 	virtual void visitExprRange(ExprRange *e) override;
 
 	virtual void visitExprRangelist(ExprRangelist *e) override;
@@ -89,6 +89,10 @@ public:
 	virtual void visitExprUnary(ExprUnary *e) override;
 
 	virtual void visitExprValLiteral(ExprValLiteral *e) override;
+
+	virtual void visitExprValEnum(ExprValEnum *e) override;
+
+	virtual void visitExprValNumeric(ExprValNumeric *e) override;
 
 	virtual void visitFieldComposite(FieldComposite *f) override;
 

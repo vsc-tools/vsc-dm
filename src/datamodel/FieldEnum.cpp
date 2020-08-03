@@ -9,7 +9,10 @@
 
 namespace vsc {
 
-FieldEnum::FieldEnum() {
+FieldEnum::FieldEnum(
+		const std::string	&name,
+		bool				is_rand,
+		EnumTypeInfo		*info) : Field(name, is_rand), m_info(info) {
 	// TODO Auto-generated constructor stub
 
 }
