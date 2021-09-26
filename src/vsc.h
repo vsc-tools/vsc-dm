@@ -23,37 +23,25 @@
 /********************************************************************
  * Constraints
  ********************************************************************/
-#include "constraints/ConstraintBlock.h"
-#include "constraints/ConstraintExpr.h"
-#include "constraints/ConstraintIf.h"
-#include "constraints/ConstraintSoft.h"
-
-/********************************************************************
- * Datamodel
- ********************************************************************/
-#include "datamodel/EnumTypeInfo.h"
-#include "datamodel/Field.h"
-#include "datamodel/FieldComposite.h"
-#include "datamodel/FieldScalar.h"
-
-/********************************************************************
- * Expr
- ********************************************************************/
-#include "expr/ExprBin.h"
-#include "expr/ExprCond.h"
-#include "expr/ExprDynamicConstraintRef.h"
-#include "expr/ExprFieldRef.h"
-#include "expr/ExprIn.h"
-#include "expr/ExprListSubscript.h"
-#include "expr/ExprRangelist.h"
-#include "expr/ExprUnary.h"
-#include "expr/ExprValLiteral.h"
-#include "expr/ExprValNumeric.h"
-
-/********************************************************************
- * Solver
- ********************************************************************/
-#include "solver/RandomizerFactory.h"
+#include "sav/ConstraintBlock.h"
+#include "sav/ConstraintExpr.h"
+#include "sav/ConstraintIf.h"
+#include "sav/ConstraintSoft.h"
+#include "sav/EnumTypeInfo.h"
+#include "sav/ExprBin.h"
+#include "sav/ExprCond.h"
+#include "sav/ExprDynamicConstraintRef.h"
+#include "sav/ExprFieldRef.h"
+#include "sav/ExprIn.h"
+#include "sav/ExprListSubscript.h"
+#include "sav/ExprRangelist.h"
+#include "sav/ExprUnary.h"
+#include "sav/ExprValInt.h"
+#include "sav/ExprValLiteral.h"
+#include "sav/Field.h"
+#include "sav/FieldComposite.h"
+#include "sav/FieldScalar.h"
+#include "sav/RandomizerFactory.h"
 
  
  

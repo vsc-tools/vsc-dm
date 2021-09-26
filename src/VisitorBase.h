@@ -24,30 +24,9 @@
  *      Author: ballance
  */
 
-#ifndef SRC_VISITORBASE_H_
-#define SRC_VISITORBASE_H_
+#pragma once
 #include "IVisitor.h"
-
-#include "constraints/ConstraintBlock.h"
-#include "constraints/ConstraintExpr.h"
-#include "constraints/ConstraintIf.h"
-#include "constraints/ConstraintScope.h"
-#include "constraints/ConstraintSoft.h"
-#include "datamodel/FieldComposite.h"
-#include "datamodel/FieldScalar.h"
-
-#include "expr/ExprBin.h"
-#include "expr/ExprCond.h"
-#include "expr/ExprDynamicConstraintRef.h"
-#include "expr/ExprFieldRef.h"
-#include "expr/ExprListSubscript.h"
-#include "expr/ExprRange.h"
-#include "expr/ExprRangelist.h"
-#include "expr/ExprUnary.h"
-#include "expr/ExprValLiteral.h"
-
-#include "expr/ExprValEnum.h"
-#include "expr/ExprValNumeric.h"
+#include "TypeField.h"
 
 namespace vsc {
 
@@ -58,47 +37,9 @@ public:
 
 	virtual ~VisitorBase();
 
-	virtual void visitConstraintBlock(ConstraintBlock *c) override;
+	virtual void visitTypeField(TypeField *f) override;
 
-	virtual void visitConstraintIf(ConstraintIf *c) override;
-
-	virtual void visitConstraintScope(ConstraintScope *c) override;
-
-	virtual void visitConstraintSoft(ConstraintSoft *c) override;
-
-	virtual void visitConstraintStmtEnter(ConstraintStmt *c) override;
-
-	virtual void visitConstraintStmtLeave(ConstraintStmt *c) override;
-
-	virtual void visitConstraintExpr(ConstraintExpr *c) override;
-
-	virtual void visitExprBin(ExprBin *e) override;
-
-	virtual void visitExprCond(ExprCond *e) override;
-
-	virtual void visitExprDynamicConstraintRef(ExprDynamicConstraintRef *e) override;
-
-	virtual void visitExprFieldRef(ExprFieldRef *e) override;
-
-	virtual void visitExprListSubscript(ExprListSubscript *e) override;
-
-	virtual void visitExprRange(ExprRange *e) override;
-
-	virtual void visitExprRangelist(ExprRangelist *e) override;
-
-	virtual void visitExprUnary(ExprUnary *e) override;
-
-	virtual void visitExprValLiteral(ExprValLiteral *e) override;
-
-	virtual void visitExprValEnum(ExprValEnum *e) override;
-
-	virtual void visitExprValNumeric(ExprValNumeric *e) override;
-
-	virtual void visitFieldComposite(FieldComposite *f) override;
-
-	virtual void visitFieldScalar(FieldScalar *f) override;
 };
 
 } /* namespace vsc */
 
-#endif /* SRC_VISITORBASE_H_ */

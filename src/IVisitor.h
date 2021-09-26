@@ -29,73 +29,14 @@
 
 namespace vsc {
 
-class ConstraintBlock;
-class ConstraintIf;
-class ConstraintScope;
-class ConstraintSoft;
-class ConstraintStmt;
-class ConstraintExpr;
-
-class ExprBin;
-class ExprCond;
-class ExprDynamicConstraintRef;
-class ExprFieldRef;
-class ExprListSubscript;
-class ExprRange;
-class ExprRangelist;
-class ExprUnary;
-class ExprValLiteral;
-
-class ExprValEnum;
-class ExprValNumeric;
-
-class FieldComposite;
-class FieldScalar;
+class TypeField;
 
 class IVisitor {
 public:
 
 	virtual ~IVisitor() { }
 
-	virtual void visitConstraintBlock(ConstraintBlock *c) = 0;
-
-	virtual void visitConstraintIf(ConstraintIf *c) = 0;
-
-	virtual void visitConstraintScope(ConstraintScope *c) = 0;
-
-	virtual void visitConstraintSoft(ConstraintSoft *c) = 0;
-
-	virtual void visitConstraintStmtEnter(ConstraintStmt *c) = 0;
-
-	virtual void visitConstraintStmtLeave(ConstraintStmt *c) = 0;
-
-	virtual void visitConstraintExpr(ConstraintExpr *c) = 0;
-
-	virtual void visitExprBin(ExprBin *e) = 0;
-
-	virtual void visitExprCond(ExprCond *e) = 0;
-
-	virtual void visitExprDynamicConstraintRef(ExprDynamicConstraintRef *e) = 0;
-
-	virtual void visitExprFieldRef(ExprFieldRef *e) = 0;
-
-	virtual void visitExprListSubscript(ExprListSubscript *e) = 0;
-
-	virtual void visitExprRange(ExprRange *e) = 0;
-
-	virtual void visitExprRangelist(ExprRangelist *e) = 0;
-
-	virtual void visitExprUnary(ExprUnary *e) = 0;
-
-	virtual void visitExprValLiteral(ExprValLiteral *e) = 0;
-
-	virtual void visitExprValEnum(ExprValEnum *e) = 0;
-
-	virtual void visitExprValNumeric(ExprValNumeric *e) = 0;
-
-	virtual void visitFieldComposite(FieldComposite *f) = 0;
-
-	virtual void visitFieldScalar(FieldScalar *f) = 0;
+	virtual void visitTypeField(TypeField *f) = 0;
 
 };
 

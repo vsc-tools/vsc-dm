@@ -33,10 +33,13 @@ set_target_properties(libgmock PROPERTIES
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     )
     
-include_directories("${source_dir}/googletest/include"
-				"${source_dir}/googlemock/include")
+include_directories(
+	"${source_dir}/googletest/include"
+	"${source_dir}/googlemock/include"
+	"${source_dir}/src/facade"
+	)
 
-file(GLOB_RECURSE test_libvsc_SRC
+file(GLOB test_libvsc_SRC
   "*.h"
   "*.cpp"
   )
@@ -44,7 +47,16 @@ file(GLOB_RECURSE test_libvsc_SRC
 add_executable(test_libvsc ${test_libvsc_SRC})
 target_include_directories(test_libvsc PUBLIC
     "${source_dir}/googletest/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/facade"
     )
-target_link_libraries(test_libvsc vsc libgtest libgmock ${Boolector_LIBRARIES})
+target_link_directories(test_libvsc PRIVATE
+    ${CMAKE_BINARY_DIR}/lib
+    ${CMAKE_BINARY_DIR}/lib64
+    )
+target_link_libraries(test_libvsc 
+	vsc 
+	libgtest 
+	libgmock
+	)
 
 gtest_discover_tests(test_libvsc)
