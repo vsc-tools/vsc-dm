@@ -9,7 +9,8 @@
 
 namespace vsc {
 
-ModelFieldType::ModelFieldType(TypeField *type) : m_type(type) {
+ModelFieldType::ModelFieldType(TypeField *type) :
+		ModelField(type->type()), m_type(type) {
 	// TODO Auto-generated constructor stub
 
 }

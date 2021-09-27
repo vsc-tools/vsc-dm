@@ -23,6 +23,8 @@ public:
 
 	virtual DataType *datatype() const { return m_type->type(); }
 
+	virtual void accept(IVisitor *v) { v->visitModelFieldType(this); }
+
 protected:
 	TypeField					*m_type;
 

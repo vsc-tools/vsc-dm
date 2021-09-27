@@ -25,8 +25,9 @@
  *      Author: ballance
  */
 
-#include "SolverBoolector.h"
 #include "boolector/boolector.h"
+#include "SolverBoolector.h"
+#include "SolverBoolectorModelBuilder.h"
 
 
 namespace vsc {
@@ -35,6 +36,9 @@ SolverBoolector::SolverBoolector() {
 	m_btor = boolector_new();
 	boolector_set_opt(m_btor, BTOR_OPT_INCREMENTAL, 1);
 	boolector_set_opt(m_btor, BTOR_OPT_MODEL_GEN, 1);
+
+	m_issat = false;
+	m_issat_valid = false;
 
 #ifdef UNDEFINED
 	m_op = Op_CreateField; // throwaway
@@ -59,38 +63,82 @@ SolverBoolector::~SolverBoolector() {
 
 	// Creates solver data for a field
 void SolverBoolector::initField(ModelField *f) {
-	// TODO:
+	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
+
+	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
+		BoolectorNode *node = SolverBoolectorModelBuilder(this).build(f);
+		m_field_node_m.insert({f, node});
+	}
 }
 
 	// Creates solver data for a constraint
 void SolverBoolector::initConstraint(ModelConstraint *c) {
-	// TODO:
+	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
+
+	if ((it=m_constraint_node_m.find(c)) == m_constraint_node_m.end()) {
+		BoolectorNode *node = SolverBoolectorModelBuilder(this).build(c);
+		m_constraint_node_m.insert({c, node});
+	}
 }
 
 void SolverBoolector::addAssume(ModelConstraint *c) {
-#ifdef UNDEFINED
-	boolector_assume(m_btor,
-			static_cast<SolverDataBoolector *>(c->solver_data())->node());
-#endif
+	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
+
+	it = m_constraint_node_m.find(c);
+	// TODO: assert ) == m_field_node_m.end()) {
+
+	m_issat_valid = false;
+	boolector_assume(m_btor, it->second);
 }
 
 void SolverBoolector::addAssert(ModelConstraint *c) {
-#ifdef UNDEFINED
-	boolector_assert(m_btor,
-			static_cast<SolverDataBoolector *>(c->solver_data())->node());
-#endif
+	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
+
+	it = m_constraint_node_m.find(c);
+
+	// TODO: assert
+
+	m_issat_valid = false;
+	boolector_assert(m_btor, it->second);
 }
 
 bool SolverBoolector::isSAT() {
-#ifdef UNDEFINED
-	int res = boolector_sat(m_btor);
 
-	return (res == BTOR_RESULT_SAT);
-#endif
+	if (!m_issat_valid) {
+		m_issat = (boolector_sat(m_btor) == BTOR_RESULT_SAT);
+		m_issat_valid = true;
+	}
+
+	return m_issat;
 }
 
-void SolverBoolector::finalizeField(ModelField *f) {
+void SolverBoolector::setFieldValue(ModelField *f) {
+	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
+
+	it = m_field_node_m.find(f);
+
+	// TODO: assert
+
+	const char *bits = boolector_bv_assignment(m_btor, it->second);
+	ModelVal &val = f->val();
+
+	fprintf(stdout, "bits: %s\n", bits);
+
+	boolector_free_bv_assignment(m_btor, bits);
+
 	// TODO:
+}
+
+BoolectorSort SolverBoolector::get_sort(int32_t width) {
+	std::unordered_map<uint32_t, BoolectorSort>::const_iterator it;
+
+	if ((it=m_sort_m.find(width)) != m_sort_m.end()) {
+		return it->second;
+	} else {
+		BoolectorSort sort = boolector_bitvec_sort(m_btor, width);
+		m_sort_m.insert({width, sort});
+		return sort;
+	}
 }
 
 } /* namespace vsc */

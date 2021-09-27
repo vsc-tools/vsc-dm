@@ -37,6 +37,28 @@ VisitorBase::~VisitorBase() {
 	// TODO Auto-generated destructor stub
 }
 
+void VisitorBase::visitDataTypeInt(DataTypeInt *t) {
+
+}
+
+void VisitorBase::visitDataTypeStruct(DataTypeStruct *t) {
+
+}
+
+void VisitorBase::visitModelField(ModelField *f) {
+	f->datatype()->accept(this);
+}
+
+void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {
+	visitModelField(f);
+
+}
+
+void VisitorBase::visitModelFieldType(ModelFieldType *f) {
+	visitModelField(f);
+
+}
+
 void VisitorBase::visitTypeField(TypeField *f) {
 }
 

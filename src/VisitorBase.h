@@ -25,7 +25,11 @@
  */
 
 #pragma once
+#include "DataTypeInt.h"
+#include "DataTypeStruct.h"
 #include "IVisitor.h"
+#include "ModelFieldRoot.h"
+#include "ModelFieldType.h"
 #include "TypeField.h"
 
 namespace vsc {
@@ -36,6 +40,16 @@ public:
 	VisitorBase();
 
 	virtual ~VisitorBase();
+
+	virtual void visitDataTypeInt(DataTypeInt *t) override;
+
+	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
+
+	virtual void visitModelField(ModelField *f) override;
+
+	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
+
+	virtual void visitModelFieldType(ModelFieldType *f) override;
 
 	virtual void visitTypeField(TypeField *f) override;
 

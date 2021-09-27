@@ -20,6 +20,8 @@ public:
 
 	virtual ~DataTypeInt();
 
+	virtual void accept(IVisitor *v) { v->visitDataTypeInt(this); }
+
 protected:
 	bool					m_is_signed;
 	int32_t					m_width;

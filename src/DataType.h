@@ -7,13 +7,14 @@
 
 #pragma once
 #include <memory>
+#include "IAccept.h"
 #include "ModelVal.h"
 
 namespace vsc {
 
 class DataType;
 typedef std::unique_ptr<DataType> DataTypeUP;
-class DataType {
+class DataType : public virtual IAccept {
 public:
 	DataType();
 

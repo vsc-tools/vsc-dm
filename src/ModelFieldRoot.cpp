@@ -11,7 +11,7 @@ namespace vsc {
 
 ModelFieldRoot::ModelFieldRoot(
 		DataType			*type,
-		const std::string	&name) : m_type(type), m_name(name) {
+		const std::string	&name) : ModelField(type), m_type(type), m_name(name) {
 	// TODO Auto-generated constructor stub
 
 }

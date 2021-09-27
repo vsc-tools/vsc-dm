@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "IAccept.h"
 #include "ModelConstraint.h"
 #include "ModelVal.h"
 #include "TypeField.h"
@@ -17,8 +18,10 @@ namespace vsc {
 
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;
-class ModelField {
+class ModelField : public IAccept {
 public:
+	ModelField(DataType *type);
+
 	ModelField();
 
 	virtual ~ModelField();
@@ -32,6 +35,10 @@ public:
 	void parent(ModelField *p) { m_parent = p; }
 
 	const std::vector<ModelFieldUP> &fields() const { return m_fields; }
+
+	const ModelVal &val() const { return m_val; }
+
+	ModelVal &val() { return m_val; }
 
 	const std::vector<ModelConstraintUP> &constraints() const {
 		return m_constraints;

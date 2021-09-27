@@ -13,7 +13,7 @@ namespace vsc {
 /**
  * Field instance based on a data type
  */
-class ModelFieldRoot {
+class ModelFieldRoot : public ModelField {
 public:
 	ModelFieldRoot(
 			DataType			*type,
@@ -25,6 +25,8 @@ public:
 	virtual const std::string &name() const { return m_name; }
 
 	virtual DataType *datatype() const { return m_type; }
+
+	virtual void accept(IVisitor *v) { v->visitModelFieldRoot(this); }
 
 protected:
 	DataType					*m_type;

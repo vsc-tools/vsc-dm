@@ -33,6 +33,9 @@
 
 struct BoolectorNode;
 struct Btor;
+struct BoolectorAnonymous;
+
+using BoolectorSort=BoolectorAnonymous *;
 
 namespace vsc {
 
@@ -43,6 +46,8 @@ public:
 	SolverBoolector();
 
 	virtual ~SolverBoolector();
+
+	Btor *btor() const { return m_btor; }
 
 	// Creates solver data for a field (and possibly sub-fields)
 	virtual void initField(ModelField *f) override;
@@ -56,18 +61,18 @@ public:
 
 	virtual bool isSAT() override;
 
-	virtual void finalizeField(ModelField *f) override;
+	virtual void setFieldValue(ModelField *f) override;
 
-private:
-
-//	BoolectorSort get_sort(int32_t width);
+	BoolectorSort get_sort(int32_t width);
 
 private:
 	Btor													*m_btor;
 
 	std::unordered_map<ModelField *,BoolectorNode *>		m_field_node_m;
 	std::unordered_map<ModelConstraint *,BoolectorNode *>	m_constraint_node_m;
-	std::unordered_map<uint32_t, uint32_t>					m_sort_m;
+	std::unordered_map<uint32_t, BoolectorSort>				m_sort_m;
+	bool													m_issat_valid;
+	bool													m_issat;
 
 };
 

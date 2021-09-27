@@ -29,12 +29,29 @@
 
 namespace vsc {
 
+class DataTypeInt;
+class DataTypeStruct;
+
+class ModelField;
+class ModelFieldRoot;
+class ModelFieldType;
+
 class TypeField;
 
 class IVisitor {
 public:
 
 	virtual ~IVisitor() { }
+
+	virtual void visitDataTypeInt(DataTypeInt *t) = 0;
+
+	virtual void visitDataTypeStruct(DataTypeStruct *t) = 0;
+
+	virtual void visitModelField(ModelField *f) = 0;
+
+	virtual void visitModelFieldRoot(ModelFieldRoot *f) = 0;
+
+	virtual void visitModelFieldType(ModelFieldType *f) = 0;
 
 	virtual void visitTypeField(TypeField *f) = 0;
 

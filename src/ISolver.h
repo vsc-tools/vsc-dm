@@ -54,7 +54,7 @@ public:
 	virtual bool isSAT() = 0;
 
 	// Assign a value to a scalar field
-	virtual void finalizeField(ModelField *f) = 0;
+	virtual void setFieldValue(ModelField *f) = 0;
 
 };
 
