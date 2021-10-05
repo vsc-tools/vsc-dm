@@ -27,7 +27,13 @@
 #pragma once
 #include "DataTypeInt.h"
 #include "DataTypeStruct.h"
+
+
 #include "IVisitor.h"
+
+#include "ModelExprBin.h"
+#include "ModelExprFieldRef.h"
+
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
 #include "TypeField.h"
@@ -44,6 +50,10 @@ public:
 	virtual void visitDataTypeInt(DataTypeInt *t) override;
 
 	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
+
+	virtual void visitModelExprBin(ModelExprBin *e) override;
+
+	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
 
 	virtual void visitModelField(ModelField *f) override;
 

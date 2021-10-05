@@ -26,6 +26,8 @@ public:
 
 	ModelExpr *rhs() const { return m_rhs.get(); }
 
+	virtual void accept(IVisitor *v) { v->visitModelExprBin(this); }
+
 private:
 	ModelExprUP					m_lhs;
 	BinOp						m_op;

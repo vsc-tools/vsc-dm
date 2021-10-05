@@ -25,6 +25,8 @@ public:
 
 	expr operator == (const expr &rhs);
 
+//	expr operator == (const attr_scalar &rhs);
+
 	int64_t val_s();
 
 	uint64_t val_u();
@@ -32,7 +34,6 @@ public:
 	void val_s(int64_t v);
 
 	void val_u(uint64_t v);
-
 
 };
 

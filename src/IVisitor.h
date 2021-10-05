@@ -32,6 +32,9 @@ namespace vsc {
 class DataTypeInt;
 class DataTypeStruct;
 
+class ModelExprBin;
+class ModelExprFieldRef;
+
 class ModelField;
 class ModelFieldRoot;
 class ModelFieldType;
@@ -46,6 +49,10 @@ public:
 	virtual void visitDataTypeInt(DataTypeInt *t) = 0;
 
 	virtual void visitDataTypeStruct(DataTypeStruct *t) = 0;
+
+	virtual void visitModelExprBin(ModelExprBin *e) = 0;
+
+	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) = 0;
 
 	virtual void visitModelField(ModelField *f) = 0;
 

@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include "ctor_ctxt.h"
+#include "ModelExpr.h"
 
 namespace vsc {
 
@@ -50,7 +51,14 @@ public:
 
 	void pop_expr_mode();
 
+	void push_expr(ModelExpr *e);
+
+	ModelExpr *expr();
+
+	ModelExpr *pop_expr();
+
 private:
+	std::vector<ModelExprUP>			m_expr_s;
 	std::vector<ctor_ctxt_up>			m_scope_s;
 	std::vector<bool>					m_expr_mode;
 	static std::unique_ptr<ctor>		m_inst;

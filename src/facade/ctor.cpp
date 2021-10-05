@@ -88,6 +88,22 @@ void ctor::pop_expr_mode() {
 	m_expr_mode.pop_back();
 }
 
+void ctor::push_expr(ModelExpr *e) {
+	m_expr_s.push_back(ModelExprUP(e));
+}
+
+ModelExpr *ctor::expr() {
+	return (m_expr_s.size())?m_expr_s.back().get():0;
+}
+
+ModelExpr *ctor::pop_expr() {
+	ModelExpr *ret = m_expr_s.back().release();
+
+	m_expr_s.pop_back();
+
+	return ret;
+}
+
 std::unique_ptr<ctor> ctor::m_inst;
 
 } /* namespace facade */

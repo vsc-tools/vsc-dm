@@ -19,6 +19,8 @@ public:
 
 	ModelField *field() const { return m_field; }
 
+	virtual void accept(IVisitor *v) { v->visitModelExprFieldRef(this); }
+
 private:
 	ModelField					*m_field;
 

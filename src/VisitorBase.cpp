@@ -45,6 +45,15 @@ void VisitorBase::visitDataTypeStruct(DataTypeStruct *t) {
 
 }
 
+void VisitorBase::visitModelExprBin(ModelExprBin *e) {
+	e->lhs()->accept(this);
+	e->rhs()->accept(this);
+}
+
+void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
+	e->field()->accept(this);
+}
+
 void VisitorBase::visitModelField(ModelField *f) {
 	f->datatype()->accept(this);
 }

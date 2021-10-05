@@ -8,6 +8,8 @@
 #include "attr_scalar.h"
 #include "rand_obj.h"
 #include "DataTypeInt.h"
+#include "ModelExprFieldRef.h"
+#include "ModelExprBin.h"
 #include "ctor.h"
 
 namespace vsc {
@@ -33,8 +35,18 @@ attr_scalar::~attr_scalar() {
 }
 
 expr attr_scalar::operator == (const expr &rhs) {
-	return expr(*this, rhs);
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Eq,
+			rhs_e));
 }
+
+/*
+expr attr_scalar::operator == (const attr_scalar &rhs) {
+	return expr(new ModelExprFieldRef(rhs.field()));
+}
+ */
 
 int64_t attr_scalar::val_s() {
 	int64_t ret = 0;

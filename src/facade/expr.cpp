@@ -5,22 +5,23 @@
  *      Author: mballance
  */
 
+#include "attr_scalar.h"
+#include "ctor.h"
 #include "expr.h"
+#include "ModelExprFieldRef.h"
 
 namespace vsc {
 namespace facade {
 
-expr::expr(const attr_scalar &attr) : m_fieldref(&attr) {
-	// TODO Auto-generated constructor stub
+expr::expr(const attr_scalar &attr) :
+		m_core(new ModelExprFieldRef(attr.field())) {
+	ctor::inst()->push_expr(m_core);
 
 }
 
-expr::expr(
-			const expr		&lhs,
-			const expr		&rhs) : m_fieldref(0) {
-	;
+expr::expr(ModelExpr *core) : m_core(core) {
+	ctor::inst()->push_expr(m_core);
 }
-
 
 expr::~expr() {
 	// TODO Auto-generated destructor stub

@@ -6,6 +6,7 @@
  */
 
 #include "TestFacadeSmoke.h"
+#include "ctor.h"
 
 using namespace vsc::facade;
 

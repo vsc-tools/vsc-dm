@@ -6,9 +6,14 @@
  */
 
 #pragma once
+#include <memory>
 #include <stdint.h>
+#include "ModelExpr.h"
 
 namespace vsc {
+
+class ModelExpr;
+using ModelExprUP=std::unique_ptr<ModelExpr>;
 namespace facade {
 
 class attr_scalar;
@@ -17,14 +22,13 @@ class expr {
 public:
 	expr(const attr_scalar &);
 
-	expr(
-			const expr		&lhs,
-			const expr		&rhs);
+	expr(ModelExpr *core);
 
 	virtual ~expr();
 
 private:
-	const attr_scalar			*m_fieldref;
+//	ModelExprUP					m_core;
+	ModelExpr					*m_core;
 };
 
 } /* namespace facade */
