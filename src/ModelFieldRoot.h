@@ -10,6 +10,9 @@
 
 namespace vsc {
 
+class ModelFieldRoot;
+using ModelFieldRootUP=std::unique_ptr<ModelFieldRoot>;
+
 /**
  * Field instance based on a data type
  */

@@ -27,6 +27,7 @@ TEST_F(TestModelSmoke, smoke) {
 	DataTypeInt *vsc_uint32_t = ctx.findIntType(false, 32);
 	ModelFieldRoot *a = new ModelFieldRoot(vsc_uint32_t, "a");
 	SolverBoolector *solver = new SolverBoolector();
+
 	solver->initField(a);
 	solver->isSAT();
 	solver->setFieldValue(a);

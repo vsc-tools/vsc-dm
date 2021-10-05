@@ -9,12 +9,12 @@
 
 namespace vsc {
 
-ModelVal::ModelVal() : m_type(0) {
+ModelVal::ModelVal() : m_type(0), m_val(0) {
 	// TODO Auto-generated constructor stub
 
 }
 
-ModelVal::ModelVal(DataType *type) : m_type(type) {
+ModelVal::ModelVal(DataType *type) : m_type(type), m_val(0) {
 
 }
 

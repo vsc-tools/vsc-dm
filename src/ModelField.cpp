@@ -22,4 +22,9 @@ ModelField::~ModelField() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelField::add_field(ModelField *field) {
+	field->parent(this);
+	m_fields.push_back(ModelFieldUP(field));
+}
+
 } /* namespace vsc */

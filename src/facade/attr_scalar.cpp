@@ -1,0 +1,57 @@
+/*
+ * attr_scalar.cpp
+ *
+ *  Created on: Aug 8, 2021
+ *      Author: mballance
+ */
+
+#include "attr_scalar.h"
+#include "rand_obj.h"
+#include "DataTypeInt.h"
+#include "ctor.h"
+
+namespace vsc {
+namespace facade {
+
+attr_scalar::attr_scalar(
+		bool				is_signed,
+		int32_t				width) {
+	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
+
+
+	if (m_parent) {
+		// Model belongs to the parent scope
+		parent()->field()->add_field(m_field);
+	} else {
+		// We own the field since there is no parent scope
+		m_field_u = ModelFieldRootUP(m_field);
+	}
+}
+
+attr_scalar::~attr_scalar() {
+	// TODO Auto-generated destructor stub
+}
+
+expr attr_scalar::operator == (const expr &rhs) {
+	return expr(*this, rhs);
+}
+
+int64_t attr_scalar::val_s() {
+	int64_t ret = 0;
+}
+
+uint64_t attr_scalar::val_u() {
+	;
+}
+
+void attr_scalar::val_s(int64_t v) {
+	;
+}
+
+void attr_scalar::val_u(uint64_t v) {
+	;
+}
+
+
+} /* namespace facade */
+} /* namespace vsc */

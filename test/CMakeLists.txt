@@ -55,6 +55,7 @@ target_link_directories(test_libvsc PRIVATE
     )
 target_link_libraries(test_libvsc 
 	vsc 
+	vsc_facade
 	libgtest 
 	libgmock
 	)

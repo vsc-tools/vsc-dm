@@ -23,4 +23,6 @@ target_link_libraries(vsc
 	)
 add_dependencies(vsc Boolector Bitwuzla)
 
+add_subdirectory(facade)
+
 

@@ -120,13 +120,40 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	// TODO: assert
 
 	const char *bits = boolector_bv_assignment(m_btor, it->second);
-	ModelVal &val = f->val();
+	ModelVal::iterator val_it = f->val().begin();
 
-	fprintf(stdout, "bits: %s\n", bits);
+	// Need to go
+	// - size-32*1..size-32*0-1
+	// - size-2*32..size-32*1-1
+	const uint32_t elem_w = 32;
+	int32_t size = boolector_get_width(m_btor, it->second);
+	int32_t it_idx = 0;
+	int32_t bidx_lim = size;
+
+	do {
+		uint32_t tval = 0;
+		int32_t bidx, bidx_lim_n;
+
+		if (size > elem_w*(it_idx+1)) {
+			bidx = size-(elem_w*(it_idx+1));
+		} else {
+			bidx = 0;
+		}
+
+		bidx_lim_n = bidx;
+		while (bidx < bidx_lim) {
+			tval <<= 1;
+			tval |= (bits[bidx] == '1')?1:0;
+			bidx++;
+		}
+		bidx_lim = bidx_lim_n;
+
+		val_it.append(tval);
+
+		it_idx++;
+	} while (elem_w*it_idx < size);
 
 	boolector_free_bv_assignment(m_btor, bits);
-
-	// TODO:
 }
 
 BoolectorSort SolverBoolector::get_sort(int32_t width) {

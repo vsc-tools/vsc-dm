@@ -36,6 +36,8 @@ public:
 
 	const std::vector<ModelFieldUP> &fields() const { return m_fields; }
 
+	void add_field(ModelField *field);
+
 	const ModelVal &val() const { return m_val; }
 
 	ModelVal &val() { return m_val; }
