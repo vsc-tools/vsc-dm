@@ -75,7 +75,8 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<unsigned int>	c {"c"};
 
 		constraint				ab_c {"ab_c", [&] {
-
+			a == b;
+			b == c;
 		}};
 	};
 
@@ -97,6 +98,37 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 	ASSERT_EQ(c.a.b.fullname(), "a.a.b");
 
 	c.randomize();
+}
+
+TEST_F(TestFacadeSmoke, constraint_inh) {
+
+	class MyBase : public rand_obj {
+	public:
+		MyBase(const scope &s) : rand_obj(this) { }
+
+		rand_attr<int>			base_a {"base_a"};
+		rand_attr<int>			base_b {"base_b"};
+
+		constraint				ab_c {"ab_c", [&] {
+			base_a == base_b;
+		}};
+	};
+
+	class MyC : public MyBase {
+	public:
+		MyC(const scope &s) : MyBase(this) { }
+
+		rand_attr<int>			a {"a"};
+		rand_attr<int>			b {"b"};
+		rand_attr<unsigned int>	c {"c"};
+
+		constraint				ab_c {"ab_c", [&] {
+			a == c;
+		}};
+	};
+
+	MyC c("z");
+
 }
 
 

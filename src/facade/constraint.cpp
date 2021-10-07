@@ -7,15 +7,22 @@
 
 #include "constraint.h"
 #include "rand_obj.h"
+#include "ctor.h"
 
 namespace vsc {
 namespace facade {
 
 constraint::constraint(
-		const scope						&s,
 		const std::function<void ()>	&body) {
-	// TODO Auto-generated constructor stub
+	rand_obj *scope = ctor::inst()->scope();
+	scope->add_constraint(this);
+}
 
+constraint::constraint(
+		const std::string				&name,
+		const std::function<void ()>	&body) : m_name(name) {
+	rand_obj *scope = ctor::inst()->scope();
+	scope->add_constraint(this);
 }
 
 constraint::~constraint() {

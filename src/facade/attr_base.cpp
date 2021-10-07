@@ -14,7 +14,13 @@ namespace facade {
 
 attr_base::attr_base() : m_field(0) {
 	m_name = ctor::inst()->scope_name();
-	m_parent = ctor::inst()->scope();
+	m_parent = ctor::inst()->scope(this);
+
+	if (m_parent == this) {
+		fprintf(stdout, "Note: this==parent\n");
+		m_parent = 0;
+	}
+	fprintf(stdout, "attr_base: %s %p\n", m_name.c_str(), m_parent);
 }
 
 attr_base::~attr_base() {

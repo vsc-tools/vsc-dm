@@ -6,6 +6,7 @@
  */
 
 #include "ctor.h"
+#include "rand_obj.h"
 
 namespace vsc {
 namespace facade {
@@ -31,19 +32,35 @@ void ctor::reset() {
 }
 
 std::string ctor::scope_name() {
-	return m_scope_s.back()->name();
+	std::string ret;
+	if (m_scope_s.size()) {
+		for (int32_t i=m_scope_s.size()-1; i>=0; i--) {
+			if (m_scope_s.at(i)->name() != "") {
+				ret = m_scope_s.at(i)->name();
+				break;
+			}
+		}
+	}
+	return ret;
 }
 
 ModelField * ctor::model_scope() {
 	return 0;
 }
 
-rand_obj *ctor::scope() {
-	if (m_scope_s.size() > 1) {
-		return m_scope_s.at(m_scope_s.size()-2)->scope();
-	} else {
-		return 0;
+rand_obj *ctor::scope(attr_base *s) {
+	rand_obj *ret = 0;
+	int32_t count = 0;
+	if (m_scope_s.size()) {
+		for (int32_t i=m_scope_s.size()-1; i>=0; i--) {
+			if (m_scope_s.at(i)->is_scope() &&
+					m_scope_s.at(i)->scope() != s) {
+				ret = m_scope_s.at(i)->scope();
+				break;
+			}
+		}
 	}
+	return ret;
 }
 
 void ctor::scope_ctor(
@@ -55,15 +72,16 @@ void ctor::scope_ctor(
 			// This is the first scope entry. Update the
 			// previous named entry
 			m_scope_s.back()->scope(scope);
-			m_scope_s.back()->ti(ti);
+			m_scope_s.back()->push_ti(ti);
+			m_scope_s.back()->is_scope(true);
 		} else if (m_scope_s.back()->scope() == scope) {
-			fprintf(stdout, "  TODO: ignore inheritance for now\n");
+			m_scope_s.back()->push_ti(ti);
 		} else {
 			fprintf(stdout, "  Error: unknown case\n");
 		}
 	} else {
 		// Name entry
-		m_scope_s.push_back(ctor_ctxt_up(new ctor_ctxt(name, 0, 0)));
+		m_scope_s.push_back(ctor_ctxt_up(new ctor_ctxt(name, 0)));
 	}
 }
 
@@ -71,7 +89,11 @@ void ctor::scope_dtor(
 			const std::string			&name,
 			rand_obj					*scope,
 			const std::type_info		*ti) {
+	fflush(stdout);
 	if (m_scope_s.back()->name() == name) {
+		if (m_scope_s.back()->scope()) {
+			m_scope_s.back()->scope()->build_constraints();
+		}
 		m_scope_s.pop_back();
 	}
 }

@@ -8,6 +8,7 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace vsc {
 namespace facade {
@@ -20,8 +21,7 @@ class ctor_ctxt {
 public:
 	ctor_ctxt(
 			const std::string		&name,
-			rand_obj				*scope,
-			const std::type_info	*ti);
+			rand_obj				*scope);
 
 	virtual ~ctor_ctxt();
 
@@ -33,14 +33,21 @@ public:
 
 	void scope(rand_obj *s) { m_scope = s; }
 
-	const std::type_info *ti() const { return m_ti; }
+	bool is_scope() const { return m_is_scope; }
 
-	void ti(const std::type_info *t) { m_ti = t; }
+	void is_scope(bool s) { m_is_scope = s; }
+
+	const std::type_info *ti() const;
+
+	void push_ti(const std::type_info *t);
+
+	void pop_ti();
 
 private:
-	std::string					m_name;
-	rand_obj					*m_scope;
-	const std::type_info		*m_ti;
+	std::string								m_name;
+	bool									m_is_scope;
+	rand_obj								*m_scope;
+	std::vector<const std::type_info *>		m_ti_s;
 
 };
 

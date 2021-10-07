@@ -18,6 +18,7 @@ class ModelField;
 namespace facade {
 
 class rand_obj;
+class attr_base;
 
 class ctor {
 public:
@@ -33,7 +34,7 @@ public:
 
 	std::string scope_name();
 
-	rand_obj *scope();
+	rand_obj *scope(attr_base *s=0);
 
 	void scope_ctor(
 			const std::string			&name,
@@ -44,6 +45,8 @@ public:
 			const std::string			&name,
 			rand_obj					*scope,
 			const std::type_info		*ti);
+
+	uint32_t scope_depth() const { return m_scope_s.size(); }
 
 	void push_expr_mode(bool expr_mode=true);
 
@@ -56,6 +59,8 @@ public:
 	ModelExpr *expr();
 
 	ModelExpr *pop_expr();
+
+	uint32_t expr_depth() const { return m_expr_s.size(); }
 
 private:
 	std::vector<ModelExprUP>			m_expr_s;
