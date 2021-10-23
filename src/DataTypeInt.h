@@ -20,6 +20,10 @@ public:
 
 	virtual ~DataTypeInt();
 
+	bool is_signed() const { return m_is_signed; }
+
+	int32_t width() const { return m_width; }
+
 	virtual void accept(IVisitor *v) { v->visitDataTypeInt(this); }
 
 protected:

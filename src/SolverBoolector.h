@@ -65,6 +65,11 @@ public:
 
 	BoolectorSort get_sort(int32_t width);
 
+	void addFieldData(ModelField *f, BoolectorNode *n);
+
+	BoolectorNode *findFieldData(ModelField *f);
+
+
 private:
 	Btor													*m_btor;
 

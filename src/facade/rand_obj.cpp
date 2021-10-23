@@ -8,8 +8,25 @@
 #include "rand_obj.h"
 #include "constraint.h"
 #include "ctor.h"
+#include "Debug.h"
 #include "ModelConstraintScope.h"
 #include "Randomizer.h"
+#include "SolverFactoryDefault.h"
+
+#define EN_DEBUG_RAND_OBJ
+
+#ifdef EN_DEBUG_RAND_OBJ
+#define DEBUG_ENTER(fmt, ...) \
+	DEBUG_ENTER_BASE(rand_obj, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) \
+	DEBUG_LEAVE_BASE(rand_obj, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) \
+	DEBUG_BASE(rand_obj, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
 
 namespace vsc {
 namespace facade {
@@ -33,7 +50,7 @@ rand_obj::~rand_obj() {
 
 bool rand_obj::randomize() {
 	RNG rng;
-	Randomizer randomizer(rng);
+	Randomizer randomizer(solver_factory(), rng);
 	std::vector<ModelField *> 		fields;
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
@@ -48,8 +65,25 @@ bool rand_obj::randomize() {
 
 bool rand_obj::randomize_with(
 		const std::function<void()> &body) {
+	RNG rng;
+	Randomizer randomizer(solver_factory(), rng);
+	std::vector<ModelField *> 		fields;
+	std::vector<ModelConstraint *> 	constraints;
+	bool diagnose_failures = false;
 
-	return false;
+	// Collect 'with' constraints
+	ModelConstraintScopeUP with_c(new ModelConstraintScope());
+	ctor::inst()->push_constraint_scope(with_c.get());
+	body();
+	ctor::inst()->pop_constraint_scope();
+
+	fields.push_back(field());
+	constraints.push_back(with_c.get());
+
+	return randomizer.randomize(
+			fields,
+			constraints,
+			diagnose_failures);
 }
 
 // Track constraints such that inheritance can be
@@ -93,7 +127,8 @@ void rand_obj::add_constraint(constraint *c) {
 
 void rand_obj::build_constraints() {
 	// First process sub-scopes
-	fprintf(stdout, "build_constraints: %d %d\n",
+	DEBUG_ENTER("build_constraints: %s n_constraints=%d n_constraint_ov=%d",
+			fullname().c_str(),
 			m_constraints.size(),
 			m_constraint_ov_s.size());
 	for (auto f : m_fields) {
@@ -110,6 +145,10 @@ void rand_obj::build_constraints() {
 			field()->add_constraint(c);
 		}
 	}
+	DEBUG_LEAVE("build_constraints: %s n_constraints=%d n_constraint_ov=%d",
+			fullname().c_str(),
+			m_constraints.size(),
+			m_constraint_ov_s.size());
 }
 
 void rand_obj::add_field(attr_base *f) {
@@ -117,6 +156,14 @@ void rand_obj::add_field(attr_base *f) {
 	m_fields.push_back(f);
 
 	m_field->add_field(f->field());
+}
+
+ISolverFactory *rand_obj::solver_factory() {
+	if (!m_solver_factory) {
+		// Initialize with the default factory
+		m_solver_factory = ISolverFactoryUP(new SolverFactoryDefault());
+	}
+	return m_solver_factory.get();
 }
 
 } /* namespace facade */

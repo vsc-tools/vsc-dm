@@ -27,7 +27,8 @@
 
 #include "boolector/boolector.h"
 #include "SolverBoolector.h"
-#include "SolverBoolectorModelBuilder.h"
+
+#include "SolverBoolectorSolveModelBuilder.h"
 
 
 namespace vsc {
@@ -66,8 +67,9 @@ void SolverBoolector::initField(ModelField *f) {
 	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
-		BoolectorNode *node = SolverBoolectorModelBuilder(this).build(f);
+		BoolectorNode *node = SolverBoolectorSolveModelBuilder(this).build(f);
 		m_field_node_m.insert({f, node});
+		m_issat_valid = false;
 	}
 }
 
@@ -76,8 +78,9 @@ void SolverBoolector::initConstraint(ModelConstraint *c) {
 	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
 
 	if ((it=m_constraint_node_m.find(c)) == m_constraint_node_m.end()) {
-		BoolectorNode *node = SolverBoolectorModelBuilder(this).build(c);
+		BoolectorNode *node = SolverBoolectorSolveModelBuilder(this).build(c);
 		m_constraint_node_m.insert({c, node});
+		m_issat_valid = false;
 	}
 }
 
@@ -165,6 +168,20 @@ BoolectorSort SolverBoolector::get_sort(int32_t width) {
 		BoolectorSort sort = boolector_bitvec_sort(m_btor, width);
 		m_sort_m.insert({width, sort});
 		return sort;
+	}
+}
+
+void SolverBoolector::addFieldData(ModelField *f, BoolectorNode *n) {
+	m_field_node_m.insert({f, n});
+}
+
+BoolectorNode *SolverBoolector::findFieldData(ModelField *f) {
+	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
+
+	if ((it=m_field_node_m.find(f)) != m_field_node_m.end()) {
+		return it->second;
+	} else {
+		return 0;
 	}
 }
 

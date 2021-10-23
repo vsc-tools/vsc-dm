@@ -187,7 +187,7 @@ void SolveSpecBuilder::process_fieldref(ModelField *f) {
 		}
 	} else {
 		// The field isn't current managed by a solveset
-		DEBUG("Not in an existing solve set");
+		DEBUG("Not in an existing solve set (active=%p)", m_active_solveset);
 
 		if (!m_active_solveset) {
 			m_active_solveset = new SolveSet();

@@ -20,6 +20,8 @@ public:
 
 	virtual ~ModelExprBin();
 
+	virtual int32_t width() const override { return m_width; }
+
 	ModelExpr *lhs() const { return m_lhs.get(); }
 
 	BinOp op() const { return m_op; }
@@ -32,6 +34,7 @@ private:
 	ModelExprUP					m_lhs;
 	BinOp						m_op;
 	ModelExprUP					m_rhs;
+	int32_t						m_width;
 };
 
 } /* namespace vsc */

@@ -34,6 +34,10 @@ public:
 		return m_all_fields;
 	}
 
+	const std::vector<ModelField *> &rand_fields() const {
+		return m_rand_fields;
+	}
+
 	const std::vector<ModelConstraint *> &constraints() const {
 		return m_constraints;
 	}

@@ -89,11 +89,11 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<int>			b {"b"};
 	};
 
-	MyC2 c("a");
+	MyC2 c("c");
 
-	ASSERT_EQ(c.fullname(), "a");
-	ASSERT_EQ(c.b.fullname(), "a.b");
-	ASSERT_EQ(c.a.b.fullname(), "a.a.b");
+	ASSERT_EQ(c.fullname(), "c");
+	ASSERT_EQ(c.b.fullname(), "c.b");
+	ASSERT_EQ(c.a.b.fullname(), "c.a.b");
 
 	c.randomize();
 }
@@ -130,6 +130,28 @@ TEST_F(TestFacadeSmoke, constraint_inh) {
 	MyC c("z");
 
 }
+
+TEST_F(TestFacadeSmoke, constraint_expr) {
+
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<int>			a {"a"};
+		rand_attr<int>			b {"b"};
+		rand_attr<unsigned int>	c {"c"};
+
+		constraint				ab_c {"ab_c", [&] {
+			a == c;
+		}};
+	};
+
+	MyC c("c");
+
+	c.randomize();
+
+}
+
 
 
 } /* namespace vsc */

@@ -15,6 +15,11 @@
 #include "scope.h"
 
 namespace vsc {
+
+class ISolver;
+class ISolverFactory;
+using ISolverFactoryUP=std::unique_ptr<ISolverFactory>;
+
 namespace facade {
 
 class constraint;
@@ -36,11 +41,15 @@ public:
 
 	void add_field(attr_base *f);
 
+protected:
+	ISolverFactory *solver_factory();
+
 private:
 	std::vector<attr_base *>					m_fields;
 	std::vector<constraint *>					m_constraints;
 	std::unordered_map<std::string,int32_t>		m_constraint_name_m;
 	std::unordered_set<int32_t>					m_constraint_ov_s;
+	ISolverFactoryUP							m_solver_factory;
 
 
 };

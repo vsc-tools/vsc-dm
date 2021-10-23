@@ -7,7 +7,20 @@
 
 #include "ctor.h"
 #include "rand_obj.h"
+#include "Debug.h"
 #include "ModelConstraintExpr.h"
+
+#define EN_DEBUG_CTOR
+
+#ifdef EN_DEBUG_CTOR
+#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(ctor, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(ctor, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) DEBUG_BASE(ctor, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
 
 namespace vsc {
 namespace facade {
@@ -68,6 +81,8 @@ void ctor::scope_ctor(
 			const std::string			&name,
 			rand_obj					*scope,
 			const std::type_info		*ti) {
+	DEBUG_ENTER("scope_ctor name=%s scope=%p ti=%p",
+			name.c_str(), scope, ti);
 	if (scope) {
 		if (m_scope_s.size() > 0 && !m_scope_s.back()->scope()) {
 			// This is the first scope entry. Update the
@@ -84,19 +99,26 @@ void ctor::scope_ctor(
 		// Name entry
 		m_scope_s.push_back(ctor_ctxt_up(new ctor_ctxt(name, 0)));
 	}
+	DEBUG_LEAVE("scope_ctor name=%s scope=%p ti=%p",
+			name.c_str(), scope, ti);
 }
 
 void ctor::scope_dtor(
 			const std::string			&name,
 			rand_obj					*scope,
 			const std::type_info		*ti) {
+	DEBUG_ENTER("scope_dtor name=%s scope=%p ti=%p",
+			name.c_str(), scope, ti);
 	fflush(stdout);
 	if (m_scope_s.back()->name() == name) {
+		DEBUG("Build constraints, since scope names match");
 		if (m_scope_s.back()->scope()) {
 			m_scope_s.back()->scope()->build_constraints();
 		}
 		m_scope_s.pop_back();
 	}
+	DEBUG_LEAVE("scope_dtor name=%s scope=%p ti=%p",
+			name.c_str(), scope, ti);
 }
 
 void ctor::push_expr_mode(bool expr_mode) {

@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 #pragma once
+#include "ISolverFactory.h"
 #include "ModelField.h"
 #include "ModelConstraint.h"
 #include "RNG.h"
@@ -13,7 +14,9 @@ namespace vsc {
 
 class Randomizer {
 public:
-	Randomizer(RNG &rng);
+	Randomizer(
+			ISolverFactory		*solver_factory,
+			RNG 				&rng);
 
 	virtual ~Randomizer();
 
@@ -24,7 +27,8 @@ public:
 			);
 
 private:
-	RNG				&m_rng;
+	ISolverFactory		*m_solver_factory;
+	RNG					&m_rng;
 
 };
 

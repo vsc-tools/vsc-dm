@@ -12,12 +12,23 @@ namespace vsc {
 enum class BinOp {
 	Eq,
 	Ne,
+	Gt,
+	Ge,
+	Lt,
+	Le,
 	Add,
 	Sub,
-	BinOr,
+	Div,
+	Mul,
+	Mod,
 	BinAnd,
-	LogOr,
+	BinOr,
 	LogAnd,
+	LogOr,
+	Sll,
+	Srl,
+	Xor,
+	Not
 };
 
 } /* namespace vsc */

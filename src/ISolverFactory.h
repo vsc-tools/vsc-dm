@@ -32,12 +32,16 @@
 
 namespace vsc {
 
+class SolveSet;
+
+class ISolverFactory;
+using ISolverFactoryUP=std::unique_ptr<ISolverFactory>;
 class ISolverFactory {
 public:
 	virtual ~ISolverFactory() { }
 
 	// Get a solver instance
-	virtual ISolver *createSolverInst() = 0;
+	virtual ISolver *createSolverInst(SolveSet *spec) = 0;
 
 };
 

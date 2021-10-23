@@ -24,7 +24,24 @@
  *      Author: ballance
  */
 
+#include "Debug.h"
 #include "VisitorBase.h"
+
+#define EN_DEBUG_VISITOR_BASE
+
+#ifdef EN_DEBUG_VISITOR_BASE
+DEBUG_SCOPE(VisitorBase)
+#define DEBUG_ENTER(fmt, ...) \
+	DEBUG_ENTER_BASE(VisitorBase, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) \
+	DEBUG_LEAVE_BASE(VisitorBase, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) \
+	DEBUG_BASE(VisitorBase, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
 
 namespace vsc {
 
@@ -50,31 +67,45 @@ void VisitorBase::visitModelConstraint(ModelConstraint *c) {
 }
 
 void VisitorBase::visitModelConstraintExpr(ModelConstraintExpr *c) {
+	DEBUG_ENTER("visitModelConstraintExpr");
 	visitModelConstraint(c);
 	c->expr()->accept(this);
+	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
 void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
+	DEBUG_ENTER("visitModelConstraintScope n=%d", c->constraints().size());
 	for (auto it=c->constraints().begin();
 			it!=c->constraints().end(); it++) {
 		(*it)->accept(this);
 	}
+	DEBUG_LEAVE("visitModelConstraintScope n=%d", c->constraints().size());
 }
 
 void VisitorBase::visitModelConstraintSoft(ModelConstraintSoft *c) {
+	DEBUG_ENTER("visitModelConstraintSoft");
 	c->constraint()->accept(this);
+	DEBUG_LEAVE("visitModelConstraintSoft");
 }
 
 void VisitorBase::visitModelExprBin(ModelExprBin *e) {
+	DEBUG_ENTER("visitModelExprBin");
 	e->lhs()->accept(this);
 	e->rhs()->accept(this);
+	DEBUG_LEAVE("visitModelExprBin");
 }
 
 void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
+	DEBUG_ENTER("visitModelExprFieldRef");
 	e->field()->accept(this);
+	DEBUG_LEAVE("visitModelExprFieldRef");
 }
 
 void VisitorBase::visitModelField(ModelField *f) {
+	DEBUG_ENTER("visitModelField %s n_fields=%d n_constraints=%d",
+			f->name().c_str(),
+			f->fields().size(),
+			f->constraints().size());
 	if (f->datatype()) {
 		f->datatype()->accept(this);
 	}
@@ -86,6 +117,10 @@ void VisitorBase::visitModelField(ModelField *f) {
 			it!=f->constraints().end(); it++) {
 		(*it)->accept(this);
 	}
+	DEBUG_LEAVE("visitModelField %s n_fields=%d n_constraints=%d",
+			f->name().c_str(),
+			f->fields().size(),
+			f->constraints().size());
 }
 
 void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {

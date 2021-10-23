@@ -30,6 +30,14 @@ public:
 
 	virtual ~SolveSpec();
 
+	const std::vector<SolveSetUP> &solvesets() const {
+		return m_solvesets;
+	}
+
+	const std::vector<ModelField *> &unconstrained() const {
+		return m_unconstrained;
+	}
+
 private:
 	std::vector<SolveSetUP>			m_solvesets;
 	std::vector<ModelField *>		m_unconstrained;
