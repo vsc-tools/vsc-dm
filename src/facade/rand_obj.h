@@ -32,12 +32,15 @@ public:
 
 	void add_constraint(constraint *c);
 
-	void build_constraints();
+	virtual void build_constraints();
+
+	void add_field(attr_base *f);
 
 private:
+	std::vector<attr_base *>					m_fields;
 	std::vector<constraint *>					m_constraints;
 	std::unordered_map<std::string,int32_t>		m_constraint_name_m;
-	std::unordered_set<int32_t>					m_constraint_en_s;
+	std::unordered_set<int32_t>					m_constraint_ov_s;
 
 
 };

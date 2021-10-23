@@ -7,6 +7,9 @@
 
 #include "rand_obj.h"
 #include "constraint.h"
+#include "ctor.h"
+#include "ModelConstraintScope.h"
+#include "Randomizer.h"
 
 namespace vsc {
 namespace facade {
@@ -17,9 +20,7 @@ rand_obj::rand_obj(const scope &s) {
 
 	if (m_parent) {
 		// Model belongs to the parent scope
-		fprintf(stdout, "[%s] parent=%p field=%p\n",
-				parent()->fullname().c_str(), parent(), parent()->field());
-		parent()->field()->add_field(m_field);
+		static_cast<rand_obj *>(parent())->add_field(this);
 	} else {
 		// We own the field since there is no parent scope
 		m_field_u = ModelFieldRootUP(m_field);
@@ -31,7 +32,18 @@ rand_obj::~rand_obj() {
 }
 
 bool rand_obj::randomize() {
-	return false;
+	RNG rng;
+	Randomizer randomizer(rng);
+	std::vector<ModelField *> 		fields;
+	std::vector<ModelConstraint *> 	constraints;
+	bool diagnose_failures = false;
+
+	fields.push_back(field());
+
+	return randomizer.randomize(
+			fields,
+			constraints,
+			diagnose_failures);
 }
 
 bool rand_obj::randomize_with(
@@ -61,7 +73,6 @@ void rand_obj::add_constraint(constraint *c) {
 	if (c->name() == "" || (it == m_constraint_name_m.end())) {
 		// Anonymous constraint or first entry
 		int32_t idx = m_constraints.size();
-		m_constraint_en_s.insert(idx);
 		m_constraints.push_back(c);
 		if (c->name() != "") {
 			m_constraint_name_m.insert({c->name(), idx});
@@ -70,18 +81,42 @@ void rand_obj::add_constraint(constraint *c) {
 		// Override
 		int32_t ex_idx = it->second;
 		int32_t new_idx = m_constraints.size();
+		m_constraints.push_back(c);
 		m_constraint_name_m.erase(it);
 		m_constraint_name_m.insert({c->name(), new_idx});
 
 		std::unordered_set<int32_t>::const_iterator s_it;
-		s_it = m_constraint_en_s.find(ex_idx);
-		m_constraint_en_s.erase(s_it);
-		m_constraint_en_s.insert(new_idx);
+		// Mark the existing index as an overridden one
+		m_constraint_ov_s.insert(ex_idx);
 	}
 }
 
 void rand_obj::build_constraints() {
-	;
+	// First process sub-scopes
+	fprintf(stdout, "build_constraints: %d %d\n",
+			m_constraints.size(),
+			m_constraint_ov_s.size());
+	for (auto f : m_fields) {
+		f->build_constraints();
+	}
+
+	for (uint32_t i=0; i<m_constraints.size(); i++) {
+		if (m_constraint_ov_s.find(i) == m_constraint_ov_s.end()) {
+			ctor::inst()->push_constraint_scope(new ModelConstraintScope());
+			ctor::inst()->push_expr_mode();
+			m_constraints.at(i)->body()();
+			ctor::inst()->pop_expr_mode();
+			ModelConstraintScope *c = ctor::inst()->pop_constraint_scope();
+			field()->add_constraint(c);
+		}
+	}
+}
+
+void rand_obj::add_field(attr_base *f) {
+	f->idx(m_fields.size());
+	m_fields.push_back(f);
+
+	m_field->add_field(f->field());
 }
 
 } /* namespace facade */

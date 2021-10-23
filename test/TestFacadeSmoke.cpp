@@ -74,7 +74,7 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<int>			b {"b"};
 		rand_attr<unsigned int>	c {"c"};
 
-		constraint				ab_c {"ab_c", [&] {
+		constraint				ab_c {"ab_c", [this] {
 			a == b;
 			b == c;
 		}};
@@ -90,8 +90,6 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 	};
 
 	MyC2 c("a");
-
-	c.a.a == c.a.b;
 
 	ASSERT_EQ(c.fullname(), "a");
 	ASSERT_EQ(c.b.fullname(), "a.b");
@@ -110,6 +108,7 @@ TEST_F(TestFacadeSmoke, constraint_inh) {
 		rand_attr<int>			base_b {"base_b"};
 
 		constraint				ab_c {"ab_c", [&] {
+			fprintf(stdout, "ab_c\n");
 			base_a == base_b;
 		}};
 	};
@@ -123,6 +122,7 @@ TEST_F(TestFacadeSmoke, constraint_inh) {
 		rand_attr<unsigned int>	c {"c"};
 
 		constraint				ab_c {"ab_c", [&] {
+			fprintf(stdout, "ab_c\n");
 			a == c;
 		}};
 	};

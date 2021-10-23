@@ -49,15 +49,25 @@ target_include_directories(test_libvsc PUBLIC
     "${source_dir}/googletest/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/facade"
     )
+   
 target_link_directories(test_libvsc PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
+    ${CMAKE_BINARY_DIR}/glog/lib64
     )
+  
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	set(libglog glogd)
+else()
+	set(libglog glog)
+endif()
+
 target_link_libraries(test_libvsc 
 	vsc 
 	vsc_facade
 	libgtest 
 	libgmock
+	${libglog}
 	)
 
 gtest_discover_tests(test_libvsc)

@@ -34,6 +34,12 @@ public:
 
 	void parent(ModelField *p) { m_parent = p; }
 
+	const std::vector<ModelConstraintUP> &constraints() const {
+		return m_constraints;
+	}
+
+	void add_constraint(ModelConstraint *c);
+
 	const std::vector<ModelFieldUP> &fields() const { return m_fields; }
 
 	void add_field(ModelField *field);
@@ -41,10 +47,6 @@ public:
 	const ModelVal &val() const { return m_val; }
 
 	ModelVal &val() { return m_val; }
-
-	const std::vector<ModelConstraintUP> &constraints() const {
-		return m_constraints;
-	}
 
 protected:
 	ModelField						*m_parent;

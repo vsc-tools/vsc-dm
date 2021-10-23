@@ -22,9 +22,14 @@ ModelField::~ModelField() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelField::add_constraint(ModelConstraint *c) {
+	m_constraints.push_back(ModelConstraintUP(c));
+}
+
 void ModelField::add_field(ModelField *field) {
 	field->parent(this);
 	m_fields.push_back(ModelFieldUP(field));
 }
+	void add_constraint(ModelConstraint *c);
 
 } /* namespace vsc */

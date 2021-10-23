@@ -13,14 +13,15 @@ namespace vsc {
 namespace facade {
 
 constraint::constraint(
-		const std::function<void ()>	&body) {
+		const std::function<void ()>	&body) : m_body(body) {
 	rand_obj *scope = ctor::inst()->scope();
 	scope->add_constraint(this);
 }
 
 constraint::constraint(
 		const std::string				&name,
-		const std::function<void ()>	&body) : m_name(name) {
+		const std::function<void ()>	&body) :
+				m_name(name), m_body(body) {
 	rand_obj *scope = ctor::inst()->scope();
 	scope->add_constraint(this);
 }

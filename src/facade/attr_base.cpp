@@ -12,14 +12,14 @@
 namespace vsc {
 namespace facade {
 
-attr_base::attr_base() : m_field(0) {
+attr_base::attr_base() : m_field(0), m_idx(-1) {
 	m_name = ctor::inst()->scope_name();
 	m_parent = ctor::inst()->scope(this);
 
-	if (m_parent == this) {
-		fprintf(stdout, "Note: this==parent\n");
-		m_parent = 0;
+	if (!m_parent) {
+
 	}
+
 	fprintf(stdout, "attr_base: %s %p\n", m_name.c_str(), m_parent);
 }
 
@@ -38,6 +38,10 @@ std::string attr_base::fullname() const {
 	}
 
 	return ret;
+}
+
+void attr_base::build_constraints() {
+
 }
 
 } /* namespace facade */

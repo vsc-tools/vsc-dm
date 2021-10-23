@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include "ctor_ctxt.h"
+#include "ModelConstraintScope.h"
 #include "ModelExpr.h"
 
 namespace vsc {
@@ -62,10 +63,19 @@ public:
 
 	uint32_t expr_depth() const { return m_expr_s.size(); }
 
+	void push_constraint_scope(ModelConstraintScope *s);
+
+	ModelConstraintScope *constraint_scope() const {
+		return m_constraint_scope_s.back();
+	}
+
+	ModelConstraintScope *pop_constraint_scope();
+
 private:
 	std::vector<ModelExprUP>			m_expr_s;
 	std::vector<ctor_ctxt_up>			m_scope_s;
 	std::vector<bool>					m_expr_mode;
+	std::vector<ModelConstraintScope *>	m_constraint_scope_s;
 	static std::unique_ptr<ctor>		m_inst;
 
 };

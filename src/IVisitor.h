@@ -32,6 +32,11 @@ namespace vsc {
 class DataTypeInt;
 class DataTypeStruct;
 
+class ModelConstraint;
+class ModelConstraintExpr;
+class ModelConstraintScope;
+class ModelConstraintSoft;
+
 class ModelExprBin;
 class ModelExprFieldRef;
 
@@ -49,6 +54,14 @@ public:
 	virtual void visitDataTypeInt(DataTypeInt *t) = 0;
 
 	virtual void visitDataTypeStruct(DataTypeStruct *t) = 0;
+
+	virtual void visitModelConstraint(ModelConstraint *c) = 0;
+
+	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) = 0;
+
+	virtual void visitModelConstraintScope(ModelConstraintScope *c) = 0;
+
+	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) = 0;
 
 	virtual void visitModelExprBin(ModelExprBin *e) = 0;
 

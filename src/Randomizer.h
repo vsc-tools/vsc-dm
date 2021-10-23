@@ -7,12 +7,13 @@
 #pragma once
 #include "ModelField.h"
 #include "ModelConstraint.h"
+#include "RNG.h"
 
 namespace vsc {
 
 class Randomizer {
 public:
-	Randomizer();
+	Randomizer(RNG &rng);
 
 	virtual ~Randomizer();
 
@@ -22,6 +23,8 @@ public:
 			bool									diagnose_failures
 			);
 
+private:
+	RNG				&m_rng;
 
 };
 

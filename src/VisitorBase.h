@@ -31,6 +31,10 @@
 
 #include "IVisitor.h"
 
+#include "ModelConstraintExpr.h"
+#include "ModelConstraintScope.h"
+#include "ModelConstraintSoft.h"
+
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 
@@ -50,6 +54,14 @@ public:
 	virtual void visitDataTypeInt(DataTypeInt *t) override;
 
 	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
+
+	virtual void visitModelConstraint(ModelConstraint *c) override;
+
+	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
+
+	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
+
+	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;
 
 	virtual void visitModelExprBin(ModelExprBin *e) override;
 

@@ -6,10 +6,11 @@
  */
 
 #include "Randomizer.h"
+#include "SolveSpecBuilder.h"
 
 namespace vsc {
 
-Randomizer::Randomizer() {
+Randomizer::Randomizer(RNG &rng) : m_rng(rng) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -23,6 +24,11 @@ bool Randomizer::randomize(
 			const std::vector<ModelConstraint *>	&constraints,
 			bool									diagnose_failures
 			) {
+	SolveSpecUP spec(SolveSpecBuilder().build(
+			fields,
+			constraints
+			));
+
 	return true;
 }
 

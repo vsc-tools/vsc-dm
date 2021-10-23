@@ -13,7 +13,6 @@ namespace facade {
 
 class constraint_else_then {
 	friend class constraint_if_then;
-	friend class constraint_else_then;
 public:
 
 	virtual ~constraint_else_then();

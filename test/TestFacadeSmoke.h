@@ -16,6 +16,7 @@ public:
 	TestFacadeSmoke();
 
 	virtual ~TestFacadeSmoke();
+
 };
 
 } /* namespace vsc */

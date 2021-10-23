@@ -7,16 +7,19 @@
 
 #pragma once
 #include <memory>
+#include "IAccept.h"
 
 namespace vsc {
 
 class ModelConstraint;
 using ModelConstraintUP=std::unique_ptr<ModelConstraint>;
-class ModelConstraint {
+class ModelConstraint : public virtual IAccept {
 public:
 	ModelConstraint();
 
 	virtual ~ModelConstraint();
+
+	virtual void accept(IVisitor *v) override { v->visitModelConstraint(this); }
 
 };
 

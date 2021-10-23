@@ -45,6 +45,26 @@ void VisitorBase::visitDataTypeStruct(DataTypeStruct *t) {
 
 }
 
+void VisitorBase::visitModelConstraint(ModelConstraint *c) {
+
+}
+
+void VisitorBase::visitModelConstraintExpr(ModelConstraintExpr *c) {
+	visitModelConstraint(c);
+	c->expr()->accept(this);
+}
+
+void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
+	for (auto it=c->constraints().begin();
+			it!=c->constraints().end(); it++) {
+		(*it)->accept(this);
+	}
+}
+
+void VisitorBase::visitModelConstraintSoft(ModelConstraintSoft *c) {
+	c->constraint()->accept(this);
+}
+
 void VisitorBase::visitModelExprBin(ModelExprBin *e) {
 	e->lhs()->accept(this);
 	e->rhs()->accept(this);
@@ -55,12 +75,21 @@ void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
 }
 
 void VisitorBase::visitModelField(ModelField *f) {
-	f->datatype()->accept(this);
+	if (f->datatype()) {
+		f->datatype()->accept(this);
+	}
+	for (auto it=f->fields().begin();
+			it!=f->fields().end(); it++) {
+		(*it)->accept(this);
+	}
+	for (auto it=f->constraints().begin();
+			it!=f->constraints().end(); it++) {
+		(*it)->accept(this);
+	}
 }
 
 void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {
 	visitModelField(f);
-
 }
 
 void VisitorBase::visitModelFieldType(ModelFieldType *f) {

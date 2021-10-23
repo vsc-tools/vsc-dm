@@ -23,7 +23,7 @@ attr_scalar::attr_scalar(
 
 	if (m_parent) {
 		// Model belongs to the parent scope
-		parent()->field()->add_field(m_field);
+		static_cast<rand_obj *>(parent())->add_field(this);
 	} else {
 		// We own the field since there is no parent scope
 		m_field_u = ModelFieldRootUP(m_field);

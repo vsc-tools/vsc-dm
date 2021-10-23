@@ -11,22 +11,23 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (NOT PACKAGES_DIR)
   set(PACKAGES_DIR ${CMAKE_SOURCE_DIR}/packages)
-  
-# ExternalProject_Add(Cadical
-#   PREFIX cadical
-#   SOURCE_DIR ${PACKAGES_DIR}/cadical
-#   CMAKE_CACHE_ARGS
-#     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
-#     -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-#     -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
-#     -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-#     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-#     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
-#   )
+
+  set (GLOG_DIR "${PACKAGES_DIR}/glog")
+  set (GMP_DIR "${PACKAGES_DIR}/gmp")
+  set (CADICAL_DIR "${PACKAGES_DIR}/cadical")
+  set (BTOR2TOOLS_DIR "${PACKAGES_DIR}/btor2tools")
+  set (BOOLECTOR_DIR "${PACKAGES_DIR}/boolector")
+  set (BITWUZLA_DIR "${PACKAGES_DIR}/bitwuzla")
+
+  # Testing is only enabled when libvsc is the top-level project
+  enable_testing()
+
+  add_subdirectory(test)
+endif()
 
 ExternalProject_Add(gmp
-  PREFIX gmp
-  SOURCE_DIR ${PACKAGES_DIR}/gmp
+    PREFIX gmp
+    SOURCE_DIR ${GMP_DIR}
   #  URL https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
   #DOWNLOAD_DIR ${CMAKE_CURRENT_BINARY_DIR}/downloads
   #  ${gmp_DOWNLOAD}
@@ -42,11 +43,21 @@ ExternalProject_Add(gmp
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
   )
-
+ 
+ExternalProject_Add(GLOG
+    PREFIX glog
+    SOURCE_DIR ${GLOG_DIR}
+    CMAKE_CACHE_ARGS
+      -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/glog
+      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+      -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+      -DBUILD_SHARED_LIBS:BOOL=OFF
+      -DCMAKE_DEBUG_POSTFIX:STRING=""
+)   
 
 ExternalProject_Add(Cadical
   PREFIX cadical
-  SOURCE_DIR ${PACKAGES_DIR}/cadical
+  SOURCE_DIR ${CADICAL_DIR}
   CMAKE_CACHE_ARGS
     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=${CMAKE_POSITION_INDEPENDENT_CODE}
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
@@ -59,7 +70,7 @@ ExternalProject_Add(Cadical
  
 ExternalProject_Add(Btor2tools
   PREFIX btor2tools
-  SOURCE_DIR ${PACKAGES_DIR}/btor2tools
+  SOURCE_DIR ${BTOR2TOOLS_DIR}
   CMAKE_CACHE_ARGS
     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=${CMAKE_POSITION_INDEPENDENT_CODE}
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
@@ -84,7 +95,7 @@ endif()
  
 ExternalProject_Add(Bitwuzla
   PREFIX bitwuzla
-  SOURCE_DIR ${PACKAGES_DIR}/bitwuzla
+  SOURCE_DIR ${BITWUZLA_DIR}
   CMAKE_CACHE_ARGS
     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=${CMAKE_POSITION_INDEPENDENT_CODE}
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
@@ -104,7 +115,7 @@ ExternalProject_Add(Bitwuzla
 
 ExternalProject_Add(Boolector
   PREFIX boolector
-  SOURCE_DIR ${PACKAGES_DIR}/boolector
+  SOURCE_DIR ${BOOLECTOR_DIR}
   CMAKE_CACHE_ARGS
     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=${CMAKE_POSITION_INDEPENDENT_CODE}
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
@@ -125,16 +136,10 @@ ExternalProject_Add(Boolector
 add_dependencies(Bitwuzla Cadical Btor2tools gmp)
 add_dependencies(Boolector Cadical Btor2tools gmp)
 
-#add_dependencies(bitwuzla cadical btor2tools)
-
-endif()
 
 add_compile_options(-fPIC)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-#find_package(Boolector REQUIRED)
-enable_testing()
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -147,7 +152,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g")
 
 add_subdirectory(src)
-add_subdirectory(test)
 
 
 #add_subdirectory(src)

@@ -7,6 +7,7 @@
 
 #include "ctor.h"
 #include "rand_obj.h"
+#include "ModelConstraintExpr.h"
 
 namespace vsc {
 namespace facade {
@@ -123,6 +124,21 @@ ModelExpr *ctor::pop_expr() {
 
 	m_expr_s.pop_back();
 
+	return ret;
+}
+
+void ctor::push_constraint_scope(ModelConstraintScope *c) {
+	m_constraint_scope_s.push_back(c);
+}
+
+ModelConstraintScope *ctor::pop_constraint_scope() {
+	ModelConstraintScope *ret = m_constraint_scope_s.back();
+	m_constraint_scope_s.pop_back();
+	for (auto it=m_expr_s.begin();
+			it!=m_expr_s.end(); it++) {
+		ret->add_constraint(new ModelConstraintExpr(it->release()));
+	}
+	m_expr_s.clear();
 	return ret;
 }
 
