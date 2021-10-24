@@ -5,13 +5,31 @@
  *      Author: mballance
  */
 
+#include "Debug.h"
 #include "bitwuzla/bitwuzla.h"
 #include "SolverBitwuzla.h"
+#include "SolverBitwuzlaSolveModelBuilder.h"
+
+#define EN_DEBUG_SOLVER_BITWUZLA
+
+#ifdef EN_DEBUG_SOLVER_BITWUZLA
+#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) DEBUG_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
 
 namespace vsc {
 
 SolverBitwuzla::SolverBitwuzla() {
 	m_bitwuzla = bitwuzla_new();
+	/*
+	bitwuzla_set_option(m_bitwuzla, BITWUZLA_OPT_LOGLEVEL, 3);
+	bitwuzla_set_option(m_bitwuzla, BITWUZLA_OPT_VERBOSITY, 3);
+	 */
 	bitwuzla_set_option(m_bitwuzla, BITWUZLA_OPT_INCREMENTAL, 1);
 	bitwuzla_set_option(m_bitwuzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
 	m_issat = false;
@@ -28,10 +46,8 @@ void SolverBitwuzla::initField(ModelField *f) {
 	std::unordered_map<ModelField *, BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
-#ifdef UNDEFINED
 		BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(f);
 		m_field_node_m.insert({f, node});
-#endif
 		m_issat_valid = false;
 	}
 }
@@ -41,10 +57,8 @@ void SolverBitwuzla::initConstraint(ModelConstraint *c) {
 	std::unordered_map<ModelConstraint *, BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_constraint_node_m.find(c)) == m_constraint_node_m.end()) {
-#ifdef UNDEFINED
 		BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(c);
 		m_constraint_node_m.insert({c, node});
-#endif
 		m_issat_valid = false;
 	}
 }

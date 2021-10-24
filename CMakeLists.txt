@@ -8,6 +8,9 @@ include (ExternalProject)
 #set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
 
 if (NOT PACKAGES_DIR)
   set(PACKAGES_DIR ${CMAKE_SOURCE_DIR}/packages)
@@ -111,6 +114,8 @@ ExternalProject_Add(Bitwuzla
     -DGMP_INCLUDE_DIR:PATH=${CMAKE_CURRENT_BINARY_DIR}/gmp/include
     -DGMP_LIBRARIES:PATH=${LIB_GMP}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+    -DASSERTIONS:BOOL=True
+    -DLOG:BOOL=True
   )
 
 ExternalProject_Add(Boolector
@@ -141,9 +146,6 @@ add_compile_options(-fPIC)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
 
 
 #set(CMAKE_CXX_FLAGS "-Wall -Wextra")

@@ -6,6 +6,7 @@
  */
 
 #include "SolverFactoryDefault.h"
+#include "SolverBitwuzla.h"
 #include "SolverBoolector.h"
 
 namespace vsc {
@@ -20,6 +21,7 @@ SolverFactoryDefault::~SolverFactoryDefault() {
 }
 
 ISolver *SolverFactoryDefault::createSolverInst(SolveSet *sset) {
+//	return new SolverBitwuzla();
 	return new SolverBoolector();
 }
 

@@ -248,6 +248,8 @@ void SolverBoolectorSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 		}
 	}
 
+	m_node_i = {is_signed, result};
+
 	DEBUG_LEAVE("visitModelExprBin");
 }
 
