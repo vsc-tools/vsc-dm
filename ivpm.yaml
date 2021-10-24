@@ -1,0 +1,20 @@
+
+package:
+   name: libvsc
+   version: 0.0.1
+   
+   dev-deps:
+     - name: bitwuzla
+       url: https://github.com/mballance/bitwuzla.git
+     - name: boolector
+       url: https://github.com/boolector/boolector.git
+     - name: btor2tools
+       url: https://github.com/boolector/btor2tools.git
+     - name: cadical
+       url: https://github.com/mballance/cadical.git
+     - name: glog
+       url: https://github.com/google/glog.git
+     - name: gmp
+       url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+       
+       

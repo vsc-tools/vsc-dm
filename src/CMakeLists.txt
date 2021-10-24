@@ -27,9 +27,11 @@ else()
 endif()     
 
 target_link_libraries(vsc 
+	bitwuzla
 	boolector
 	btor2parser
 	cadical
+	gmp
 	${libglog}
 	)
 

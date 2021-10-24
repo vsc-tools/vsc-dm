@@ -25,7 +25,7 @@ if (NOT PACKAGES_DIR)
   add_subdirectory(test)
 endif()
 
-ExternalProject_Add(gmp
+ExternalProject_Add(GMP
     PREFIX gmp
     SOURCE_DIR ${GMP_DIR}
   #  URL https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
@@ -133,8 +133,8 @@ ExternalProject_Add(Boolector
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
   )
 
-add_dependencies(Bitwuzla Cadical Btor2tools gmp)
-add_dependencies(Boolector Cadical Btor2tools gmp)
+add_dependencies(Bitwuzla Cadical Btor2tools GMP)
+add_dependencies(Boolector Cadical Btor2tools GMP)
 
 
 add_compile_options(-fPIC)
