@@ -142,13 +142,15 @@ TEST_F(TestFacadeSmoke, constraint_expr) {
 		rand_attr<unsigned int>	c {"c"};
 
 		constraint				ab_c {"ab_c", [&] {
-			a == c;
+			a != c;
 		}};
 	};
 
 	MyC c("c");
 
-	c.randomize();
+	for (uint32_t i=0; i<1000; i++) {
+		c.randomize();
+	}
 
 }
 

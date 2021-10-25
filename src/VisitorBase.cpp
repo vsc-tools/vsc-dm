@@ -27,7 +27,7 @@
 #include "Debug.h"
 #include "VisitorBase.h"
 
-#define EN_DEBUG_VISITOR_BASE
+#undef EN_DEBUG_VISITOR_BASE
 
 #ifdef EN_DEBUG_VISITOR_BASE
 DEBUG_SCOPE(VisitorBase)

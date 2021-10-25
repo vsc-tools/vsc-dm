@@ -9,7 +9,7 @@
 #include "glog/logging.h"
 #include <iostream>
 
-#define EN_DEBUG_SOLVE_SPEC_BUILDER
+#undef EN_DEBUG_SOLVE_SPEC_BUILDER
 #ifdef EN_DEBUG_SOLVE_SPEC_BUILDER
 DEBUG_SCOPE(SolveSpecBuilder)
 #define DEBUG_ENTER(fmt, ...) \

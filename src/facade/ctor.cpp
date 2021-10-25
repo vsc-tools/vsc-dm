@@ -10,7 +10,7 @@
 #include "Debug.h"
 #include "ModelConstraintExpr.h"
 
-#define EN_DEBUG_CTOR
+#undef EN_DEBUG_CTOR
 
 #ifdef EN_DEBUG_CTOR
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(ctor, fmt, ##__VA_ARGS__)

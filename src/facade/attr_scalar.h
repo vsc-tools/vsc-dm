@@ -25,6 +25,16 @@ public:
 
 	expr operator == (const expr &rhs);
 
+	expr operator != (const expr &rhs);
+
+	expr operator < (const expr &rhs);
+
+	expr operator > (const expr &rhs);
+
+	expr operator <= (const expr &rhs);
+
+	expr operator >= (const expr &rhs);
+
 //	expr operator == (const attr_scalar &rhs);
 
 	int64_t val_s();

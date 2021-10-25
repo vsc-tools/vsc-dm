@@ -11,9 +11,10 @@
 #include "Debug.h"
 #include "ModelConstraintScope.h"
 #include "Randomizer.h"
+#include "SetFieldUsedRandVisitor.h"
 #include "SolverFactoryDefault.h"
 
-#define EN_DEBUG_RAND_OBJ
+#undef EN_DEBUG_RAND_OBJ
 
 #ifdef EN_DEBUG_RAND_OBJ
 #define DEBUG_ENTER(fmt, ...) \
@@ -55,6 +56,7 @@ bool rand_obj::randomize() {
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
 
+	SetFieldUsedRandVisitor().set(field());
 	fields.push_back(field());
 
 	return randomizer.randomize(
@@ -77,6 +79,7 @@ bool rand_obj::randomize_with(
 	body();
 	ctor::inst()->pop_constraint_scope();
 
+	SetFieldUsedRandVisitor().set(field());
 	fields.push_back(field());
 	constraints.push_back(with_c.get());
 

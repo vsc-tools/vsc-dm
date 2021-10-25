@@ -10,7 +10,7 @@
 #include "SolverBitwuzla.h"
 #include "SolverBitwuzlaSolveModelBuilder.h"
 
-#define EN_DEBUG_SOLVER_BITWUZLA
+#undef EN_DEBUG_SOLVER_BITWUZLA
 
 #ifdef EN_DEBUG_SOLVER_BITWUZLA
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
@@ -95,14 +95,18 @@ bool SolverBitwuzla::isSAT() {
 }
 
 void SolverBitwuzla::setFieldValue(ModelField *f) {
+	DEBUG_ENTER("setFieldValue %s", f->name().c_str());
 	std::unordered_map<ModelField *, BitwuzlaTerm *>::const_iterator it;
 
-	it = m_field_node_m.find(f);
+	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
+		return;
+	}
 
 	// TODO: assert
 
 	BitwuzlaTerm *val = bitwuzla_get_value(m_bitwuzla, it->second);
 	const char *bits = bitwuzla_get_bv_value(m_bitwuzla, val);
+	DEBUG("bits=%s", bits);
 	ModelVal::iterator val_it = f->val().begin();
 
 	// Need to go
@@ -135,6 +139,8 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 
 		it_idx++;
 	} while (elem_w*it_idx < size);
+
+	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
 }
 
 BitwuzlaSort *SolverBitwuzla::get_sort(int32_t width) {

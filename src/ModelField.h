@@ -16,6 +16,11 @@
 
 namespace vsc {
 
+using ModelFieldFlags=uint32_t;
+static const uint32_t ModelFieldFlag_DeclRand = (1 << 0);
+static const uint32_t ModelFieldFlag_UsedRand = (1 << 1);
+static const uint32_t ModelFieldFlag_Resoved  = (1 << 2);
+
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;
 class ModelField : public IAccept {
@@ -48,6 +53,20 @@ public:
 
 	ModelVal &val() { return m_val; }
 
+	ModelFieldFlags flags() const { return m_flags; }
+
+	void clear_flag(ModelFieldFlags flags) {
+		m_flags &= (~flags);
+	}
+
+	void set_flag(ModelFieldFlags flags) {
+		m_flags |= flags;
+	}
+
+	bool is_flag_set(ModelFieldFlags flags) const {
+		return ((m_flags & flags) == flags);
+	}
+
 protected:
 	ModelField						*m_parent;
 
@@ -56,6 +75,7 @@ protected:
 
 	std::vector<ModelFieldUP>		m_fields;
 	std::vector<ModelConstraintUP>	m_constraints;
+	ModelFieldFlags					m_flags;
 
 };
 

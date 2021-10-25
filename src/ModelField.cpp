@@ -9,12 +9,13 @@
 
 namespace vsc {
 
-ModelField::ModelField() : m_parent(0) {
+ModelField::ModelField() : m_parent(0), m_flags(0) {
 	// TODO Auto-generated constructor stub
 
 }
 
-ModelField::ModelField(DataType *type) : m_parent(0), m_val(type) {
+ModelField::ModelField(DataType *type) :
+		m_parent(0), m_val(type), m_flags(0) {
 
 }
 

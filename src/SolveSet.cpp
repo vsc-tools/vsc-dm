@@ -21,7 +21,9 @@ SolveSet::~SolveSet() {
 void SolveSet::add_field(ModelField *f) {
 	if (m_field_s.find(f) == m_field_s.end()) {
 		m_all_fields.push_back(f);
-		// TODO: if rand...
+		if (f->is_flag_set(ModelFieldFlag_UsedRand)) {
+			m_rand_fields.push_back(f);
+		}
 		m_field_s.insert(f);
 	}
 }

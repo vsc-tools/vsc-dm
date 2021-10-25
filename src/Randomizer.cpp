@@ -5,12 +5,13 @@
  *      Author: mballance
  */
 
+#include "CommitFieldValueVisitor.h"
 #include "Debug.h"
 #include "Randomizer.h"
 #include "SolveSpecBuilder.h"
 #include "SolveSetSolveModelBuilder.h"
 
-#define EN_DEBUG_RANDOMIZER
+#undef EN_DEBUG_RANDOMIZER
 
 #ifdef EN_DEBUG_RANDOMIZER
 DEBUG_SCOPE(Randomizer)
@@ -39,8 +40,7 @@ Randomizer::~Randomizer() {
 bool Randomizer::randomize(
 			const std::vector<ModelField *>			&fields,
 			const std::vector<ModelConstraint *>	&constraints,
-			bool									diagnose_failures
-			) {
+			bool									diagnose_failures) {
 	bool ret = true;
 	DEBUG_ENTER("randomize n_fields=%d n_constraints=%d",
 			fields.size(),
@@ -69,6 +69,11 @@ bool Randomizer::randomize(
 
 		if (solver->isSAT()) {
 			DEBUG("PASS: Initial try-solve for solveset");
+			for (auto f_it=(*sset)->rand_fields().begin();
+					f_it!=(*sset)->rand_fields().end(); f_it++) {
+				DEBUG("Commit %s", (*f_it)->name().c_str());
+				CommitFieldValueVisitor(solver.get()).commit(*f_it);
+			}
 		} else {
 			DEBUG("FAIL: Initial try-solve for solveset");
 

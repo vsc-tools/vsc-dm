@@ -9,7 +9,7 @@
 #include "SolverBoolectorSolveModelBuilder.h"
 #include "boolector/boolector.h"
 
-#define EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
+#undef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 DEBUG_SCOPE(SolverBoolectorSolveModelBuilder)

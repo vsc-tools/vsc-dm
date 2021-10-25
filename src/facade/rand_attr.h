@@ -25,7 +25,7 @@ public:
 	rand_attr(
 			const scope		&name,
 			int32_t			width=32) : attr_scalar(true, width) {
-		fprintf(stdout, "rand_attr<int>\n");
+		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 };
 
@@ -35,7 +35,7 @@ public:
 	rand_attr(
 			const scope		&name,
 			int32_t			width=32) : attr_scalar(true, width) {
-		fprintf(stdout, "rand_attr<unsigned int>\n");
+		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 };
 

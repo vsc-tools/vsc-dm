@@ -20,7 +20,6 @@ attr_scalar::attr_scalar(
 		int32_t				width) {
 	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
 
-
 	if (m_parent) {
 		// Model belongs to the parent scope
 		static_cast<rand_obj *>(parent())->add_field(this);
@@ -39,6 +38,46 @@ expr attr_scalar::operator == (const expr &rhs) {
 	return expr(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Eq,
+			rhs_e));
+}
+
+expr attr_scalar::operator != (const expr &rhs) {
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Ne,
+			rhs_e));
+}
+
+expr attr_scalar::operator < (const expr &rhs) {
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Lt,
+			rhs_e));
+}
+
+expr attr_scalar::operator > (const expr &rhs) {
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Gt,
+			rhs_e));
+}
+
+expr attr_scalar::operator <= (const expr &rhs) {
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Le,
+			rhs_e));
+}
+
+expr attr_scalar::operator >= (const expr &rhs) {
+	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Ge,
 			rhs_e));
 }
 

@@ -26,10 +26,21 @@
  */
 
 #include "boolector/boolector.h"
+#include "Debug.h"
 #include "SolverBoolector.h"
-
 #include "SolverBoolectorSolveModelBuilder.h"
 
+#undef EN_DEBUG_SOLVER_BITWUZLA
+
+#ifdef EN_DEBUG_SOLVER_BITWUZLA
+#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) DEBUG_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
 
 namespace vsc {
 
@@ -116,6 +127,7 @@ bool SolverBoolector::isSAT() {
 }
 
 void SolverBoolector::setFieldValue(ModelField *f) {
+	DEBUG_ENTER("setFieldValue %s", f->name().c_str());
 	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
 
 	it = m_field_node_m.find(f);
@@ -124,6 +136,7 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 
 	const char *bits = boolector_bv_assignment(m_btor, it->second);
 	ModelVal::iterator val_it = f->val().begin();
+	DEBUG("bits=%s", bits);
 
 	// Need to go
 	// - size-32*1..size-32*0-1
@@ -157,6 +170,7 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	} while (elem_w*it_idx < size);
 
 	boolector_free_bv_assignment(m_btor, bits);
+	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
 }
 
 BoolectorSort SolverBoolector::get_sort(int32_t width) {

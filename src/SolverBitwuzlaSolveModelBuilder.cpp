@@ -9,7 +9,7 @@
 #include "SolverBitwuzlaSolveModelBuilder.h"
 #include "bitwuzla/bitwuzla.h"
 
-#define EN_DEBUG_SOLVER_BITWUZLA_SOLVE_MODEL_BUILDER
+#undef EN_DEBUG_SOLVER_BITWUZLA_SOLVE_MODEL_BUILDER
 
 #ifdef EN_DEBUG_SOLVER_BITWUZLA_SOLVE_MODEL_BUILDER
 DEBUG_SCOPE(SolverBitwuzlaSolveModelBuilder)
