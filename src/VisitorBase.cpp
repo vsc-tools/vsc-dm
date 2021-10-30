@@ -90,10 +90,51 @@ void VisitorBase::visitModelExprBin(ModelExprBin *e) {
 	DEBUG_LEAVE("visitModelExprBin");
 }
 
+void VisitorBase::visitModelExprCond(ModelExprCond *e) {
+	e->cond()->accept(this);
+	e->true_e()->accept(this);
+	e->false_e()->accept(this);
+}
+
 void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	e->field()->accept(this);
 	DEBUG_LEAVE("visitModelExprFieldRef");
+}
+
+void VisitorBase::visitModelExprPartSelect(ModelExprPartSelect *e) {
+	DEBUG_ENTER("visitModelExprPartSelect");
+	e->lhs()->accept(this);
+	DEBUG_LEAVE("visitModelExprPartSelect");
+}
+
+void VisitorBase::visitModelExprRange(ModelExprRange *e) {
+	DEBUG_ENTER("visitModelExprRange");
+	e->lower()->accept(this);
+	if (e->upper()) {
+		e->upper()->accept(this);
+	}
+	DEBUG_LEAVE("visitModelExprRange");
+}
+
+void VisitorBase::visitModelExprRangelist(ModelExprRangelist *e) {
+	DEBUG_ENTER("visitModelExprRangelist");
+	for (auto it=e->ranges().begin(); it!=e->ranges().end(); it++) {
+		(*it)->accept(this);
+	}
+	DEBUG_LEAVE("visitModelExprRangelist");
+}
+
+void VisitorBase::visitModelExprRef(ModelExprRef *e) {
+	DEBUG_ENTER("visitModelExprRef");
+	e->expr()->accept(this);
+	DEBUG_LEAVE("visitModelExprRef");
+}
+
+void VisitorBase::visitModelExprUnary(ModelExprUnary *e) {
+	DEBUG_ENTER("visitModelExprUnary");
+	e->expr()->accept(this);
+	DEBUG_LEAVE("visitModelExprUnary");
 }
 
 void VisitorBase::visitModelField(ModelField *f) {

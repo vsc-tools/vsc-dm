@@ -36,7 +36,13 @@
 #include "ModelConstraintSoft.h"
 
 #include "ModelExprBin.h"
+#include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
+#include "ModelExprPartSelect.h"
+#include "ModelExprRange.h"
+#include "ModelExprRangelist.h"
+#include "ModelExprRef.h"
+#include "ModelExprUnary.h"
 
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
@@ -65,7 +71,19 @@ public:
 
 	virtual void visitModelExprBin(ModelExprBin *e) override;
 
+	virtual void visitModelExprCond(ModelExprCond *e) override;
+
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
+
+	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) override;
+
+	virtual void visitModelExprRange(ModelExprRange *e) override;
+
+	virtual void visitModelExprRangelist(ModelExprRangelist *e) override;
+
+	virtual void visitModelExprRef(ModelExprRef *e) override;
+
+	virtual void visitModelExprUnary(ModelExprUnary *e) override;
 
 	virtual void visitModelField(ModelField *f) override;
 

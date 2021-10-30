@@ -38,7 +38,13 @@ class ModelConstraintScope;
 class ModelConstraintSoft;
 
 class ModelExprBin;
+class ModelExprCond;
 class ModelExprFieldRef;
+class ModelExprPartSelect;
+class ModelExprRange;
+class ModelExprRangelist;
+class ModelExprRef;
+class ModelExprUnary;
 
 class ModelField;
 class ModelFieldRoot;
@@ -65,7 +71,19 @@ public:
 
 	virtual void visitModelExprBin(ModelExprBin *e) = 0;
 
+	virtual void visitModelExprCond(ModelExprCond *e) = 0;
+
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) = 0;
+
+	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) = 0;
+
+	virtual void visitModelExprRange(ModelExprRange *e) = 0;
+
+	virtual void visitModelExprRangelist(ModelExprRangelist *e) = 0;
+
+	virtual void visitModelExprRef(ModelExprRef *e) = 0;
+
+	virtual void visitModelExprUnary(ModelExprUnary *e) = 0;
 
 	virtual void visitModelField(ModelField *f) = 0;
 
