@@ -137,6 +137,12 @@ void VisitorBase::visitModelExprUnary(ModelExprUnary *e) {
 	DEBUG_LEAVE("visitModelExprUnary");
 }
 
+void VisitorBase::visitModelExprVal(ModelExprVal *e) {
+	DEBUG_ENTER("visitModelExprVal");
+
+	DEBUG_LEAVE("visitModelExprVal");
+}
+
 void VisitorBase::visitModelField(ModelField *f) {
 	DEBUG_ENTER("visitModelField %s n_fields=%d n_constraints=%d",
 			f->name().c_str(),

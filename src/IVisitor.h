@@ -45,6 +45,7 @@ class ModelExprRange;
 class ModelExprRangelist;
 class ModelExprRef;
 class ModelExprUnary;
+class ModelExprVal;
 
 class ModelField;
 class ModelFieldRoot;
@@ -84,6 +85,8 @@ public:
 	virtual void visitModelExprRef(ModelExprRef *e) = 0;
 
 	virtual void visitModelExprUnary(ModelExprUnary *e) = 0;
+
+	virtual void visitModelExprVal(ModelExprVal *e) = 0;
 
 	virtual void visitModelField(ModelField *f) = 0;
 

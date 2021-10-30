@@ -290,6 +290,33 @@ void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef 
 			e->field()->name().c_str(), m_node_i.second);
 }
 
+void SolverBoolectorSolveModelBuilder::visitModelExprPartSelect(
+		ModelExprPartSelect *e) {
+	int32_t ctx_width = m_width_s.back();
+	DEBUG_ENTER("visitModelExprPartSelect");
+	node_info_t lhs_i = expr(e->lhs(), ctx_width);
+
+	m_node_i.first = false;
+	m_node_i.second = boolector_slice(
+			m_solver->btor(),
+			lhs_i.second,
+			e->upper(),
+			e->lower());
+
+	DEBUG_LEAVE("visitModelExprPartSelect");
+}
+
+void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
+	DEBUG_ENTER("visitModelExprVal");
+	char *bits = (char *)alloca(e->val().bits()+1);
+	e->val().to_bits(bits);
+
+	m_node_i.second = boolector_const(m_solver->btor(), bits);
+	m_node_i.first = false; // TODO:
+
+	DEBUG_LEAVE("visitModelExprVal");
+}
+
 void SolverBoolectorSolveModelBuilder::visitModelField(ModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
 	m_field_s.push_back(f);

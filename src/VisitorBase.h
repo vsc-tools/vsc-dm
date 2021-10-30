@@ -43,6 +43,7 @@
 #include "ModelExprRangelist.h"
 #include "ModelExprRef.h"
 #include "ModelExprUnary.h"
+#include "ModelExprVal.h"
 
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
@@ -84,6 +85,8 @@ public:
 	virtual void visitModelExprRef(ModelExprRef *e) override;
 
 	virtual void visitModelExprUnary(ModelExprUnary *e) override;
+
+	virtual void visitModelExprVal(ModelExprVal *e) override;
 
 	virtual void visitModelField(ModelField *f) override;
 

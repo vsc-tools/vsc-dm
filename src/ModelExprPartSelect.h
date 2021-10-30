@@ -22,6 +22,10 @@ public:
 
 	ModelExpr *lhs() const { return m_lhs.get(); }
 
+	int32_t lower() const { return m_lower; }
+
+	int32_t upper() const { return m_upper; }
+
 	virtual void accept(IVisitor *v) { v->visitModelExprPartSelect(this); }
 
 private:

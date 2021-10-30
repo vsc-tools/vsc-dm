@@ -57,13 +57,38 @@ public:
 
 	virtual ~ModelVal();
 
+	DataType *type() const { return m_type; }
+
+	uint32_t bits() const { return m_bits; }
+
+	uint32_t at(uint32_t b) const;
+
+	void to_bits(char *bits) const;
+
+	void push_bit(uint32_t b);
+
+	void push_word(uint32_t v);
+
+	void clear();
+
+	int64_t val_i() const;
+
+	uint64_t val_u() const;
+
 	ModelVal::iterator begin();
 
 	ModelVal::const_iterator begin() const;
 
+	/*
+	ModelVal::iterator end();
+
+	ModelVal::const_iterator end() const;
+	 */
+
 private:
 	DataType						*m_type;
 	std::vector<uint32_t>			m_val;
+	uint32_t						m_bits;
 };
 
 } /* namespace vsc */
