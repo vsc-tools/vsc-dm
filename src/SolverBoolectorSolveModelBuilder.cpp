@@ -23,7 +23,7 @@
 #include "SolverBoolectorSolveModelBuilder.h"
 #include "boolector/boolector.h"
 
-#undef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
+#define EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 DEBUG_SCOPE(SolverBoolectorSolveModelBuilder)
@@ -109,6 +109,36 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintExpr(ModelConstraintE
 	m_node_i.second = toBoolNode(m_node_i.second);
 
 	DEBUG_LEAVE("visitModelConstraintExpr");
+}
+
+void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(ModelConstraintIf *c) {
+	DEBUG_ENTER("visitModelConstrainIf");
+	c->cond()->accept(this);
+	BoolectorNode *cond_n = toBoolNode(m_node_i.second);
+
+	c->true_c()->accept(this);
+	BoolectorNode *true_n = toBoolNode(m_node_i.second);
+
+	if (c->false_c()) {
+		c->false_c()->accept(this);
+		BoolectorNode *false_n = toBoolNode(m_node_i.second);
+
+		m_node_i.second = boolector_cond(
+				m_solver->btor(),
+				cond_n,
+				true_n,
+				false_n);
+		m_node_i.first = false;
+	} else {
+		// Simple 'implies'
+		m_node_i.second = boolector_implies(
+				m_solver->btor(),
+				cond_n,
+				true_n);
+		m_node_i.first = false;
+	}
+
+	DEBUG_LEAVE("visitModelConstrainIf");
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelConstraintScope(ModelConstraintScope *c) {
@@ -311,6 +341,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 	char *bits = (char *)alloca(e->val().bits()+1);
 	e->val().to_bits(bits);
 
+	DEBUG("bits=%s", bits);
 	m_node_i.second = boolector_const(m_solver->btor(), bits);
 	m_node_i.first = false; // TODO:
 
@@ -319,13 +350,24 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 
 void SolverBoolectorSolveModelBuilder::visitModelField(ModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
-	m_field_s.push_back(f);
-	if (f->datatype()) {
-		f->datatype()->accept(this);
+	if (f->is_flag_set(ModelFieldFlag_UsedRand)) {
+		// Create a solver-variable representation for this
+		m_field_s.push_back(f);
+		if (f->datatype()) {
+			f->datatype()->accept(this);
+		} else {
+			DEBUG("Note: no datatype");
+		}
+		m_field_s.pop_back();
 	} else {
-		DEBUG("Note: no datatype");
+		// Create a value node
+		char *bits = (char *)alloca(f->val().bits()+1);
+		f->val().to_bits(bits);
+
+		DEBUG("bits=%s", bits);
+		m_node_i.second = boolector_const(m_solver->btor(), bits);
+		m_node_i.first = false; // TODO:
 	}
-	m_field_s.pop_back();
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 

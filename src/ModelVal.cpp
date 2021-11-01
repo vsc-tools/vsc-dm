@@ -20,6 +20,7 @@
  */
 
 #include "ModelVal.h"
+#include "DataTypeWidthVisitor.h"
 #include <string.h>
 
 namespace vsc {
@@ -46,8 +47,16 @@ ModelVal::ModelVal(DataType *type) :
 		m_val(0),
 		m_is_signed(false),
 		m_bits(0) {
-	// TODO: determine signed/width from type
+	if (type) {
+		std::pair<bool,int32_t> w = DataTypeWidthVisitor().width(type);
+		m_is_signed = w.first;
+		m_bits = w.second;
 
+		// Ensure we have sufficient space allocated
+		while (m_val.size() < ((m_bits-1)/32+1)) {
+			m_val.push_back(0);
+		}
+	}
 }
 
 ModelVal::~ModelVal() {
@@ -93,6 +102,17 @@ uint64_t ModelVal::u64() const {
 	}
 
 	return val;
+}
+
+void ModelVal::u64(uint64_t v) {
+	for (uint32_t i=0; i<m_val.size(); i++) {
+		m_val[i] = v;
+		v >>= 32;
+	}
+
+	if ((m_bits%32) != 0) {
+		m_val.back() &= ((1 << (m_bits%32))-1);
+	}
 }
 
 int64_t ModelVal::i64() const {

@@ -35,6 +35,7 @@ attr_scalar::attr_scalar(
 		int32_t				width,
 		const int_t			&ival) {
 	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
+	m_field->val().u64(ival.val());
 
 	if (m_parent) {
 		// Model belongs to the parent scope

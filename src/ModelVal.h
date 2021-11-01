@@ -81,6 +81,8 @@ public:
 
 	uint64_t u64() const;
 
+	void u64(uint64_t v);
+
 	int64_t i64() const;
 
 	void to_bits(char *bits) const;

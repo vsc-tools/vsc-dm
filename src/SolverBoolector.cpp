@@ -140,35 +140,10 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	int32_t size = boolector_get_width(m_btor, it->second);
 
 	f->val().from_bits(bits, size);
-//	int32_t it_idx = 0;
-//	int32_t bidx_lim = size;
-//
-//	do {
-//		uint32_t tval = 0;
-//		int32_t bidx, bidx_lim_n;
-//
-//		if (size > elem_w*(it_idx+1)) {
-//			bidx = size-(elem_w*(it_idx+1));
-//		} else {
-//			bidx = 0;
-//		}
-//
-//		bidx_lim_n = bidx;
-//		while (bidx < bidx_lim) {
-//			tval <<= 1;
-//			tval |= (bits[bidx] == '1')?1:0;
-//			bidx++;
-//		}
-//		bidx_lim = bidx_lim_n;
-//
-//		// TODO:
-////		val_it.append(tval);
-//
-//		it_idx++;
-//	} while (elem_w*it_idx < size);
 
 	boolector_free_bv_assignment(m_btor, bits);
-	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
+	DEBUG_LEAVE("setFieldValue %s (0x%08llx)",
+			f->name().c_str(), f->val().u64());
 }
 
 BoolectorSort SolverBoolector::get_sort(int32_t width) {

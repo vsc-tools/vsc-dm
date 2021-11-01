@@ -24,6 +24,8 @@ public:
 
 	ModelVal toVal() const;
 
+	uint64_t val() const { return m_val; }
+
 private:
 	bool			m_is_signed;
 	uint32_t		m_width;

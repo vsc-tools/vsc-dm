@@ -30,6 +30,8 @@ public:
 
 	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
 
+	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
+
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
 
 	virtual void visitModelField(ModelField *f) override;

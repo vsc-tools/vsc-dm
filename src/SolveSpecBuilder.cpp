@@ -115,6 +115,14 @@ void SolveSpecBuilder::visitModelConstraintExpr(ModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr pass=%d", m_pass);
 }
 
+void SolveSpecBuilder::visitModelConstraintIf(ModelConstraintIf *c) {
+	DEBUG_ENTER("visitModelConstraintIf");
+	constraint_enter(c);
+	VisitorBase::visitModelConstraintIf(c);
+	constraint_leave(c);
+	DEBUG_LEAVE("visitModelConstraintIf");
+}
+
 void SolveSpecBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	if (m_pass == 0) {

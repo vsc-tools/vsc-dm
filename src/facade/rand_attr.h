@@ -42,7 +42,7 @@ public:
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 
-	int64_t operator ()() { return i32(); }
+	uint64_t operator ()() { return u32(); }
 };
 
 template <int W> class rand_attr<si_t<W>> : public attr_scalar {
@@ -55,7 +55,7 @@ public:
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 
-	int64_t operator ()() { return i32(); }
+	int64_t operator ()() { return i64(); }
 };
 
 template <> class rand_attr<int> : public attr_scalar {
