@@ -28,11 +28,13 @@ constraint_else_then::constraint_else_then(
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
+	fprintf(stdout, "constraint_else_then::constraint_else_then\n");
 	// TODO Auto-generated constructor stub
 
 }
 
 constraint_else_then::~constraint_else_then() {
+	fprintf(stdout, "constraint_else_then::~constraint_else_then\n");
 	// TODO Auto-generated destructor stub
 }
 

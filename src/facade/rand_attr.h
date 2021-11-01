@@ -22,6 +22,7 @@
 #pragma once
 #include "attr_cls.h"
 #include "attr_scalar.h"
+#include "int_t.h"
 
 namespace vsc {
 namespace facade {
@@ -29,8 +30,32 @@ namespace facade {
 template <typename T> class rand_attr : public T {
 public:
 	rand_attr(const scope &name) : T(name) { }
+};
 
+template <int W> class rand_attr<ui_t<W>> : public attr_scalar {
+public:
 
+	rand_attr(
+			const scope &name,
+			const int_t	&ival=int_t(false, W, 0)) :
+				attr_scalar(false, W, ival) {
+		m_field->set_flag(ModelFieldFlag_DeclRand);
+	}
+
+	int64_t operator ()() { return i32(); }
+};
+
+template <int W> class rand_attr<si_t<W>> : public attr_scalar {
+public:
+
+	rand_attr(
+			const scope &name,
+			const int_t &ival=int_t(true, W, 0)) :
+				attr_scalar(true, W, ival) {
+		m_field->set_flag(ModelFieldFlag_DeclRand);
+	}
+
+	int64_t operator ()() { return i32(); }
 };
 
 template <> class rand_attr<int> : public attr_scalar {
@@ -38,9 +63,12 @@ public:
 
 	rand_attr(
 			const scope		&name,
-			int32_t			width=32) : attr_scalar(true, width) {
+			const int_t		&ival=int_t(true, 32, 0)) :
+				attr_scalar(true, 32, ival) {
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
+
+	int32_t operator ()() { return i32(); }
 };
 
 template <> class rand_attr<unsigned int> : public attr_scalar {
@@ -48,9 +76,12 @@ public:
 
 	rand_attr(
 			const scope		&name,
-			int32_t			width=32) : attr_scalar(true, width) {
+			const int_t		&ival=int_t(false, 32, 0)) :
+				attr_scalar(false, 32, ival) {
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
+
+	uint32_t operator ()() { return u32(); }
 };
 
 }

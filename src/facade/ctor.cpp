@@ -178,6 +178,30 @@ ModelConstraintScope *ctor::pop_constraint_scope() {
 	return ret;
 }
 
+DataTypeInt *ctor::type_int(
+			bool		is_signed,
+			int32_t		width) {
+	std::unordered_map<int32_t,DataTypeIntUP>::const_iterator it;
+
+	if (is_signed) {
+		if ((it=m_si_type_m.find(width)) != m_si_type_m.end()) {
+			return it->second.get();
+		} else {
+			DataTypeInt *dt = new DataTypeInt(true, width);
+			m_si_type_m.insert({width, DataTypeIntUP(dt)});
+			return dt;
+		}
+	} else {
+		if ((it=m_ui_type_m.find(width)) != m_ui_type_m.end()) {
+			return it->second.get();
+		} else {
+			DataTypeInt *dt = new DataTypeInt(false, width);
+			m_ui_type_m.insert({width, DataTypeIntUP(dt)});
+			return dt;
+		}
+	}
+}
+
 std::unique_ptr<ctor> ctor::m_inst;
 
 } /* namespace facade */

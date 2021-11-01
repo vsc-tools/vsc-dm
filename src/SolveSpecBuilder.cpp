@@ -20,8 +20,6 @@
  */
 #include "Debug.h"
 #include "SolveSpecBuilder.h"
-#include "glog/logging.h"
-#include <iostream>
 
 #undef EN_DEBUG_SOLVE_SPEC_BUILDER
 #ifdef EN_DEBUG_SOLVE_SPEC_BUILDER

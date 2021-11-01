@@ -19,6 +19,8 @@ public:
 
 	virtual ~ModelExprVal();
 
+	virtual int32_t width() const override { return m_val.bits(); }
+
 	const ModelVal &val() const { return m_val; }
 
 	ModelVal &val() { return m_val; }

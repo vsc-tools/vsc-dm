@@ -21,8 +21,10 @@
 
 #pragma once
 #include <memory>
+#include <unordered_map>
 #include <vector>
 #include "ctor_ctxt.h"
+#include "DataTypeInt.h"
 #include "ModelConstraintScope.h"
 #include "ModelExpr.h"
 
@@ -85,12 +87,18 @@ public:
 
 	ModelConstraintScope *pop_constraint_scope();
 
+	DataTypeInt *type_int(
+			bool		is_signed,
+			int32_t		width);
+
 private:
-	std::vector<ModelExprUP>			m_expr_s;
-	std::vector<ctor_ctxt_up>			m_scope_s;
-	std::vector<bool>					m_expr_mode;
-	std::vector<ModelConstraintScope *>	m_constraint_scope_s;
-	static std::unique_ptr<ctor>		m_inst;
+	std::vector<ModelExprUP>					m_expr_s;
+	std::vector<ctor_ctxt_up>					m_scope_s;
+	std::vector<bool>							m_expr_mode;
+	std::unordered_map<int32_t, DataTypeIntUP>	m_si_type_m;
+	std::unordered_map<int32_t, DataTypeIntUP>	m_ui_type_m;
+	std::vector<ModelConstraintScope *>			m_constraint_scope_s;
+	static std::unique_ptr<ctor>				m_inst;
 
 };
 

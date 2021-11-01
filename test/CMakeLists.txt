@@ -67,7 +67,7 @@ target_link_libraries(test_libvsc
 	vsc_facade
 	libgtest 
 	libgmock
-	${libglog}
 	)
+#set_property(TARGET test_libvsc PROPERTY INTERPROCEDURAL_OPTIMIZATION OFF)
 
 gtest_discover_tests(test_libvsc)

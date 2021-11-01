@@ -22,5 +22,29 @@
 
 namespace vsc {
 
+const char *BinOp2Str_s(BinOp op) {
+	switch (op) {
+	case BinOp::Eq: return "Eq";
+	case BinOp::Ne: return "Ne";
+	case BinOp::Gt: return "Gt";
+	case BinOp::Ge: return "Ge";
+	case BinOp::Lt: return "Lt";
+	case BinOp::Le: return "Le";
+	case BinOp::Add: return "Add";
+	case BinOp::Sub: return "Sub";
+	case BinOp::Div: return "Div";
+	case BinOp::Mul: return "Mul";
+	case BinOp::Mod: return "Mod";
+	case BinOp::BinAnd: return "BinAnd";
+	case BinOp::BinOr: return "BinOr";
+	case BinOp::LogAnd: return "LogAnd";
+	case BinOp::LogOr: return "LogOr";
+	case BinOp::Sll: return "Sll";
+	case BinOp::Srl: return "Srl";
+	case BinOp::Xor: return "Xor";
+	case BinOp::Not: return "Not";
+	default: return "BinOp::Unknown";
+	}
+}
 
 } /* namespace vsc */

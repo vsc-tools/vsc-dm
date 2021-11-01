@@ -23,6 +23,7 @@
 #include "expr.h"
 #include "constraint_else_if.h"
 #include "constraint_else_then.h"
+#include "ModelConstraintIf.h"
 
 namespace vsc {
 namespace facade {
@@ -37,13 +38,13 @@ public:
 
 	virtual ~constraint_if_then();
 
-	constraint_else_if else_if(
+	constraint_if_then else_if(
 			const expr					&cond,
 			const std::function<void()> &body,
 			const char					*file=0,
 			int32_t						lineno=-1);
 
-	constraint_else_then else_then(
+	void else_then(
 			const std::function<void()> &body,
 			const char					*file=0,
 			int32_t						lineno=-1);
@@ -54,6 +55,12 @@ private:
 			const std::function<void()> &body,
 			const char					*file=0,
 			int32_t						lineno=-1);
+
+	constraint_if_then(
+			ModelConstraintIf			*constraint);
+
+private:
+	ModelConstraintIf					*m_constraint;
 
 };
 

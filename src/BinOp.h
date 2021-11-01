@@ -31,5 +31,8 @@ enum class BinOp {
 	Not
 };
 
+const char *BinOp2Str_s(BinOp op);
+
+
 } /* namespace vsc */
 

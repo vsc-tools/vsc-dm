@@ -26,6 +26,7 @@
 #include "rand_obj.h"
 #include "constraint.h"
 #include "constraint_if_then.h"
+#include "literal_base.h"
 
 /**
  * User-facade macro that captures source location

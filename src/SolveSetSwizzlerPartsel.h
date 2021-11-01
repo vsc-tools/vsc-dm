@@ -7,14 +7,14 @@
 
 #pragma once
 #include "ISolver.h"
-#include "RNG.h"
+#include "RandState.h"
 #include "SolveSet.h"
 
 namespace vsc {
 
 class SolveSetSwizzlerPartsel {
 public:
-	SolveSetSwizzlerPartsel(RNG &rng);
+	SolveSetSwizzlerPartsel(RandState *rand_state);
 
 	virtual ~SolveSetSwizzlerPartsel();
 
@@ -35,7 +35,7 @@ private:
 			std::vector<ModelConstraintUP>	&constraints);
 
 private:
-	RNG						&m_rng;
+	RandState				*m_randstate;
 	ISolver					*m_solver;
 	SolveSet				*m_sset;
 

@@ -24,6 +24,7 @@
 #include "DataTypeInt.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprBin.h"
+#include "ModelExprVal.h"
 #include "ctor.h"
 
 namespace vsc {
@@ -31,7 +32,8 @@ namespace facade {
 
 attr_scalar::attr_scalar(
 		bool				is_signed,
-		int32_t				width) {
+		int32_t				width,
+		const int_t			&ival) {
 	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
 
 	if (m_parent) {
@@ -55,12 +57,32 @@ expr attr_scalar::operator == (const expr &rhs) {
 			rhs_e));
 }
 
+expr attr_scalar::operator == (const int_t &val) {
+	ModelExprVal *rhs = val.toExpr();
+	ModelExprBin *eq = new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Eq,
+			rhs);
+	return expr(eq);
+}
+
+//expr attr_scalar::operator == (uint64_t val) {
+//	;
+//}
+
 expr attr_scalar::operator != (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Ne,
 			rhs_e));
+}
+
+expr attr_scalar::operator != (const int_t &val) {
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Eq,
+			val.toExpr()));
 }
 
 expr attr_scalar::operator < (const expr &rhs) {
@@ -71,6 +93,14 @@ expr attr_scalar::operator < (const expr &rhs) {
 			rhs_e));
 }
 
+expr attr_scalar::operator < (const int_t &val) {
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Lt,
+			val.toExpr()));
+}
+
+
 expr attr_scalar::operator > (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
@@ -79,12 +109,27 @@ expr attr_scalar::operator > (const expr &rhs) {
 			rhs_e));
 }
 
+expr attr_scalar::operator > (const int_t &val) {
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Gt,
+			val.toExpr()));
+}
+
+
 expr attr_scalar::operator <= (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Le,
 			rhs_e));
+}
+
+expr attr_scalar::operator <= (const int_t &val) {
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Le,
+			val.toExpr()));
 }
 
 expr attr_scalar::operator >= (const expr &rhs) {
@@ -95,18 +140,27 @@ expr attr_scalar::operator >= (const expr &rhs) {
 			rhs_e));
 }
 
-/*
-expr attr_scalar::operator == (const attr_scalar &rhs) {
-	return expr(new ModelExprFieldRef(rhs.field()));
-}
- */
-
-int64_t attr_scalar::val_s() {
-	int64_t ret = 0;
+expr attr_scalar::operator >= (const int_t &val) {
+	return expr(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Ge,
+			val.toExpr()));
 }
 
-uint64_t attr_scalar::val_u() {
-	;
+uint32_t attr_scalar::u32() {
+	return field()->val().u32();
+}
+
+int32_t attr_scalar::i32() {
+	return field()->val().i32();
+}
+
+uint64_t attr_scalar::u64() {
+	return field()->val().u64();
+}
+
+int64_t attr_scalar::i64() {
+	return field()->val().i64();
 }
 
 void attr_scalar::val_s(int64_t v) {

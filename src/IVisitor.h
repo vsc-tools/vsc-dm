@@ -34,6 +34,7 @@ class DataTypeStruct;
 
 class ModelConstraint;
 class ModelConstraintExpr;
+class ModelConstraintIf;
 class ModelConstraintScope;
 class ModelConstraintSoft;
 
@@ -65,6 +66,8 @@ public:
 	virtual void visitModelConstraint(ModelConstraint *c) = 0;
 
 	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) = 0;
+
+	virtual void visitModelConstraintIf(ModelConstraintIf *c) = 0;
 
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) = 0;
 

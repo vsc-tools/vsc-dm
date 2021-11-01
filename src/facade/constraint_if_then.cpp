@@ -20,6 +20,7 @@
  */
 
 #include "constraint_if_then.h"
+#include "ctor.h"
 
 namespace vsc {
 namespace facade {
@@ -29,27 +30,64 @@ constraint_if_then::constraint_if_then(
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
-	// TODO Auto-generated constructor stub
+	fprintf(stdout, "constraint_if_then::constraint_if_then\n");
+	ModelConstraintScope *true_c = new ModelConstraintScope();
+	m_constraint = new ModelConstraintIf(
+			ctor::inst()->pop_expr(),
+			true_c,
+			0);
+	ctor::inst()->constraint_scope()->add_constraint(m_constraint);
+	ctor::inst()->push_constraint_scope(true_c);
+	body();
+	ctor::inst()->pop_constraint_scope();
+}
+
+constraint_if_then::constraint_if_then(
+		ModelConstraintIf				*if_c) : m_constraint(if_c) {
 
 }
 
 constraint_if_then::~constraint_if_then() {
 	// TODO Auto-generated destructor stub
+	fprintf(stdout, "constraint_if_then::~constraint_if_then\n");
 }
 
-constraint_else_if constraint_if_then::else_if(
+constraint_if_then constraint_if_then::else_if(
 		const expr						&cond,
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
+	ModelConstraintScope *true_c = new ModelConstraintScope();
+	ModelConstraintIf *if_c = new ModelConstraintIf(
+			ctor::inst()->pop_expr(),
+			true_c,
+			0);
+	m_constraint->false_c(if_c);
 
+	ctor::inst()->push_constraint_scope(true_c);
+	body();
+	ctor::inst()->pop_constraint_scope();
+
+	return constraint_if_then(if_c);
 }
 
-constraint_else_then constraint_if_then::else_then(
+void constraint_if_then::else_then(
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
+	ModelConstraintScope *else_c = new ModelConstraintScope();
+	m_constraint->false_c(else_c);
+	ctor::inst()->push_constraint_scope(else_c);
+	body();
+	ctor::inst()->pop_constraint_scope();
+}
 
+constraint_if_then (if_then)(
+		const expr					&cond,
+		const std::function<void()>	&body,
+		const char					*file,
+		int32_t						lineno) {
+	return constraint_if_then(cond, body, file, lineno);
 }
 
 } /* namespace facade */

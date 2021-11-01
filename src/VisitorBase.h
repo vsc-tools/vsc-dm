@@ -32,6 +32,7 @@
 #include "IVisitor.h"
 
 #include "ModelConstraintExpr.h"
+#include "ModelConstraintIf.h"
 #include "ModelConstraintScope.h"
 #include "ModelConstraintSoft.h"
 
@@ -65,6 +66,8 @@ public:
 	virtual void visitModelConstraint(ModelConstraint *c) override;
 
 	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
+
+	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
 
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
 

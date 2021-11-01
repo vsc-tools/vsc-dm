@@ -28,8 +28,12 @@ namespace facade {
 
 constraint::constraint(
 		const std::function<void ()>	&body) : m_body(body) {
+	fprintf(stdout, "--> constraint\n");
+	fflush(stdout);
 	rand_obj *scope = ctor::inst()->scope();
 	scope->add_constraint(this);
+	fprintf(stdout, "<-- constraint\n");
+	fflush(stdout);
 }
 
 constraint::constraint(

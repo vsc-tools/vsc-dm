@@ -144,7 +144,7 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintSoft(ModelConstraintS
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
-	DEBUG_ENTER("visitModelExprBin");
+	DEBUG_ENTER("visitModelExprBin %s", BinOp2Str_s(e->op()));
 	int32_t ctx_width = m_width_s.back();
 
 	if (e->lhs()->width() > ctx_width) {
@@ -264,7 +264,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 
 	m_node_i = {is_signed, result};
 
-	DEBUG_LEAVE("visitModelExprBin");
+	DEBUG_LEAVE("visitModelExprBin %s", BinOp2Str_s(e->op()));
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
@@ -368,16 +368,27 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::extend(
 			int32_t				ctx_width,
 			bool				is_signed) {
 	int32_t width = boolector_get_width(m_solver->btor(), n);
+	DEBUG_ENTER("extend width=%d ctx_width=%d is_signed=%d",
+			width, ctx_width, is_signed);
 
 	if (ctx_width > width) {
 		if (is_signed) {
-			return boolector_sext(m_solver->btor(), n, ctx_width);
+			DEBUG("Sign-extend");
+			n = boolector_sext(
+					m_solver->btor(),
+					n,
+					(ctx_width-width));
 		} else {
-			return boolector_uext(m_solver->btor(), n, ctx_width);
+			DEBUG("Unsigned-extend");
+			n = boolector_uext(
+					m_solver->btor(),
+					n,
+					(ctx_width-width));
 		}
-	} else {
-		return n;
 	}
+	DEBUG_LEAVE("extend width=%d ctx_width=%d is_signed=%d",
+			width, ctx_width, is_signed);
+	return n;
 }
 
 } /* namespace vsc */

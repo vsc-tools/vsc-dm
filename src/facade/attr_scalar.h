@@ -23,6 +23,7 @@
 #include <string>
 #include "attr_base.h"
 #include "expr.h"
+#include "int_t.h"
 #include "scope.h"
 #include "ModelFieldRoot.h"
 
@@ -33,27 +34,44 @@ class attr_scalar : public attr_base {
 public:
 	attr_scalar(
 			bool				is_signed,
-			int32_t				width);
+			int32_t				width,
+			const int_t			&ival);
 
 	virtual ~attr_scalar();
 
 	expr operator == (const expr &rhs);
 
+	expr operator == (const int_t &val);
+
 	expr operator != (const expr &rhs);
+
+	expr operator != (const int_t &val);
 
 	expr operator < (const expr &rhs);
 
+	expr operator < (const int_t &val);
+
 	expr operator > (const expr &rhs);
+
+	expr operator > (const int_t &val);
 
 	expr operator <= (const expr &rhs);
 
+	expr operator <= (const int_t &val);
+
 	expr operator >= (const expr &rhs);
+
+	expr operator >= (const int_t &val);
 
 //	expr operator == (const attr_scalar &rhs);
 
-	int64_t val_s();
+	uint32_t u32();
 
-	uint64_t val_u();
+	int32_t i32();
+
+	uint64_t u64();
+
+	int64_t i64();
 
 	void val_s(int64_t v);
 

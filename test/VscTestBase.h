@@ -6,13 +6,12 @@
  */
 
 #pragma once
-#include "glog/logging.h"
 #include "gtest/gtest.h"
 
 
 namespace vsc {
 
-class VscTestBase : public ::testing::Test, public virtual ::google::LogSink {
+class VscTestBase : public ::testing::Test {
 public:
 	VscTestBase();
 
@@ -22,10 +21,6 @@ public:
 
 	virtual void TearDown() override;
 
-	virtual void send(::google::LogSeverity severity, const char* full_filename,
-	                    const char* base_filename, int line,
-	                    const struct ::tm* tm_time,
-	                    const char* message, size_t message_len) override;
 
 };
 

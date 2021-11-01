@@ -9,7 +9,8 @@
 
 namespace vsc {
 
-SolveSetSwizzlerPartsel::SolveSetSwizzlerPartsel(RNG &rng) : m_rng(rng) {
+SolveSetSwizzlerPartsel::SolveSetSwizzlerPartsel(RandState *randstate) :
+		m_randstate(randstate) {
 	m_solver = 0;
 	m_sset = 0;
 }
@@ -39,7 +40,7 @@ void SolveSetSwizzlerPartsel::swizzle_field_l(
 	std::vector<ModelConstraintUP> constraints;
 
 	for (uint32_t i=0; i<max_swizzle && fields_c.size(); i++) {
-		uint32_t target_idx = m_rng.randint_u(0, fields_c.size()-1);
+		uint32_t target_idx = m_randstate->randint32(0, fields_c.size()-1);
 		ModelField *field = fields.at(target_idx);
 		fields_c.erase(fields_c.begin()+target_idx);
 		swizzle_field(field, constraints);
@@ -72,8 +73,11 @@ void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
 	// Specifically, there is a width inside min/max
 	// TODO: should probably do this with 'val' to ensure we
 	// can handle wide variables
-	uint32_t width = 8;
-	uint32_t bit_pattern = m_rng.randint_u(0, (1 << width)-1);
+	ModelVal val(f->val());
+	uint32_t width = val.bits();
+	m_randstate->randbits(val);
+//	uint32_t bit_pattern = m_randstate->randint32(0, (1 << width)-1);
+
 	uint32_t max_intervals = 6;
 
 	if (width > max_intervals) {

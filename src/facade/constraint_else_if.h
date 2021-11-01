@@ -28,6 +28,7 @@ namespace vsc {
 namespace facade {
 
 class constraint_else_if {
+	friend class constraint_if_then;
 public:
 
 	virtual ~constraint_else_if();

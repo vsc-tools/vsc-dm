@@ -68,6 +68,16 @@ void VisitorBase::visitModelConstraintExpr(ModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
+void VisitorBase::visitModelConstraintIf(ModelConstraintIf *c) {
+	DEBUG_ENTER("visitModelConstraintIf");
+	c->cond()->accept(this);
+	c->true_c()->accept(this);
+	if (c->false_c()) {
+		c->false_c()->accept(this);
+	}
+	DEBUG_LEAVE("visitModelConstraintIf");
+}
+
 void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope n=%d", c->constraints().size());
 	for (auto it=c->constraints().begin();

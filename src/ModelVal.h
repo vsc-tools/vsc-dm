@@ -25,7 +25,13 @@ public:
 
 		iterator();
 
-		void append(uint32_t val);
+		uint32_t get32();
+
+		void set32(uint32_t val);
+
+		uint64_t get64();
+
+		void set64(uint64_t val);
 
 	private:
 		iterator(ModelVal *v, int32_t idx);
@@ -53,17 +59,33 @@ public:
 public:
 	ModelVal();
 
+	ModelVal(
+			bool		is_signed,
+			int32_t		bits);
+
 	ModelVal(DataType *type);
 
 	virtual ~ModelVal();
 
 	DataType *type() const { return m_type; }
 
+	void type(DataType *t) { m_type = t; }
+
 	uint32_t bits() const { return m_bits; }
 
 	uint32_t at(uint32_t b) const;
 
+	uint32_t u32() const;
+
+	int32_t i32() const;
+
+	uint64_t u64() const;
+
+	int64_t i64() const;
+
 	void to_bits(char *bits) const;
+
+	void from_bits(const char *bits, int32_t width=-1);
 
 	void push_bit(uint32_t b);
 
@@ -88,6 +110,7 @@ public:
 private:
 	DataType						*m_type;
 	std::vector<uint32_t>			m_val;
+	bool							m_is_signed;
 	uint32_t						m_bits;
 };
 

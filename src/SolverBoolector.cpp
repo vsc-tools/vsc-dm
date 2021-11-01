@@ -24,12 +24,13 @@
 #include "SolverBoolector.h"
 #include "SolverBoolectorSolveModelBuilder.h"
 
-#undef EN_DEBUG_SOLVER_BITWUZLA
+#define EN_DEBUG_SOLVER_BOOLECTOR
 
-#ifdef EN_DEBUG_SOLVER_BITWUZLA
-#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
-#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
-#define DEBUG(fmt, ...) DEBUG_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
+#ifdef EN_DEBUG_SOLVER_BOOLECTOR
+DEBUG_SCOPE(SolverBoolector);
+#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBoolector, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBoolector, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) DEBUG_BASE(SolverBoolector, fmt, ##__VA_ARGS__)
 #else
 #define DEBUG_ENTER(fmt, ...)
 #define DEBUG_LEAVE(fmt, ...)
@@ -137,31 +138,34 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	// - size-2*32..size-32*1-1
 	const uint32_t elem_w = 32;
 	int32_t size = boolector_get_width(m_btor, it->second);
-	int32_t it_idx = 0;
-	int32_t bidx_lim = size;
 
-	do {
-		uint32_t tval = 0;
-		int32_t bidx, bidx_lim_n;
-
-		if (size > elem_w*(it_idx+1)) {
-			bidx = size-(elem_w*(it_idx+1));
-		} else {
-			bidx = 0;
-		}
-
-		bidx_lim_n = bidx;
-		while (bidx < bidx_lim) {
-			tval <<= 1;
-			tval |= (bits[bidx] == '1')?1:0;
-			bidx++;
-		}
-		bidx_lim = bidx_lim_n;
-
-		val_it.append(tval);
-
-		it_idx++;
-	} while (elem_w*it_idx < size);
+	f->val().from_bits(bits, size);
+//	int32_t it_idx = 0;
+//	int32_t bidx_lim = size;
+//
+//	do {
+//		uint32_t tval = 0;
+//		int32_t bidx, bidx_lim_n;
+//
+//		if (size > elem_w*(it_idx+1)) {
+//			bidx = size-(elem_w*(it_idx+1));
+//		} else {
+//			bidx = 0;
+//		}
+//
+//		bidx_lim_n = bidx;
+//		while (bidx < bidx_lim) {
+//			tval <<= 1;
+//			tval |= (bits[bidx] == '1')?1:0;
+//			bidx++;
+//		}
+//		bidx_lim = bidx_lim_n;
+//
+//		// TODO:
+////		val_it.append(tval);
+//
+//		it_idx++;
+//	} while (elem_w*it_idx < size);
 
 	boolector_free_bv_assignment(m_btor, bits);
 	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());

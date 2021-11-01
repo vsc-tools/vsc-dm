@@ -23,27 +23,40 @@
 #include <string>
 #include "attr_scalar.h"
 #include "expr.h"
+#include "int_t.h"
 
 namespace vsc {
 namespace facade {
 
 class rand_obj;
 
-template <typename T> class attr : public attr_scalar {
+template <typename T> class attr : public T {
 public:
+	attr(const scope &name) : T(name) { }
 };
 
-template <> class attr<int> : public attr_scalar {
+template <int W> class attr<ui_t<W>> : public attr_scalar {
 public:
 
 	attr(
-			const scope			&s,
-			int32_t 			width=32) : attr_scalar(true, width) {
+		const scope &s,
+		const int_t &ival=int_t(false, W, 0)) : attr_scalar(false, W, ival) {
+
 	}
 
-	expr operator == (int32_t v) {
-//		return false;
+	uint64_t operator ()() { return u64(); }
+
+};
+
+template <int W> class attr<si_t<W>> : public attr_scalar {
+public:
+
+	attr(const scope &s, const int_t &ival=int_t(true, W, 0)) :
+		attr_scalar(true, W, ival) {
+
 	}
+
+	int64_t operator ()() { return i64(); }
 
 };
 

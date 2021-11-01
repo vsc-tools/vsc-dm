@@ -154,6 +154,71 @@ TEST_F(TestFacadeSmoke, constraint_expr) {
 
 }
 
+TEST_F(TestFacadeSmoke, constraint_expr_literal) {
 
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<si_t<8>>		ia {"ia"};
+		rand_attr<ui_t<32>>		ib {"ib"};
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<ui_t<8>>		b {"b"};
+		rand_attr<ui_t<8>>		c {"c"};
+
+		attr<ui_t<8>>			d {"d", 5};
+
+		constraint				ab_c {"ab_c", [&] {
+			a == si_t<8>(1);
+			b == si_t<8>(2);
+			c == d;
+		}};
+	};
+
+	MyC c("c");
+
+	ASSERT_TRUE(c.randomize());
+	ASSERT_EQ(c.a(), 1);
+	ASSERT_EQ(c.b(), 2);
+	ASSERT_EQ(c.c(), 5);
+	/*
+	 */
+}
+
+TEST_F(TestFacadeSmoke, constraint_if_else) {
+
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<si_t<8>>		ia {"ia"};
+		rand_attr<ui_t<32>>		ib {"ib"};
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<ui_t<8>>		b {"b"};
+		rand_attr<ui_t<8>>		c {"c"};
+
+		attr<ui_t<8>>			d {"d", 5};
+
+		constraint				ab_c {"ab_c", [&] {
+			if_then(d == 5, [&] {
+				a < 10;
+				b > 10;
+			}).else_then([&] {
+				a > 10;
+				b < 10;
+			});
+			c == d;
+		}};
+	};
+
+	MyC c("c");
+
+	ASSERT_TRUE(c.randomize());
+	ASSERT_LT(c.a(), 10);
+	ASSERT_GT(c.b(), 10);
+	ASSERT_EQ(c.c(), 5);
+	/*
+	 */
+}
 
 } /* namespace vsc */

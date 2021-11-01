@@ -149,7 +149,8 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 		}
 		bidx_lim = bidx_lim_n;
 
-		val_it.append(tval);
+		// TODO:
+//		val_it.append(tval);
 
 		it_idx++;
 	} while (elem_w*it_idx < size);
