@@ -26,19 +26,10 @@
 #include "rand_obj.h"
 #include "constraint.h"
 #include "constraint_if_then.h"
+#include "constraint_implies.h"
+#include "expr_inside.h"
 #include "literal_base.h"
 
-/**
- * User-facade macro that captures source location
- */
-#define if_then(cond, body) \
-	if_then(cond, body, __FILE__, __LINE__)
-
-#define else_if(cond, body) \
-	else_if(cond, body, __FILE__, __LINE__)
-
-#define else_then(body) \
-	else_then(body, __FILE__, __LINE__)
 
 
 

@@ -11,6 +11,8 @@
 
 namespace vsc {
 
+class RandState;
+using RandStateUP=std::unique_ptr<RandState>;
 class RandState {
 public:
 	RandState(uint32_t seed);

@@ -7,6 +7,7 @@
 
 #pragma once
 #include "gtest/gtest.h"
+#include "vsc_facade.h"
 
 
 namespace vsc {

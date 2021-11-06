@@ -22,6 +22,7 @@
 #include "CommitFieldValueVisitor.h"
 #include "Debug.h"
 #include "Randomizer.h"
+#include "SolveSetSwizzlerPartsel.h"
 #include "SolveSpecBuilder.h"
 #include "SolveSetSolveModelBuilder.h"
 
@@ -42,7 +43,8 @@ namespace vsc {
 
 Randomizer::Randomizer(
 		ISolverFactory		*solver_factory,
-		RNG 				&rng) : m_solver_factory(solver_factory), m_rng(rng) {
+		RandState 			*randstate) :
+				m_solver_factory(solver_factory), m_randstate(randstate) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -83,17 +85,35 @@ bool Randomizer::randomize(
 
 		if (solver->isSAT()) {
 			DEBUG("PASS: Initial try-solve for solveset");
+			for (auto c_it=(*sset)->constraints().begin();
+				c_it!=(*sset)->constraints().end(); c_it++) {
+				solver->addAssert(*c_it);
+			}
+		} else {
+			DEBUG("FAIL: Initial try-solve for solveset");
+
+			ret = false;
+
+			// TODO: Try backing off soft constraints
+		}
+
+		if (ret) {
+			// Swizzle fields
+			SolveSetSwizzlerPartsel(m_randstate).swizzle(
+					solver.get(),
+					sset->get());
+
+			// Ensure we're SAT
+			if (!solver->isSAT()) {
+				fprintf(stdout, "unsat post-swizzle\n");
+			}
+
 			for (auto f_it=(*sset)->rand_fields().begin();
 					f_it!=(*sset)->rand_fields().end(); f_it++) {
 				DEBUG("Commit %s", (*f_it)->name().c_str());
 				CommitFieldValueVisitor(solver.get()).commit(*f_it);
 			}
 		} else {
-			DEBUG("FAIL: Initial try-solve for solveset");
-
-			// Try backing off soft constraints
-
-			ret = false;
 			break;
 		}
 	}
@@ -101,6 +121,7 @@ bool Randomizer::randomize(
 	for (auto uc_it=spec->unconstrained().begin();
 			uc_it!=spec->unconstrained().end(); uc_it++) {
 		DEBUG("Randomize unconstrained field %s", (*uc_it)->name().c_str());
+		m_randstate->randbits((*uc_it)->val());
 	}
 
 	DEBUG_LEAVE("randomize n_fields=%d n_constraints=%d ret=%d",

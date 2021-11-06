@@ -29,6 +29,7 @@ std::pair<bool,int32_t> DataTypeWidthVisitor::width(DataType *t) {
 void DataTypeWidthVisitor::visitDataTypeInt(DataTypeInt *t) {
 	m_is_signed = t->is_signed();
 	m_width = t->width();
+	fprintf(stdout, "width: %d\n", m_width);
 }
 
 } /* namespace vsc */

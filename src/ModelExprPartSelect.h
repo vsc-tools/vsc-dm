@@ -26,6 +26,8 @@ public:
 
 	int32_t upper() const { return m_upper; }
 
+	virtual int32_t width() const override { return m_upper-m_lower+1; }
+
 	virtual void accept(IVisitor *v) { v->visitModelExprPartSelect(this); }
 
 private:

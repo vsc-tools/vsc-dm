@@ -77,6 +77,8 @@ public:
 
 	uint32_t u32() const;
 
+	void u32(uint32_t v);
+
 	int32_t i32() const;
 
 	uint64_t u64() const;
@@ -88,6 +90,14 @@ public:
 	void to_bits(char *bits) const;
 
 	void from_bits(const char *bits, int32_t width=-1);
+
+	void set_bit(uint32_t bit, uint32_t val);
+
+	uint32_t get_bit(uint32_t bit);
+
+	void set_word(uint32_t wi, uint32_t val);
+
+	uint32_t get_word(uint32_t wi) const { return m_val[wi]; }
 
 	void push_bit(uint32_t b);
 
@@ -102,6 +112,10 @@ public:
 	ModelVal::iterator begin();
 
 	ModelVal::const_iterator begin() const;
+
+	ModelVal slice(
+			int32_t		upper,
+			int32_t		lower);
 
 	/*
 	ModelVal::iterator end();

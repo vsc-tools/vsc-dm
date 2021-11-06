@@ -8,6 +8,7 @@
 #include "ISolverFactory.h"
 #include "ModelField.h"
 #include "ModelConstraint.h"
+#include "RandState.h"
 #include "RNG.h"
 
 namespace vsc {
@@ -16,7 +17,7 @@ class Randomizer {
 public:
 	Randomizer(
 			ISolverFactory		*solver_factory,
-			RNG 				&rng);
+			RandState			*randstate);
 
 	virtual ~Randomizer();
 
@@ -28,7 +29,7 @@ public:
 
 private:
 	ISolverFactory		*m_solver_factory;
-	RNG					&m_rng;
+	RandState			*m_randstate;
 
 };
 

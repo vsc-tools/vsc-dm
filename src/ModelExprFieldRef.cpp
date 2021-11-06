@@ -24,9 +24,6 @@
 namespace vsc {
 
 ModelExprFieldRef::ModelExprFieldRef(ModelField *field) : m_field(field) {
-	// TODO: Compute based on field data type
-	m_width = 32;
-	// TODO Auto-generated constructor stub
 
 }
 

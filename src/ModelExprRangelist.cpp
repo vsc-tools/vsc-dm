@@ -9,13 +9,17 @@
 
 namespace vsc {
 
-ModelExprRangelist::ModelExprRangelist() {
+ModelExprRangelist::ModelExprRangelist() : m_width(-1) {
 
 }
 
 ModelExprRangelist::ModelExprRangelist(
 		const std::vector<ModelExprRange *> &ranges) {
+	m_width = -1;
 	for (auto it=ranges.begin(); it!=ranges.end(); it++) {
+		if ((*it)->width() > m_width) {
+			m_width = (*it)->width();
+		}
 		m_ranges.push_back(ModelExprRangeUP(*it));
 	}
 }

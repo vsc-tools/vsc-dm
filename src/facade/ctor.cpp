@@ -39,7 +39,7 @@
 namespace vsc {
 namespace facade {
 
-ctor::ctor() {
+ctor::ctor() : m_randstate(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -200,6 +200,11 @@ DataTypeInt *ctor::type_int(
 			return dt;
 		}
 	}
+}
+
+RandState *ctor::mk_randstate() {
+	uint32_t seed = m_randstate.randint32(1, 0x7FFFFFFF);
+	return new RandState(seed);
 }
 
 std::unique_ptr<ctor> ctor::m_inst;

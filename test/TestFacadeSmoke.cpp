@@ -221,4 +221,51 @@ TEST_F(TestFacadeSmoke, constraint_if_else) {
 	 */
 }
 
+TEST_F(TestFacadeSmoke, enum_type_field) {
+
+	enum my_e {
+		A,
+		B,
+		C,
+		D,
+		E,
+		F
+	};
+
+	using my_e_t=enum_t<my_e, A, F>;
+
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<my_e_t>		ia {"ia"};
+		rand_attr<ui_t<32>>		ib {"ib"};
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<ui_t<8>>		b {"b"};
+		rand_attr<ui_t<8>>		c {"c"};
+
+		attr<ui_t<8>>			d {"d", 5};
+
+		constraint				ab_c {"ab_c", [&] {
+			if_then(d == 5, [&] {
+				a < 10;
+				b > 10;
+			}).else_then([&] {
+				a > 10;
+				b < 10;
+			});
+			c == d;
+		}};
+	};
+
+	MyC c("c");
+
+	ASSERT_TRUE(c.randomize());
+	ASSERT_LT(c.a(), 10);
+	ASSERT_GT(c.b(), 10);
+	ASSERT_EQ(c.c(), 5);
+	/*
+	 */
+}
+
 } /* namespace vsc */

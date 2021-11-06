@@ -41,27 +41,15 @@ public:
 
 	expr operator == (const expr &rhs);
 
-	expr operator == (const int_t &val);
-
 	expr operator != (const expr &rhs);
-
-	expr operator != (const int_t &val);
 
 	expr operator < (const expr &rhs);
 
-	expr operator < (const int_t &val);
-
 	expr operator > (const expr &rhs);
-
-	expr operator > (const int_t &val);
 
 	expr operator <= (const expr &rhs);
 
-	expr operator <= (const int_t &val);
-
 	expr operator >= (const expr &rhs);
-
-	expr operator >= (const int_t &val);
 
 //	expr operator == (const attr_scalar &rhs);
 

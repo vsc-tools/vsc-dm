@@ -31,6 +31,8 @@ public:
 
 	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
 
+	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) override;
+
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
 
 	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;

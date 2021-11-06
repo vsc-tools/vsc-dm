@@ -23,7 +23,7 @@
 #include "SolverBoolectorSolveModelBuilder.h"
 #include "boolector/boolector.h"
 
-#define EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
+#undef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 DEBUG_SCOPE(SolverBoolectorSolveModelBuilder)
@@ -53,10 +53,8 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelField *f) {
 	m_width_s.push_back(-1);
 
 	f->accept(this);
-	BoolectorSort sort = m_solver->get_sort(32);
-	BoolectorNode *node = boolector_var(m_solver->btor(), sort, 0);
 
-	return node;
+	return m_node_i.second;
 }
 
 BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelConstraint *c) {
@@ -78,7 +76,7 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelConstraint *c) {
 }
 
 void SolverBoolectorSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
-	DEBUG_ENTER("visitDataTypeInt");
+	DEBUG_ENTER("visitDataTypeInt width=%d", t->width());
 	BoolectorNode *n = boolector_var(m_solver->btor(),
 			m_solver->get_sort(t->width()), 0);
 	m_node_i = {t->is_signed(), n};
@@ -139,6 +137,23 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(ModelConstraintIf 
 	}
 
 	DEBUG_LEAVE("visitModelConstrainIf");
+}
+
+void SolverBoolectorSolveModelBuilder::visitModelConstraintImplies(
+		ModelConstraintImplies *c) {
+	DEBUG_ENTER("visitModelConstraintImplies");
+	c->cond()->accept(this);
+	BoolectorNode *cond_n = toBoolNode(m_node_i.second);
+
+	c->body()->accept(this);
+	BoolectorNode *body_n = toBoolNode(m_node_i.second);
+
+	m_node_i.second = boolector_implies(
+			m_solver->btor(),
+			cond_n,
+			body_n);
+	m_node_i.first = false;
+	DEBUG_LEAVE("visitModelConstraintImplies");
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelConstraintScope(ModelConstraintScope *c) {

@@ -100,7 +100,7 @@ void SolverBitwuzla::addAssert(ModelConstraint *c) {
 
 bool SolverBitwuzla::isSAT() {
 
-	if (!m_issat_valid) {
+	if (!m_issat_valid || !m_issat) {
 		m_issat = (bitwuzla_check_sat(m_bitwuzla) == BITWUZLA_SAT);
 		m_issat_valid = true;
 	}
@@ -131,29 +131,7 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 	int32_t it_idx = 0;
 	int32_t bidx_lim = size;
 
-	do {
-		uint32_t tval = 0;
-		int32_t bidx, bidx_lim_n;
-
-		if (size > elem_w*(it_idx+1)) {
-			bidx = size-(elem_w*(it_idx+1));
-		} else {
-			bidx = 0;
-		}
-
-		bidx_lim_n = bidx;
-		while (bidx < bidx_lim) {
-			tval <<= 1;
-			tval |= (bits[bidx] == '1')?1:0;
-			bidx++;
-		}
-		bidx_lim = bidx_lim_n;
-
-		// TODO:
-//		val_it.append(tval);
-
-		it_idx++;
-	} while (elem_w*it_idx < size);
+	f->val().from_bits(bits, size);
 
 	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
 }

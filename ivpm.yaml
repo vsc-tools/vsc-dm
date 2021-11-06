@@ -16,5 +16,7 @@ package:
        url: https://github.com/google/glog.git
      - name: gmp
        url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+     - name: magic_enum
+       url: https://github.com/Neargye/magic_enum.git
        
        

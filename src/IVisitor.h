@@ -35,12 +35,14 @@ class DataTypeStruct;
 class ModelConstraint;
 class ModelConstraintExpr;
 class ModelConstraintIf;
+class ModelConstraintImplies;
 class ModelConstraintScope;
 class ModelConstraintSoft;
 
 class ModelExprBin;
 class ModelExprCond;
 class ModelExprFieldRef;
+class ModelExprIn;
 class ModelExprPartSelect;
 class ModelExprRange;
 class ModelExprRangelist;
@@ -69,6 +71,8 @@ public:
 
 	virtual void visitModelConstraintIf(ModelConstraintIf *c) = 0;
 
+	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) = 0;
+
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) = 0;
 
 	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) = 0;
@@ -78,6 +82,8 @@ public:
 	virtual void visitModelExprCond(ModelExprCond *e) = 0;
 
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) = 0;
+
+	virtual void visitModelExprIn(ModelExprIn *e) = 0;
 
 	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) = 0;
 

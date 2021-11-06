@@ -24,7 +24,7 @@
 #include "SolverBoolector.h"
 #include "SolverBoolectorSolveModelBuilder.h"
 
-#define EN_DEBUG_SOLVER_BOOLECTOR
+#undef EN_DEBUG_SOLVER_BOOLECTOR
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR
 DEBUG_SCOPE(SolverBoolector);
@@ -70,13 +70,18 @@ SolverBoolector::~SolverBoolector() {
 
 	// Creates solver data for a field
 void SolverBoolector::initField(ModelField *f) {
+	DEBUG_ENTER("initField %s", f->name().c_str());
+
 	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
 		BoolectorNode *node = SolverBoolectorSolveModelBuilder(this).build(f);
 		m_field_node_m.insert({f, node});
+		DEBUG("node width: %d", boolector_get_width(m_btor, node));
 		m_issat_valid = false;
 	}
+
+	DEBUG_LEAVE("initField %s (width=%d)", f->name().c_str(), f->val().bits());
 }
 
 	// Creates solver data for a constraint
@@ -113,7 +118,7 @@ void SolverBoolector::addAssert(ModelConstraint *c) {
 
 bool SolverBoolector::isSAT() {
 
-	if (!m_issat_valid) {
+	if (!m_issat_valid || !m_issat) {
 		m_issat = (boolector_sat(m_btor) == BTOR_RESULT_SAT);
 		m_issat_valid = true;
 	}

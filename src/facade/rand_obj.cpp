@@ -64,8 +64,12 @@ rand_obj::~rand_obj() {
 }
 
 bool rand_obj::randomize() {
-	RNG rng;
-	Randomizer randomizer(solver_factory(), rng);
+	if (!m_randstate) {
+		m_randstate = RandStateUP(ctor::inst()->mk_randstate());
+	}
+	Randomizer randomizer(
+			solver_factory(),
+			m_randstate.get());
 	std::vector<ModelField *> 		fields;
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
@@ -81,8 +85,12 @@ bool rand_obj::randomize() {
 
 bool rand_obj::randomize_with(
 		const std::function<void()> &body) {
-	RNG rng;
-	Randomizer randomizer(solver_factory(), rng);
+	if (!m_randstate) {
+		m_randstate = RandStateUP(ctor::inst()->mk_randstate());
+	}
+	Randomizer randomizer(
+			solver_factory(),
+			m_randstate.get());
 	std::vector<ModelField *> 		fields;
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;

@@ -25,6 +25,8 @@
 #include "constraint_else_then.h"
 #include "ModelConstraintIf.h"
 
+
+
 namespace vsc {
 namespace facade {
 
@@ -76,3 +78,14 @@ constraint_if_then (if_then)(
 } /* namespace facade */
 } /* namespace vsc */
 
+/**
+ * User-facade macro that captures source location
+ */
+#define if_then(cond, body) \
+	if_then(cond, body, __FILE__, __LINE__)
+
+#define else_if(cond, body) \
+	else_if(cond, body, __FILE__, __LINE__)
+
+#define else_then(body) \
+	else_then(body, __FILE__, __LINE__)

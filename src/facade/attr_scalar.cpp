@@ -58,15 +58,6 @@ expr attr_scalar::operator == (const expr &rhs) {
 			rhs_e));
 }
 
-expr attr_scalar::operator == (const int_t &val) {
-	ModelExprVal *rhs = val.toExpr();
-	ModelExprBin *eq = new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Eq,
-			rhs);
-	return expr(eq);
-}
-
 //expr attr_scalar::operator == (uint64_t val) {
 //	;
 //}
@@ -79,13 +70,6 @@ expr attr_scalar::operator != (const expr &rhs) {
 			rhs_e));
 }
 
-expr attr_scalar::operator != (const int_t &val) {
-	return expr(new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Eq,
-			val.toExpr()));
-}
-
 expr attr_scalar::operator < (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
@@ -93,14 +77,6 @@ expr attr_scalar::operator < (const expr &rhs) {
 			BinOp::Lt,
 			rhs_e));
 }
-
-expr attr_scalar::operator < (const int_t &val) {
-	return expr(new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Lt,
-			val.toExpr()));
-}
-
 
 expr attr_scalar::operator > (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
@@ -110,14 +86,6 @@ expr attr_scalar::operator > (const expr &rhs) {
 			rhs_e));
 }
 
-expr attr_scalar::operator > (const int_t &val) {
-	return expr(new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Gt,
-			val.toExpr()));
-}
-
-
 expr attr_scalar::operator <= (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
@@ -126,26 +94,12 @@ expr attr_scalar::operator <= (const expr &rhs) {
 			rhs_e));
 }
 
-expr attr_scalar::operator <= (const int_t &val) {
-	return expr(new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Le,
-			val.toExpr()));
-}
-
 expr attr_scalar::operator >= (const expr &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Ge,
 			rhs_e));
-}
-
-expr attr_scalar::operator >= (const int_t &val) {
-	return expr(new ModelExprBin(
-			new ModelExprFieldRef(field()),
-			BinOp::Ge,
-			val.toExpr()));
 }
 
 uint32_t attr_scalar::u32() {

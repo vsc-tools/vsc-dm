@@ -18,7 +18,7 @@ public:
 	virtual ~ModelExprFieldRef();
 
 	virtual int32_t width() const override {
-		return m_width;
+		return m_field->val().bits();
 	}
 
 	ModelField *field() const { return m_field; }
@@ -27,7 +27,6 @@ public:
 
 private:
 	ModelField					*m_field;
-	int32_t						m_width;
 
 };
 

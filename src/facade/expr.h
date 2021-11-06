@@ -23,6 +23,7 @@
 #include <memory>
 #include <stdint.h>
 #include "ModelExpr.h"
+#include "int_t.h"
 
 namespace vsc {
 
@@ -33,12 +34,23 @@ namespace facade {
 class attr_scalar;
 
 class expr {
+	friend class attr_scalar;
 public:
 	expr(const attr_scalar &);
 
-	expr(ModelExpr *core);
+	expr(const int_t &);
+
+	expr(int32_t v);
+
+	expr(int64_t v);
+
+	explicit expr(ModelExpr *core);
 
 	virtual ~expr();
+
+	ModelExpr *core() const { return m_core; }
+
+private:
 
 private:
 //	ModelExprUP					m_core;

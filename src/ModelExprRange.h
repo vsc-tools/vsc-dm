@@ -20,6 +20,8 @@ public:
 
 	virtual ~ModelExprRange();
 
+	virtual int32_t width() const override;
+
 	ModelExpr *lower() const { return m_lower.get(); }
 
 	ModelExpr *upper() const { return m_upper.get(); }

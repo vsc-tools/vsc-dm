@@ -27,6 +27,7 @@
 #include <unordered_set>
 #include "attr_base.h"
 #include "scope.h"
+#include "RandState.h"
 
 namespace vsc {
 
@@ -64,6 +65,7 @@ private:
 	std::unordered_map<std::string,int32_t>		m_constraint_name_m;
 	std::unordered_set<int32_t>					m_constraint_ov_s;
 	ISolverFactoryUP							m_solver_factory;
+	RandStateUP									m_randstate;
 
 
 };

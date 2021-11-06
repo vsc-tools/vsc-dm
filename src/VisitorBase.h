@@ -33,12 +33,14 @@
 
 #include "ModelConstraintExpr.h"
 #include "ModelConstraintIf.h"
+#include "ModelConstraintImplies.h"
 #include "ModelConstraintScope.h"
 #include "ModelConstraintSoft.h"
 
 #include "ModelExprBin.h"
 #include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
+#include "ModelExprIn.h"
 #include "ModelExprPartSelect.h"
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
@@ -69,6 +71,8 @@ public:
 
 	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
 
+	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) override;
+
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
 
 	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;
@@ -78,6 +82,8 @@ public:
 	virtual void visitModelExprCond(ModelExprCond *e) override;
 
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
+
+	virtual void visitModelExprIn(ModelExprIn *e) override;
 
 	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) override;
 

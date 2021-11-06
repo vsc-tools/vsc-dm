@@ -22,6 +22,10 @@
 #include "constraint_if_then.h"
 #include "ctor.h"
 
+#undef if_then
+#undef else_if
+#undef else_then
+
 namespace vsc {
 namespace facade {
 
@@ -30,7 +34,6 @@ constraint_if_then::constraint_if_then(
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
-	fprintf(stdout, "constraint_if_then::constraint_if_then\n");
 	ModelConstraintScope *true_c = new ModelConstraintScope();
 	m_constraint = new ModelConstraintIf(
 			ctor::inst()->pop_expr(),
@@ -48,8 +51,6 @@ constraint_if_then::constraint_if_then(
 }
 
 constraint_if_then::~constraint_if_then() {
-	// TODO Auto-generated destructor stub
-	fprintf(stdout, "constraint_if_then::~constraint_if_then\n");
 }
 
 constraint_if_then constraint_if_then::else_if(

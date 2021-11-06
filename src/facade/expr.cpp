@@ -30,10 +30,30 @@ namespace facade {
 expr::expr(const attr_scalar &attr) :
 		m_core(new ModelExprFieldRef(attr.field())) {
 	ctor::inst()->push_expr(m_core);
-
 }
 
 expr::expr(ModelExpr *core) : m_core(core) {
+	ctor::inst()->push_expr(m_core);
+}
+
+expr::expr(const int_t &val) {
+	m_core = val.toExpr();
+	ctor::inst()->push_expr(m_core);
+}
+
+expr::expr(int32_t val) {
+	DataTypeInt *dt = ctor::inst()->type_int(true, 32);
+	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	e->val().u32(val);
+	m_core = e;
+	ctor::inst()->push_expr(m_core);
+}
+
+expr::expr(int64_t val) {
+	DataTypeInt *dt = ctor::inst()->type_int(true, 64);
+	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	e->val().u64(val);
+	m_core = e;
 	ctor::inst()->push_expr(m_core);
 }
 

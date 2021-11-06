@@ -12,6 +12,7 @@ target_include_directories(vsc PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/facade
     ${CMAKE_BINARY_DIR}/include
+	${PACKAGES_DIR}/magic_enum/include
     ${Boolector_INCLUDE_DIR}
     )
    

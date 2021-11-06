@@ -40,6 +40,10 @@ ModelVal::ModelVal(
 		m_type(0), m_is_signed(is_signed), m_bits(bits),
 		m_val(0, ((bits-1)/32)+1) {
 
+		// Ensure we have sufficient space allocated
+		while (m_val.size() < ((m_bits-1)/32+1)) {
+			m_val.push_back(0);
+		}
 }
 
 ModelVal::ModelVal(DataType *type) :
@@ -71,6 +75,13 @@ uint32_t ModelVal::u32() const {
 	}
 
 	return val;
+}
+
+void ModelVal::u32(uint32_t v) {
+	m_val[0] = v;
+	for (uint32_t i=1; i<m_val.size(); i++) {
+		m_val[i] = 0;
+	}
 }
 
 int32_t ModelVal::i32() const {
@@ -158,6 +169,8 @@ void ModelVal::to_bits(char *bits) const {
 }
 
 void ModelVal::from_bits(const char *bits, int32_t width) {
+	// Width is for the incoming bits. It often happens
+	// that the width of the literal is wider than
 	if (width == -1) {
 		width = strlen(bits);
 	}
@@ -184,6 +197,23 @@ void ModelVal::from_bits(const char *bits, int32_t width) {
 		fprintf(stdout, "  val[%d]=0x%08x\n", i, m_val[i]);
 	}
 	 */
+}
+
+void ModelVal::set_bit(uint32_t bit, uint32_t val) {
+	uint32_t wi = bit/32;
+	uint32_t bi = bit%32;
+	m_val[wi] &= ~(1 << bi);
+	m_val[wi] |= ((val&1) << bi);
+}
+
+uint32_t ModelVal::get_bit(uint32_t bit) {
+	uint32_t wi = bit/32;
+	uint32_t bi = bit%32;
+	return (m_val[wi] & (1 << bi))?1:0;
+}
+
+void ModelVal::set_word(uint32_t wi, uint32_t val) {
+	m_val[wi] = val;
 }
 
 void ModelVal::push_bit(uint32_t b) {
@@ -286,6 +316,16 @@ ModelVal::const_iterator::const_iterator() : m_val(0), m_idx(-1) {
 ModelVal::const_iterator::const_iterator(ModelVal *v, int32_t idx) :
 		m_val(v), m_idx(idx) {
 
+}
+
+ModelVal ModelVal::slice(
+			int32_t		upper,
+			int32_t		lower) {
+	ModelVal ret(false, (upper-lower+1));
+	for (uint32_t bit=lower; bit<=upper; bit++) {
+		ret.set_bit(bit-lower, get_bit(bit));
+	}
+	return ret;
 }
 
 } /* namespace vsc */

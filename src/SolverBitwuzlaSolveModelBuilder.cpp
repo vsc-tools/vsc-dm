@@ -53,10 +53,8 @@ BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
 	m_width_s.push_back(-1);
 
 	f->accept(this);
-	BitwuzlaSort *sort = m_solver->get_sort(32);
-	BitwuzlaTerm *node = bitwuzla_mk_const(m_solver->bitwuzla(), sort, 0);
 
-	return node;
+	return m_node_i.second;
 }
 
 BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
@@ -395,6 +393,39 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *
 	m_node_i = {is_signed, n};
 	DEBUG_LEAVE("visitModelExprFieldRef %s n=%p",
 			e->field()->name().c_str(), m_node_i.second);
+}
+
+void SolverBitwuzlaSolveModelBuilder::visitModelExprPartSelect(
+		ModelExprPartSelect *e) {
+	int32_t ctx_width = m_width_s.back();
+	DEBUG_ENTER("visitModelExprPartSelect");
+	node_info_t lhs_i = expr(e->lhs(), ctx_width);
+
+	m_node_i.first = false;
+	m_node_i.second = bitwuzla_mk_term1_indexed2(
+					m_solver->bitwuzla(),
+					BITWUZLA_KIND_BV_EXTRACT,
+					lhs_i.second,
+					e->upper(),
+					e->lower());
+
+	DEBUG_LEAVE("visitModelExprPartSelect");
+}
+
+void SolverBitwuzlaSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
+	DEBUG_ENTER("visitModelExprVal");
+	char *bits = (char *)alloca(e->val().bits()+1);
+	e->val().to_bits(bits);
+
+	DEBUG("bits=%s", bits);
+	m_node_i.second = bitwuzla_mk_bv_value(
+			m_solver->bitwuzla(),
+			m_solver->get_sort(e->val().bits()),
+			bits,
+			BITWUZLA_BV_BASE_BIN);
+	m_node_i.first = false; // TODO:
+
+	DEBUG_LEAVE("visitModelExprVal");
 }
 
 void SolverBitwuzlaSolveModelBuilder::visitModelField(ModelField *f) {

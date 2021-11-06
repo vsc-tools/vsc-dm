@@ -35,6 +35,7 @@ public:
 			int32_t									lineno);
 
 	virtual ~constraint_foreach();
+
 };
 
 void (foreach)(

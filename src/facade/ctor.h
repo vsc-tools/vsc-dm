@@ -27,6 +27,7 @@
 #include "DataTypeInt.h"
 #include "ModelConstraintScope.h"
 #include "ModelExpr.h"
+#include "RandState.h"
 
 namespace vsc {
 
@@ -91,6 +92,11 @@ public:
 			bool		is_signed,
 			int32_t		width);
 
+	/**
+	 * Derives a randstate from the master copy
+	 */
+	RandState *mk_randstate();
+
 private:
 	std::vector<ModelExprUP>					m_expr_s;
 	std::vector<ctor_ctxt_up>					m_scope_s;
@@ -98,6 +104,7 @@ private:
 	std::unordered_map<int32_t, DataTypeIntUP>	m_si_type_m;
 	std::unordered_map<int32_t, DataTypeIntUP>	m_ui_type_m;
 	std::vector<ModelConstraintScope *>			m_constraint_scope_s;
+	RandState									m_randstate;
 	static std::unique_ptr<ctor>				m_inst;
 
 };

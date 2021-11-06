@@ -78,6 +78,13 @@ void VisitorBase::visitModelConstraintIf(ModelConstraintIf *c) {
 	DEBUG_LEAVE("visitModelConstraintIf");
 }
 
+void VisitorBase::visitModelConstraintImplies(ModelConstraintImplies *c) {
+	DEBUG_ENTER("visitModelConstraintImplies");
+	c->cond()->accept(this);
+	c->body()->accept(this);
+	DEBUG_LEAVE("visitModelConstraintImplies");
+}
+
 void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope n=%d", c->constraints().size());
 	for (auto it=c->constraints().begin();
@@ -110,6 +117,13 @@ void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	e->field()->accept(this);
 	DEBUG_LEAVE("visitModelExprFieldRef");
+}
+
+void VisitorBase::visitModelExprIn(ModelExprIn *e) {
+	DEBUG_ENTER("visitModelExprIn");
+	e->lhs()->accept(this);
+	e->rangelist()->accept(this);
+	DEBUG_LEAVE("visitModelExprIn");
 }
 
 void VisitorBase::visitModelExprPartSelect(ModelExprPartSelect *e) {

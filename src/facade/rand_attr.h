@@ -22,6 +22,7 @@
 #pragma once
 #include "attr_cls.h"
 #include "attr_scalar.h"
+#include "enum_t.h"
 #include "int_t.h"
 
 namespace vsc {
@@ -56,6 +57,15 @@ public:
 	}
 
 	int64_t operator ()() { return i64(); }
+};
+
+template <typename T, T first, T last> class rand_attr<enum_t<T, first, last>> : public attr_scalar {
+public:
+
+	rand_attr(
+			const scope &name) : attr_scalar(true, 32, int_t(true, 32, 0)) { }
+
+	T operator ()() { return reinterpret_cast<T>(i64()); }
 };
 
 template <> class rand_attr<int> : public attr_scalar {
