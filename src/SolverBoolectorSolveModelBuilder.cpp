@@ -335,6 +335,83 @@ void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef 
 			e->field()->name().c_str(), m_node_i.second);
 }
 
+void SolverBoolectorSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
+	DEBUG_ENTER("visitModelExprIn");
+	int32_t ctx_width = m_width_s.back();
+	node_info_t lhs_i = expr(e->lhs(), ctx_width);
+
+	if (e->lhs()->width() > ctx_width) {
+		ctx_width = e->lhs()->width();
+	}
+
+	if (e->rangelist()->width() > ctx_width) {
+		ctx_width = e->rangelist()->width();
+	}
+
+	// TODO: need to consider sign of rangelist elements?
+	bool is_signed = lhs_i.first;
+
+	lhs_i.second = extend(lhs_i.second, ctx_width, is_signed);
+
+	BoolectorNode *n = 0;
+
+	for (auto r_it=e->rangelist()->ranges().begin();
+			r_it!=e->rangelist()->ranges().end(); r_it++) {
+		BoolectorNode *t;
+		// Individual term
+		if ((*r_it)->upper()) {
+			// Dual-value
+			node_info_t rvl_i = expr((*r_it)->lower(), ctx_width);
+			node_info_t rvu_i = expr((*r_it)->upper(), ctx_width);
+			if (is_signed) {
+				t = boolector_and(
+						m_solver->btor(),
+						boolector_sgte(
+								m_solver->btor(),
+								lhs_i.second,
+								rvl_i.second),
+						boolector_slte(
+								m_solver->btor(),
+								lhs_i.second,
+								rvu_i.second));
+			} else {
+				t = boolector_and(
+						m_solver->btor(),
+						boolector_ugte(
+								m_solver->btor(),
+								lhs_i.second,
+								rvl_i.second),
+						boolector_ulte(
+								m_solver->btor(),
+								lhs_i.second,
+								rvu_i.second));
+			}
+		} else {
+			// Single value
+			node_info_t rv_i = expr((*r_it)->lower(), ctx_width);
+			t = boolector_eq(
+					m_solver->btor(),
+					lhs_i.second,
+					rv_i.second);
+		}
+
+		if (!n) {
+			n = t;
+		} else {
+			n = boolector_or(
+					m_solver->btor(),
+					n,
+					t);
+		}
+	}
+
+	m_node_i.second = n;
+	m_node_i.first = false;
+
+
+	DEBUG_LEAVE("visitModelExprIn");
+}
+
 void SolverBoolectorSolveModelBuilder::visitModelExprPartSelect(
 		ModelExprPartSelect *e) {
 	int32_t ctx_width = m_width_s.back();

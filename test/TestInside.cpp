@@ -42,6 +42,17 @@ TEST_F(TestInside, single) {
 			inside(b, { {c, d} });
 		}};
 	};
+
+	my_s it("my_s");
+
+	for (uint32_t i=0; i<10; i++) {
+		ASSERT_TRUE(it.randomize());
+		ASSERT_LT(it.c(), it.d());
+		if (it.a() != 1 && it.a() != 2 && it.a() != 4 && it.a() != 8) {
+			fprintf(stdout, "a=%lld\n", it.a());
+			FAIL() << "a not in [1,2,4,8]";
+		}
+	}
 }
 
 } /* namespace vsc */

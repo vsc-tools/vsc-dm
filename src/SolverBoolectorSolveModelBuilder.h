@@ -41,6 +41,8 @@ public:
 
 	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
 
+	virtual void visitModelExprIn(ModelExprIn *e) override;
+
 	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) override;
 
 	virtual void visitModelExprVal(ModelExprVal *e) override;
