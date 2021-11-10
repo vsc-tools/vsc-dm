@@ -30,7 +30,7 @@ namespace vsc {
 namespace facade {
 
 constraint_if_then::constraint_if_then(
-		const expr						&cond,
+		const expr_base						&cond,
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
@@ -54,7 +54,7 @@ constraint_if_then::~constraint_if_then() {
 }
 
 constraint_if_then constraint_if_then::else_if(
-		const expr						&cond,
+		const expr_base						&cond,
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
@@ -84,7 +84,7 @@ void constraint_if_then::else_then(
 }
 
 constraint_if_then (if_then)(
-		const expr					&cond,
+		const expr_base					&cond,
 		const std::function<void()>	&body,
 		const char					*file,
 		int32_t						lineno) {

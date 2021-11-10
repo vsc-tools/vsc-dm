@@ -22,7 +22,7 @@
 #pragma once
 #include <string>
 #include "attr_base.h"
-#include "expr.h"
+#include "expr_base.h"
 #include "int_t.h"
 #include "scope.h"
 #include "ModelFieldRoot.h"
@@ -35,21 +35,26 @@ public:
 	attr_scalar(
 			bool				is_signed,
 			int32_t				width,
-			const int_t			&ival);
+			const int_t			&ival,
+			bool				parentless=false);
 
 	virtual ~attr_scalar();
 
-	expr operator == (const expr &rhs);
+	void operator = (const expr_base &rhs);
 
-	expr operator != (const expr &rhs);
+	expr_base operator == (const expr_base &rhs);
 
-	expr operator < (const expr &rhs);
+	expr_base operator != (const expr_base &rhs);
 
-	expr operator > (const expr &rhs);
+	expr_base operator < (const expr_base &rhs);
 
-	expr operator <= (const expr &rhs);
+	expr_base operator > (const expr_base &rhs);
 
-	expr operator >= (const expr &rhs);
+	expr_base operator <= (const expr_base &rhs);
+
+	expr_base operator >= (const expr_base &rhs);
+
+	expr_base operator % (const expr_base &rhs);
 
 //	expr operator == (const attr_scalar &rhs);
 
@@ -64,6 +69,8 @@ public:
 	void val_s(int64_t v);
 
 	void val_u(uint64_t v);
+
+protected:
 
 };
 

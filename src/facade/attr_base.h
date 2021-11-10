@@ -28,6 +28,7 @@ namespace facade {
 
 class attr_base {
 	friend class rand_obj;
+	template <class ...T> friend class with_sample;
 public:
 	attr_base();
 
@@ -49,6 +50,8 @@ public:
 
 	ModelField *field() const { return m_field; }
 
+	ModelField *release() { return m_field_u.release(); }
+
 protected:
 
 	virtual void build_constraints();
@@ -59,8 +62,8 @@ protected:
 	int32_t						m_idx;
 	attr_base					*m_parent;
 
-	ModelFieldRoot				*m_field;
-	ModelFieldRootUP			m_field_u;
+	ModelField					*m_field;
+	ModelFieldUP				m_field_u;
 
 };
 

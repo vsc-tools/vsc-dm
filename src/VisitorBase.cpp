@@ -167,6 +167,13 @@ void VisitorBase::visitModelExprVal(ModelExprVal *e) {
 	DEBUG_LEAVE("visitModelExprVal");
 }
 
+void VisitorBase::visitModelExprVecSubscript(ModelExprVecSubscript *e) {
+	DEBUG_ENTER("visitModelExprVecSubscript");
+	e->expr()->accept(this);
+	e->subscript()->accept(this);
+	DEBUG_LEAVE("visitModelExprVecSubscript");
+}
+
 void VisitorBase::visitModelField(ModelField *f) {
 	DEBUG_ENTER("visitModelField %s n_fields=%d n_constraints=%d",
 			f->name().c_str(),
@@ -196,6 +203,15 @@ void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {
 void VisitorBase::visitModelFieldType(ModelFieldType *f) {
 	visitModelField(f);
 
+}
+
+void VisitorBase::visitModelFieldVec(ModelFieldVec *f) {
+	f->size()->accept(this);
+	visitModelField(f);
+}
+
+void VisitorBase::visitModelFieldVecRoot(ModelFieldVecRoot *f) {
+	visitModelFieldVec(f);
 }
 
 void VisitorBase::visitTypeField(TypeField *f) {

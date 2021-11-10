@@ -46,10 +46,16 @@ public:
 		return m_soft_constraints;
 	}
 
+	/**
+	 * Merge data from the `src` set into this one
+	 */
+	void merge(SolveSet *src);
+
 private:
 	std::unordered_set<ModelField *>			m_field_s;
 	std::vector<ModelField *>					m_all_fields;
 	std::vector<ModelField *>					m_rand_fields;
+	std::vector<ModelFieldVec *>				m_constrained_sz_vec;
 	std::unordered_set<ModelConstraint *>		m_constraint_s;
 	std::vector<ModelConstraint *>				m_constraints;
 

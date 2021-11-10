@@ -21,7 +21,8 @@
 
 #pragma once
 #include <functional>
-#include "expr.h"
+
+#include "expr_base.h"
 
 namespace vsc {
 namespace facade {
@@ -29,7 +30,7 @@ namespace facade {
 class constraint_foreach {
 public:
 	constraint_foreach(
-			const expr		&target,
+			const expr_base		&target,
 			const std::function<void(uint32_t i)>	&body,
 			const char								*file,
 			int32_t									lineno);
@@ -39,7 +40,7 @@ public:
 };
 
 void (foreach)(
-		const expr								&target,
+		const expr_base								&target,
 		const std::function<void(uint32_t i)>	&body,
 		const char								*file=0,
 		int32_t									lineno=-1

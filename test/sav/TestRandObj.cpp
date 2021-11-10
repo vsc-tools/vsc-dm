@@ -32,7 +32,7 @@ TEST_F(TestRandObj, decl) {
 		constraint ab_c{this, [&] {
 			a == 1;
 
-			if_then(expr(), [&] {
+			if_then(expr_base(), [&] {
 
 			}).else_then([&] {
 

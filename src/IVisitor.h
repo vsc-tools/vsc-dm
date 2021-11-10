@@ -47,12 +47,15 @@ class ModelExprPartSelect;
 class ModelExprRange;
 class ModelExprRangelist;
 class ModelExprRef;
+class ModelExprVecSubscript;
 class ModelExprUnary;
 class ModelExprVal;
 
 class ModelField;
 class ModelFieldRoot;
 class ModelFieldType;
+class ModelFieldVec;
+class ModelFieldVecRoot;
 
 class TypeField;
 
@@ -97,11 +100,17 @@ public:
 
 	virtual void visitModelExprVal(ModelExprVal *e) = 0;
 
+	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) = 0;
+
 	virtual void visitModelField(ModelField *f) = 0;
 
 	virtual void visitModelFieldRoot(ModelFieldRoot *f) = 0;
 
 	virtual void visitModelFieldType(ModelFieldType *f) = 0;
+
+	virtual void visitModelFieldVec(ModelFieldVec *f) = 0;
+
+	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) = 0;
 
 	virtual void visitTypeField(TypeField *f) = 0;
 

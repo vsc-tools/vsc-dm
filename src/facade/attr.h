@@ -22,7 +22,7 @@
 #pragma once
 #include <string>
 #include "attr_scalar.h"
-#include "expr.h"
+#include "expr_base.h"
 #include "int_t.h"
 
 namespace vsc {
@@ -46,6 +46,14 @@ public:
 
 	uint64_t operator ()() { return u64(); }
 
+	void operator = (const expr_base &rhs);
+
+	// TODO: want this to be private, but having issues with template friend
+	attr() : attr_scalar(false, W, int_t(false, W, 0), true) { }
+
+private:
+
+
 };
 
 template <int W> class attr<si_t<W>> : public attr_scalar {
@@ -57,6 +65,11 @@ public:
 	}
 
 	int64_t operator ()() { return i64(); }
+
+	// TODO: want this to be private, but having issues with template friend
+	attr() : attr_scalar(false, W, int_t(false, W, 0), true) { }
+private:
+
 
 };
 

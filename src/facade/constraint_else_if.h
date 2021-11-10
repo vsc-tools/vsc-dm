@@ -22,7 +22,7 @@
 #pragma once
 #include <functional>
 #include "constraint_else_then.h"
-#include "expr.h"
+#include "expr_base.h"
 
 namespace vsc {
 namespace facade {
@@ -34,7 +34,7 @@ public:
 	virtual ~constraint_else_if();
 
 	constraint_else_if else_if(
-			const expr						&cond,
+			const expr_base						&cond,
 			const std::function<void()>		&body,
 			const char						*file=0,
 			int32_t							line=-1);
@@ -46,7 +46,7 @@ public:
 
 private:
 	constraint_else_if(
-			const expr						&cond,
+			const expr_base						&cond,
 			const std::function<void()>		&body,
 			const char						*file,
 			int32_t							line);

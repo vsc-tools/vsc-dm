@@ -24,9 +24,11 @@
 #include "attr.h"
 #include "rand_attr.h"
 #include "rand_obj.h"
+#include "rand_vec.h"
 #include "constraint.h"
 #include "constraint_if_then.h"
 #include "constraint_implies.h"
+#include "covergroup.h"
 #include "expr_inside.h"
 #include "literal_base.h"
 

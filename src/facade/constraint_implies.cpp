@@ -13,7 +13,7 @@ namespace vsc {
 namespace facade {
 
 constraint_implies::constraint_implies(
-		const expr						&cond,
+		const expr_base						&cond,
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {

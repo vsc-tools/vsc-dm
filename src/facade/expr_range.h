@@ -6,19 +6,25 @@
  */
 
 #pragma once
-#include "expr.h"
+#include "expr_base.h"
 
 namespace vsc {
 namespace facade {
 
 class expr_range {
 public:
+
+	expr_base				lower;
+	expr_base				upper;
+
+	/*
+public:
 	expr_range(
-			const expr		&val);
+			const expr_base		&val);
 
 	expr_range(
-			const expr		&lower,
-			const expr		&upper);
+			const expr_base		&lower,
+			const expr_base		&upper);
 
 	virtual ~expr_range();
 
@@ -26,6 +32,7 @@ public:
 
 private:
 	ModelExprRange			*m_core;
+	 */
 
 };
 

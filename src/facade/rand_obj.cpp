@@ -55,7 +55,7 @@ rand_obj::rand_obj(const scope &s) {
 		static_cast<rand_obj *>(parent())->add_field(this);
 	} else {
 		// We own the field since there is no parent scope
-		m_field_u = ModelFieldRootUP(m_field);
+		m_field_u = ModelFieldUP(m_field);
 	}
 }
 
@@ -96,14 +96,14 @@ bool rand_obj::randomize_with(
 	bool diagnose_failures = false;
 
 	// Collect 'with' constraints
-	ModelConstraintScopeUP with_c(new ModelConstraintScope());
-	ctor::inst()->push_constraint_scope(with_c.get());
+	ModelConstraintScope with_c;
+	ctor::inst()->push_constraint_scope(&with_c);
 	body();
 	ctor::inst()->pop_constraint_scope();
 
 	SetFieldUsedRandVisitor().set(field());
 	fields.push_back(field());
-	constraints.push_back(with_c.get());
+	constraints.push_back(&with_c);
 
 	return randomizer.randomize(
 			fields,

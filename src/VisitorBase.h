@@ -45,11 +45,14 @@
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
 #include "ModelExprRef.h"
+#include "ModelExprVecSubscript.h"
 #include "ModelExprUnary.h"
 #include "ModelExprVal.h"
 
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
+#include "ModelFieldVec.h"
+#include "ModelFieldVecRoot.h"
 #include "TypeField.h"
 
 namespace vsc {
@@ -97,11 +100,17 @@ public:
 
 	virtual void visitModelExprVal(ModelExprVal *e) override;
 
+	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) override;
+
 	virtual void visitModelField(ModelField *f) override;
 
 	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
 
 	virtual void visitModelFieldType(ModelFieldType *f) override;
+
+	virtual void visitModelFieldVec(ModelFieldVec *f) override;
+
+	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) override;
 
 	virtual void visitTypeField(TypeField *f) override;
 

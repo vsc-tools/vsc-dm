@@ -182,22 +182,10 @@ void SolveSpecBuilder::process_fieldref(ModelField *f) {
 				// Update the solveset this field is mapped to
 				auto it_e = m_solveset_field_m.find(*it);
 				it_e->second = m_active_solveset;
-
-				// Add the field to the active solveset
-				m_active_solveset->add_field(*it);
 			}
 
-			for (std::vector<ModelConstraint *>::const_iterator
-					it=f_it->second->constraints().begin();
-					it!=f_it->second->constraints().end(); it++) {
-				m_active_solveset->add_constraint(*it);
-			}
-
-			for (std::vector<ModelConstraintSoft *>::const_iterator
-					it=f_it->second->soft_constraints().begin();
-					it!=f_it->second->soft_constraints().end(); it++) {
-				m_active_solveset->add_soft_constraint(*it);
-			}
+			// Merge data into the active solveset
+			m_active_solveset->merge(f_it->second);
 
 			// Now, remove the old solveset
 			auto solveset_i = m_solveset_m.find(f_it->second);

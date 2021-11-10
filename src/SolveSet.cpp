@@ -20,6 +20,7 @@
  */
 
 #include "SolveSet.h"
+#include "ModelFieldVec.h"
 
 namespace vsc {
 
@@ -38,6 +39,11 @@ void SolveSet::add_field(ModelField *f) {
 		if (f->is_flag_set(ModelFieldFlag_UsedRand)) {
 			m_rand_fields.push_back(f);
 		}
+		// If this is the size of a vector, save the vec
+		if (f->is_flag_set(ModelFieldFlag_VecSize)) {
+			m_constrained_sz_vec.push_back(
+					static_cast<ModelFieldVec *>(f->parent()));
+		}
 		m_field_s.insert(f);
 	}
 }
@@ -53,6 +59,21 @@ void SolveSet::add_soft_constraint(ModelConstraintSoft *c) {
 	if (m_soft_constraint_s.find(c) == m_soft_constraint_s.end()) {
 		m_soft_constraints.push_back(c);
 		m_soft_constraint_s.insert(c);
+	}
+}
+
+void SolveSet::merge(SolveSet *src) {
+	for (auto it=src->m_all_fields.begin();
+			it!=src->m_all_fields.end(); it++) {
+		add_field(*it);
+	}
+	for (auto it=src->m_constraints.begin();
+			it!=src->m_constraints.end(); it++) {
+		add_constraint(*it);
+	}
+	for (auto it=src->m_soft_constraints.begin();
+			it!=src->m_soft_constraints.end(); it++) {
+		add_soft_constraint(*it);
 	}
 }
 

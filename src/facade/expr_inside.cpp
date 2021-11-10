@@ -5,8 +5,9 @@
  *      Author: mballance
  */
 
-#include "ctor.h"
 #include "expr_inside.h"
+
+#include "ctor.h"
 #include "ModelExprIn.h"
 #include "ModelExprRangelist.h"
 
@@ -15,8 +16,8 @@
 namespace vsc {
 namespace facade {
 
-expr (inside)(
-		const expr				&cond,
+expr_base (inside)(
+		const expr_base				&cond,
 		const expr_rangelist	&rangelist,
 		const char				*file,
 		int32_t					lineno) {
@@ -26,12 +27,12 @@ expr (inside)(
 	ModelExprRangelist *rl_m = new ModelExprRangelist(ranges);
 	 */
 
-	return expr(0);
+	return expr_base(0);
 }
 
-expr (inside)(
-		const expr						&cond,
-		std::initializer_list<expr>		rangelist,
+expr_base (inside)(
+		const expr_base						&cond,
+		std::initializer_list<expr_base>		rangelist,
 		const char						*file,
 		int32_t							lineno) {
 	std::vector<ModelExprRange *>	ranges;
@@ -44,24 +45,25 @@ expr (inside)(
 
 	ModelExprRangelist *rl_m = new ModelExprRangelist(ranges);
 
-	return expr(new ModelExprIn(cond_m, rl_m));
+	return expr_base::mk(new ModelExprIn(cond_m, rl_m));
 }
 
-expr (inside)(
-		const expr							&cond,
-		std::initializer_list<expr_range>	rangelist,
+expr_base (inside)(
+		const expr_base						&cond,
+		const std::vector<expr_range>		&rangelist,
 		const char							*file,
 		int32_t								lineno) {
 	std::vector<ModelExprRange *>	ranges;
 	for (auto it=rangelist.begin(); it!=rangelist.end(); it++) {
-		ranges.push_back(it->core());
+		// TODO: build elem/range as appropriate
+//		ranges.push_back(it->core());
 	}
 	ctor::inst()->pop_expr();
 	ModelExpr *cond_m = cond.core();
 
 	ModelExprRangelist *rl_m = new ModelExprRangelist(ranges);
 
-	return expr(new ModelExprIn(cond_m, rl_m));
+	return expr_base::mk(new ModelExprIn(cond_m, rl_m));
 }
 
 } /* namespace facade */

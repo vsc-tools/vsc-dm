@@ -7,11 +7,13 @@
 
 #pragma once
 #include <stdint.h>
+#include "rand_attr.h"
+#include "ModelFieldVecRoot.h"
 
 namespace vsc {
 namespace facade {
 
-class vec_scalar {
+class vec_scalar : public attr_base {
 public:
 	vec_scalar(
 			bool		is_signed,
@@ -19,6 +21,12 @@ public:
 			int32_t		size);
 
 	virtual ~vec_scalar();
+
+	rand_attr<ui_t<32>>			size;
+
+	void push_back(uint32_t v);
+
+	expr_base subscript(const expr_base &rhs);
 
 private:
 

@@ -25,7 +25,7 @@ namespace vsc {
 namespace facade {
 
 constraint_foreach::constraint_foreach(
-		const expr								&target,
+		const expr_base								&target,
 		const std::function<void(uint32_t i)>	&body,
 		const char								*file,
 		int32_t									lineno) {

@@ -13,44 +13,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * else_if.cpp
+ * expr.h
  *
- *  Created on: Aug 12, 2021
+ *  Created on: Aug 9, 2021
  *      Author: mballance
  */
 
-#include "constraint_else_if.h"
+#pragma once
+#include <memory>
+#include <stdint.h>
+#include "ModelExpr.h"
+#include "ModelVal.h"
+#include "int_t.h"
 
 namespace vsc {
+
+class ModelExpr;
+using ModelExprUP=std::unique_ptr<ModelExpr>;
 namespace facade {
 
-constraint_else_if::constraint_else_if(
-		const expr_base						&cond,
-		const std::function<void()>		&body,
-		const char						*file,
-		int32_t							line) {
-	// TODO Auto-generated constructor stub
+class attr_scalar;
 
-}
+class expr_base {
+	friend class attr_scalar;
+public:
+	expr_base();
 
-constraint_else_if::~constraint_else_if() {
-	// TODO Auto-generated destructor stub
-}
+	expr_base(const attr_scalar &);
 
-constraint_else_then constraint_else_if::else_then(
-		const std::function<void()>		&body,
-		const char						*file,
-		int32_t							line) {
+	expr_base(const attr_scalar  *);
 
-}
+	expr_base(const int_t &);
 
-constraint_else_if constraint_else_if::else_if(
-		const expr_base						&cond,
-		const std::function<void()>		&body,
-		const char						*file,
-		int32_t							line) {
+	expr_base(int32_t v);
 
-}
+	expr_base(uint32_t v);
+
+	expr_base(int64_t v);
+
+	expr_base(uint64_t v);
+
+	virtual ~expr_base();
+
+	ModelExpr *core() const { return m_core; }
+
+	ModelVal val();
+
+	static expr_base mk(ModelExpr *core);
+
+protected:
+	ModelExpr					*m_core;
+};
 
 } /* namespace facade */
 } /* namespace vsc */
+

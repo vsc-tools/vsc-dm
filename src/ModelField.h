@@ -20,6 +20,7 @@ using ModelFieldFlags=uint32_t;
 static const uint32_t ModelFieldFlag_DeclRand = (1 << 0);
 static const uint32_t ModelFieldFlag_UsedRand = (1 << 1);
 static const uint32_t ModelFieldFlag_Resoved  = (1 << 2);
+static const uint32_t ModelFieldFlag_VecSize  = (1 << 3);
 
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;

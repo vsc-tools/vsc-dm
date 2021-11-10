@@ -7,6 +7,8 @@
 
 #pragma once
 #include <functional>
+
+#include "ctor.h"
 #include "expr.h"
 #include "int_t.h"
 #include "scope.h"
@@ -29,7 +31,7 @@ public:
 
 	rand_vec(
 			const scope		&name,
-			int32_t			size=-1) : vec_scalar(false, W, size) { }
+			int32_t			size=0) : vec_scalar(false, W, size) { }
 
 	void foreach(
 			const std::function<void(c_iterator &)> &body) {
@@ -41,7 +43,9 @@ public:
 
 	}
 
-	expr operator [](const expr &rhs);
+	expr<ui_t<W>> operator [](const expr_base &rhs) {
+		expr<ui_t<W>>(subscript(rhs));
+	}
 
 };
 

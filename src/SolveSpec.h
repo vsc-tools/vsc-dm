@@ -41,6 +41,7 @@ public:
 private:
 	std::vector<SolveSetUP>			m_solvesets;
 	std::vector<ModelField *>		m_unconstrained;
+	std::vector<ModelFieldVec *>	m_unconstrained_sz_vec;
 };
 
 } /* namespace vsc */

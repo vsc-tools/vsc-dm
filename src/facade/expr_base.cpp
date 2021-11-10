@@ -21,27 +21,25 @@
 
 #include "attr_scalar.h"
 #include "ctor.h"
-#include "expr.h"
+#include "expr_base.h"
 #include "ModelExprFieldRef.h"
 
 namespace vsc {
 namespace facade {
 
-expr::expr(const attr_scalar &attr) :
+expr_base::expr_base() : m_core(0) { }
+
+expr_base::expr_base(const attr_scalar &attr) :
 		m_core(new ModelExprFieldRef(attr.field())) {
 	ctor::inst()->push_expr(m_core);
 }
 
-expr::expr(ModelExpr *core) : m_core(core) {
-	ctor::inst()->push_expr(m_core);
-}
-
-expr::expr(const int_t &val) {
+expr_base::expr_base(const int_t &val) {
 	m_core = val.toExpr();
 	ctor::inst()->push_expr(m_core);
 }
 
-expr::expr(int32_t val) {
+expr_base::expr_base(int32_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(true, 32);
 	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
 	e->val().u32(val);
@@ -49,7 +47,15 @@ expr::expr(int32_t val) {
 	ctor::inst()->push_expr(m_core);
 }
 
-expr::expr(int64_t val) {
+expr_base::expr_base(uint32_t val) {
+	DataTypeInt *dt = ctor::inst()->type_int(false, 32);
+	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	e->val().u32(val);
+	m_core = e;
+	ctor::inst()->push_expr(m_core);
+}
+
+expr_base::expr_base(int64_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(true, 64);
 	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
 	e->val().u64(val);
@@ -57,8 +63,30 @@ expr::expr(int64_t val) {
 	ctor::inst()->push_expr(m_core);
 }
 
-expr::~expr() {
+expr_base::expr_base(uint64_t val) {
+	DataTypeInt *dt = ctor::inst()->type_int(false, 64);
+	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	e->val().u64(val);
+	m_core = e;
+	ctor::inst()->push_expr(m_core);
+}
+
+expr_base::~expr_base() {
 	// TODO Auto-generated destructor stub
+}
+
+expr_base expr_base::mk(ModelExpr *core) {
+	expr_base ret;
+	ctor::inst()->push_expr(core);
+	ret.m_core = core;
+	return ret;
+}
+
+ModelVal expr_base::val() {
+	ModelVal ret;
+	ret.push_word(0);
+
+	return ret;
 }
 
 /*

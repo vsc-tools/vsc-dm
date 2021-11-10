@@ -35,6 +35,7 @@ public:
 
 template <int W> class rand_attr<ui_t<W>> : public attr_scalar {
 public:
+	friend class vec_scalar;
 
 	rand_attr(
 			const scope &name,
@@ -44,6 +45,15 @@ public:
 	}
 
 	uint64_t operator ()() { return u32(); }
+
+private:
+
+	rand_attr(
+			const scope 	&name,
+			bool			parentless) :
+		attr_scalar(false, W, int_t(false, W, 0), parentless) {
+		m_field->set_flag(ModelFieldFlag_DeclRand);
+	}
 };
 
 template <int W> class rand_attr<si_t<W>> : public attr_scalar {

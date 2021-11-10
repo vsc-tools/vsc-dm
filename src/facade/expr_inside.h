@@ -6,27 +6,28 @@
  */
 
 #pragma once
-#include "expr.h"
+#include "expr_base.h"
 #include "expr_rangelist.h"
+#include <vector>
 
 namespace vsc {
 namespace facade {
 
-expr (inside)(
-		const expr				&cond,
+expr_base (inside)(
+		const expr_base				&cond,
 		const expr_rangelist	&rangelist,
 		const char				*file=0,
 		int32_t					lineno=-1);
 
-expr (inside)(
-		const expr							&cond,
-		std::initializer_list<expr>			rangelist,
+expr_base (inside)(
+		const expr_base							&cond,
+		std::initializer_list<expr_base>			rangelist,
 		const char							*file=0,
 		int32_t								lineno=-1);
 
-expr (inside)(
-		const expr							&cond,
-		std::initializer_list<expr_range>	rangelist,
+expr_base (inside)(
+		const expr_base						&cond,
+		const std::vector<expr_range>		&rangelist,
 		const char							*file=0,
 		int32_t								lineno=-1);
 

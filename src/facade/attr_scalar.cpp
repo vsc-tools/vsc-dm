@@ -33,16 +33,19 @@ namespace facade {
 attr_scalar::attr_scalar(
 		bool				is_signed,
 		int32_t				width,
-		const int_t			&ival) {
+		const int_t			&ival,
+		bool				parentless) {
 	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
 	m_field->val().u64(ival.val());
 
-	if (m_parent) {
+	if (m_parent && !parentless) {
 		// Model belongs to the parent scope
+		fprintf(stdout, "field %s has a parent\n", m_name.c_str());
 		static_cast<rand_obj *>(parent())->add_field(this);
 	} else {
 		// We own the field since there is no parent scope
-		m_field_u = ModelFieldRootUP(m_field);
+		fprintf(stdout, "field %s has no parent\n", m_name.c_str());
+		m_field_u = ModelFieldUP(m_field);
 	}
 }
 
@@ -50,9 +53,9 @@ attr_scalar::~attr_scalar() {
 	// TODO Auto-generated destructor stub
 }
 
-expr attr_scalar::operator == (const expr &rhs) {
+expr_base attr_scalar::operator == (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Eq,
 			rhs_e));
@@ -62,43 +65,52 @@ expr attr_scalar::operator == (const expr &rhs) {
 //	;
 //}
 
-expr attr_scalar::operator != (const expr &rhs) {
+expr_base attr_scalar::operator != (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Ne,
 			rhs_e));
 }
 
-expr attr_scalar::operator < (const expr &rhs) {
+expr_base attr_scalar::operator < (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Lt,
 			rhs_e));
 }
 
-expr attr_scalar::operator > (const expr &rhs) {
+expr_base attr_scalar::operator > (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Gt,
 			rhs_e));
 }
 
-expr attr_scalar::operator <= (const expr &rhs) {
+expr_base attr_scalar::operator <= (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Le,
 			rhs_e));
 }
 
-expr attr_scalar::operator >= (const expr &rhs) {
+expr_base attr_scalar::operator >= (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
-	return expr(new ModelExprBin(
+	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Ge,
+			rhs_e));
+}
+
+expr_base attr_scalar::operator % (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ModelExpr *rhs_e = rhs.core();
+	return expr_base::mk(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Mod,
 			rhs_e));
 }
 

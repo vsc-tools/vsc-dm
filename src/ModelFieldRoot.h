@@ -20,8 +20,7 @@ class ModelFieldRoot : public ModelField {
 public:
 	ModelFieldRoot(
 			DataType			*type,
-			const std::string	&name
-			);
+			const std::string	&name);
 
 	virtual ~ModelFieldRoot();
 
