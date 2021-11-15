@@ -46,9 +46,11 @@
 namespace vsc {
 namespace facade {
 
-rand_obj::rand_obj(const scope &s) {
-	m_field = new ModelFieldRoot(0, m_name);
+rand_obj::rand_obj(const scope &s) :
+		obj_scope(ObjType_RandObj|ObjType_Scope),
+		m_field(0) {
 
+	/*
 
 	if (m_parent) {
 		// Model belongs to the parent scope
@@ -57,6 +59,7 @@ rand_obj::rand_obj(const scope &s) {
 		// We own the field since there is no parent scope
 		m_field_u = ModelFieldUP(m_field);
 	}
+	 */
 }
 
 rand_obj::~rand_obj() {
@@ -74,8 +77,8 @@ bool rand_obj::randomize() {
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
 
-	SetFieldUsedRandVisitor().set(field());
-	fields.push_back(field());
+	SetFieldUsedRandVisitor().set(m_field);
+	fields.push_back(m_field);
 
 	return randomizer.randomize(
 			fields,
@@ -101,8 +104,8 @@ bool rand_obj::randomize_with(
 	body();
 	ctor::inst()->pop_constraint_scope();
 
-	SetFieldUsedRandVisitor().set(field());
-	fields.push_back(field());
+	SetFieldUsedRandVisitor().set(m_field);
+	fields.push_back(m_field);
 	constraints.push_back(&with_c);
 
 	return randomizer.randomize(
@@ -150,12 +153,59 @@ void rand_obj::add_constraint(constraint *c) {
 	}
 }
 
+void rand_obj::build() {
+	if (ctor::inst()->build_phase() == 0) {
+		// Only build fields. The fields will take care of this
+		for (auto it=children().begin(); it!=children().end(); it++) {
+			(*it)->build();
+		}
+	} else {
+		// Only build fields. The fields will take care of this
+		std::unordered_set<std::string>	constraint_ov_s;
+
+		// Class hierarchies are built inside-out, which means that
+		// subtype constraints are added after super-type constraints.
+		// Process the list in reverse order and track constraint
+		// names to avoid the proper constraints
+		for (auto it=children().rbegin(); it!=children().rend(); it++) {
+			if ((*it)->is_type(ObjType_Constraint)) {
+				constraint *c = static_cast<constraint *>(*it);
+				if (constraint_ov_s.find(c->name()) == constraint_ov_s.end()) {
+					if (c->name() != "") {
+						constraint_ov_s.insert(c->name());
+					}
+					(*it)->build();
+				}
+			} else {
+				(*it)->build();
+			}
+		}
+	}
+}
+
 void rand_obj::build_constraints() {
 	// First process sub-scopes
 	DEBUG_ENTER("build_constraints: %s n_constraints=%d n_constraint_ov=%d",
 			fullname().c_str(),
 			m_constraints.size(),
 			m_constraint_ov_s.size());
+	if (ctor::inst()->build_phase() == 0) {
+		m_field = new ModelFieldRoot(0, name());
+
+		if (parent()) {
+
+		} else {
+			m_field_u = ModelFieldRootUP(m_field);
+		}
+
+		// Only build out fields
+
+		for (auto it=children().begin(); it!=children().end(); it++) {
+		}
+	} else if (ctor::inst()->build_phase() == 1) {
+		// Build out constraints
+	}
+#ifdef UNDEFINED
 	for (auto f : m_fields) {
 		f->build_constraints();
 	}
@@ -170,6 +220,7 @@ void rand_obj::build_constraints() {
 			field()->add_constraint(c);
 		}
 	}
+#endif
 	DEBUG_LEAVE("build_constraints: %s n_constraints=%d n_constraint_ov=%d",
 			fullname().c_str(),
 			m_constraints.size(),

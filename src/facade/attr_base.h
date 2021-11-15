@@ -21,12 +21,14 @@
 
 #pragma once
 #include <string>
+#include "obj.h"
 #include "ModelFieldRoot.h"
 
 namespace vsc {
 namespace facade {
 
-class attr_base {
+class obj_scope;
+class attr_base : public obj {
 	friend class rand_obj;
 	template <class ...T> friend class with_sample;
 public:
@@ -34,19 +36,9 @@ public:
 
 	virtual ~attr_base();
 
-	const std::string &name() const { return m_name; }
-
-	void name(const std::string &n) { m_name = n; }
-
-	std::string fullname() const;
-
 	int32_t idx() const { return m_idx; }
 
 	void idx(int32_t i) { m_idx = i; }
-
-	attr_base *parent() const { return m_parent; }
-
-	void parent(attr_base *p) { m_parent = p; }
 
 	ModelField *field() const { return m_field; }
 
@@ -54,13 +46,13 @@ public:
 
 protected:
 
+	virtual void build();
+
 	virtual void build_constraints();
 
 
 protected:
-	std::string					m_name;
 	int32_t						m_idx;
-	attr_base					*m_parent;
 
 	ModelField					*m_field;
 	ModelFieldUP				m_field_u;

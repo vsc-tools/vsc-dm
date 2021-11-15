@@ -38,6 +38,7 @@ attr_scalar::attr_scalar(
 	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
 	m_field->val().u64(ival.val());
 
+	/*
 	if (m_parent && !parentless) {
 		// Model belongs to the parent scope
 		fprintf(stdout, "field %s has a parent\n", m_name.c_str());
@@ -47,6 +48,7 @@ attr_scalar::attr_scalar(
 		fprintf(stdout, "field %s has no parent\n", m_name.c_str());
 		m_field_u = ModelFieldUP(m_field);
 	}
+	 */
 }
 
 attr_scalar::~attr_scalar() {

@@ -24,6 +24,7 @@
 #include <unordered_map>
 #include <vector>
 #include "ctor_ctxt.h"
+#include "obj.h"
 #include "DataTypeInt.h"
 #include "ModelConstraintScope.h"
 #include "ModelExpr.h"
@@ -34,9 +35,6 @@ namespace vsc {
 class ModelField;
 
 namespace facade {
-
-class rand_obj;
-class attr_base;
 
 class ctor {
 public:
@@ -52,16 +50,16 @@ public:
 
 	std::string scope_name();
 
-	rand_obj *scope(attr_base *s=0);
+	obj *scope(obj *s=0);
 
 	void scope_ctor(
 			const std::string			&name,
-			rand_obj					*scope,
+			obj							*scope,
 			const std::type_info		*ti);
 
 	void scope_dtor(
 			const std::string			&name,
-			rand_obj					*scope,
+			obj							*scope,
 			const std::type_info		*ti);
 
 	uint32_t scope_depth() const { return m_scope_s.size(); }
@@ -88,6 +86,12 @@ public:
 
 	ModelConstraintScope *pop_constraint_scope();
 
+	uint32_t build_phase() const { return m_build_phase_s.back(); }
+
+	void push_build_phase(uint32_t p);
+
+	void pop_build_phase();
+
 	DataTypeInt *type_int(
 			bool		is_signed,
 			int32_t		width);
@@ -104,6 +108,7 @@ private:
 	std::unordered_map<int32_t, DataTypeIntUP>	m_si_type_m;
 	std::unordered_map<int32_t, DataTypeIntUP>	m_ui_type_m;
 	std::vector<ModelConstraintScope *>			m_constraint_scope_s;
+	std::vector<uint32_t>						m_build_phase_s;
 	RandState									m_randstate;
 	static std::unique_ptr<ctor>				m_inst;
 

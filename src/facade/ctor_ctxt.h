@@ -27,7 +27,7 @@
 namespace vsc {
 namespace facade {
 
-class rand_obj;
+class obj;
 
 class ctor_ctxt;
 using ctor_ctxt_up = std::unique_ptr<ctor_ctxt>;
@@ -35,7 +35,7 @@ class ctor_ctxt {
 public:
 	ctor_ctxt(
 			const std::string		&name,
-			rand_obj				*scope);
+			obj						*scope);
 
 	virtual ~ctor_ctxt();
 
@@ -43,9 +43,9 @@ public:
 
 	void name(const std::string &n) { m_name = n; }
 
-	rand_obj *scope() const { return m_scope; }
+	obj *scope() const { return m_scope; }
 
-	void scope(rand_obj *s) { m_scope = s; }
+	void scope(obj *s) { m_scope = s; }
 
 	bool is_scope() const { return m_is_scope; }
 
@@ -60,7 +60,7 @@ public:
 private:
 	std::string								m_name;
 	bool									m_is_scope;
-	rand_obj								*m_scope;
+	obj										*m_scope;
 	std::vector<const std::type_info *>		m_ti_s;
 
 };

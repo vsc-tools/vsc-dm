@@ -26,6 +26,7 @@
 namespace vsc {
 namespace facade {
 
+/*
 constraint::constraint(
 		const std::function<void ()>	&body) : m_body(body) {
 	fprintf(stdout, "--> constraint\n");
@@ -35,17 +36,24 @@ constraint::constraint(
 	fprintf(stdout, "<-- constraint\n");
 	fflush(stdout);
 }
+ */
 
 constraint::constraint(
-		const std::string				&name,
+		const scope 					&name,
 		const std::function<void ()>	&body) :
-				m_name(name), m_body(body) {
-	rand_obj *scope = ctor::inst()->scope();
-	scope->add_constraint(this);
+				obj(ObjType_Constraint), m_body(body) {
+
 }
 
 constraint::~constraint() {
 	// TODO Auto-generated destructor stub
+}
+
+void constraint::build() {
+	if (ctor::inst()->build_phase() == 1) {
+
+
+	}
 }
 
 } /* namespace facade */

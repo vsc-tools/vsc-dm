@@ -31,14 +31,14 @@ scope_base::scope_base(const std::string &name) :
 }
 
 scope_base::scope_base(
-		rand_obj				*s,
+		obj						*s,
 		const std::type_info	&ti) :
 			m_scope(s), m_ti(&ti) {
 	ctor::inst()->scope_ctor("", s, &ti);
 }
 
 scope_base::scope_base(
-		rand_obj				*s,
+		obj						*s,
 		const std::type_info	&ti,
 		const std::string		&name) :
 			m_name(name), m_scope(s), m_ti(&ti) {

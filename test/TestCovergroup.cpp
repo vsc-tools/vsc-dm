@@ -31,10 +31,73 @@ TEST_F(TestCovergroup, simple_coverpoint) {
 
 		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
 			bins abc { "abc", {1, {2,3}} };
-
 		}};
-
 	};
+
+	my_covergroup cg("cg");
+
+	cg.sample(5);
+	cg.sample(10);
+}
+
+TEST_F(TestCovergroup, simple_coverpoint_autobins) {
+
+	class my_covergroup : public covergroup {
+	public:
+		my_covergroup(const scope &s) : covergroup(this) { }
+
+		// Sampling method
+		with_sample<ui_t<4>> sample;
+
+		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+			bins abc { "abc" };
+		}};
+	};
+
+	my_covergroup cg("cg");
+
+	cg.sample(5);
+	cg.sample(10);
+}
+
+TEST_F(TestCovergroup, simple_coverpoint_inf_array_bins) {
+
+	class my_covergroup : public covergroup {
+	public:
+		my_covergroup(const scope &s) : covergroup(this) { }
+
+		// Sampling method
+		with_sample<ui_t<4>> sample;
+
+		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+			bins abc { "abc", {}, { {1, 7} } };
+		}};
+	};
+
+	my_covergroup cg("cg");
+
+	cg.sample(5);
+	cg.sample(10);
+}
+
+TEST_F(TestCovergroup, simple_coverpoint_sz_array_bins) {
+
+	class my_covergroup : public covergroup {
+	public:
+		my_covergroup(const scope &s) : covergroup(this) { }
+
+		// Sampling method
+		with_sample<ui_t<4>> sample;
+
+		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+			bins abc { "abc", {4}, { {1, 7} } };
+		}};
+	};
+
+	my_covergroup cg("cg");
+
+	cg.sample(5);
+	cg.sample(10);
 }
 
 TEST_F(TestCovergroup, simple_cross) {
@@ -55,7 +118,6 @@ TEST_F(TestCovergroup, simple_cross) {
 			bins abc { "abc", {1, {2,3}} };
 		}};
 		cross cr {"cr", {cp1, cp2}};
-
 	};
 }
 

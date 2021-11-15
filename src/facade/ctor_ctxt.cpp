@@ -26,7 +26,7 @@ namespace facade {
 
 ctor_ctxt::ctor_ctxt(
 		const std::string		&name,
-		rand_obj				*scope):
+		obj						*scope):
 				m_name(name), m_scope(scope),
 				m_is_scope(false) {
 

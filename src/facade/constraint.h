@@ -21,24 +21,27 @@
 
 #pragma once
 #include <functional>
+#include "obj.h"
 #include "scope.h"
 
 namespace vsc {
 namespace facade {
 
-class rand_obj;
-
-class constraint {
+class constraint : public obj {
 public:
-	constraint(const std::function<void()> &body);
+//	constraint(const std::function<void()> &body);
 
-	constraint(const std::string &name, const std::function<void()> &body);
+	constraint(const scope &name, const std::function<void()> &body);
 
 	virtual ~constraint();
 
 	const std::string &name() const { return m_name; }
 
 	const std::function<void()> &body() const { return m_body; }
+
+protected:
+
+	virtual void build() override;
 
 private:
 	std::string							m_name;

@@ -26,6 +26,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include "attr_base.h"
+#include "obj_scope.h"
 #include "scope.h"
 #include "RandState.h"
 
@@ -39,7 +40,7 @@ namespace facade {
 
 class constraint;
 
-class rand_obj : public attr_base {
+class rand_obj : public obj_scope {
 public:
 	rand_obj(const scope &s);
 
@@ -54,12 +55,16 @@ public:
 
 	virtual void build_constraints();
 
+	virtual void build();
+
 	void add_field(attr_base *f);
 
 protected:
 	ISolverFactory *solver_factory();
 
 private:
+	ModelFieldRoot								*m_field;
+	ModelFieldRootUP							m_field_u;
 	std::vector<attr_base *>					m_fields;
 	std::vector<constraint *>					m_constraints;
 	std::unordered_map<std::string,int32_t>		m_constraint_name_m;

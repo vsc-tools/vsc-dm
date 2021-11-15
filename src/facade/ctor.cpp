@@ -20,11 +20,10 @@
  */
 
 #include "ctor.h"
-#include "rand_obj.h"
 #include "Debug.h"
 #include "ModelConstraintExpr.h"
 
-#undef EN_DEBUG_CTOR
+#define EN_DEBUG_CTOR
 
 #ifdef EN_DEBUG_CTOR
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(ctor, fmt, ##__VA_ARGS__)
@@ -76,8 +75,8 @@ ModelField * ctor::model_scope() {
 	return 0;
 }
 
-rand_obj *ctor::scope(attr_base *s) {
-	rand_obj *ret = 0;
+obj *ctor::scope(obj *s) {
+	obj *ret = 0;
 	int32_t count = 0;
 	if (m_scope_s.size()) {
 		for (int32_t i=m_scope_s.size()-1; i>=0; i--) {
@@ -93,7 +92,7 @@ rand_obj *ctor::scope(attr_base *s) {
 
 void ctor::scope_ctor(
 			const std::string			&name,
-			rand_obj					*scope,
+			obj							*scope,
 			const std::type_info		*ti) {
 	DEBUG_ENTER("scope_ctor name=%s scope=%p ti=%p",
 			name.c_str(), scope, ti);
@@ -119,15 +118,19 @@ void ctor::scope_ctor(
 
 void ctor::scope_dtor(
 			const std::string			&name,
-			rand_obj					*scope,
+			obj							*scope,
 			const std::type_info		*ti) {
 	DEBUG_ENTER("scope_dtor name=%s scope=%p ti=%p",
 			name.c_str(), scope, ti);
-	fflush(stdout);
 	if (m_scope_s.back()->name() == name) {
 		DEBUG("Build constraints, since scope names match");
-		if (m_scope_s.back()->scope()) {
-			m_scope_s.back()->scope()->build_constraints();
+		if (m_scope_s.back()->scope() && m_scope_s.size() == 1) {
+			DEBUG("scope_s.size=%d", m_scope_s.size());
+			for (uint32_t i=0; i<3; i++) {
+				push_build_phase(i);
+				m_scope_s.back()->scope()->build();
+				pop_build_phase();
+			}
 		}
 		m_scope_s.pop_back();
 	}
@@ -200,6 +203,14 @@ DataTypeInt *ctor::type_int(
 			return dt;
 		}
 	}
+}
+
+void ctor::push_build_phase(uint32_t p) {
+	m_build_phase_s.push_back(p);
+}
+
+void ctor::pop_build_phase() {
+	m_build_phase_s.pop_back();
 }
 
 RandState *ctor::mk_randstate() {

@@ -26,18 +26,18 @@
 namespace vsc {
 namespace facade {
 
-class rand_obj;
+class obj;
 
 class scope_base {
 public:
 	scope_base(const std::string &name);
 
 	scope_base(
-			rand_obj				*s,
+			obj						*s,
 			const std::type_info 	&ti);
 
 	scope_base(
-			rand_obj				*s,
+			obj						*s,
 			const std::type_info 	&ti,
 			const std::string		&name);
 
@@ -48,7 +48,7 @@ public:
 
 private:
 	std::string						m_name;
-	rand_obj						*m_scope;
+	obj								*m_scope;
 	const std::type_info			*m_ti;
 
 };

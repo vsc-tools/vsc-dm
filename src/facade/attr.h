@@ -39,17 +39,21 @@ template <int W> class attr<ui_t<W>> : public attr_scalar {
 public:
 
 	attr(
-		const scope &s,
+		const scope &s="__anonymous__",
 		const int_t &ival=int_t(false, W, 0)) : attr_scalar(false, W, ival) {
 
 	}
 
 	uint64_t operator ()() { return u64(); }
 
-	void operator = (const expr_base &rhs);
+	void operator ()(uint64_t v) {
+	}
 
-	// TODO: want this to be private, but having issues with template friend
-	attr() : attr_scalar(false, W, int_t(false, W, 0), true) { }
+	void operator ()(const ui_t<W> &v) {
+		fprintf(stdout, "operator<%d>()\n", W);
+	}
+
+	void operator = (const expr_base &rhs);
 
 private:
 
@@ -59,15 +63,13 @@ private:
 template <int W> class attr<si_t<W>> : public attr_scalar {
 public:
 
-	attr(const scope &s, const int_t &ival=int_t(true, W, 0)) :
-		attr_scalar(true, W, ival) {
-
+	attr(
+			const scope &s="__anonymous__",
+			const int_t &ival=int_t(true, W, 0)) : attr_scalar(true, W, ival) {
 	}
 
 	int64_t operator ()() { return i64(); }
 
-	// TODO: want this to be private, but having issues with template friend
-	attr() : attr_scalar(false, W, int_t(false, W, 0), true) { }
 private:
 
 

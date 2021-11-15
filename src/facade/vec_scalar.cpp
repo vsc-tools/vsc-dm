@@ -19,6 +19,7 @@ vec_scalar::vec_scalar(
 		bool			is_signed,
 		int32_t			width,
 		int32_t			isize) : size("size", true) {
+	/*
 	ctor::inst()->type_int(is_signed, width);
 	ModelFieldVec *vec = new ModelFieldVecRoot(
 			ctor::inst()->type_int(is_signed, width),
@@ -35,6 +36,7 @@ vec_scalar::vec_scalar(
 	for (int32_t i=0; i<isize; i++) {
 		vec->push_back(0);
 	}
+	 */
 }
 
 vec_scalar::~vec_scalar() {
