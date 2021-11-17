@@ -39,6 +39,10 @@ class ModelConstraintImplies;
 class ModelConstraintScope;
 class ModelConstraintSoft;
 
+class ModelCoverCross;
+class ModelCovergroup;
+class ModelCoverpoint;
+
 class ModelExprBin;
 class ModelExprCond;
 class ModelExprFieldRef;
@@ -79,6 +83,12 @@ public:
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) = 0;
 
 	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) = 0;
+
+	virtual void visitModelCoverCross(ModelCoverCross *c) = 0;
+
+	virtual void visitModelCovergroup(ModelCovergroup *c) = 0;
+
+	virtual void visitModelCoverpoint(ModelCoverpoint *c) = 0;
 
 	virtual void visitModelExprBin(ModelExprBin *e) = 0;
 

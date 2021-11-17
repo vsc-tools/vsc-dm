@@ -100,6 +100,33 @@ void VisitorBase::visitModelConstraintSoft(ModelConstraintSoft *c) {
 	DEBUG_LEAVE("visitModelConstraintSoft");
 }
 
+void VisitorBase::visitModelCoverCross(ModelCoverCross *c) {
+	DEBUG_ENTER("visitModelCoverCross");
+
+	DEBUG_LEAVE("visitModelCoverCross");
+}
+
+void VisitorBase::visitModelCovergroup(ModelCovergroup *c) {
+	DEBUG_ENTER("visitModelCovergroup");
+	for (auto it=c->coverpoints().begin(); it!=c->coverpoints().end(); it++) {
+		(*it)->accept(this);
+	}
+	for (auto it=c->crosses().begin(); it!=c->crosses().end(); it++) {
+		(*it)->accept(this);
+	}
+
+	DEBUG_LEAVE("visitModelCovergroup");
+}
+
+void VisitorBase::visitModelCoverpoint(ModelCoverpoint *c) {
+	DEBUG_ENTER("visitModelCoverpoint");
+	c->target()->accept(this);
+	if (c->iff()) {
+		c->iff()->accept(this);
+	}
+	DEBUG_LEAVE("visitModelCoverpoint");
+}
+
 void VisitorBase::visitModelExprBin(ModelExprBin *e) {
 	DEBUG_ENTER("visitModelExprBin");
 	e->lhs()->accept(this);

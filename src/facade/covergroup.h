@@ -53,7 +53,6 @@ public:
 	// TODO: need a new container class -- rand_obj is too specific
 	template <class ...T> class with_sample : public with_sample_base {
 	public:
-		std::tuple<attr<T>...>	items;
 
 		with_sample() : with_sample_base("sample") {
 			// TODO: construct items-tuple items
@@ -72,31 +71,36 @@ public:
 			m_cg->sample();
 		}
 
+		// Sample-method fields to be used by coverpoints
+		std::tuple<attr<T>...>	items;
 
 	private:
 
+		/**
+		 * Proxy classes used to propagate values from the sample-method
+		 * parameters to the item elements on which coverage is defined
+		 */
 		template <size_t I=0, class... Ts>
 			typename std::enable_if<(I==sizeof...(Ts)), void>::type
 				_setval(std::tuple<attr<Ts>...> &tup) { }
-
 		template <size_t I=0, class... Ts, class PT, class... PTs>
 			typename std::enable_if<(I<sizeof...(Ts)), void>::type
 			   _setval(std::tuple<attr<Ts>...> &tup, PT const &first, PTs const&... rest) {
-			fprintf(stdout, "_setval: I=%d\n", I);
 			std::get<I>(tup)(first);
 		    _setval<I+1>(tup, rest...);
 		}
 
+		/**
+		 * Proxy classes used to assign a unique name to each sample field
+		 */
 		template <size_t I=0, class... Ts>
 			typename std::enable_if<(I==sizeof...(Ts)), void>::type
 				_setname(std::tuple<attr<Ts>...> &tup) { }
-
 		template <size_t I=0, class... Ts>
 			typename std::enable_if<(I<sizeof...(Ts)), void>::type
 			   _setname(std::tuple<attr<Ts>...> &tup) {
 			char tmp[64];
 			sprintf(tmp, "svar%d", I);
-			fprintf(stdout, "_setname: I=%d\n", I);
 			std::get<I>(tup).name(tmp);
 		    _setname<I+1>(tup);
 		}
@@ -194,29 +198,6 @@ private:
 	std::vector<cross *>			m_crosses;
 
 };
-
-#ifdef UNDEFINED
-class my_covergroup : public covergroup {
-public:
-
-	my_covergroup(const scope &s) : covergroup(this) { }
-
-	virtual ~my_covergroup() { }
-
-	// Need a function-like object that accepts
-	// some arguments
-	with_sample<ui_t<8>,ui_t<16>,si_t<32>> sample {this};
-
-};
-
-
-void doit() {
-	my_covergroup c("cg");
-	c.sample(5, 6, 7);
-	std::get<0>(c.sample.items).fullname();
-	std::get<0>(c.sample.items) = 2;
-}
-#endif
 
 } /* namespace facade */
 } /* namespace vsc */

@@ -37,6 +37,10 @@
 #include "ModelConstraintScope.h"
 #include "ModelConstraintSoft.h"
 
+#include "ModelCoverCross.h"
+#include "ModelCovergroup.h"
+#include "ModelCoverpoint.h"
+
 #include "ModelExprBin.h"
 #include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
@@ -79,6 +83,12 @@ public:
 	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
 
 	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;
+
+	virtual void visitModelCoverCross(ModelCoverCross *c) override;
+
+	virtual void visitModelCovergroup(ModelCovergroup *c) override;
+
+	virtual void visitModelCoverpoint(ModelCoverpoint *c) override;
 
 	virtual void visitModelExprBin(ModelExprBin *e) override;
 
