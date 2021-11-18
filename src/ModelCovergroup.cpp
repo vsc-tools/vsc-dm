@@ -18,4 +18,13 @@ ModelCovergroup::~ModelCovergroup() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelCovergroup::sample() {
+	for (auto it=m_coverpoints.begin(); it!=m_coverpoints.end(); it++) {
+		(*it)->sample();
+	}
+	for (auto it=m_crosses.begin(); it!=m_crosses.end(); it++) {
+		(*it)->sample();
+	}
+}
+
 } /* namespace vsc */

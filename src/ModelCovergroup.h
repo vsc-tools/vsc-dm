@@ -35,6 +35,8 @@ public:
 		return m_crosses;
 	}
 
+	void sample();
+
 	virtual void accept(IVisitor *v) override { v->visitModelCovergroup(this); }
 
 private:

@@ -31,8 +31,6 @@ public:
 
 	virtual int32_t n_bins() = 0;
 
-	virtual int32_t hit_idx() = 0;
-
 	virtual BinsType bin_type() = 0;
 
 	virtual void bin_type(BinsType t) = 0;
