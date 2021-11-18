@@ -116,6 +116,7 @@ ExternalProject_Add(Bitwuzla
     -DGMP_INCLUDE_DIR:PATH=${CMAKE_CURRENT_BINARY_DIR}/gmp/include
     -DGMP_LIBRARIES:PATH=${LIB_GMP}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+    -DGTest_FOUND:BOOL=True
   )
 
 ExternalProject_Add(Boolector
@@ -136,6 +137,7 @@ ExternalProject_Add(Boolector
     -DGMP_INCLUDE_DIR:PATH=${CMAKE_CURRENT_BINARY_DIR}/gmp/include
     -DGMP_LIBRARIES:PATH=${LIB_GMP}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+    -DGTest_FOUND:BOOL=True
   )
 
 add_dependencies(Bitwuzla Cadical Btor2tools GMP)
