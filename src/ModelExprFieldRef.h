@@ -23,6 +23,8 @@ public:
 
 	ModelField *field() const { return m_field; }
 
+	virtual void eval(ModelVal &dst) override;
+
 	virtual void accept(IVisitor *v) { v->visitModelExprFieldRef(this); }
 
 private:

@@ -32,9 +32,13 @@ int32_t RandState::randint32(
 }
 
 void RandState::randbits(ModelVal &val) {
-	uint32_t n_words = (val.bits()-1)/32+1;
-	for (uint32_t i=0; i<n_words; i++) {
-		uint64_t rv = next();
+	if (val.bits() <= 64) {
+		val.u64(next());
+	} else {
+		uint32_t n_words = (val.bits()-1)/64+1;
+		for (uint32_t i=0; i<n_words; i++) {
+			uint64_t rv = next();
+#ifdef UNDEFINED
 		val.set_word(i, rv);
 
 		if (i+1 < n_words) {
@@ -46,6 +50,8 @@ void RandState::randbits(ModelVal &val) {
 			// Mask the last word
 			val.set_word(i,
 					(val.get_word(i) & (1 << (val.bits()%32))-1));
+		}
+#endif
 		}
 	}
 }

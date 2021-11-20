@@ -41,7 +41,7 @@ expr_base::expr_base(const int_t &val) {
 
 expr_base::expr_base(int32_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(true, 32);
-	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	ModelExprVal *e = new ModelExprVal(ModelVal(32));
 	e->val().u32(val);
 	m_core = e;
 	ctor::inst()->push_expr(m_core);
@@ -49,7 +49,7 @@ expr_base::expr_base(int32_t val) {
 
 expr_base::expr_base(uint32_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(false, 32);
-	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	ModelExprVal *e = new ModelExprVal(ModelVal(32));
 	e->val().u32(val);
 	m_core = e;
 	ctor::inst()->push_expr(m_core);
@@ -57,7 +57,7 @@ expr_base::expr_base(uint32_t val) {
 
 expr_base::expr_base(int64_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(true, 64);
-	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	ModelExprVal *e = new ModelExprVal(ModelVal(64));
 	e->val().u64(val);
 	m_core = e;
 	ctor::inst()->push_expr(m_core);
@@ -65,7 +65,7 @@ expr_base::expr_base(int64_t val) {
 
 expr_base::expr_base(uint64_t val) {
 	DataTypeInt *dt = ctor::inst()->type_int(false, 64);
-	ModelExprVal *e = new ModelExprVal(ModelVal(dt));
+	ModelExprVal *e = new ModelExprVal(ModelVal(64));
 	e->val().u64(val);
 	m_core = e;
 	ctor::inst()->push_expr(m_core);
@@ -83,10 +83,7 @@ expr_base expr_base::mk(ModelExpr *core) {
 }
 
 ModelVal expr_base::val() {
-	ModelVal ret;
-	ret.push_word(0);
-
-	return ret;
+	return ModelVal(32);
 }
 
 /*

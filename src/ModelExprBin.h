@@ -8,6 +8,7 @@
 #pragma once
 #include "BinOp.h"
 #include "ModelExpr.h"
+#include "ModelVal.h"
 
 namespace vsc {
 
@@ -28,13 +29,19 @@ public:
 
 	ModelExpr *rhs() const { return m_rhs.get(); }
 
+	virtual void eval(ModelVal &dst) override;
+
 	virtual void accept(IVisitor *v) { v->visitModelExprBin(this); }
+
+private:
+	static void eq_op_64(ModelVal &dst, const ModelVal &op1, const ModelVal &op2);
 
 private:
 	ModelExprUP					m_lhs;
 	BinOp						m_op;
 	ModelExprUP					m_rhs;
 	int32_t						m_width;
+	bool						m_signed;
 };
 
 } /* namespace vsc */

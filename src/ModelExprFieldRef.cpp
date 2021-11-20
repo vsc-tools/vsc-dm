@@ -31,4 +31,11 @@ ModelExprFieldRef::~ModelExprFieldRef() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelExprFieldRef::eval(ModelVal &dst) {
+	dst = m_field->val();
+	fprintf(stdout, "ModelExprFieldRef::eval %lld %d (%lld %d)\n",
+			dst.val_u(), dst.bits(),
+			m_field->val().val_u(), m_field->val().bits());
+}
+
 } /* namespace vsc */

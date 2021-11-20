@@ -135,7 +135,6 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	// TODO: assert
 
 	const char *bits = boolector_bv_assignment(m_btor, it->second);
-	ModelVal::iterator val_it = f->val().begin();
 	DEBUG("bits=%s", bits);
 
 	// Need to go

@@ -47,6 +47,7 @@ public:
 	uint64_t operator ()() { return u64(); }
 
 	void operator ()(uint64_t v) {
+		val_u(v);
 	}
 
 	void operator ()(const ui_t<W> &v) {

@@ -7,6 +7,7 @@
 
 #pragma once
 #include "DataType.h"
+#include "IDataTypeInt.h"
 
 namespace vsc {
 

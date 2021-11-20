@@ -34,8 +34,8 @@ attr_scalar::attr_scalar(
 		bool				is_signed,
 		int32_t				width,
 		const int_t			&ival,
-		bool				parentless) {
-	m_field = new ModelFieldRoot(new DataTypeInt(is_signed, width), m_name);
+		bool				parentless) : m_is_signed(is_signed), m_width(width) {
+	m_field = new ModelFieldRoot(ctor::inst()->type_int(is_signed, width), m_name);
 	m_field->val().u64(ival.val());
 
 	/*
@@ -137,7 +137,7 @@ void attr_scalar::val_s(int64_t v) {
 }
 
 void attr_scalar::val_u(uint64_t v) {
-	;
+	field()->val().val_u(v, m_width);
 }
 
 

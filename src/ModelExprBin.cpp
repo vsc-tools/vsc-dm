@@ -20,6 +20,7 @@
  */
 
 #include "ModelExprBin.h"
+#include "ModelValOp.h"
 
 namespace vsc {
 
@@ -28,6 +29,8 @@ ModelExprBin::ModelExprBin(
 		BinOp				op,
 		ModelExpr			*rhs) :
 			m_lhs(lhs), m_op(op), m_rhs(rhs) {
+
+	m_signed = true;
 
 	switch (op) {
 	case BinOp::Eq:
@@ -46,6 +49,114 @@ ModelExprBin::ModelExprBin(
 
 ModelExprBin::~ModelExprBin() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelExprBin::eval(ModelVal &dst) {
+	ModelVal lhs(m_width), rhs(m_width);
+	m_lhs->eval(lhs);
+	m_rhs->eval(rhs);
+
+	if (m_width <= 64) {
+		switch (m_op) {
+		case BinOp::Add:
+			dst.val_u(lhs.val_u() + rhs.val_u(), m_width);
+			dst.bits(m_width);
+			break;
+		case BinOp::Eq:
+			ModelValOp::eq(dst, lhs, rhs);
+			break;
+		case BinOp::Ne:
+			ModelValOp::ne(dst, lhs, rhs);
+			break;
+		case BinOp::Ge:
+			// Expression must be signed or unsigned
+			if (m_signed) {
+				ModelValOp::sge(dst, lhs, rhs);
+			} else {
+				dst.val_u(lhs.val_u() >= rhs.val_u());
+				dst.bits(1);
+			}
+			break;
+		case BinOp::Gt:
+			// Expression must be signed or unsigned
+			if (m_signed) {
+				dst.val_u(lhs.val_i() > rhs.val_i());
+				dst.bits(1);
+			} else {
+				dst.val_u(lhs.val_u() > rhs.val_u());
+				dst.bits(1);
+			}
+			break;
+		case BinOp::Le:
+			// Expression must be signed or unsigned
+			if (m_signed) {
+				dst.val_u(lhs.val_i() <= rhs.val_i());
+			} else {
+				dst.val_u(lhs.val_u() <= rhs.val_u());
+			}
+			dst.bits(1);
+			break;
+		case BinOp::Lt:
+			// Expression must be signed or unsigned
+			if (m_signed) {
+				dst.val_u(lhs.val_i() < rhs.val_i());
+			} else {
+				dst.val_u(lhs.val_u() < rhs.val_u());
+			}
+			dst.bits(1);
+			break;
+		case BinOp::LogAnd:
+			dst.val_u(lhs.val_u() & rhs.val_u());
+			dst.bits(m_width);
+			break;
+		case BinOp::LogOr:
+			dst.val_u(lhs.val_u() | rhs.val_u());
+			dst.bits(m_width);
+			break;
+		case BinOp::Sll:
+			dst.val_u(lhs.val_u() << rhs.val_u());
+			dst.bits(m_width);
+			break;
+		case BinOp::Srl:
+			if (m_signed) {
+				dst.val_u(lhs.val_i() >> rhs.val_u());
+			} else {
+				dst.val_u(lhs.val_u() >> rhs.val_u());
+			}
+			dst.bits(m_width);
+			break;
+		case BinOp::Sub:
+			if (m_signed) {
+				dst.val_u(lhs.val_i() - rhs.val_i(), m_width);
+				dst.bits(m_width);
+			} else {
+				dst.val_u(lhs.val_u() - rhs.val_u(), m_width);
+				dst.bits(m_width);
+			}
+			break;
+		case BinOp::Xor:
+			dst.val_u(lhs.val_u() ^ rhs.val_u(), m_width);
+			dst.bits(m_width);
+			break;
+		case BinOp::BinAnd:
+			dst.val_u(lhs.val_u() != 0 && rhs.val_u() != 0);
+			break;
+		case BinOp::BinOr:
+			dst.val_u(lhs.val_u() != 0 || rhs.val_u() != 0);
+			break;
+		}
+	} else {
+		// Slow path?
+
+	}
+}
+
+void ModelExprBin::eq_op_64(
+		ModelVal 		&dst,
+		const ModelVal 	&op1,
+		const ModelVal 	&op2) {
+	dst.val_u(op1.val_u() == op2.val_u());
+	dst.bits(1);
 }
 
 } /* namespace vsc */

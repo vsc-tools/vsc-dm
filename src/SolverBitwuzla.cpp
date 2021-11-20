@@ -121,7 +121,6 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 	BitwuzlaTerm *val = bitwuzla_get_value(m_bitwuzla, it->second);
 	const char *bits = bitwuzla_get_bv_value(m_bitwuzla, val);
 	DEBUG("bits=%s", bits);
-	ModelVal::iterator val_it = f->val().begin();
 
 	// Need to go
 	// - size-32*1..size-32*0-1

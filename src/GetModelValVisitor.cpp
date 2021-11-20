@@ -22,7 +22,6 @@ ModelVal GetModelValVisitor::value(
 		ModelField			*ctx,
 		ModelExpr			*expr) {
 	m_ctx = ctx;
-	m_val.clear();
 	expr->accept(this);
 	return m_val;
 }

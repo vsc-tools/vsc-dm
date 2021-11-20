@@ -39,7 +39,7 @@ int_t::int_t(int64_t val) :
 ModelExprVal *int_t::toExpr() const {
 	DEBUG_ENTER("toExpr width=%d is_signed=%d val=0x%llx", m_width, m_is_signed, m_val);
 	DataTypeInt *dt = ctor::inst()->type_int(m_is_signed, m_width);
-	ModelExprVal *ret = new ModelExprVal(ModelVal(dt));
+	ModelExprVal *ret = new ModelExprVal(ModelVal(m_width));
 	// TODO:
 	ret->val().u64(m_val);
 	DEBUG_LEAVE("toExpr width=%d is_signed=%d val=0x%llx", m_width, m_is_signed, m_val);
@@ -47,7 +47,7 @@ ModelExprVal *int_t::toExpr() const {
 }
 
 ModelVal int_t::toVal() const {
-	ModelVal ret(m_is_signed, m_width);
+	ModelVal ret(m_width);
 	ret.u64(m_val);
 	return ret;
 }

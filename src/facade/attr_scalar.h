@@ -71,6 +71,8 @@ public:
 	void val_u(uint64_t v);
 
 protected:
+	bool					m_is_signed;
+	int32_t					m_width;
 
 };
 

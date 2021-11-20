@@ -25,70 +25,96 @@
 
 namespace vsc {
 
-ModelVal::ModelVal() :
-		m_type(0),
-		m_val(0),
-		m_is_signed(false),
-		m_bits(0) {
+ModelVal::ModelVal() : m_val{0}, m_bits(0) {
 	// TODO Auto-generated constructor stub
 
 }
 
-ModelVal::ModelVal(
-			bool		is_signed,
-			int32_t		bits) :
-		m_type(0), m_is_signed(is_signed), m_bits(bits),
-		m_val(0, ((bits-1)/32)+1) {
-
-		// Ensure we have sufficient space allocated
-		while (m_val.size() < ((m_bits-1)/32+1)) {
-			m_val.push_back(0);
-		}
+ModelVal::ModelVal(int32_t bits) : m_val{0}, m_bits(bits) {
+	if (bits > 64) {
+		m_val.vp = new uint64_t[((bits-1)/64)+1];
+		memset(m_val.vp, 0, sizeof(uint64_t)*(((bits-1)/64)+1));
+	}
 }
 
-ModelVal::ModelVal(DataType *type) :
-		m_type(type),
-		m_val(0),
-		m_is_signed(false),
-		m_bits(0) {
-	if (type) {
-		std::pair<bool,int32_t> w = DataTypeWidthVisitor().width(type);
-		m_is_signed = w.first;
-		m_bits = w.second;
+ModelVal::ModelVal(const ModelVal &rhs) {
+	m_bits = rhs.m_bits;
 
-		// Ensure we have sufficient space allocated
-		while (m_val.size() < ((m_bits-1)/32+1)) {
-			m_val.push_back(0);
+	if (m_bits <= 64) {
+		m_val.v = rhs.m_val.v;
+
+		if (m_bits < 64) {
+			m_val.v &= (1ULL << m_bits)-1;
 		}
+	} else {
+		m_val.vp = new uint64_t[(m_bits-1)/64+1];
+		memcpy(m_val.vp, rhs.m_val.vp, sizeof(uint64_t)*((m_bits-1)/64+1));
+	}
+}
+
+void ModelVal::operator = (const ModelVal &rhs) {
+	// Clean up first
+	if (m_bits > 64 && m_val.vp) {
+		delete [] m_val.vp;
+	}
+
+	m_bits = rhs.m_bits;
+
+	if (m_bits <= 64) {
+		m_val.v = rhs.m_val.v;
+
+		if (m_bits < 64) {
+			m_val.v &= ((1ULL << m_bits)-1);
+		}
+	} else {
+		m_val.vp = new uint64_t[(m_bits-1)/64+1];
+		memcpy(m_val.vp, rhs.m_val.vp, sizeof(uint64_t)*((m_bits-1)/64+1));
 	}
 }
 
 ModelVal::~ModelVal() {
-	// TODO Auto-generated destructor stub
+	if (m_bits > 64 && m_val.vp) {
+		delete [] m_val.vp;
+	}
+}
+
+void ModelVal::bits(uint32_t b) {
+	// TODO: handle transitions between val and vec
+	if ((m_bits <= 64) != (b <= 64)) {
+		// I
+
+	}
+	m_bits = b;
 }
 
 uint32_t ModelVal::u32() const {
-	uint32_t val = m_val[0];
-
-	if (m_bits < 32) {
-		val &= ((1 << m_bits)-1);
+	if (m_bits <= 64) {
+		return m_val.v;
+	} else {
+		return m_val.vp[0];
 	}
-
-	return val;
 }
 
 void ModelVal::u32(uint32_t v) {
-	m_val[0] = v;
-	for (uint32_t i=1; i<m_val.size(); i++) {
-		m_val[i] = 0;
+	if (m_bits <= 64) {
+		if (m_bits < 32) {
+			v &= (1ULL << m_bits)-1;
+		}
+		m_val.v = v;
+	} else {
+		m_val.vp[0] = v;
+		for (uint32_t i=1; i<((m_bits-1)/64)+1; i++) {
+			m_val.vp[i] = 0;
+		}
 	}
 }
 
 int32_t ModelVal::i32() const {
+#ifdef UNDEFINED
 	uint32_t val = m_val[0];
 
 	if (m_bits < 32) {
-		val &= ((1 << m_bits)-1);
+		val &= ((1ULL << m_bits)-1);
 
 		// Handle signing for smaller values
 		if (val & (1 << (m_bits-1))) {
@@ -97,36 +123,39 @@ int32_t ModelVal::i32() const {
 	}
 
 	return val;
+#endif
 }
 
 uint64_t ModelVal::u64() const {
-	uint64_t val = 0;
-
-	if (m_val.size() >= 2) {
-		val = m_val[1];
-		val <<= 32;
-	}
-	val |= m_val[0];
-
 	if (m_bits < 64) {
-		val &= ((1ULL << m_bits)-1);
+		return m_val.v;
+	} else {
+		return m_val.vp[0];
 	}
-
-	return val;
 }
 
 void ModelVal::u64(uint64_t v) {
-	for (uint32_t i=0; i<m_val.size(); i++) {
-		m_val[i] = v;
-		v >>= 32;
-	}
+	if (m_bits <= 64) {
+		if (m_bits < 64) {
+			v &= (1ULL << m_bits)-1;
+		}
+		m_val.v = v;
+	} else {
+		uint32_t n_words = (m_bits-1)/64+1;
+		m_val.vp[0] = v;
+		for (uint32_t i=1; i<n_words; i++) {
+			m_val.vp[i] = 0;
+		}
 
-	if ((m_bits%32) != 0) {
-		m_val.back() &= ((1 << (m_bits%32))-1);
+		if (m_bits%64) {
+			// Must mask last word
+			m_val.vp[n_words-1] &= (1ULL << (m_bits%64))-1;
+		}
 	}
 }
 
 int64_t ModelVal::i64() const {
+#ifdef UNDEFINED
 	uint64_t val = 0;
 
 	if (m_val.size() >= 2) {
@@ -145,15 +174,22 @@ int64_t ModelVal::i64() const {
 	}
 
 	return val;
+#endif
 }
 
 
+#ifdef UNDEFINED
 uint32_t ModelVal::at(uint32_t b) const {
 	uint32_t val = m_val.at(b/32);
 	return ((val >> (b%32)) & 1);
 }
+#endif
 
 void ModelVal::to_bits(char *bits) const {
+#ifdef UNDEFINED
+	if (m_bits <= 64) {
+	} else {
+	}
 	char *ep = bits+m_bits;
 	*ep-- = 0;
 
@@ -166,9 +202,11 @@ void ModelVal::to_bits(char *bits) const {
 			word >>= 1;
 		}
 	}
+#endif
 }
 
 void ModelVal::from_bits(const char *bits, int32_t width) {
+#ifdef UNDEFINED
 	// Width is for the incoming bits. It often happens
 	// that the width of the literal is wider than
 	if (width == -1) {
@@ -190,19 +228,14 @@ void ModelVal::from_bits(const char *bits, int32_t width) {
 		}
 		m_val[wi] = word;
 	}
-
-	/*
-	fprintf(stdout, "from_bits: %s\n", bits);
-	for (uint32_t i=0; i<m_val.size(); i++) {
-		fprintf(stdout, "  val[%d]=0x%08x\n", i, m_val[i]);
-	}
-	 */
+#endif
 }
 
+#ifdef UNDEFINED
 void ModelVal::set_bit(uint32_t bit, uint32_t val) {
 	uint32_t wi = bit/32;
 	uint32_t bi = bit%32;
-	m_val[wi] &= ~(1 << bi);
+	m_val[wi] &= ~(1ULL << bi);
 	m_val[wi] |= ((val&1) << bi);
 }
 
@@ -240,30 +273,48 @@ void ModelVal::push_word(uint32_t v) {
 void ModelVal::clear() {
 	m_bits = 0;
 }
+#endif
 
+#ifdef UNDEFINED
 int64_t ModelVal::val_i() const {
-	uint64_t val;
-	if (m_val.size() >= 2) {
-		val = m_val[1];
-		val <<= 32;
-		val |= m_val[0];
+	int64_t ret;
+	if (m_bits > 64) {
+		ret = m_val.vp[0];
 	} else {
-		val = m_val[0];
+		ret = m_val.v;
+		if (m_bits < 64) {
+			// Sign-extend
+			ret >>= (64-m_bits);
+			ret <<= (64-m_bits);
+		}
 	}
-	return val;
+	return ret;
 }
 
 uint64_t ModelVal::val_u() const {
-	if (m_val.size() >= 2) {
-		uint64_t val = m_val[1];
-		val <<= 32;
-		val |= m_val[0];
-		return val;
+	if (m_bits > 64) {
+		return m_val.vp[0];
 	} else {
-		return m_val[0];
+		return m_val.v;
+	}
+}
+#endif
+
+void ModelVal::val_u(uint64_t v, int32_t width) {
+	if (m_bits > 64) {
+		m_val.vp[0] = v;
+		if (width < 64) {
+			m_val.vp[0] &= (1ULL << width)-1;
+		}
+	} else {
+		m_val.v = v;
+		if (width < 64) {
+			m_val.v &= (1ULL << width)-1;
+		}
 	}
 }
 
+#ifdef UNDEFINED
 ModelVal::iterator ModelVal::begin() {
 	return ModelVal::iterator(this, 0);
 }
@@ -317,15 +368,18 @@ ModelVal::const_iterator::const_iterator(ModelVal *v, int32_t idx) :
 		m_val(v), m_idx(idx) {
 
 }
+#endif
 
 ModelVal ModelVal::slice(
 			int32_t		upper,
 			int32_t		lower) {
-	ModelVal ret(false, (upper-lower+1));
+#ifdef UNDEFINED
+	ModelVal ret((upper-lower+1));
 	for (uint32_t bit=lower; bit<=upper; bit++) {
 		ret.set_bit(bit-lower, get_bit(bit));
 	}
 	return ret;
+#endif
 }
 
 } /* namespace vsc */
