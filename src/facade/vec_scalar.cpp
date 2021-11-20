@@ -48,7 +48,7 @@ void vec_scalar::push_back(uint32_t v) {
 	ModelFieldRoot *field = new ModelFieldRoot(
 			vec->datatype(),
 			"a");
-	field->val().u32(v);
+	field->val().val_u(v);
 	vec->push_back(field);
 }
 

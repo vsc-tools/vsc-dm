@@ -35,8 +35,7 @@ literal_base::~literal_base() {
 }
 
 ModelExprVal *literal_base::toExpr() const {
-	ModelExprVal *ret = new ModelExprVal(ModelVal(32));
-	ret->val().u64(m_val);
+	ModelExprVal *ret = new ModelExprVal(ModelVal(32, m_val));
 	return ret;
 }
 

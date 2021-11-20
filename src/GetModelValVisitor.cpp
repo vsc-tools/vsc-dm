@@ -9,7 +9,7 @@
 
 namespace vsc {
 
-GetModelValVisitor::GetModelValVisitor() : m_ctx(0) {
+GetModelValVisitor::GetModelValVisitor() : m_ctx(0), m_val(64) {
 	// TODO Auto-generated constructor stub
 
 }

@@ -27,13 +27,17 @@ namespace vsc {
 
 ModelVal::ModelVal() : m_val{0}, m_bits(0) {
 	// TODO Auto-generated constructor stub
+	fprintf(stdout, "ModelVal::ModelVal\n");
 
 }
 
-ModelVal::ModelVal(int32_t bits) : m_val{0}, m_bits(bits) {
+ModelVal::ModelVal(int32_t bits, uint64_t val) : m_bits(bits) {
 	if (bits > 64) {
 		m_val.vp = new uint64_t[((bits-1)/64)+1];
 		memset(m_val.vp, 0, sizeof(uint64_t)*(((bits-1)/64)+1));
+		m_val.vp[0] = (bits<64)?(val & ((1ULL<<bits)-1)):val;
+	} else {
+		m_val.v = (bits<64)?(val & ((1ULL<<bits)-1)):val;
 	}
 }
 
@@ -84,106 +88,9 @@ void ModelVal::bits(uint32_t b) {
 		// I
 
 	}
+	fprintf(stdout, "ModelVal::bits: %d\n", b);
 	m_bits = b;
 }
-
-uint32_t ModelVal::u32() const {
-	if (m_bits <= 64) {
-		return m_val.v;
-	} else {
-		return m_val.vp[0];
-	}
-}
-
-void ModelVal::u32(uint32_t v) {
-	if (m_bits <= 64) {
-		if (m_bits < 32) {
-			v &= (1ULL << m_bits)-1;
-		}
-		m_val.v = v;
-	} else {
-		m_val.vp[0] = v;
-		for (uint32_t i=1; i<((m_bits-1)/64)+1; i++) {
-			m_val.vp[i] = 0;
-		}
-	}
-}
-
-int32_t ModelVal::i32() const {
-#ifdef UNDEFINED
-	uint32_t val = m_val[0];
-
-	if (m_bits < 32) {
-		val &= ((1ULL << m_bits)-1);
-
-		// Handle signing for smaller values
-		if (val & (1 << (m_bits-1))) {
-			val = (~val+1);
-		}
-	}
-
-	return val;
-#endif
-}
-
-uint64_t ModelVal::u64() const {
-	if (m_bits < 64) {
-		return m_val.v;
-	} else {
-		return m_val.vp[0];
-	}
-}
-
-void ModelVal::u64(uint64_t v) {
-	if (m_bits <= 64) {
-		if (m_bits < 64) {
-			v &= (1ULL << m_bits)-1;
-		}
-		m_val.v = v;
-	} else {
-		uint32_t n_words = (m_bits-1)/64+1;
-		m_val.vp[0] = v;
-		for (uint32_t i=1; i<n_words; i++) {
-			m_val.vp[i] = 0;
-		}
-
-		if (m_bits%64) {
-			// Must mask last word
-			m_val.vp[n_words-1] &= (1ULL << (m_bits%64))-1;
-		}
-	}
-}
-
-int64_t ModelVal::i64() const {
-#ifdef UNDEFINED
-	uint64_t val = 0;
-
-	if (m_val.size() >= 2) {
-		val = m_val[1];
-		val <<= 32;
-	}
-	val |= m_val[0];
-
-	if (m_bits < 64) {
-		val &= ((1ULL << m_bits)-1);
-
-		// Handle signing for smaller values
-		if (val & (1 << (m_bits-1))) {
-			val = (~val+1);
-		}
-	}
-
-	return val;
-#endif
-}
-
-
-#ifdef UNDEFINED
-uint32_t ModelVal::at(uint32_t b) const {
-	uint32_t val = m_val.at(b/32);
-	return ((val >> (b%32)) & 1);
-}
-#endif
 
 void ModelVal::to_bits(char *bits) const {
 #ifdef UNDEFINED
@@ -301,6 +208,9 @@ uint64_t ModelVal::val_u() const {
 #endif
 
 void ModelVal::val_u(uint64_t v, int32_t width) {
+	if (width == -1) {
+		width = m_bits;
+	}
 	if (m_bits > 64) {
 		m_val.vp[0] = v;
 		if (width < 64) {
@@ -314,65 +224,17 @@ void ModelVal::val_u(uint64_t v, int32_t width) {
 	}
 }
 
-#ifdef UNDEFINED
-ModelVal::iterator ModelVal::begin() {
-	return ModelVal::iterator(this, 0);
-}
-
-ModelVal::iterator::iterator() : m_val(0), m_idx(-1) {
-
-}
-
-ModelVal::iterator::iterator(ModelVal *v, int32_t idx) :
-		m_val(v), m_idx(idx) {
-
-}
-
-uint32_t ModelVal::iterator::get32() {
-	uint32_t ret = 0;
-	if (m_val && m_idx < m_val->bits()) {
-		if (!(m_idx%32)) {
-			ret = m_val->m_val[m_idx/32];
-			m_idx += 32;
-		} else {
-			// TODO: handle unaligned access
-		}
-	}
-	return ret;
-}
-
-void ModelVal::iterator::set32(uint32_t val) {
-	if (m_val && m_idx < m_val->bits()) {
-		if (!(m_idx%32)) {
-			m_val->m_val[m_idx/32] = val;
-			m_idx += 32;
-		} else {
-			// TODO: handle unaligned access
-		}
-	}
-}
-
-uint64_t ModelVal::iterator::get64() {
-	;
-}
-
-void ModelVal::iterator::set64(uint64_t val) {
-	;
-}
-
-ModelVal::const_iterator::const_iterator() : m_val(0), m_idx(-1) {
-
-}
-
-ModelVal::const_iterator::const_iterator(ModelVal *v, int32_t idx) :
-		m_val(v), m_idx(idx) {
-
-}
-#endif
-
 ModelVal ModelVal::slice(
 			int32_t		upper,
 			int32_t		lower) {
+	if (m_bits <= 64) {
+		return ModelVal(
+				(upper-lower+1),
+				m_val.v >> lower
+				);
+	} else {
+		// TODO:
+	}
 #ifdef UNDEFINED
 	ModelVal ret((upper-lower+1));
 	for (uint32_t bit=lower; bit<=upper; bit++) {

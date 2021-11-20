@@ -73,55 +73,50 @@ void ModelExprBin::eval(ModelVal &dst) {
 			if (m_signed) {
 				ModelValOp::sge(dst, lhs, rhs);
 			} else {
-				dst.val_u(lhs.val_u() >= rhs.val_u());
-				dst.bits(1);
+				ModelValOp::uge(dst, lhs, rhs);
 			}
 			break;
 		case BinOp::Gt:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				dst.val_u(lhs.val_i() > rhs.val_i());
-				dst.bits(1);
+				ModelValOp::sgt(dst, lhs, rhs);
 			} else {
-				dst.val_u(lhs.val_u() > rhs.val_u());
-				dst.bits(1);
+				ModelValOp::ugt(dst, lhs, rhs);
 			}
 			break;
 		case BinOp::Le:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				dst.val_u(lhs.val_i() <= rhs.val_i());
+				ModelValOp::sle(dst, lhs, rhs);
 			} else {
-				dst.val_u(lhs.val_u() <= rhs.val_u());
+				ModelValOp::ule(dst, lhs, rhs);
 			}
-			dst.bits(1);
 			break;
 		case BinOp::Lt:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				dst.val_u(lhs.val_i() < rhs.val_i());
+				ModelValOp::slt(dst, lhs, rhs);
 			} else {
-				dst.val_u(lhs.val_u() < rhs.val_u());
+				ModelValOp::ult(dst, lhs, rhs);
 			}
-			dst.bits(1);
 			break;
 		case BinOp::LogAnd:
-			dst.val_u(lhs.val_u() & rhs.val_u());
+			ModelValOp::log_and(dst, lhs, rhs);
 			dst.bits(m_width);
 			break;
 		case BinOp::LogOr:
-			dst.val_u(lhs.val_u() | rhs.val_u());
+			ModelValOp::log_or(dst, lhs, rhs);
 			dst.bits(m_width);
 			break;
 		case BinOp::Sll:
-			dst.val_u(lhs.val_u() << rhs.val_u());
+			ModelValOp::sll(dst, lhs, rhs);
 			dst.bits(m_width);
 			break;
 		case BinOp::Srl:
 			if (m_signed) {
-				dst.val_u(lhs.val_i() >> rhs.val_u());
+				ModelValOp::sra(dst, lhs, rhs);
 			} else {
-				dst.val_u(lhs.val_u() >> rhs.val_u());
+				ModelValOp::srl(dst, lhs, rhs);
 			}
 			dst.bits(m_width);
 			break;

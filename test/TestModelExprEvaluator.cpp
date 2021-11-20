@@ -32,7 +32,7 @@ TEST_F(TestModelExprEvaluator, smoke) {
 	ModelVal val;
 	a_expr->eval(val);
 
-	ASSERT_EQ(val.u32(), 10);
+	ASSERT_EQ(val.val_u(), 10);
 	ASSERT_EQ(val.bits(), 8);
 
 }
@@ -47,10 +47,10 @@ TEST_F(TestModelExprEvaluator, bin_op_ult) {
 	expr_base e = (a < b);
 	ModelExpr *expr = ctor::inst()->pop_expr();
 
-	ModelVal val;
+	ModelVal val(64);
 	expr->eval(val);
 
-	ASSERT_EQ(val.u32(), 1);
+	ASSERT_EQ(val.val_u(), 1);
 	ASSERT_EQ(val.bits(), 1);
 
 }

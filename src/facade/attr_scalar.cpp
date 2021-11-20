@@ -36,7 +36,8 @@ attr_scalar::attr_scalar(
 		const int_t			&ival,
 		bool				parentless) : m_is_signed(is_signed), m_width(width) {
 	m_field = new ModelFieldRoot(ctor::inst()->type_int(is_signed, width), m_name);
-	m_field->val().u64(ival.val());
+	fprintf(stdout, "attr_scalar::attr_scalar ival.bits=%d\n", ival.toVal().bits());
+	m_field->val() = ival.toVal();
 
 	/*
 	if (m_parent && !parentless) {
@@ -117,19 +118,19 @@ expr_base attr_scalar::operator % (const expr_base &rhs) {
 }
 
 uint32_t attr_scalar::u32() {
-	return field()->val().u32();
+	return field()->val().val_u();
 }
 
 int32_t attr_scalar::i32() {
-	return field()->val().i32();
+	return field()->val().val_i();
 }
 
 uint64_t attr_scalar::u64() {
-	return field()->val().u64();
+	return field()->val().val_u();
 }
 
 int64_t attr_scalar::i64() {
-	return field()->val().i64();
+	return field()->val().val_i();
 }
 
 void attr_scalar::val_s(int64_t v) {

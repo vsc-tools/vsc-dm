@@ -5,7 +5,9 @@
  *      Author: mballance
  */
 
+#include "ModelCoverpoint.h"
 #include "ModelCoverpointBinSingleVal.h"
+#include "ModelValOp.h"
 
 namespace vsc {
 
@@ -33,7 +35,15 @@ std::string ModelCoverpointBinSingleVal::bin_name(int32_t bin_idx) {
 }
 
 void ModelCoverpointBinSingleVal::sample() {
-	// TODO:
+	ModelVal is_eq(1);
+	ModelValOp::eq(
+			is_eq,
+			m_val,
+			m_cp->val());
+	if (is_eq.val_u()) {
+		// Notify the coverpoint...
+		m_cp->coverage_ev(m_bin_idx_base, m_type);
+	}
 }
 
 } /* namespace vsc */

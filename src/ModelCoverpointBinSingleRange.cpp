@@ -5,7 +5,9 @@
  *      Author: mballance
  */
 
+#include "ModelCoverpoint.h"
 #include "ModelCoverpointBinSingleRange.h"
+#include "ModelValOp.h"
 
 namespace vsc {
 
@@ -36,7 +38,22 @@ std::string ModelCoverpointBinSingleRange::bin_name(int32_t bin_idx) {
 }
 
 void ModelCoverpointBinSingleRange::sample() {
-	// TODO:
+	ModelVal ge(1), le(1);
+
+	// TODO: need to know if this is signed/unsigned
+	ModelValOp::uge(
+			ge,
+			m_cp->val(),
+			m_lower);
+
+	ModelValOp::ule(
+			le,
+			m_cp->val(),
+			m_upper);
+
+	if (ge.val_u() && le.val_u()) {
+		m_cp->coverage_ev(m_bin_idx_base, m_type);
+	}
 }
 
 } /* namespace vsc */

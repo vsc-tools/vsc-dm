@@ -17,6 +17,19 @@ public:
 
 };
 
+template <int W> class expr<si_t<W>> : public expr_base {
+public:
+
+	expr(const expr_base &e) {
+		m_core = e.core();
+	}
+
+	int64_t operator ()() {
+		return val().val_i();
+	}
+
+};
+
 template <int W> class expr<ui_t<W>> : public expr_base {
 public:
 
@@ -25,7 +38,7 @@ public:
 	}
 
 	uint64_t operator ()() {
-		return val().u64();
+		return val().val_u();
 	}
 
 };

@@ -33,7 +33,7 @@ int32_t RandState::randint32(
 
 void RandState::randbits(ModelVal &val) {
 	if (val.bits() <= 64) {
-		val.u64(next());
+		val.val_u(next());
 	} else {
 		uint32_t n_words = (val.bits()-1)/64+1;
 		for (uint32_t i=0; i<n_words; i++) {
