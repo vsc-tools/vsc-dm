@@ -154,33 +154,55 @@ void rand_obj::add_constraint(constraint *c) {
 }
 
 void rand_obj::build() {
+	DEBUG_ENTER("build(phase=%d)", ctor::inst()->build_phase());
 	if (ctor::inst()->build_phase() == 0) {
+		m_field = new ModelFieldRoot(0, name());
+
+		if (ctor::inst()->build_field()) {
+			ctor::inst()->build_field()->add_field(m_field);
+		} else {
+			m_field_u = ModelFieldRootUP(m_field);
+		}
+
+		ctor::inst()->push_build_field(m_field);
+
 		// Only build fields. The fields will take care of this
 		for (auto it=children().begin(); it!=children().end(); it++) {
 			(*it)->build();
 		}
-	} else {
-		// Only build fields. The fields will take care of this
-		std::unordered_set<std::string>	constraint_ov_s;
 
-		// Class hierarchies are built inside-out, which means that
-		// subtype constraints are added after super-type constraints.
-		// Process the list in reverse order and track constraint
-		// names to avoid the proper constraints
-		for (auto it=children().rbegin(); it!=children().rend(); it++) {
-			if ((*it)->is_type(ObjType_Constraint)) {
-				constraint *c = static_cast<constraint *>(*it);
-				if (constraint_ov_s.find(c->name()) == constraint_ov_s.end()) {
-					if (c->name() != "") {
-						constraint_ov_s.insert(c->name());
+		ctor::inst()->pop_build_field();
+	} else {
+		ctor::inst()->push_build_field(m_field);
+
+		if (ctor::inst()->build_phase() == 1) {
+
+			// Only build fields. The fields will take care of this
+			std::unordered_set<std::string>	constraint_ov_s;
+
+			// Class hierarchies are built inside-out, which means that
+			// subtype constraints are added after super-type constraints.
+			// Process the list in reverse order and track constraint
+			// names to avoid the proper constraints
+			for (auto it=children().rbegin(); it!=children().rend(); it++) {
+				if ((*it)->is_type(ObjType_Constraint)) {
+					DEBUG("processing constraint");
+					constraint *c = static_cast<constraint *>(*it);
+					if (constraint_ov_s.find(c->name()) == constraint_ov_s.end()) {
+						if (c->name() != "") {
+							constraint_ov_s.insert(c->name());
+						}
+						(*it)->build();
 					}
+				} else {
 					(*it)->build();
 				}
-			} else {
-				(*it)->build();
 			}
 		}
+
+		ctor::inst()->pop_build_field();
 	}
+	DEBUG_LEAVE("build(phase=%d)", ctor::inst()->build_phase());
 }
 
 void rand_obj::build_constraints() {

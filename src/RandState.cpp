@@ -9,10 +9,12 @@
 
 namespace vsc {
 
-RandState::RandState(uint32_t seed) {
+RandState::RandState(uint32_t seed) : m_state(seed) {
+	/*
 	m_state = (0x330EULL << 32)
 			| ((uint64_t)(seed & 0xFFFF) << 16)
 			| (seed >> 16);
+			 */
 }
 
 RandState::~RandState() {
@@ -69,11 +71,13 @@ uint64_t RandState::next() {
     val ^= val << 17
 	 */
 
+	/*
 	m_state ^= (m_state << 13);
     m_state ^= (m_state >> 7);
     m_state ^= (m_state << 17);
+     */
 
-    return m_state;
+    return m_state();
 }
 
 } /* namespace vsc */

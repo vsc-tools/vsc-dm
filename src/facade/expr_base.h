@@ -24,7 +24,6 @@
 #include <stdint.h>
 #include "ModelExpr.h"
 #include "ModelVal.h"
-#include "int_t.h"
 
 namespace vsc {
 
@@ -33,6 +32,7 @@ using ModelExprUP=std::unique_ptr<ModelExpr>;
 namespace facade {
 
 class attr_scalar;
+class int_t;
 
 class expr_base {
 	friend class attr_scalar;
@@ -54,6 +54,16 @@ public:
 	expr_base(uint64_t v);
 
 	virtual ~expr_base();
+
+	expr_base operator && (const expr_base &rhs);
+
+	expr_base operator || (const expr_base &rhs);
+
+	expr_base operator & (const expr_base &rhs);
+
+	expr_base operator | (const expr_base &rhs);
+
+	expr_base operator ^ (const expr_base &rhs);
 
 	ModelExpr *core() const { return m_core; }
 

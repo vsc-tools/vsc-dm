@@ -23,7 +23,6 @@ ModelCoverpoint::ModelCoverpoint(
 	m_illegal_bins_val = 0;
 	m_coverage_valid = false;
 	m_coverage = 0.0;
-
 }
 
 ModelCoverpoint::~ModelCoverpoint() {
@@ -97,6 +96,8 @@ void ModelCoverpoint::finalize() {
 
 void ModelCoverpoint::sample() {
 	m_hit_idx = -1;
+
+	m_target->eval(m_val);
 
 	// TODO: evaluate expression
 

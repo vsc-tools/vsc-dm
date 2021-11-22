@@ -40,6 +40,8 @@ public:
 
 	virtual ~attr_scalar();
 
+	virtual void build() override;
+
 	void operator = (const expr_base &rhs);
 
 	expr_base operator == (const expr_base &rhs);
@@ -56,6 +58,10 @@ public:
 
 	expr_base operator % (const expr_base &rhs);
 
+	expr_base operator + (const expr_base &rhs);
+
+	expr_base operator - (const expr_base &rhs);
+
 //	expr operator == (const attr_scalar &rhs);
 
 	uint32_t u32();
@@ -69,6 +75,7 @@ public:
 	void val_s(int64_t v);
 
 	void val_u(uint64_t v);
+
 
 protected:
 	bool					m_is_signed;

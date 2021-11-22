@@ -24,7 +24,7 @@
 #include "ctor.h"
 #include "rand_obj.h"
 
-#define EN_DEBUG_ATTR_BASE
+#undef EN_DEBUG_ATTR_BASE
 
 #ifdef EN_DEBUG_ATTR_BASE
 DEBUG_SCOPE(attr_base)

@@ -8,8 +8,10 @@
 #include "covergroup.h"
 #include "ctor.h"
 #include "Debug.h"
+#include "ModelCoverpoint.h"
+#include "ModelExprEvaluator.h"
 
-#define EN_DEBUG_COVERGROUP
+#undef EN_DEBUG_COVERGROUP
 
 #ifdef EN_DEBUG_COVERGROUP
 DEBUG_SCOPE(covergroup);
@@ -88,18 +90,54 @@ void covergroup::with_sample_base::build() {
 covergroup::coverpoint::coverpoint(
 		const scope					&name,
 		const expr_base				&expr,
-		const std::function<void()>	&body) : obj(ObjType_Coverpoint) {
+		const std::function<void()>	&body) : obj(ObjType_Coverpoint),
+				m_cp(0), m_iff(0), m_body(body) {
 	// Pop the sample expression
 	ctor::inst()->pop_expr();
+	m_target = expr.core();
+}
+
+covergroup::coverpoint::coverpoint(
+		const scope					&name,
+		const expr_base				&expr,
+		const covergroup::iff		&iff_e,
+		const std::function<void()>	&body) : obj(ObjType_Coverpoint),
+				m_cp(0), m_iff(0), m_body(body) {
+	// Pop the sample expression
+	ctor::inst()->pop_expr();
+	m_target = expr.core();
+	m_iff = iff_e.m_iff;
 }
 
 covergroup::coverpoint::coverpoint(
 		const scope											&name,
 		const expr_base										&expr,
 		const std::function<void(covergroup::options_t &)>	&body) :
-			obj(ObjType_Coverpoint) {
+			obj(ObjType_Coverpoint), m_cp(0), m_iff(0), m_body_opts(body) {
+
 	// Pop the sample expression
 	ctor::inst()->pop_expr();
+	m_target = expr.core();
+}
+
+covergroup::coverpoint::coverpoint(
+		const scope											&name,
+		const expr_base										&expr,
+		const covergroup::iff								&iff_e,
+		const std::function<void(covergroup::options_t &)>	&body) :
+			obj(ObjType_Coverpoint), m_cp(0), m_iff(0), m_body_opts(body) {
+
+	// Pop the sample expression
+	ctor::inst()->pop_expr();
+	m_target = expr.core();
+
+	m_iff = iff_e.m_iff;
+}
+
+covergroup::coverpoint &covergroup::coverpoint::iff(const expr_base &expr) {
+	ctor::inst()->pop_expr();
+	m_iff = expr.core();
+	return *this;
 }
 
 void covergroup::coverpoint::add_bins(bins *b) {
@@ -114,19 +152,51 @@ void covergroup::coverpoint::add_illegal_bins(illegal_bins *b) {
 	m_illegal_bins.push_back(b);
 }
 
+double covergroup::coverpoint::get_coverage() {
+	return m_cp->coverage();
+}
+
 void covergroup::coverpoint::build() {
 	DEBUG_ENTER("coverpoint::build %s (%d)",
 			name().c_str(), ctor::inst()->build_phase());
+	ctor::inst()->push_build_scope(this);
 	if (ctor::inst()->build_phase() == 0) {
 		if (m_body) {
 			m_body();
-		} else {
+		} else if (m_body_opts) {
 			// TODO:
 //			m_body_opts();
 		}
 
 		// We now have a collection of bins. Build the coverpoint model
+		m_cp = new ModelCoverpoint(
+				m_target,
+				name(),
+				m_iff
+				);
+
+		// Value ranges to be excluded based on ignore_bins, illegal_bins, etc
+		ModelValRangelist exclude_bins;
+
+		// TODO: build up exclusion list
+		for (auto it=m_ignore_bins.begin(); it!=m_ignore_bins.end(); it++) {
+
+		}
+
+		// TODO: build up exclusion list
+		for (auto it=m_illegal_bins.begin(); it!=m_illegal_bins.end(); it++) {
+
+		}
+
+		if (m_bins.size() > 0) {
+			DEBUG("Coverpoint %s has user-defined bins", name().c_str());
+
+		} else {
+			DEBUG("Coverpoint %s has no user-defined bins ; autobinning", name().c_str());
+
+		}
 	}
+	ctor::inst()->pop_build_scope();
 	DEBUG_LEAVE("coverpoint::build %s (%d)",
 			name().c_str(), ctor::inst()->build_phase());
 }
@@ -151,28 +221,56 @@ void covergroup::cross::build() {
 }
 
 covergroup::bins::bins(
-		const scope			&s) {
+		const std::string	&name,
+		const std::vector<expr_range>	&ranges) : m_name(name) {
+	DEBUG_ENTER("bins::bins scope=%p", ctor::inst()->scope());
+	covergroup::coverpoint *cp =
+			ctor::inst()->build_scopeT<covergroup::coverpoint>();
 
-}
+	m_is_array = false;
+	m_n_bins = 1;
 
-covergroup::bins::bins(
-		const scope			&s,
-		const std::vector<expr_range>	&ranges) {
+	cp->add_bins(this);
+
 	for (auto it=ranges.begin(); it!=ranges.end(); it++) {
 		ctor::inst()->pop_expr();
-		fprintf(stdout, "pop range\n");
+		ModelExpr *lower_e = it->lower.core();
 		if (it->upper.core()) {
 			// We have two elements here
 			ctor::inst()->pop_expr();
-			fprintf(stdout, "pop range (2)\n");
+			ModelExpr *upper_e = it->upper.core();
+			m_ranges.push_back(ModelValRange(
+					ModelExprEvaluator().eval(lower_e),
+					ModelExprEvaluator().eval(upper_e)));
+			delete upper_e;
+		} else {
+			m_ranges.push_back(ModelValRange(
+					ModelExprEvaluator().eval(lower_e)));
 		}
+		delete lower_e;
 	}
+	DEBUG_LEAVE("bins::bins");
 }
 
 covergroup::bins::bins(
-		const scope						&s,
+		const std::string				&name,
 		const expr_base					&sz,
-		const std::vector<expr_range>	&ranges) {
+		const std::vector<expr_range>	&ranges) : m_name(name) {
+	ctor::inst()->build_scopeT<covergroup::coverpoint>()->add_bins(this);
+
+	m_is_array = true;
+	if (sz.core()) {
+		ctor::inst()->pop_expr();
+		ModelExpr *sz_e = sz.core();
+		ModelVal sz_v = ModelExprEvaluator().eval(sz_e);
+		delete sz_e;
+
+		m_n_bins = sz_v.val_u();
+	} else {
+		// Empty range
+		m_n_bins = -1;
+	}
+
 	for (auto it=ranges.begin(); it!=ranges.end(); it++) {
 		ctor::inst()->pop_expr();
 		fprintf(stdout, "pop range\n");
@@ -185,14 +283,16 @@ covergroup::bins::bins(
 }
 
 covergroup::ignore_bins::ignore_bins(
-		const scope			&s,
-		const std::vector<expr_range>	&ranges) {
+		const std::string				&name,
+		const std::vector<expr_range>	&ranges) : m_name(name) {
+	ctor::inst()->build_scopeT<covergroup::coverpoint>()->add_ignore_bins(this);
 
 }
 
 covergroup::illegal_bins::illegal_bins(
-		const scope			&s,
-		const std::vector<expr_range>	&ranges) {
+		const std::string				&name,
+		const std::vector<expr_range>	&ranges) : m_name(name) {
+	ctor::inst()->build_scopeT<covergroup::coverpoint>()->add_illegal_bins(this);
 
 }
 

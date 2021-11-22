@@ -30,7 +30,11 @@ TEST_F(TestCovergroup, simple_coverpoint) {
 		with_sample<ui_t<4>> sample;
 
 		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
-			bins abc { "abc", {1, {2,3}} };
+			bins abc { "abc", {1, {2,5}} };
+		}};
+		coverpoint cp2 { "cp2", std::get<0>(sample.items),
+						iff(std::get<0>(sample.items) < 10), [&] {
+			bins abc { "abc", {1, {2,5}} };
 		}};
 	};
 
@@ -50,7 +54,7 @@ TEST_F(TestCovergroup, simple_coverpoint_autobins) {
 		with_sample<ui_t<4>> sample;
 
 		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
-			bins abc { "abc" };
+//			bins abc { "abc" };
 		}};
 	};
 

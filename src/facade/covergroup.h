@@ -13,6 +13,7 @@
 #include "ctor.h"
 #include "expr_range.h"
 #include "obj_scope.h"
+#include "ModelValRangelist.h"
 
 namespace vsc {
 namespace facade {
@@ -106,6 +107,14 @@ public:
 		}
 	};
 
+	struct iff {
+		iff(const expr_base &e) {
+			ctor::inst()->pop_expr();
+			m_iff = e.core();
+		}
+		ModelExpr			*m_iff;
+	};
+
 	class bins;
 	class ignore_bins;
 	class illegal_bins;
@@ -117,9 +126,23 @@ public:
 			const std::function<void()>		&body);
 
 		coverpoint(
+			const scope						&name,
+			const expr_base					&expr,
+			const iff						&iff_e,
+			const std::function<void()>		&body);
+
+		coverpoint(
 			const scope								&name,
 			const expr_base							&expr,
 			const std::function<void(options_t &)>	&body);
+
+		coverpoint(
+			const scope								&name,
+			const expr_base							&expr,
+			const iff								&iff_e,
+			const std::function<void(options_t &)>	&body);
+
+		coverpoint &iff(const expr_base &expr);
 
 		void add_bins(bins *b);
 
@@ -127,9 +150,14 @@ public:
 
 		void add_illegal_bins(illegal_bins *b);
 
+		double get_coverage();
+
 		virtual void build() override;
 
 	private:
+		ModelCoverpoint						*m_cp;
+		ModelExpr							*m_target;
+		ModelExpr							*m_iff;
 		std::function<void()>				m_body;
 		std::function<void(options_t &)>	m_body_opts;
 		std::vector<bins *>					m_bins;
@@ -158,30 +186,41 @@ public:
 	class bins {
 	public:
 		bins(
-			const scope 					&s);
-
-		bins(
-			const scope 					&s,
+			const std::string				&name,
 			const std::vector<expr_range>	&ranges);
 
 		bins(
-			const scope 					&s,
+			const std::string				&name,
 			const expr_base					&sz,
 			const std::vector<expr_range>	&ranges);
+
+		std::string							m_name;
+		bool								m_is_array;
+		int32_t								m_n_bins;
+		ModelValRangelist					m_ranges;
+
 	};
 
 	class ignore_bins {
 	public:
 		ignore_bins(
-			const scope 					&s,
+			const std::string				&name,
 			const std::vector<expr_range>	&ranges);
+
+		std::string							m_name;
+		ModelValRangelist					m_ranges;
+
 	};
 
 	class illegal_bins {
 	public:
 		illegal_bins(
-			const scope 					&s,
+			const std::string				&name,
 			const std::vector<expr_range>	&ranges);
+
+		std::string							m_name;
+		ModelValRangelist					m_ranges;
+
 	};
 
 protected:

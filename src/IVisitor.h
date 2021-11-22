@@ -33,6 +33,7 @@ class DataTypeInt;
 class DataTypeStruct;
 
 class ModelConstraint;
+class ModelConstraintBlock;
 class ModelConstraintExpr;
 class ModelConstraintIf;
 class ModelConstraintImplies;
@@ -73,6 +74,8 @@ public:
 	virtual void visitDataTypeStruct(DataTypeStruct *t) = 0;
 
 	virtual void visitModelConstraint(ModelConstraint *c) = 0;
+
+	virtual void visitModelConstraintBlock(ModelConstraintBlock *c) = 0;
 
 	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) = 0;
 

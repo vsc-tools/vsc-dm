@@ -31,6 +31,7 @@
 
 #include "IVisitor.h"
 
+#include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
 #include "ModelConstraintIf.h"
 #include "ModelConstraintImplies.h"
@@ -73,6 +74,8 @@ public:
 	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
 
 	virtual void visitModelConstraint(ModelConstraint *c) override;
+
+	virtual void visitModelConstraintBlock(ModelConstraintBlock *c) override;
 
 	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
 

@@ -59,6 +59,8 @@ public:
 
 	double coverage();
 
+	virtual void accept(IVisitor *v) override { v->visitModelCoverpoint(this); }
+
 private:
 	ModelExprUP								m_target;
 	std::string								m_name;

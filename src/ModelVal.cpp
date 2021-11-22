@@ -93,6 +93,18 @@ void ModelVal::bits(uint32_t b) {
 }
 
 void ModelVal::to_bits(char *bits) const {
+	if (m_bits <= 64) {
+		char *ep = bits+m_bits;
+		*ep-- = 0;
+		uint64_t v = m_val.v;
+		for (uint32_t i=0; i<m_bits; i++) {
+			*ep = '0'+(v&1);
+			ep--;
+			v >>= 1;
+		}
+	} else {
+		// TODO:
+	}
 #ifdef UNDEFINED
 	if (m_bits <= 64) {
 	} else {
@@ -113,7 +125,6 @@ void ModelVal::to_bits(char *bits) const {
 }
 
 void ModelVal::from_bits(const char *bits, int32_t width) {
-#ifdef UNDEFINED
 	// Width is for the incoming bits. It often happens
 	// that the width of the literal is wider than
 	if (width == -1) {
@@ -122,6 +133,24 @@ void ModelVal::from_bits(const char *bits, int32_t width) {
 	const char *ep = bits+width-1;
 	uint32_t n_words = ((width-1)/32)+1;
 
+	if (m_bits <= 64) {
+		const char *cp;
+		m_val.v = 0;
+		if (m_bits < width) {
+			cp = ep-m_bits+1;
+		} else {
+			cp = ep-width+1;
+		}
+		for (uint32_t i=0; i<m_bits; i++) {
+			m_val.v <<= 1;
+			m_val.v |= (*cp - '0');
+			cp++;
+		}
+	} else {
+		// TODO:
+	}
+
+#ifdef UNDEFINED
 	m_bits = width;
 	while (m_val.size() < n_words) {
 		m_val.push_back(0);

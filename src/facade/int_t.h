@@ -8,6 +8,7 @@
 #pragma once
 #include <stdint.h>
 #include "ModelExprVal.h"
+#include "expr_rangelist.h"
 
 namespace vsc {
 namespace facade {

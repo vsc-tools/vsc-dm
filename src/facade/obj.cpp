@@ -10,7 +10,7 @@
 #include "obj_scope.h"
 #include "Debug.h"
 
-#define EN_DEBUG_OBJ
+#undef EN_DEBUG_OBJ
 
 #ifdef EN_DEBUG_OBJ
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(obj, fmt, ##__VA_ARGS__)

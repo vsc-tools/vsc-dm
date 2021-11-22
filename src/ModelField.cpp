@@ -20,6 +20,7 @@
  */
 
 #include "ModelField.h"
+#include "DataTypeWidthVisitor.h"
 
 namespace vsc {
 
@@ -30,6 +31,9 @@ ModelField::ModelField() : m_parent(0), m_flags(0) {
 
 ModelField::ModelField(DataType *type) :
 		m_parent(0), m_val(32), m_flags(0) {
+	if (type) {
+		m_val = ModelVal(DataTypeWidthVisitor().width(type).second);
+	}
 	// TODO: obtain actual width
 	fprintf(stdout, "ModelField::ModelField() bits=%d\n",
 			m_val.bits());

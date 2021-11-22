@@ -66,8 +66,15 @@ bool Randomizer::randomize(
 			constraints
 			));
 
+	DEBUG("%d solve-sets ; %d unconstrained",
+			spec->solvesets().size(),
+			spec->unconstrained().size());
+
 	for (auto sset=spec->solvesets().begin();
 			sset!=spec->solvesets().end(); sset++) {
+		DEBUG("Solve Set: %d fields ; %d constraints",
+				(*sset)->all_fields().size(),
+				(*sset)->constraints().size());
 		ISolverUP solver(m_solver_factory->createSolverInst(sset->get()));
 
 		// Build solve data for this solve set
@@ -98,6 +105,8 @@ bool Randomizer::randomize(
 		}
 
 		if (ret) {
+			/*
+			 */
 			// Swizzle fields
 			SolveSetSwizzlerPartsel(m_randstate).swizzle(
 					solver.get(),

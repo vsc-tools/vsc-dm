@@ -61,6 +61,12 @@ void VisitorBase::visitModelConstraint(ModelConstraint *c) {
 
 }
 
+void VisitorBase::visitModelConstraintBlock(ModelConstraintBlock *c) {
+	DEBUG_ENTER("visitModelConstraintBlock");
+	visitModelConstraintScope(c);
+	DEBUG_LEAVE("visitModelConstraintBlock");
+}
+
 void VisitorBase::visitModelConstraintExpr(ModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr");
 	visitModelConstraint(c);

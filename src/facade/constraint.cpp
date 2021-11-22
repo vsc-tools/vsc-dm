@@ -22,6 +22,25 @@
 #include "constraint.h"
 #include "rand_obj.h"
 #include "ctor.h"
+#include "Debug.h"
+#include "ModelConstraintBlock.h"
+#include "ModelField.h"
+
+#undef EN_DEBUG_CONSTRAINT
+
+#ifdef EN_DEBUG_CONSTRAINT
+#define DEBUG_ENTER(fmt, ...) \
+	DEBUG_ENTER_BASE(constraint, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) \
+	DEBUG_LEAVE_BASE(constraint, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) \
+	DEBUG_BASE(constraint, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
+
 
 namespace vsc {
 namespace facade {
@@ -50,10 +69,18 @@ constraint::~constraint() {
 }
 
 void constraint::build() {
+	DEBUG_ENTER("build(phase=%d)", ctor::inst()->build_phase());
 	if (ctor::inst()->build_phase() == 1) {
+		ModelConstraintBlock *c = new ModelConstraintBlock(name());
+		ctor::inst()->push_constraint_scope(c);
 
+		m_body();
 
+		ctor::inst()->pop_constraint_scope();
+		DEBUG("Adding constraint body (%d statements)", c->constraints().size());
+		ctor::inst()->build_field()->add_constraint(c);
 	}
+	DEBUG_LEAVE("build(phase=%d)", ctor::inst()->build_phase());
 }
 
 } /* namespace facade */

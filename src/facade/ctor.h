@@ -92,6 +92,22 @@ public:
 
 	void pop_build_phase();
 
+	obj *build_scope() const { return m_build_scope_s.back(); }
+
+	template <class T> T *build_scopeT() const {
+		return dynamic_cast<T *>(build_scope());
+	}
+
+	void push_build_scope(obj *s);
+
+	void pop_build_scope();
+
+	ModelField *build_field() const;
+
+	void push_build_field(ModelField *f);
+
+	void pop_build_field();
+
 	DataTypeInt *type_int(
 			bool		is_signed,
 			int32_t		width);
@@ -109,6 +125,8 @@ private:
 	std::unordered_map<int32_t, DataTypeIntUP>	m_ui_type_m;
 	std::vector<ModelConstraintScope *>			m_constraint_scope_s;
 	std::vector<uint32_t>						m_build_phase_s;
+	std::vector<obj *>							m_build_scope_s;
+	std::vector<ModelField *>					m_build_field_s;
 	RandState									m_randstate;
 	static std::unique_ptr<ctor>				m_inst;
 

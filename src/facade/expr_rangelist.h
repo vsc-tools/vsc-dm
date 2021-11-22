@@ -8,7 +8,6 @@
 #pragma once
 #include <vector>
 
-#include "expr_base.h"
 #include "expr_range.h"
 
 namespace vsc {

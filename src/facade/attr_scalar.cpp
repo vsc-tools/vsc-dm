@@ -22,10 +22,27 @@
 #include "attr_scalar.h"
 #include "rand_obj.h"
 #include "DataTypeInt.h"
+#include "Debug.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprBin.h"
 #include "ModelExprVal.h"
 #include "ctor.h"
+
+#undef EN_DEBUG_ATTR_SCALAR
+
+#ifdef EN_DEBUG_ATTR_SCALAR
+#define DEBUG_ENTER(fmt, ...) \
+	DEBUG_ENTER_BASE(attr_scalar, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) \
+	DEBUG_LEAVE_BASE(attr_scalar, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) \
+	DEBUG_BASE(attr_scalar, fmt, ##__VA_ARGS__)
+#else
+#define DEBUG_ENTER(fmt, ...)
+#define DEBUG_LEAVE(fmt, ...)
+#define DEBUG(fmt, ...)
+#endif
+
 
 namespace vsc {
 namespace facade {
@@ -35,7 +52,10 @@ attr_scalar::attr_scalar(
 		int32_t				width,
 		const int_t			&ival,
 		bool				parentless) : m_is_signed(is_signed), m_width(width) {
-	m_field = new ModelFieldRoot(ctor::inst()->type_int(is_signed, width), m_name);
+	DEBUG_ENTER("attr_scalar()");
+	m_field = new ModelFieldRoot(
+			ctor::inst()->type_int(is_signed, width),
+			m_name);
 	fprintf(stdout, "attr_scalar::attr_scalar ival.bits=%d\n", ival.toVal().bits());
 	m_field->val() = ival.toVal();
 
@@ -50,10 +70,23 @@ attr_scalar::attr_scalar(
 		m_field_u = ModelFieldUP(m_field);
 	}
 	 */
+	DEBUG_LEAVE("attr_scalar()");
 }
 
 attr_scalar::~attr_scalar() {
 	// TODO Auto-generated destructor stub
+}
+
+void attr_scalar::build() {
+	DEBUG_ENTER("build(phase=%d)", ctor::inst()->build_phase());
+	if (ctor::inst()->build_phase() == 0) {
+		if (ctor::inst()->build_field()) {
+			ctor::inst()->build_field()->add_field(m_field);
+		} else {
+			m_field_u = ModelFieldUP(m_field);
+		}
+	}
+	DEBUG_LEAVE("build(phase=%d)", ctor::inst()->build_phase());
 }
 
 expr_base attr_scalar::operator == (const expr_base &rhs) {
@@ -69,27 +102,29 @@ expr_base attr_scalar::operator == (const expr_base &rhs) {
 //}
 
 expr_base attr_scalar::operator != (const expr_base &rhs) {
-	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	DEBUG_ENTER("operator !=");
+	ctor::inst()->pop_expr();
+	DEBUG_LEAVE("operator !=");
 	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Ne,
-			rhs_e));
+			rhs.core()));
 }
 
 expr_base attr_scalar::operator < (const expr_base &rhs) {
-	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
 	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Lt,
-			rhs_e));
+			rhs.core()));
 }
 
 expr_base attr_scalar::operator > (const expr_base &rhs) {
-	ModelExpr *rhs_e = ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
 	return expr_base::mk(new ModelExprBin(
 			new ModelExprFieldRef(field()),
 			BinOp::Gt,
-			rhs_e));
+			rhs.core()));
 }
 
 expr_base attr_scalar::operator <= (const expr_base &rhs) {
@@ -115,6 +150,22 @@ expr_base attr_scalar::operator % (const expr_base &rhs) {
 			new ModelExprFieldRef(field()),
 			BinOp::Mod,
 			rhs_e));
+}
+
+expr_base attr_scalar::operator + (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	return expr_base::mk(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Add,
+			rhs.core()));
+}
+
+expr_base attr_scalar::operator - (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	return expr_base::mk(new ModelExprBin(
+			new ModelExprFieldRef(field()),
+			BinOp::Sub,
+			rhs.core()));
 }
 
 uint32_t attr_scalar::u32() {

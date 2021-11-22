@@ -30,7 +30,7 @@ ModelExprBin::ModelExprBin(
 		ModelExpr			*rhs) :
 			m_lhs(lhs), m_op(op), m_rhs(rhs) {
 
-	m_signed = true;
+	m_signed = false;
 
 	switch (op) {
 	case BinOp::Eq:

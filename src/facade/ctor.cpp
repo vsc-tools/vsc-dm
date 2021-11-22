@@ -23,7 +23,7 @@
 #include "Debug.h"
 #include "ModelConstraintExpr.h"
 
-#define EN_DEBUG_CTOR
+#undef EN_DEBUG_CTOR
 
 #ifdef EN_DEBUG_CTOR
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(ctor, fmt, ##__VA_ARGS__)
@@ -151,7 +151,9 @@ void ctor::pop_expr_mode() {
 }
 
 void ctor::push_expr(ModelExpr *e) {
+	DEBUG_ENTER("push_expr %p", e);
 	m_expr_s.push_back(ModelExprUP(e));
+	DEBUG_LEAVE("push_expr");
 }
 
 ModelExpr *ctor::expr() {
@@ -159,25 +161,32 @@ ModelExpr *ctor::expr() {
 }
 
 ModelExpr *ctor::pop_expr() {
+	DEBUG_ENTER("pop_expr %p", m_expr_s.back().get());
 	ModelExpr *ret = m_expr_s.back().release();
 
 	m_expr_s.pop_back();
 
+	DEBUG_LEAVE("pop_expr");
 	return ret;
 }
 
 void ctor::push_constraint_scope(ModelConstraintScope *c) {
+	DEBUG_ENTER("push_constraint_scope");
 	m_constraint_scope_s.push_back(c);
+	DEBUG_LEAVE("push_constraint_scope");
 }
 
 ModelConstraintScope *ctor::pop_constraint_scope() {
+	DEBUG_ENTER("pop_constraint_scope");
 	ModelConstraintScope *ret = m_constraint_scope_s.back();
 	m_constraint_scope_s.pop_back();
 	for (auto it=m_expr_s.begin();
 			it!=m_expr_s.end(); it++) {
+		DEBUG("Add expression constraint");
 		ret->add_constraint(new ModelConstraintExpr(it->release()));
 	}
 	m_expr_s.clear();
+	DEBUG_ENTER("pop_constraint_scope");
 	return ret;
 }
 
@@ -211,6 +220,30 @@ void ctor::push_build_phase(uint32_t p) {
 
 void ctor::pop_build_phase() {
 	m_build_phase_s.pop_back();
+}
+
+void ctor::push_build_scope(obj *s) {
+	m_build_scope_s.push_back(s);
+}
+
+void ctor::pop_build_scope() {
+	m_build_scope_s.pop_back();
+}
+
+ModelField *ctor::build_field() const {
+	if (m_build_field_s.size()) {
+		return m_build_field_s.back();;
+	} else {
+		return 0;
+	}
+}
+
+void ctor::push_build_field(ModelField *f) {
+	m_build_field_s.push_back(f);
+}
+
+void ctor::pop_build_field() {
+	m_build_field_s.pop_back();
 }
 
 RandState *ctor::mk_randstate() {

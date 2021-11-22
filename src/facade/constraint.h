@@ -37,8 +37,6 @@ public:
 
 	const std::string &name() const { return m_name; }
 
-	const std::function<void()> &body() const { return m_body; }
-
 protected:
 
 	virtual void build() override;

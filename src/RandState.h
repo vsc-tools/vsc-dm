@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <random>
 #include <stdint.h>
 #include "ModelVal.h"
 
@@ -32,7 +33,7 @@ protected:
 	uint64_t next();
 
 private:
-	uint64_t			m_state;
+	std::mt19937_64 	m_state;
 
 };
 

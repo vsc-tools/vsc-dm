@@ -22,6 +22,7 @@
 #include "attr_scalar.h"
 #include "ctor.h"
 #include "expr_base.h"
+#include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 
 namespace vsc {
@@ -69,6 +70,61 @@ expr_base::expr_base(uint64_t val) {
 
 expr_base::~expr_base() {
 	// TODO Auto-generated destructor stub
+}
+
+expr_base expr_base::operator && (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::LogAnd,
+					rhs.core()));
+}
+
+expr_base expr_base::operator || (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::LogOr,
+					rhs.core()));
+}
+
+expr_base expr_base::operator & (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::BinAnd,
+					rhs.core()));
+}
+
+expr_base expr_base::operator | (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::BinOr,
+					rhs.core()));
+}
+
+expr_base expr_base::operator ^ (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Xor,
+					rhs.core()));
 }
 
 expr_base expr_base::mk(ModelExpr *core) {
