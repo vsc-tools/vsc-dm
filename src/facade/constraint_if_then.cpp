@@ -83,8 +83,8 @@ void constraint_if_then::else_then(
 	ctor::inst()->pop_constraint_scope();
 }
 
-constraint_if_then (if_then)(
-		const expr_base					&cond,
+constraint_if_then if_then(
+		const expr_base				&cond,
 		const std::function<void()>	&body,
 		const char					*file,
 		int32_t						lineno) {

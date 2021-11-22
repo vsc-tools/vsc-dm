@@ -21,6 +21,8 @@
 
 #pragma once
 
+#define VSC_LOC __FILE__, __LINE__
+
 #include "attr.h"
 #include "rand_attr.h"
 #include "rand_obj.h"

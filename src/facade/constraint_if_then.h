@@ -69,7 +69,7 @@ private:
 /**
  * Method used in user-defined constraints
  */
-constraint_if_then (if_then)(
+constraint_if_then if_then(
 		const expr_base					&cond,
 		const std::function<void()>	&body,
 		const char					*file=0,
@@ -78,6 +78,7 @@ constraint_if_then (if_then)(
 } /* namespace facade */
 } /* namespace vsc */
 
+#ifdef UNDEFINED
 /**
  * User-facade macro that captures source location
  */
@@ -89,3 +90,4 @@ constraint_if_then (if_then)(
 
 #define else_then(body) \
 	else_then(body, __FILE__, __LINE__)
+#endif

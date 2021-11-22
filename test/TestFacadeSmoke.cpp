@@ -145,8 +145,7 @@ TEST_F(TestFacadeSmoke, constraint_expr) {
 			a != 0; // ui_t<8>(0);
 			c != 0; // ui_t<8>(0);
 			b != 0; // ui_t<8>(0);
-			a == (b+1);
-			b == (c+1);
+			a != c;
 		}};
 	};
 
@@ -264,7 +263,7 @@ TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 
 	MyC c("c");
 
-	for (uint32_t i=0; i<10; i++) {
+	for (uint32_t i=0; i<1000; i++) {
 		ASSERT_TRUE(c.randomize());
 		fprintf(stdout, "0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
 				c.shared0(), c.shared1(), c.shared2(), c.shared3(),
@@ -272,6 +271,8 @@ TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 		fprintf(stdout, "0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
 				c.side_effect0(), c.side_effect1(), c.side_effect2(), c.side_effect3(),
 				c.side_effect4(), c.side_effect5(), c.side_effect6(), c.side_effect7());
+		/*
+		 */
 	}
 	/*
 	 */
