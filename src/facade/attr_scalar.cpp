@@ -89,6 +89,11 @@ void attr_scalar::build() {
 	DEBUG_LEAVE("build(phase=%d)", ctor::inst()->build_phase());
 }
 
+expr_base attr_scalar::operator ()() {
+	return expr_base::mk(new ModelExprFieldRef(field()));
+}
+
+/*
 expr_base attr_scalar::operator == (const expr_base &rhs) {
 	ModelExpr *rhs_e = ctor::inst()->pop_expr();
 	return expr_base::mk(new ModelExprBin(
@@ -167,6 +172,7 @@ expr_base attr_scalar::operator - (const expr_base &rhs) {
 			BinOp::Sub,
 			rhs.core()));
 }
+ */
 
 uint32_t attr_scalar::u32() {
 	return field()->val().val_u();
@@ -185,11 +191,19 @@ int64_t attr_scalar::i64() {
 }
 
 void attr_scalar::val_s(int64_t v) {
-	;
+	field()->val().val_u(v, m_width);
+}
+
+int64_t attr_scalar::val_s() const {
+	return field()->val().val_i();
 }
 
 void attr_scalar::val_u(uint64_t v) {
 	field()->val().val_u(v, m_width);
+}
+
+uint64_t attr_scalar::val_u() const {
+	return field()->val().val_u();
 }
 
 

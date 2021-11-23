@@ -17,9 +17,9 @@ public:
 
 	virtual ~SolverBitwuzlaSolveModelBuilder();
 
-	BitwuzlaTerm *build(ModelField *f);
+	const BitwuzlaTerm *build(ModelField *f);
 
-	BitwuzlaTerm *build(ModelConstraint *c);
+	const BitwuzlaTerm *build(ModelConstraint *c);
 
 	virtual void visitDataTypeInt(DataTypeInt *t) override;
 
@@ -51,25 +51,25 @@ public:
 
 private:
 
-	using node_info_t=std::pair<bool, BitwuzlaTerm *>;
+	using node_info_t=std::pair<bool, const BitwuzlaTerm *>;
 
 private:
 
-	BitwuzlaTerm *toBoolNode(BitwuzlaTerm *n);
+	const BitwuzlaTerm *toBoolNode(const BitwuzlaTerm *n);
 
 	node_info_t expr(ModelExpr *e, int32_t ctx_width);
 
-	BitwuzlaTerm *extend(
-			BitwuzlaTerm		*n,
-			int32_t				ctx_width,
-			bool				is_signed);
+	const BitwuzlaTerm *extend(
+			const BitwuzlaTerm		*n,
+			int32_t					ctx_width,
+			bool					is_signed);
 
 
 private:
-	SolverBitwuzla						*m_solver;
-	std::vector<ModelField *>			m_field_s;
-	std::pair<bool,BitwuzlaTerm *>		m_node_i;
-	std::vector<int32_t>				m_width_s;
+	SolverBitwuzla							*m_solver;
+	std::vector<ModelField *>				m_field_s;
+	std::pair<bool,const BitwuzlaTerm *>	m_node_i;
+	std::vector<int32_t>					m_width_s;
 };
 
 } /* namespace vsc */

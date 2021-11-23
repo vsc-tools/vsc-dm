@@ -57,10 +57,10 @@ SolverBitwuzla::~SolverBitwuzla() {
 }
 
 void SolverBitwuzla::initField(ModelField *f) {
-	std::unordered_map<ModelField *, BitwuzlaTerm *>::const_iterator it;
+	std::unordered_map<ModelField *, const BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
-		BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(f);
+		const BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(f);
 		m_field_node_m.insert({f, node});
 		m_issat_valid = false;
 	}
@@ -68,17 +68,17 @@ void SolverBitwuzla::initField(ModelField *f) {
 
 	// Creates solver data for a constraint
 void SolverBitwuzla::initConstraint(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BitwuzlaTerm *>::const_iterator it;
+	std::unordered_map<ModelConstraint *, const BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_constraint_node_m.find(c)) == m_constraint_node_m.end()) {
-		BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(c);
+		const BitwuzlaTerm *node = SolverBitwuzlaSolveModelBuilder(this).build(c);
 		m_constraint_node_m.insert({c, node});
 		m_issat_valid = false;
 	}
 }
 
 void SolverBitwuzla::addAssume(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BitwuzlaTerm *>::const_iterator it;
+	std::unordered_map<ModelConstraint *, const BitwuzlaTerm *>::const_iterator it;
 
 	it = m_constraint_node_m.find(c);
 	// TODO: assert ) == m_field_node_m.end()) {
@@ -88,7 +88,7 @@ void SolverBitwuzla::addAssume(ModelConstraint *c) {
 }
 
 void SolverBitwuzla::addAssert(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BitwuzlaTerm *>::const_iterator it;
+	std::unordered_map<ModelConstraint *, const BitwuzlaTerm *>::const_iterator it;
 
 	it = m_constraint_node_m.find(c);
 
@@ -110,7 +110,7 @@ bool SolverBitwuzla::isSAT() {
 
 void SolverBitwuzla::setFieldValue(ModelField *f) {
 	DEBUG_ENTER("setFieldValue %s", f->name().c_str());
-	std::unordered_map<ModelField *, BitwuzlaTerm *>::const_iterator it;
+	std::unordered_map<ModelField *, const BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
 		return;
@@ -118,7 +118,7 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 
 	// TODO: assert
 
-	BitwuzlaTerm *val = bitwuzla_get_value(m_bitwuzla, it->second);
+	const BitwuzlaTerm *val = bitwuzla_get_value(m_bitwuzla, it->second);
 	const char *bits = bitwuzla_get_bv_value(m_bitwuzla, val);
 	DEBUG("bits=%s", bits);
 
@@ -135,24 +135,24 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
 }
 
-BitwuzlaSort *SolverBitwuzla::get_sort(int32_t width) {
-	std::unordered_map<uint32_t, BitwuzlaSort *>::const_iterator it;
+const BitwuzlaSort *SolverBitwuzla::get_sort(int32_t width) {
+	std::unordered_map<uint32_t, const BitwuzlaSort *>::const_iterator it;
 
 	if ((it=m_sort_m.find(width)) != m_sort_m.end()) {
 		return it->second;
 	} else {
-		BitwuzlaSort *sort = bitwuzla_mk_bv_sort(m_bitwuzla, width);
+		const BitwuzlaSort *sort = bitwuzla_mk_bv_sort(m_bitwuzla, width);
 		m_sort_m.insert({width, sort});
 		return sort;
 	}
 }
 
-void SolverBitwuzla::addFieldData(ModelField *f, BitwuzlaTerm *n) {
+void SolverBitwuzla::addFieldData(ModelField *f, const BitwuzlaTerm *n) {
 	m_field_node_m.insert({f, n});
 }
 
-BitwuzlaTerm *SolverBitwuzla::findFieldData(ModelField *f) {
-	std::unordered_map<ModelField *, BitwuzlaTerm *>::const_iterator it;
+const BitwuzlaTerm *SolverBitwuzla::findFieldData(ModelField *f) {
+	std::unordered_map<ModelField *, const BitwuzlaTerm *>::const_iterator it;
 
 	if ((it=m_field_node_m.find(f)) != m_field_node_m.end()) {
 		return it->second;

@@ -42,8 +42,11 @@ public:
 
 	virtual void build() override;
 
-	void operator = (const expr_base &rhs);
+	expr_base operator ()();
 
+//	void operator = (const expr_base &rhs);
+
+	/*
 	expr_base operator == (const expr_base &rhs);
 
 	expr_base operator != (const expr_base &rhs);
@@ -61,6 +64,7 @@ public:
 	expr_base operator + (const expr_base &rhs);
 
 	expr_base operator - (const expr_base &rhs);
+	 */
 
 //	expr operator == (const attr_scalar &rhs);
 
@@ -74,7 +78,11 @@ public:
 
 	void val_s(int64_t v);
 
+	int64_t val_s() const;
+
 	void val_u(uint64_t v);
+
+	uint64_t val_u() const;
 
 
 protected:

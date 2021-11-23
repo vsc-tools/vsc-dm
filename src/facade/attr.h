@@ -30,9 +30,19 @@ namespace facade {
 
 class rand_obj;
 
-template <typename T> class attr : public T {
+template <typename T> class attr {
 public:
-	attr(const scope &name) : T(name) { }
+	template <typename ...At> attr(
+			const scope &name,
+			At const &... args) {
+		m_core = std::shared_ptr<T>(new T(name, args...));
+	}
+
+	std::shared_ptr<T> operator ->() {
+		return m_core;
+	}
+
+	std::shared_ptr<T>			m_core;
 };
 
 template <int W> class attr<ui_t<W>> : public attr_scalar {
@@ -56,6 +66,8 @@ public:
 
 	void operator = (const expr_base &rhs);
 
+	attr_scalar *operator ->() const { return this; }
+
 private:
 
 
@@ -70,6 +82,8 @@ public:
 	}
 
 	int64_t operator ()() { return i64(); }
+
+	attr_scalar *operator ->() const { return this; }
 
 private:
 

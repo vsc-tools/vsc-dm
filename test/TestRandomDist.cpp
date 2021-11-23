@@ -20,6 +20,7 @@ TestRandomDist::~TestRandomDist() {
 	// TODO Auto-generated destructor stub
 }
 
+#ifdef UNDEFINED
 TEST_F(TestRandomDist, if_then_dist) {
 
 	class BranchInstr : public rand_obj {
@@ -95,5 +96,6 @@ TEST_F(TestRandomDist, multivar_rel) {
 	}
 	fprintf(stdout, "\n");
 }
+#endif
 
 } /* namespace vsc */

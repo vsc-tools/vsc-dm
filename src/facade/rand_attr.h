@@ -28,9 +28,19 @@
 namespace vsc {
 namespace facade {
 
-template <typename T> class rand_attr : public T {
+template <typename T> class rand_attr {
 public:
-	rand_attr(const scope &name) : T(name) { }
+	template <typename ...At> rand_attr(
+			const scope &name,
+			At const &... args) {
+		m_core = std::shared_ptr<T>(new T(name, args...));
+	}
+
+	std::shared_ptr<T> operator -> () {
+		return m_core;
+	}
+
+	std::shared_ptr<T>				m_core;
 };
 
 template <int W> class rand_attr<ui_t<W>> : public attr_scalar {
@@ -44,7 +54,48 @@ public:
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 
-	uint64_t operator ()() { return u32(); }
+	operator uint64_t() const { return val_u(); }
+
+	const rand_attr<ui_t<W>> &operator = (uint64_t v) {
+		val_u(v);
+		return *this;
+	}
+
+	const rand_attr<ui_t<W>> &operator = (const rand_attr<ui_t<W>> &rhs) {
+		val_u(rhs.val_u());
+		return *this;
+	}
+
+	const rand_attr<ui_t<W>> &operator = (const attr_scalar &rhs) {
+		val_u(rhs.val_u());
+		return *this;
+	}
+
+	rand_attr<ui_t<W>> *operator -> () {
+		return this;
+	}
+
+	/*
+	void operator = (const attr_scalar &rhs) {
+		val_u(rhs.val_u());
+	}
+
+	template <int Wt> void operator = (const rand_attr<ui_t<Wt>> &rhs) {
+		val_u(rhs.val_u());
+	}
+
+	 */
+	/*
+	template <int Wt> void operator = (const rand_attr<si_t<Wt>> &rhs) {
+		val_u(rhs.val_u());
+	}
+	 */
+
+	/*
+	void operator = (const attr_scalar &rhs) {
+		val_u(rhs.val_u());
+	}
+	 */
 
 private:
 
@@ -66,7 +117,26 @@ public:
 		m_field->set_flag(ModelFieldFlag_DeclRand);
 	}
 
-	int64_t operator ()() { return i64(); }
+	operator int64_t () const { return val_s(); }
+
+	rand_attr<si_t<W>> *operator -> () {
+		return this;
+	}
+
+	void operator = (int64_t v) {
+		val_s(v);
+	}
+
+	const rand_attr<si_t<W>> &operator = (const rand_attr<si_t<W>> &rhs) {
+		val_s(rhs.val_s());
+		return *this;
+	}
+
+	const rand_attr<si_t<W>> &operator = (const attr_scalar &rhs) {
+		val_s(rhs.val_s());
+		return *this;
+	}
+
 };
 
 template <typename T, T first, T last> class rand_attr<enum_t<T, first, last>> : public attr_scalar {
@@ -89,6 +159,8 @@ public:
 	}
 
 	int32_t operator ()() { return i32(); }
+
+	rand_attr<int> *operator ->() { return this; }
 };
 
 template <> class rand_attr<unsigned int> : public attr_scalar {
@@ -102,6 +174,9 @@ public:
 	}
 
 	uint32_t operator ()() { return u32(); }
+
+	rand_attr<unsigned int> *operator ->() { return this; }
+
 };
 
 }

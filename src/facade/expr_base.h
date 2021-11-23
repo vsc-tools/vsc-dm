@@ -55,6 +55,22 @@ public:
 
 	virtual ~expr_base();
 
+	expr_base operator == (const expr_base &rhs);
+
+	expr_base operator != (const expr_base &rhs);
+
+	expr_base operator < (const expr_base &rhs);
+
+	expr_base operator > (const expr_base &rhs);
+
+	expr_base operator <= (const expr_base &rhs);
+
+	expr_base operator >= (const expr_base &rhs);
+
+	expr_base operator + (const expr_base &rhs);
+
+	expr_base operator - (const expr_base &rhs);
+
 	expr_base operator && (const expr_base &rhs);
 
 	expr_base operator || (const expr_base &rhs);

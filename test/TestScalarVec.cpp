@@ -20,6 +20,7 @@ TestScalarVec::~TestScalarVec() {
 	// TODO Auto-generated destructor stub
 }
 
+#ifdef UNDEFINED
 TEST_F(TestScalarVec, smoke) {
 
 	class my_c : public rand_obj {
@@ -45,5 +46,6 @@ TEST_F(TestScalarVec, smoke) {
 	}
 
 }
+#endif
 
 } /* namespace vsc */

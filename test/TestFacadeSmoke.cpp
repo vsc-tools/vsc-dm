@@ -21,6 +21,7 @@ TestFacadeSmoke::~TestFacadeSmoke() {
 	// TODO Auto-generated destructor stub
 }
 
+#ifdef UNDEFINED
 TEST_F(TestFacadeSmoke, smoke) {
 	class MyC : public rand_obj {
 	public:
@@ -32,6 +33,73 @@ TEST_F(TestFacadeSmoke, smoke) {
 
 	MyC c("a");
 
+}
+#endif
+
+TEST_F(TestFacadeSmoke, attr_assign) {
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<ui_t<8>>		b {"b"};
+	};
+
+	attr<MyC> c("c");
+
+	c->a = 5;
+	c->b = 7;
+	ASSERT_EQ(c->a, 5);
+	ASSERT_EQ(c->b, 7);
+
+	c->a = c->b;
+	ASSERT_EQ(c->a, 7);
+	ASSERT_EQ(c->b, 7);
+}
+
+TEST_F(TestFacadeSmoke, attr_assign_2) {
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<ui_t<10>>		b {"b"};
+	};
+
+	attr<MyC> c("c");
+
+	c->a = 5;
+	c->b = 7;
+	ASSERT_EQ(c->a, 5);
+	ASSERT_EQ(c->b, 7);
+
+	c->a = c->b;
+	ASSERT_EQ(c->a, 7);
+	ASSERT_EQ(c->b, 7);
+}
+
+TEST_F(TestFacadeSmoke, attr_assign_3) {
+	class MyC : public rand_obj {
+	public:
+		MyC(const scope &s) : rand_obj(this) { }
+
+		rand_attr<ui_t<8>>		a {"a"};
+		rand_attr<si_t<10>>		b {"b"};
+	};
+
+	attr<MyC> c("c");
+
+	c->a = 5;
+	c->b = 7;
+	ASSERT_EQ(c->a, 5);
+	ASSERT_EQ(c->b, 7);
+
+	c->a = c->b;
+	ASSERT_EQ(c->a, 7);
+	ASSERT_EQ(c->b, 7);
+
+	fprintf(stdout, "a=%lld\n",
+			(int64_t)c->a);
 }
 
 TEST_F(TestFacadeSmoke, smoke_inh) {
@@ -52,7 +120,7 @@ TEST_F(TestFacadeSmoke, smoke_inh) {
 		rand_attr<int>			b {"b"};
 	};
 
-	MyC c("a");
+	attr<MyC> c("a");
 
 }
 
@@ -75,8 +143,8 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<unsigned int>	c {"c"};
 
 		constraint				ab_c {"ab_c", [this] {
-			a == b;
-			b == c;
+			a() == b();
+			b() == c();
 		}};
 	};
 
@@ -89,13 +157,13 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<int>			b {"b"};
 	};
 
-	MyC2 c("c");
+	attr<MyC2> c("c");
 
-	ASSERT_EQ(c.fullname(), "c");
-	ASSERT_EQ(c.b.fullname(), "c.b");
-	ASSERT_EQ(c.a.b.fullname(), "c.a.b");
+	ASSERT_EQ(c->fullname(), "c");
+	ASSERT_EQ(c->b->fullname(), "c.b");
+	ASSERT_EQ(c->a->b->fullname(), "c.a.b");
 
-	c.randomize();
+	c->randomize();
 }
 
 TEST_F(TestFacadeSmoke, constraint_inh) {
@@ -109,7 +177,7 @@ TEST_F(TestFacadeSmoke, constraint_inh) {
 
 		constraint				ab_c {"ab_c", [&] {
 			fprintf(stdout, "ab_c\n");
-			base_a == base_b;
+			base_a() == base_b();
 		}};
 	};
 
@@ -123,13 +191,15 @@ TEST_F(TestFacadeSmoke, constraint_inh) {
 
 		constraint				ab_c {"ab_c", [&] {
 			fprintf(stdout, "ab_c\n");
-			a == c;
+			a() == c();
 		}};
 	};
 
-	MyC c("z");
+	attr<MyC> c("z");
 
 }
+#ifdef UNDEFINED
+#endif
 
 TEST_F(TestFacadeSmoke, constraint_expr) {
 
@@ -142,27 +212,26 @@ TEST_F(TestFacadeSmoke, constraint_expr) {
 		rand_attr<ui_t<8>>		c {"c"};
 
 		constraint				ab_c {"ab_c", [&] {
-			a != 0; // ui_t<8>(0);
-			c != 0; // ui_t<8>(0);
-			b != 0; // ui_t<8>(0);
-			a != c;
+			a() != 0; // ui_t<8>(0);
+			c() != 0; // ui_t<8>(0);
+			b() != 0; // ui_t<8>(0);
+			a() != c();
 		}};
 	};
 
-	MyC c("c");
+	attr<MyC> c("c");
 
 	for (uint32_t i=0; i<1000; i++) {
-		c.randomize();
-		/*
-		ASSERT_NE(c.a(), 0);
-		ASSERT_NE(c.b(), 0);
-		ASSERT_NE(c.c(), 0);
-		 */
-		ASSERT_NE(c.a(), c.c());
+		c->randomize();
+		ASSERT_NE(c->a, 0);
+		ASSERT_NE(c->b, 0);
+		ASSERT_NE(c->c, 0);
+		ASSERT_NE(c->a, c->c);
 	}
 
 }
 
+#ifdef UNDEFINED
 TEST_F(TestFacadeSmoke, constraint_expr_literal) {
 
 	class MyC : public rand_obj {
@@ -265,13 +334,13 @@ TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 
 	for (uint32_t i=0; i<1000; i++) {
 		ASSERT_TRUE(c.randomize());
+		/*
 		fprintf(stdout, "0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
 				c.shared0(), c.shared1(), c.shared2(), c.shared3(),
 				c.shared4(), c.shared5(), c.shared6(), c.shared7());
 		fprintf(stdout, "0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
 				c.side_effect0(), c.side_effect1(), c.side_effect2(), c.side_effect3(),
 				c.side_effect4(), c.side_effect5(), c.side_effect6(), c.side_effect7());
-		/*
 		 */
 	}
 	/*
@@ -361,5 +430,6 @@ TEST_F(TestFacadeSmoke, enum_type_field) {
 	/*
 	 */
 }
+#endif
 
 } /* namespace vsc */

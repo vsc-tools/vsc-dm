@@ -44,7 +44,7 @@ TEST_F(TestModelExprEvaluator, bin_op_ult) {
 
 	a(10);
 	b(20);
-	expr_base e = (a < b);
+	expr_base e = (a() < b());
 	ModelExpr *expr = ctor::inst()->pop_expr();
 
 	ModelVal val(64);

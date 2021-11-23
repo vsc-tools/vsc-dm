@@ -20,6 +20,7 @@ TestInside::~TestInside() {
 	// TODO Auto-generated destructor stub
 }
 
+#ifdef UNDEFINED
 TEST_F(TestInside, single) {
 
 	class my_s : public rand_obj {
@@ -54,5 +55,6 @@ TEST_F(TestInside, single) {
 		}
 	}
 }
+#endif
 
 } /* namespace vsc */

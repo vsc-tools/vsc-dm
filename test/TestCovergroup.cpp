@@ -33,7 +33,7 @@ TEST_F(TestCovergroup, simple_coverpoint) {
 			bins abc { "abc", {1, {2,5}} };
 		}};
 		coverpoint cp2 { "cp2", std::get<0>(sample.items),
-						iff(std::get<0>(sample.items) < 10), [&] {
+						iff(std::get<0>(sample.items)() < 10), [&] {
 			bins abc { "abc", {1, {2,5}} };
 		}};
 	};

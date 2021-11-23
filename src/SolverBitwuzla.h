@@ -40,19 +40,19 @@ public:
 
 	virtual void setFieldValue(ModelField *f) override;
 
-	BitwuzlaSort *get_sort(int32_t width);
+	const BitwuzlaSort *get_sort(int32_t width);
 
-	void addFieldData(ModelField *f, BitwuzlaTerm *n);
+	void addFieldData(ModelField *f, const BitwuzlaTerm *n);
 
-	BitwuzlaTerm *findFieldData(ModelField *f);
+	const BitwuzlaTerm *findFieldData(ModelField *f);
 
 private:
 	Bitwuzla				*m_bitwuzla;
-	std::unordered_map<ModelField *,BitwuzlaTerm *>			m_field_node_m;
-	std::unordered_map<ModelConstraint *,BitwuzlaTerm *>	m_constraint_node_m;
-	std::unordered_map<uint32_t, BitwuzlaSort *>			m_sort_m;
-	bool													m_issat_valid;
-	bool													m_issat;
+	std::unordered_map<ModelField *,const BitwuzlaTerm *>		m_field_node_m;
+	std::unordered_map<ModelConstraint *,const BitwuzlaTerm *>	m_constraint_node_m;
+	std::unordered_map<uint32_t, const BitwuzlaSort *>			m_sort_m;
+	bool														m_issat_valid;
+	bool														m_issat;
 };
 
 } /* namespace vsc */

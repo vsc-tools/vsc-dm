@@ -20,6 +20,7 @@ TestRandomizeWith::~TestRandomizeWith() {
 	// TODO Auto-generated destructor stub
 }
 
+#ifdef UNDEFINED
 TEST_F(TestRandomizeWith, smoke) {
 
 	class my_class : public rand_obj {
@@ -58,5 +59,6 @@ TEST_F(TestRandomizeWith, smoke) {
 	}
 
 }
+#endif
 
 } /* namespace vsc */

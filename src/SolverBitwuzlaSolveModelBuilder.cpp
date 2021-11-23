@@ -48,7 +48,7 @@ SolverBitwuzlaSolveModelBuilder::~SolverBitwuzlaSolveModelBuilder() {
 	// TODO Auto-generated destructor stub
 }
 
-BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
@@ -57,7 +57,7 @@ BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
 	return m_node_i.second;
 }
 
-BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
 	DEBUG_ENTER("build(ModelConstraint)");
 	m_width_s.clear();
 	m_width_s.push_back(-1);
@@ -80,7 +80,7 @@ BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
 
 void SolverBitwuzlaSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt");
-	BitwuzlaTerm *n = bitwuzla_mk_const(m_solver->bitwuzla(),
+	const BitwuzlaTerm *n = bitwuzla_mk_const(m_solver->bitwuzla(),
 			m_solver->get_sort(t->width()), 0);
 	m_node_i = {t->is_signed(), n};
 	DEBUG_LEAVE("visitDataTypeInt");
@@ -114,7 +114,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelConstraintExpr(ModelConstraintEx
 
 void SolverBitwuzlaSolveModelBuilder::visitModelConstraintScope(ModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope");
-	BitwuzlaTerm *result = 0;
+	const BitwuzlaTerm *result = 0;
 
 	for (auto c_it=c->constraints().begin();
 			c_it!=c->constraints().end(); c_it++) {
@@ -123,7 +123,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelConstraintScope(ModelConstraintS
 
 		if (m_node_i.second) {
 			// Ensure the term is a boolean
-			BitwuzlaTerm *n = toBoolNode(m_node_i.second);
+			const BitwuzlaTerm *n = toBoolNode(m_node_i.second);
 
 			if (result) {
 				// Need to AND together
@@ -164,8 +164,8 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 
 	bool is_signed = (lhs_i.first && rhs_i.first);
 
-	BitwuzlaTerm *lhs_n;
-	BitwuzlaTerm *rhs_n;
+	const BitwuzlaTerm *lhs_n;
+	const BitwuzlaTerm *rhs_n;
 
 	if (e->op() == BinOp::LogAnd || e->op() == BinOp::LogOr) {
 		lhs_n = toBoolNode(lhs_i.second);
@@ -175,7 +175,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 		rhs_n =	extend(rhs_i.second, ctx_width, is_signed);
 	}
 
-	BitwuzlaTerm *result = 0;
+	const BitwuzlaTerm *result = 0;
 
 	switch (e->op()) {
 	case BinOp::Eq:
@@ -374,7 +374,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 
 void SolverBitwuzlaSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
 	// Note: this should only be used for scalar fields
-	BitwuzlaTerm *n;
+	const BitwuzlaTerm *n;
 	bool is_signed = false;
 	DEBUG_ENTER("visitModelExprFieldRef %s", e->field()->name().c_str());
 
@@ -413,11 +413,11 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
 
 	lhs_i.second = extend(lhs_i.second, ctx_width, is_signed);
 
-	BitwuzlaTerm *n = 0;
+	const BitwuzlaTerm *n = 0;
 
 	for (auto r_it=e->rangelist()->ranges().begin();
 			r_it!=e->rangelist()->ranges().end(); r_it++) {
-		BitwuzlaTerm *t;
+		const BitwuzlaTerm *t;
 		// Individual term
 		if ((*r_it)->upper()) {
 			// Dual-value
@@ -499,16 +499,25 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprPartSelect(
 
 void SolverBitwuzlaSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 	DEBUG_ENTER("visitModelExprVal");
-	char *bits = (char *)alloca(e->val().bits()+1);
-	e->val().to_bits(bits);
 
-	DEBUG("bits=%s", bits);
-	m_node_i.second = bitwuzla_mk_bv_value(
-			m_solver->bitwuzla(),
-			m_solver->get_sort(e->val().bits()),
-			bits,
-			BITWUZLA_BV_BASE_BIN);
-	m_node_i.first = false; // TODO:
+	if (e->val().bits() <= 64) {
+		m_node_i.second = bitwuzla_mk_bv_value_uint64(
+				m_solver->bitwuzla(),
+				m_solver->get_sort(e->val().bits()),
+				e->val().val_u());
+		m_node_i.first = false; // TODO:
+	} else {
+		char *bits = (char *)alloca(e->val().bits()+1);
+		e->val().to_bits(bits);
+
+		DEBUG("bits=%s", bits);
+		m_node_i.second = bitwuzla_mk_bv_value(
+				m_solver->bitwuzla(),
+				m_solver->get_sort(e->val().bits()),
+				bits,
+				BITWUZLA_BV_BASE_BIN);
+		m_node_i.first = false; // TODO:
+	}
 
 	DEBUG_LEAVE("visitModelExprVal");
 }
@@ -535,7 +544,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(ModelFieldType *f) {
 
 }
 
-BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::toBoolNode(BitwuzlaTerm *n) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::toBoolNode(const BitwuzlaTerm *n) {
 	uint32_t width;
 	DEBUG_ENTER("toBoolNode (width=%d)", bitwuzla_term_bv_get_size(n));
 
@@ -565,10 +574,10 @@ SolverBitwuzlaSolveModelBuilder::node_info_t SolverBitwuzlaSolveModelBuilder::ex
 	return m_node_i;
 }
 
-BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::extend(
-			BitwuzlaTerm		*n,
-			int32_t				ctx_width,
-			bool				is_signed) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::extend(
+			const BitwuzlaTerm		*n,
+			int32_t					ctx_width,
+			bool					is_signed) {
 	DEBUG_ENTER("extend width=%d ctx_width=%d",
 			bitwuzla_term_bv_get_size(n), ctx_width);
 
@@ -583,7 +592,7 @@ BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::extend(
 					m_solver->bitwuzla(),
 					BITWUZLA_KIND_BV_SIGN_EXTEND,
 					n,
-					ctx_width);
+					(ctx_width-width));
 		} else {
 			DEBUG("Zero Extend");
 			DEBUG_LEAVE("extend width=%d ctx_width=%d",
@@ -592,7 +601,7 @@ BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::extend(
 					m_solver->bitwuzla(),
 					BITWUZLA_KIND_BV_ZERO_EXTEND,
 					n,
-					ctx_width);
+					(ctx_width-width));
 		}
 	} else {
 		return n;

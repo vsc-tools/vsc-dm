@@ -72,6 +72,94 @@ expr_base::~expr_base() {
 	// TODO Auto-generated destructor stub
 }
 
+expr_base expr_base::operator == (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Eq,
+					rhs.core()));
+}
+
+expr_base expr_base::operator != (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Ne,
+					rhs.core()));
+}
+
+expr_base expr_base::operator < (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Lt,
+					rhs.core()));
+}
+
+expr_base expr_base::operator > (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Gt,
+					rhs.core()));
+}
+
+expr_base expr_base::operator <= (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Le,
+					rhs.core()));
+}
+
+expr_base expr_base::operator >= (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Ge,
+					rhs.core()));
+}
+
+expr_base expr_base::operator + (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Add,
+					rhs.core()));
+}
+
+expr_base expr_base::operator - (const expr_base &rhs) {
+	ctor::inst()->pop_expr();
+	ctor::inst()->pop_expr();
+
+	return expr_base::mk(
+			new ModelExprBin(
+					m_core,
+					BinOp::Sub,
+					rhs.core()));
+}
+
 expr_base expr_base::operator && (const expr_base &rhs) {
 	ctor::inst()->pop_expr();
 	ctor::inst()->pop_expr();
