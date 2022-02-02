@@ -48,6 +48,14 @@ void covergroup::sample() {
 void covergroup::build() {
 	DEBUG_ENTER("build %s (%d)",
 			name().c_str(), ctor::inst()->build_phase());
+	if (ctor::inst()->build_phase() == 0) {
+		m_cg = ModelCovergroupUP(new ModelCovergroup());
+		m_cg->options().weight(options.weight);
+		m_cg->options().goal(options.goal);
+		m_cg->options().comment(options.comment);
+		m_cg->options().at_least(options.at_least);
+		m_cg->options().auto_bin_max(options.auto_bin_max);
+	}
 	obj_scope::build();
 	DEBUG_LEAVE("build %s (%d)",
 			name().c_str(), ctor::inst()->build_phase());
@@ -160,20 +168,44 @@ void covergroup::coverpoint::build() {
 	DEBUG_ENTER("coverpoint::build %s (%d)",
 			name().c_str(), ctor::inst()->build_phase());
 	ctor::inst()->push_build_scope(this);
-	if (ctor::inst()->build_phase() == 0) {
-		if (m_body) {
-			m_body();
-		} else if (m_body_opts) {
-			// TODO:
-//			m_body_opts();
-		}
 
-		// We now have a collection of bins. Build the coverpoint model
+	// TODO: initialize with options from above
+
+	if (ctor::inst()->build_phase() == 0) {
+
+
+		// We know enough to build the coverpoint itself
 		m_cp = new ModelCoverpoint(
 				m_target,
 				name(),
 				m_iff
 				);
+
+		// Propagate options from the parent
+		covergroup *cg = static_cast<covergroup *>(parent());
+
+		m_cp->options().propagate(cg->m_cg->options());
+
+		if (m_body) {
+			m_body();
+		} else if (m_body_opts) {
+			options_t options;
+
+			// Propagate initial options from above
+			options.at_least = m_cp->options().at_least();
+			options.auto_bin_max = m_cp->options().auto_bin_max();
+
+			m_body_opts(options);
+
+			// Sync model options with user-specified values
+			m_cp->options().weight(options.weight);
+			m_cp->options().goal(options.goal);
+			m_cp->options().comment(options.comment);
+			m_cp->options().at_least(options.at_least);
+			m_cp->options().auto_bin_max(options.auto_bin_max);
+		}
+
+		// We now have a collection of bins. Build the coverpoint model
 
 		// Value ranges to be excluded based on ignore_bins, illegal_bins, etc
 		ModelValRangelist exclude_bins;

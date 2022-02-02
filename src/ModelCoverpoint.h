@@ -9,6 +9,7 @@
 #include <vector>
 #include "IAccept.h"
 #include "IModelCoverpointBins.h"
+#include "ModelCoverOpts.h"
 #include "ModelExpr.h"
 #include "ModelVal.h"
 
@@ -59,6 +60,12 @@ public:
 
 	double coverage();
 
+	const ModelCoverOpts &options() const { return m_options; }
+
+	ModelCoverOpts &options() { return m_options; }
+
+	void options(const ModelCoverOpts &o) { m_options = o; }
+
 	virtual void accept(IVisitor *v) override { v->visitModelCoverpoint(this); }
 
 private:
@@ -81,6 +88,7 @@ private:
 	uint32_t								*m_illegal_bins_val;
 	bool									m_coverage_valid;
 	double									m_coverage;
+	ModelCoverOpts							m_options;
 
 };
 

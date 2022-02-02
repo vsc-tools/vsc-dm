@@ -43,9 +43,15 @@ public:
 
 	}
 
+	/**
+	 * Return a ref that is convertible to a value or expression
+	 */
 	expr<ui_t<W>> operator [](const expr_base &rhs) {
 		expr<ui_t<W>>(subscript(rhs));
 	}
+};
+
+template <int W> class rand_vec<si_t<W>> : public vec_scalar {
 
 };
 

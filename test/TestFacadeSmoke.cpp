@@ -262,6 +262,7 @@ TEST_F(TestFacadeSmoke, constraint_expr_literal) {
 	/*
 	 */
 }
+#endif
 
 TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 
@@ -287,53 +288,53 @@ TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 		rand_attr<ui_t<13>>		side_effect7 {"side_effect7"};
 
 		constraint				ab_c {"ab_c", [&] {
-			if_then(shared0 == lead, [&] {
-				side_effect0 == shared0;
+			if_then(shared0() == lead(), [&] {
+				side_effect0() == shared0();
 			}).else_then([&] {
-				(side_effect0 > shared0) && (side_effect0 < lead);
+				(side_effect0() > shared0()) && (side_effect0() < lead());
 			});
-			if_then(shared1 == shared0, [&] {
-				side_effect1 == shared1;
+			if_then(shared1() == shared0(), [&] {
+				side_effect1() == shared1();
 			}).else_then([&] {
-				(side_effect1 > shared1) && (side_effect1 < shared0);
+				(side_effect1() > shared1()) && (side_effect1() < shared0());
 			});
-			if_then(shared2 == shared1, [&] {
-				side_effect2 == shared2;
+			if_then(shared2() == shared1(), [&] {
+				side_effect2() == shared2();
 			}).else_then([&] {
-				(side_effect2 > shared2) && (side_effect2 < shared1);
+				(side_effect2() > shared2()) && (side_effect2() < shared1());
 			});
-			if_then(shared3 == shared2, [&] {
-				side_effect3 == shared3;
+			if_then(shared3() == shared2(), [&] {
+				side_effect3() == shared3();
 			}).else_then([&] {
-				(side_effect3 > shared3) && (side_effect3 < shared2);
+				(side_effect3() > shared3()) && (side_effect3() < shared2());
 			});
-			if_then(shared4 == shared3, [&] {
-				side_effect4 == shared4;
+			if_then(shared4() == shared3(), [&] {
+				side_effect4() == shared4();
 			}).else_then([&] {
-				(side_effect4 > shared4) && (side_effect4 < shared3);
+				(side_effect4() > shared4()) && (side_effect4() < shared3());
 			});
-			if_then(shared5 == shared4, [&] {
-				side_effect5 == shared5;
+			if_then(shared5() == shared4(), [&] {
+				side_effect5() == shared5();
 			}).else_then([&] {
-				(side_effect5 > shared5) && (side_effect5 < shared4);
+				(side_effect5() > shared5()) && (side_effect5() < shared4());
 			});
-			if_then(shared6 == shared5, [&] {
-				side_effect6 == shared6;
+			if_then(shared6() == shared5(), [&] {
+				side_effect6() == shared6();
 			}).else_then([&] {
-				(side_effect6 > shared6) && (side_effect6 < shared5);
+				(side_effect6() > shared6()) && (side_effect6() < shared5());
 			});
-			if_then(shared7 == shared6, [&] {
-				side_effect7 == shared7;
+			if_then(shared7() == shared6(), [&] {
+				side_effect7() == shared7();
 			}).else_then([&] {
-				(side_effect7 > shared7) && (side_effect7 < shared6);
+				(side_effect7() > shared7()) && (side_effect7() < shared6());
 			});
 		}};
 	};
 
-	MyC c("c");
+	attr<MyC> c("c");
 
 	for (uint32_t i=0; i<1000; i++) {
-		ASSERT_TRUE(c.randomize());
+		ASSERT_TRUE(c->randomize());
 		/*
 		fprintf(stdout, "0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x 0x%04x\n",
 				c.shared0(), c.shared1(), c.shared2(), c.shared3(),
@@ -347,6 +348,7 @@ TEST_F(TestFacadeSmoke, constraint_foreach_unroll) {
 	 */
 }
 
+#ifdef UNDEFINED
 
 TEST_F(TestFacadeSmoke, constraint_if_else) {
 

@@ -3,3 +3,5 @@ python/libvsc.cpp
 *.egg-info
 
 packages/
+
+__pycache__/

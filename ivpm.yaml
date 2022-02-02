@@ -4,6 +4,8 @@ package:
    version: 0.0.1
    
    dev-deps:
+     - name: cython
+       src: pypi
      - name: bitwuzla
        url: https://github.com/mballance/bitwuzla.git
      - name: boolector
@@ -16,7 +18,8 @@ package:
        url: https://github.com/google/glog.git
      - name: gmp
        url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
-     - name: magic_enum
-       url: https://github.com/Neargye/magic_enum.git
+     - name: mkdv
+       url: https://github.com/fvutils/mkdv.git
+       branch: schema-redo
        
        

@@ -1,0 +1,13 @@
+
+job-group:
+  
+  jobs:
+    - name: libvsc
+      runner:
+        id: gtest
+        auto-discover: true
+        config:
+          exe-path:
+            - ../build/test/test_libvsc
+    
+    

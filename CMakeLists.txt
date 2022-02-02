@@ -15,18 +15,18 @@ endif()
 if (NOT PACKAGES_DIR)
   set(PACKAGES_DIR ${CMAKE_SOURCE_DIR}/packages)
 
-#  set (GLOG_DIR "${PACKAGES_DIR}/glog")
-  set (GMP_DIR "${PACKAGES_DIR}/gmp")
-  set (CADICAL_DIR "${PACKAGES_DIR}/cadical")
-  set (BTOR2TOOLS_DIR "${PACKAGES_DIR}/btor2tools")
-  set (BOOLECTOR_DIR "${PACKAGES_DIR}/boolector")
-  set (BITWUZLA_DIR "${PACKAGES_DIR}/bitwuzla")
 
   # Testing is only enabled when libvsc is the top-level project
   enable_testing()
 
   add_subdirectory(test)
 endif()
+
+set (GMP_DIR "${PACKAGES_DIR}/gmp")
+set (CADICAL_DIR "${PACKAGES_DIR}/cadical")
+set (BTOR2TOOLS_DIR "${PACKAGES_DIR}/btor2tools")
+set (BOOLECTOR_DIR "${PACKAGES_DIR}/boolector")
+set (BITWUZLA_DIR "${PACKAGES_DIR}/bitwuzla")
 
 ExternalProject_Add(GMP
     PREFIX gmp
@@ -47,17 +47,6 @@ ExternalProject_Add(GMP
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
   )
  
-# ExternalProject_Add(GLOG
-#     PREFIX glog
-#     SOURCE_DIR ${GLOG_DIR}
-#     CMAKE_CACHE_ARGS
-#       -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_BINARY_DIR}/glog
-#       -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-#       -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-#       -DBUILD_SHARED_LIBS:BOOL=OFF
-#       -DCMAKE_DEBUG_POSTFIX:STRING=""
-# )   
-
 ExternalProject_Add(Cadical
   PREFIX cadical
   SOURCE_DIR ${CADICAL_DIR}
@@ -151,7 +140,10 @@ add_dependencies(Bitwuzla Cadical Btor2tools GMP)
 add_dependencies(Boolector Cadical Btor2tools GMP)
 
 
-add_compile_options(-fPIC)
+if(NOT WIN32)
+  add_compile_options(-fPIC)
+endif()
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 

@@ -73,7 +73,7 @@ TEST_F(TestCovergroup, simple_coverpoint_inf_array_bins) {
 		// Sampling method
 		with_sample<ui_t<4>> sample;
 
-		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+		coverpoint cp1 { "cp1", std::get<0>(sample.items)(), [&] {
 			bins abc { "abc", {}, { {1, 7} } };
 		}};
 	};
@@ -93,7 +93,7 @@ TEST_F(TestCovergroup, simple_coverpoint_sz_array_bins) {
 		// Sampling method
 		with_sample<ui_t<4>> sample;
 
-		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+		coverpoint cp1 { "cp1", std::get<0>(sample.items)(), [&] {
 			bins abc { "abc", {4}, { {1, 7} } };
 		}};
 	};
@@ -115,10 +115,10 @@ TEST_F(TestCovergroup, simple_cross) {
 		// Sampling method
 		with_sample<ui_t<4>,ui_t<4>> sample;
 
-		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&] {
+		coverpoint cp1 { "cp1", std::get<0>(sample.items)(), [&] {
 			bins abc { "abc", {1, {2,3}} };
 		}};
-		coverpoint cp2 { "cp2", std::get<1>(sample.items), [&] {
+		coverpoint cp2 { "cp2", std::get<1>(sample.items)(), [&] {
 			bins abc { "abc", {1, {2,3}} };
 		}};
 		cross cr {"cr", {cp1, cp2}};
@@ -134,7 +134,7 @@ TEST_F(TestCovergroup, simple_coverpoint_options) {
 		// Sampling method
 		with_sample<ui_t<4>> sample;
 
-		coverpoint cp1 { "cp1", std::get<0>(sample.items), [&](options_t &options) {
+		coverpoint cp1 { "cp1", std::get<0>(sample.items)(), [&](options_t &options) {
 			options.auto_bin_max = 4;
 		}};
 

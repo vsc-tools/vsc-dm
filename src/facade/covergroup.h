@@ -13,6 +13,7 @@
 #include "ctor.h"
 #include "expr_range.h"
 #include "obj_scope.h"
+#include "ModelCovergroup.h"
 #include "ModelValRangelist.h"
 
 namespace vsc {
@@ -233,6 +234,7 @@ protected:
 	options_t				options;
 
 private:
+	ModelCovergroupUP				m_cg;
 	std::vector<coverpoint *>		m_coverpoints;
 	std::vector<cross *>			m_crosses;
 

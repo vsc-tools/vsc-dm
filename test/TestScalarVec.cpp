@@ -20,7 +20,6 @@ TestScalarVec::~TestScalarVec() {
 	// TODO Auto-generated destructor stub
 }
 
-#ifdef UNDEFINED
 TEST_F(TestScalarVec, smoke) {
 
 	class my_c : public rand_obj {
@@ -31,21 +30,22 @@ TEST_F(TestScalarVec, smoke) {
 		rand_vec<ui_t<8>>			arr {"arr"};
 	};
 
-	my_c c("c");
+	attr<my_c> c("c");
 
-	ASSERT_EQ(c.arr.size(), 0);
-	c.arr.push_back(0);
-	ASSERT_EQ(c.arr.size(), 1);
-	c.arr.push_back(1);
-	ASSERT_EQ(c.arr.size(), 2);
+	ASSERT_EQ(c->arr.size, 0);
+	c->arr.push_back(0);
+	ASSERT_EQ(c->arr.size, 1);
+	c->arr.push_back(1);
+	ASSERT_EQ(c->arr.size, 2);
 
-	ASSERT_TRUE(c.randomize());
+	ASSERT_TRUE(c->randomize());
 
-	for (uint32_t i=0; i<c.arr.size(); i++) {
-		fprintf(stdout, "data[%d] %lld\n", i, c.arr[i]());
+#ifdef UNDEFINED
+	for (uint32_t i=0; i<c->arr.size; i++) {
+		fprintf(stdout, "data[%d] %lld\n", i, (uint64_t)c->arr[i]);
 	}
+#endif
 
 }
-#endif
 
 } /* namespace vsc */

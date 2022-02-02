@@ -9,6 +9,7 @@
 #include <memory>
 #include <stdint.h>
 #include <vector>
+#include "vsc/IModelVal.h"
 
 namespace vsc {
 
@@ -16,7 +17,7 @@ class DataType;
 
 class ModelVal;
 using ModelValUP=std::unique_ptr<ModelVal>;
-class ModelVal {
+class ModelVal : public IModelVal {
 public:
 
 	ModelVal();
@@ -29,40 +30,30 @@ public:
 
 	virtual ~ModelVal();
 
-	uint32_t bits() const { return m_bits; }
-
-	void bits(uint32_t b);
-
-	void to_bits(char *bits) const;
-
-	void from_bits(const char *bits, int32_t width=-1);
-
-	inline int64_t val_i() const {
-		if (m_bits <= 64) {
-			int64_t ret = m_val.v;
-			if (m_bits < 64) { // sign-extend
-				ret <<= (64-m_bits);
-				ret >>= (64-m_bits);
-			}
-			return ret;
-		} else {
-			return m_val.vp[0];
-		}
+	virtual uint32_t bits() const override {
+		return m_bits;
 	}
 
-	inline uint64_t val_u() const { return (m_bits<=64)?m_val.v:m_val.vp[0]; }
+	virtual void bits(uint32_t b) override;
 
-	void val_u(uint64_t v, int32_t width=-1);
+	virtual void to_bits(char *bits) const override;
+
+	virtual void from_bits(const char *bits, int32_t width=-1) override;
+
+	virtual void val_u(uint64_t v, int32_t width=-1) override;
+
+	inline uint64_t val_u() const { return (bits()<=64)?val().v:val().vp[0]; }
+
+	virtual const val_t &val() const override { return m_val; }
+
+	virtual val_t &val() override { return m_val; }
 
 	ModelVal slice(
 			int32_t		upper,
 			int32_t		lower);
 
 private:
-	union val_t {
-		uint64_t		v;
-		uint64_t		*vp;
-	} m_val;
+	val_t				m_val;
 	uint32_t			m_bits;
 };
 
