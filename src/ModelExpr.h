@@ -7,7 +7,7 @@
 
 #pragma once
 #include <memory>
-#include "IAccept.h"
+#include "vsc/IModelExpr.h"
 #include "ModelVal.h"
 
 namespace vsc {
@@ -15,18 +15,18 @@ namespace vsc {
 class ModelExpr;
 using ModelExprUP = std::unique_ptr<ModelExpr>;
 
-class ModelExpr : public IAccept {
+class ModelExpr : public IModelExpr {
 public:
 	ModelExpr();
 
 	virtual ~ModelExpr();
 
-	virtual int32_t width() const = 0;
+//	virtual int32_t width() const = 0;
 
 	/**
 	 * Evaluate the expression and return a result
 	 */
-	virtual void eval(ModelVal &dst) { }
+//	virtual void eval(IModelVal *dst) override { }
 
 protected:
 	/**

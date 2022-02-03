@@ -7,7 +7,7 @@
 
 #pragma once
 #include <memory>
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 #include "ModelVal.h"
 
 namespace vsc {
@@ -24,7 +24,7 @@ public:
 	/**
 	 * Obtain the initial value of this data type
 	 */
-	virtual void initial(ModelVal &v) = 0;
+	virtual void initial(IModelVal *v) = 0;
 
 	virtual bool eq(
 			DataType						*other_t,

@@ -5,9 +5,17 @@
  *      Author: mballance
  */
 
+#pragma once
+#include <memory>
+#include <stdint.h>
+#include "vsc/IAccept.h"
+#include "vsc/IModelVal.h"
+
 namespace vsc {
 
-class IModelExpr {
+class IModelExpr;
+using IModelExprUP=std::unique_ptr<IModelExpr>;
+class IModelExpr : public IAccept {
 public:
 	virtual ~IModelExpr() { }
 
@@ -16,7 +24,7 @@ public:
 	/**
 	 * Evaluate the expression and return a result
 	 */
-	virtual void eval(ModelVal &dst) = 0;
+	virtual void eval(IModelVal *dst) = 0;
 };
 
 }

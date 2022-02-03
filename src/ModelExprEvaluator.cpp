@@ -37,7 +37,7 @@ void ModelExprEvaluator::visitModelExprCond(ModelExprCond *e) {
 }
 
 void ModelExprEvaluator::visitModelExprFieldRef(ModelExprFieldRef *e) {
-	m_val = e->field()->val();
+	m_val.set(e->field()->val());
 }
 
 void ModelExprEvaluator::visitModelExprIn(ModelExprIn *e) {

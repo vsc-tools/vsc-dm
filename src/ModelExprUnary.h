@@ -24,6 +24,8 @@ public:
 
 	UnaryOp op() const { return m_op; }
 
+	virtual void eval(IModelVal *dst) override;
+
 	virtual void accept(IVisitor *v) override { v->visitModelExprUnary(this); }
 
 private:

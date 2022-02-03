@@ -453,8 +453,8 @@ void SolverBoolectorSolveModelBuilder::visitModelField(ModelField *f) {
 		m_field_s.pop_back();
 	} else {
 		// Create a value node
-		char *bits = (char *)alloca(f->val().bits()+1);
-		f->val().to_bits(bits);
+		char *bits = (char *)alloca(f->val()->bits()+1);
+		f->val()->to_bits(bits);
 
 		DEBUG("bits=%s", bits);
 		m_node_i.second = boolector_const(m_solver->btor(), bits);

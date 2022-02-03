@@ -1,7 +1,10 @@
 
 python/libvsc.cpp
+python/core.cpp
+python/libvsc/*.so
 *.egg-info
 
+build/
 packages/
 
 __pycache__/

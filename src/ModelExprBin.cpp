@@ -51,93 +51,93 @@ ModelExprBin::~ModelExprBin() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelExprBin::eval(ModelVal &dst) {
+void ModelExprBin::eval(IModelVal *dst) {
 	ModelVal lhs(m_width), rhs(m_width);
-	m_lhs->eval(lhs);
-	m_rhs->eval(rhs);
+	m_lhs->eval(&lhs);
+	m_rhs->eval(&rhs);
 
 	if (m_width <= 64) {
 		switch (m_op) {
 		case BinOp::Add:
-			dst.val_u(lhs.val_u() + rhs.val_u(), m_width);
-			dst.bits(m_width);
+			dst->val_u(lhs.val_u() + rhs.val_u(), m_width);
+			dst->bits(m_width);
 			break;
 		case BinOp::Eq:
-			ModelValOp::eq(dst, lhs, rhs);
+			ModelValOp::eq(dst, &lhs, &rhs);
 			break;
 		case BinOp::Ne:
-			ModelValOp::ne(dst, lhs, rhs);
+			ModelValOp::ne(dst, &lhs, &rhs);
 			break;
 		case BinOp::Ge:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				ModelValOp::sge(dst, lhs, rhs);
+				ModelValOp::sge(dst, &lhs, &rhs);
 			} else {
-				ModelValOp::uge(dst, lhs, rhs);
+				ModelValOp::uge(dst, &lhs, &rhs);
 			}
 			break;
 		case BinOp::Gt:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				ModelValOp::sgt(dst, lhs, rhs);
+				ModelValOp::sgt(dst, &lhs, &rhs);
 			} else {
-				ModelValOp::ugt(dst, lhs, rhs);
+				ModelValOp::ugt(dst, &lhs, &rhs);
 			}
 			break;
 		case BinOp::Le:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				ModelValOp::sle(dst, lhs, rhs);
+				ModelValOp::sle(dst, &lhs, &rhs);
 			} else {
-				ModelValOp::ule(dst, lhs, rhs);
+				ModelValOp::ule(dst, &lhs, &rhs);
 			}
 			break;
 		case BinOp::Lt:
 			// Expression must be signed or unsigned
 			if (m_signed) {
-				ModelValOp::slt(dst, lhs, rhs);
+				ModelValOp::slt(dst, &lhs, &rhs);
 			} else {
-				ModelValOp::ult(dst, lhs, rhs);
+				ModelValOp::ult(dst, &lhs, &rhs);
 			}
 			break;
 		case BinOp::LogAnd:
-			ModelValOp::log_and(dst, lhs, rhs);
-			dst.bits(m_width);
+			ModelValOp::log_and(dst, &lhs, &rhs);
+			dst->bits(m_width);
 			break;
 		case BinOp::LogOr:
-			ModelValOp::log_or(dst, lhs, rhs);
-			dst.bits(m_width);
+			ModelValOp::log_or(dst, &lhs, &rhs);
+			dst->bits(m_width);
 			break;
 		case BinOp::Sll:
-			ModelValOp::sll(dst, lhs, rhs);
-			dst.bits(m_width);
+			ModelValOp::sll(dst, &lhs, &rhs);
+			dst->bits(m_width);
 			break;
 		case BinOp::Srl:
 			if (m_signed) {
-				ModelValOp::sra(dst, lhs, rhs);
+				ModelValOp::sra(dst, &lhs, &rhs);
 			} else {
-				ModelValOp::srl(dst, lhs, rhs);
+				ModelValOp::srl(dst, &lhs, &rhs);
 			}
-			dst.bits(m_width);
+			dst->bits(m_width);
 			break;
 		case BinOp::Sub:
 			if (m_signed) {
-				dst.val_u(lhs.val_i() - rhs.val_i(), m_width);
-				dst.bits(m_width);
+				dst->val_u(lhs.val_i() - rhs.val_i(), m_width);
+				dst->bits(m_width);
 			} else {
-				dst.val_u(lhs.val_u() - rhs.val_u(), m_width);
-				dst.bits(m_width);
+				dst->val_u(lhs.val_u() - rhs.val_u(), m_width);
+				dst->bits(m_width);
 			}
 			break;
 		case BinOp::Xor:
-			dst.val_u(lhs.val_u() ^ rhs.val_u(), m_width);
-			dst.bits(m_width);
+			dst->val_u(lhs.val_u() ^ rhs.val_u(), m_width);
+			dst->bits(m_width);
 			break;
 		case BinOp::BinAnd:
-			dst.val_u(lhs.val_u() != 0 && rhs.val_u() != 0);
+			dst->val_u(lhs.val_u() != 0 && rhs.val_u() != 0);
 			break;
 		case BinOp::BinOr:
-			dst.val_u(lhs.val_u() != 0 || rhs.val_u() != 0);
+			dst->val_u(lhs.val_u() != 0 || rhs.val_u() != 0);
 			break;
 		}
 	} else {
@@ -147,11 +147,11 @@ void ModelExprBin::eval(ModelVal &dst) {
 }
 
 void ModelExprBin::eq_op_64(
-		ModelVal 		&dst,
+		IModelVal 		*dst,
 		const ModelVal 	&op1,
 		const ModelVal 	&op2) {
-	dst.val_u(op1.val_u() == op2.val_u());
-	dst.bits(1);
+	dst->val_u(op1.val_u() == op2.val_u());
+	dst->bits(1);
 }
 
 } /* namespace vsc */

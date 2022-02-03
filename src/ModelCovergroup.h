@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 #include "ModelCoverOpts.h"
 #include "ModelCoverpoint.h"
 #include "ModelCoverCross.h"

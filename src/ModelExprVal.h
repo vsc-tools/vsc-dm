@@ -25,6 +25,8 @@ public:
 
 	ModelVal &val() { return m_val; }
 
+	virtual void eval(IModelVal *dst) override;
+
 	virtual void accept(IVisitor *v) override { v->visitModelExprVal(this); }
 
 private:

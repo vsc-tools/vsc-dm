@@ -27,7 +27,7 @@ public:
 	/**
 	 * Fills the value with a random bit pattern
 	 */
-	void randbits(ModelVal &val);
+	void randbits(IModelVal *val);
 
 protected:
 	uint64_t next();

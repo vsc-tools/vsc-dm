@@ -143,7 +143,7 @@ void SolverBoolector::setFieldValue(ModelField *f) {
 	const uint32_t elem_w = 32;
 	int32_t size = boolector_get_width(m_btor, it->second);
 
-	f->val().from_bits(bits, size);
+	f->val()->from_bits(bits, size);
 
 	boolector_free_bv_assignment(m_btor, bits);
 	DEBUG_LEAVE("setFieldValue %s (0x%08llx)",

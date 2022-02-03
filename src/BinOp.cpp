@@ -18,7 +18,7 @@
  *      Author: mballance
  */
 
-#include "BinOp.h"
+#include "vsc/BinOp.h"
 
 namespace vsc {
 

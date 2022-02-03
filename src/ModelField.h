@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 #include "ModelConstraint.h"
 #include "ModelVal.h"
 #include "TypeField.h"
@@ -50,9 +50,9 @@ public:
 
 	void add_field(ModelField *field);
 
-	const ModelVal &val() const { return m_val; }
+	const IModelVal *val() const { return &m_val; }
 
-	ModelVal &val() { return m_val; }
+	IModelVal *val() { return &m_val; }
 
 	ModelFieldFlags flags() const { return m_flags; }
 

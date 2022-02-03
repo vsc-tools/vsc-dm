@@ -21,4 +21,8 @@ ModelExprPartSelect::~ModelExprPartSelect() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelExprPartSelect::eval(IModelVal *dst) {
+	fprintf(stdout, "TODO: ModelExprPartSelect::eval\n");
+}
+
 } /* namespace vsc */

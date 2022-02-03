@@ -97,7 +97,7 @@ void ModelCoverpoint::finalize() {
 void ModelCoverpoint::sample() {
 	m_hit_idx = -1;
 
-	m_target->eval(m_val);
+	m_target->eval(&m_val);
 
 	// TODO: evaluate expression
 
@@ -137,6 +137,10 @@ std::string ModelCoverpoint::illegal_bin_name(int32_t bin_idx) {
 		}
 	}
 	return b->bin_name(bin_idx);
+}
+
+void ModelCoverpoint::val(const IModelVal *v) {
+	m_val.set(v);
 }
 
 void ModelCoverpoint::coverage_ev(int32_t bin, BinsType type) {

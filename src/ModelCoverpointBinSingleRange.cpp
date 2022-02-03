@@ -42,14 +42,14 @@ void ModelCoverpointBinSingleRange::sample() {
 
 	// TODO: need to know if this is signed/unsigned
 	ModelValOp::uge(
-			ge,
+			&ge,
 			m_cp->val(),
-			m_lower);
+			&m_lower);
 
 	ModelValOp::ule(
-			le,
+			&le,
 			m_cp->val(),
-			m_upper);
+			&m_upper);
 
 	if (ge.val_u() && le.val_u()) {
 		m_cp->coverage_ev(m_bin_idx_base, m_type);

@@ -32,4 +32,8 @@ int32_t ModelExprRange::width() const {
 	}
 }
 
+void ModelExprRange::eval(IModelVal *dst) {
+	fprintf(stdout, "TODO: ModelExprRange::eval\n");
+}
+
 } /* namespace vsc */

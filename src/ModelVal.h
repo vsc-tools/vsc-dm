@@ -30,6 +30,8 @@ public:
 
 	virtual ~ModelVal();
 
+	virtual void set(const IModelVal *v) override;
+
 	virtual uint32_t bits() const override {
 		return m_bits;
 	}

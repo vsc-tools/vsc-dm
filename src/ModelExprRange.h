@@ -26,6 +26,8 @@ public:
 
 	ModelExpr *upper() const { return m_upper.get(); }
 
+	virtual void eval(IModelVal *dst) override;
+
 	virtual void accept(IVisitor *v) override { v->visitModelExprRange(this); }
 
 private:

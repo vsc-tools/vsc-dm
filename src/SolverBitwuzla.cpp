@@ -130,7 +130,7 @@ void SolverBitwuzla::setFieldValue(ModelField *f) {
 	int32_t it_idx = 0;
 	int32_t bidx_lim = size;
 
-	f->val().from_bits(bits, size);
+	f->val()->from_bits(bits, size);
 
 	DEBUG_LEAVE("setFieldValue %s", f->name().c_str());
 }

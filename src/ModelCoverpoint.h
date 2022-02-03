@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 #include "IModelCoverpointBins.h"
 #include "ModelCoverOpts.h"
 #include "ModelExpr.h"
@@ -54,9 +54,9 @@ public:
 
 	virtual void coverage_ev(int32_t bin, BinsType type);
 
-	const ModelVal &val() const { return m_val; }
+	const IModelVal *val() const { return &m_val; }
 
-	void val(const ModelVal &v) { m_val = v; }
+	void val(const IModelVal *v);
 
 	double coverage();
 

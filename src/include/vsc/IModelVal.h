@@ -6,10 +6,13 @@
  */
 
 #pragma once
+#include <memory>
 #include <stdint.h>
 
 namespace vsc {
 
+class IModelVal;
+using IModelValUP=std::unique_ptr<IModelVal>;
 class IModelVal {
 public:
 	union val_t {
@@ -19,6 +22,8 @@ public:
 
 public:
 	virtual ~IModelVal() { }
+
+	virtual void set(const IModelVal *v) = 0;
 
 	virtual uint32_t bits() const = 0;
 

@@ -21,4 +21,8 @@ ModelExprVal::~ModelExprVal() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelExprVal::eval(IModelVal *dst) {
+	dst->set(&m_val);
+}
+
 } /* namespace vsc */

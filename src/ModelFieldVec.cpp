@@ -20,12 +20,12 @@ ModelFieldVec::~ModelFieldVec() {
 
 void ModelFieldVec::push_back(ModelField *f) {
 	m_fields.push_back(ModelFieldUP(f));
-	m_size->val().val_u(m_fields.size());
+	m_size->val()->val_u(m_fields.size());
 }
 
 void ModelFieldVec::pop_back() {
 	m_fields.pop_back();
-	m_size->val().val_u(m_fields.size());
+	m_size->val()->val_u(m_fields.size());
 }
 
 } /* namespace vsc */

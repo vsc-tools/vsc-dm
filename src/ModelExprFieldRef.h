@@ -18,12 +18,12 @@ public:
 	virtual ~ModelExprFieldRef();
 
 	virtual int32_t width() const override {
-		return m_field->val().bits();
+		return m_field->val()->bits();
 	}
 
 	ModelField *field() const { return m_field; }
 
-	virtual void eval(ModelVal &dst) override;
+	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) { v->visitModelExprFieldRef(this); }
 

@@ -57,7 +57,7 @@ attr_scalar::attr_scalar(
 			ctor::inst()->type_int(is_signed, width),
 			m_name);
 	fprintf(stdout, "attr_scalar::attr_scalar ival.bits=%d\n", ival.toVal().bits());
-	m_field->val() = ival.toVal();
+	m_field->val()->set(&ival.toVal());
 
 	/*
 	if (m_parent && !parentless) {
@@ -175,35 +175,35 @@ expr_base attr_scalar::operator - (const expr_base &rhs) {
  */
 
 uint32_t attr_scalar::u32() {
-	return field()->val().val_u();
+	return field()->val()->val_u();
 }
 
 int32_t attr_scalar::i32() {
-	return field()->val().val_i();
+	return field()->val()->val_i();
 }
 
 uint64_t attr_scalar::u64() {
-	return field()->val().val_u();
+	return field()->val()->val_u();
 }
 
 int64_t attr_scalar::i64() {
-	return field()->val().val_i();
+	return field()->val()->val_i();
 }
 
 void attr_scalar::val_s(int64_t v) {
-	field()->val().val_u(v, m_width);
+	field()->val()->val_u(v, m_width);
 }
 
 int64_t attr_scalar::val_s() const {
-	return field()->val().val_i();
+	return field()->val()->val_i();
 }
 
 void attr_scalar::val_u(uint64_t v) {
-	field()->val().val_u(v, m_width);
+	field()->val()->val_u(v, m_width);
 }
 
 uint64_t attr_scalar::val_u() const {
-	return field()->val().val_u();
+	return field()->val()->val_u();
 }
 
 

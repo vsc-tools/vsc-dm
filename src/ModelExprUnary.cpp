@@ -20,4 +20,8 @@ ModelExprUnary::~ModelExprUnary() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelExprUnary::eval(IModelVal *dst) {
+	fprintf(stdout, "TODO: ModelExprUnary::eval\n");
+}
+
 } /* namespace vsc */

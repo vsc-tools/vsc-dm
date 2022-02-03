@@ -111,10 +111,12 @@ void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
 	// Specifically, there is a width inside min/max
 	// TODO: should probably do this with 'val' to ensure we
 	// can handle wide variables
-	ModelVal val(f->val());
+	ModelVal val;
 	uint32_t width = val.bits();
 
-	m_randstate->randbits(val);
+	val.set(f->val());
+
+	m_randstate->randbits(&val);
 	DEBUG("randbits: 0x%08llx", val.u64());
 //	uint32_t bit_pattern = m_randstate->randint32(0, (1 << width)-1);
 

@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <string>
 #include "BinsType.h"
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 
 namespace vsc {
 

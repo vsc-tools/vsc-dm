@@ -82,6 +82,25 @@ ModelVal::~ModelVal() {
 	}
 }
 
+void ModelVal::set(const IModelVal *rhs) {
+	if (m_bits > 64 && m_val.vp) {
+		delete [] m_val.vp;
+	}
+
+	m_bits = rhs->bits();
+
+	if (m_bits <= 64) {
+		m_val.v = rhs->val().v;
+
+		if (m_bits < 64) {
+			m_val.v &= ((1ULL << m_bits)-1);
+		}
+	} else {
+		m_val.vp = new uint64_t[(m_bits-1)/64+1];
+		memcpy(m_val.vp, rhs->val().vp, sizeof(uint64_t)*((m_bits-1)/64+1));
+	}
+}
+
 void ModelVal::bits(uint32_t b) {
 	// TODO: handle transitions between val and vec
 	if ((m_bits <= 64) != (b <= 64)) {

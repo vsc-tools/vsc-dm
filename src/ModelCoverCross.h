@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "IAccept.h"
+#include "vsc/IAccept.h"
 #include "ModelCoverpoint.h"
 
 namespace vsc {

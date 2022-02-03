@@ -6,8 +6,8 @@
  */
 
 #pragma once
+#include "vsc/IModelExpr.h"
 #include "ModelConstraint.h"
-#include "ModelExpr.h"
 
 namespace vsc {
 
@@ -15,16 +15,16 @@ class ModelConstraintExpr;
 using ModelConstraintExprUP=std::unique_ptr<ModelConstraintExpr>;
 class ModelConstraintExpr : public ModelConstraint {
 public:
-	ModelConstraintExpr(ModelExpr *expr);
+	ModelConstraintExpr(IModelExpr *expr);
 
 	virtual ~ModelConstraintExpr();
 
-	ModelExpr *expr() const { return m_expr.get(); }
+	IModelExpr *expr() const { return m_expr.get(); }
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintExpr(this); }
 
 private:
-	ModelExprUP						m_expr;
+	IModelExprUP						m_expr;
 
 };
 
