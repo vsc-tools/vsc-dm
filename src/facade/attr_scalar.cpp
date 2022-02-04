@@ -57,7 +57,8 @@ attr_scalar::attr_scalar(
 			ctor::inst()->type_int(is_signed, width),
 			m_name);
 	fprintf(stdout, "attr_scalar::attr_scalar ival.bits=%d\n", ival.toVal().bits());
-	m_field->val()->set(&ival.toVal());
+	ModelVal ival_v = ival.toVal();
+	m_field->val()->set(&ival_v);
 
 	/*
 	if (m_parent && !parentless) {

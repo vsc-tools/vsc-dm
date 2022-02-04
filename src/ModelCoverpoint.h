@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IAccept.h"
+#include "vsc/IModelCoverpoint.h"
 #include "IModelCoverpointBins.h"
 #include "ModelCoverOpts.h"
 #include "ModelExpr.h"
@@ -17,20 +17,20 @@ namespace vsc {
 
 class ModelCoverpoint;
 using ModelCoverpointUP=std::unique_ptr<ModelCoverpoint>;
-class ModelCoverpoint : public IAccept {
+class ModelCoverpoint : public IModelCoverpoint {
 public:
 	ModelCoverpoint(
-			ModelExpr			*target,
+			IModelExpr			*target,
 			const std::string	&name,
-			ModelExpr			*iff);
+			IModelExpr			*iff);
 
 	virtual ~ModelCoverpoint();
 
-	ModelExpr *target() const { return m_target.get(); }
+	virtual IModelExpr *target() const override { return m_target.get(); }
 
-	const std::string &name() const { return m_name; }
+	virtual const std::string &name() const override { return m_name; }
 
-	ModelExpr *iff() const { return m_iff.get(); }
+	virtual IModelExpr *iff() const override { return m_iff.get(); }
 
 	void add_bins(IModelCoverpointBins *bins);
 
@@ -69,9 +69,9 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelCoverpoint(this); }
 
 private:
-	ModelExprUP								m_target;
+	IModelExprUP							m_target;
 	std::string								m_name;
-	ModelExprUP								m_iff;
+	IModelExprUP							m_iff;
 
 	int32_t									m_hit_idx;
 

@@ -16,19 +16,19 @@ namespace vsc {
 class ModelExprBin : public IModelExprBin {
 public:
 	ModelExprBin(
-			ModelExpr			*lhs,
+			IModelExpr			*lhs,
 			BinOp				op,
-			ModelExpr			*rhs);
+			IModelExpr			*rhs);
 
 	virtual ~ModelExprBin();
 
 	virtual int32_t width() const override { return m_width; }
 
-	virtual ModelExpr *lhs() const override { return m_lhs.get(); }
+	virtual IModelExpr *lhs() const override { return m_lhs.get(); }
 
 	virtual BinOp op() const override { return m_op; }
 
-	virtual ModelExpr *rhs() const override { return m_rhs.get(); }
+	virtual IModelExpr *rhs() const override { return m_rhs.get(); }
 
 	virtual void eval(IModelVal *dst) override;
 
@@ -38,9 +38,9 @@ private:
 	static void eq_op_64(IModelVal *dst, const ModelVal &op1, const ModelVal &op2);
 
 private:
-	ModelExprUP					m_lhs;
+	IModelExprUP				m_lhs;
 	BinOp						m_op;
-	ModelExprUP					m_rhs;
+	IModelExprUP				m_rhs;
 	int32_t						m_width;
 	bool						m_signed;
 };

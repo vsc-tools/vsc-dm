@@ -17,7 +17,7 @@ constraint_implies::constraint_implies(
 		const std::function<void()>		&body,
 		const char						*file,
 		int32_t							lineno) {
-	ModelExpr *cond_e = ctor::inst()->pop_expr();
+	IModelExpr *cond_e = ctor::inst()->pop_expr();
 	ModelConstraintScope *body_c = new ModelConstraintScope();
 	ModelConstraintImplies *c = new ModelConstraintImplies(
 			cond_e,

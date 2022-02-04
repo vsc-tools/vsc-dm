@@ -266,11 +266,11 @@ covergroup::bins::bins(
 
 	for (auto it=ranges.begin(); it!=ranges.end(); it++) {
 		ctor::inst()->pop_expr();
-		ModelExpr *lower_e = it->lower.core();
+		IModelExpr *lower_e = it->lower.core();
 		if (it->upper.core()) {
 			// We have two elements here
 			ctor::inst()->pop_expr();
-			ModelExpr *upper_e = it->upper.core();
+			IModelExpr *upper_e = it->upper.core();
 			m_ranges.push_back(ModelValRange(
 					ModelExprEvaluator().eval(lower_e),
 					ModelExprEvaluator().eval(upper_e)));

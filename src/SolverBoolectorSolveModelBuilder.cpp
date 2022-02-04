@@ -488,7 +488,7 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::toBoolNode(BoolectorNode *n) {
 }
 
 SolverBoolectorSolveModelBuilder::node_info_t SolverBoolectorSolveModelBuilder::expr(
-		ModelExpr 		*e,
+		IModelExpr 		*e,
 		int32_t 		ctx_width) {
 	m_node_i = {false, 0};
 	m_width_s.push_back(ctx_width);

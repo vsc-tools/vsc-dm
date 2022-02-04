@@ -57,7 +57,7 @@ private:
 
 	const BitwuzlaTerm *toBoolNode(const BitwuzlaTerm *n);
 
-	node_info_t expr(ModelExpr *e, int32_t ctx_width);
+	node_info_t expr(IModelExpr *e, int32_t ctx_width);
 
 	const BitwuzlaTerm *extend(
 			const BitwuzlaTerm		*n,

@@ -6,33 +6,33 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprRange.h"
 
 namespace vsc {
 
 class ModelExprRange;
 using ModelExprRangeUP=std::unique_ptr<ModelExprRange>;
-class ModelExprRange : public ModelExpr {
+class ModelExprRange : public IModelExprRange {
 public:
 	ModelExprRange(
-			ModelExpr		*lower,
-			ModelExpr		*upper);
+			IModelExpr		*lower,
+			IModelExpr		*upper);
 
 	virtual ~ModelExprRange();
 
 	virtual int32_t width() const override;
 
-	ModelExpr *lower() const { return m_lower.get(); }
+	virtual IModelExpr *lower() const override { return m_lower.get(); }
 
-	ModelExpr *upper() const { return m_upper.get(); }
+	virtual IModelExpr *upper() const override { return m_upper.get(); }
 
 	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprRange(this); }
 
 private:
-	ModelExprUP			m_lower;
-	ModelExprUP			m_upper;
+	IModelExprUP			m_lower;
+	IModelExprUP			m_upper;
 };
 
 } /* namespace vsc */

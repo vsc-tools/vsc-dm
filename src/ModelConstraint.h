@@ -7,13 +7,13 @@
 
 #pragma once
 #include <memory>
-#include "vsc/IAccept.h"
+#include "vsc/IModelConstraint.h"
 
 namespace vsc {
 
 class ModelConstraint;
 using ModelConstraintUP=std::unique_ptr<ModelConstraint>;
-class ModelConstraint : public virtual IAccept {
+class ModelConstraint : public virtual IModelConstraint {
 public:
 	ModelConstraint();
 

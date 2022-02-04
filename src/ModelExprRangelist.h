@@ -7,32 +7,35 @@
 
 #pragma once
 #include <vector>
+#include "vsc/IModelExprRangelist.h"
 #include "ModelExprRange.h"
 
 namespace vsc {
 
 class ModelExprRangelist;
 using ModelExprRangelistUP=std::unique_ptr<ModelExprRangelist>;
-class ModelExprRangelist : public ModelExpr {
+class ModelExprRangelist : public IModelExprRangelist {
 public:
 	ModelExprRangelist();
 
 	ModelExprRangelist(
-			const std::vector<ModelExprRange *> &ranges);
+			const std::vector<IModelExprRange *> &ranges);
 
 	virtual ~ModelExprRangelist();
 
 	virtual int32_t width() const override { return m_width; }
 
-	const std::vector<ModelExprRangeUP> &ranges() const {
+	virtual const std::vector<IModelExprRangeUP> &ranges() const override {
 		return m_ranges;
 	}
+
+	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprRangelist(this); }
 
 private:
 	int32_t								m_width;
-	std::vector<ModelExprRangeUP>		m_ranges;
+	std::vector<IModelExprRangeUP>		m_ranges;
 
 };
 

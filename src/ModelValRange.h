@@ -6,11 +6,12 @@
  */
 
 #pragma once
+#include "vsc/IModelValRange.h"
 #include "ModelVal.h"
 
 namespace vsc {
 
-class ModelValRange {
+class ModelValRange : public IModelValRange {
 public:
 	ModelValRange(
 			const ModelVal	&lower) :
@@ -23,13 +24,13 @@ public:
 
 	virtual ~ModelValRange() { }
 
-	ModelVal &lower() { return m_lower; }
+	virtual IModelVal *lower() override { return &m_lower; }
 
-	const ModelVal &lower() const { return m_lower; }
+	virtual const IModelVal *lower() const override { return &m_lower; }
 
-	ModelVal &upper() { return m_upper; }
+	virtual IModelVal *upper() override { return &m_upper; }
 
-	const ModelVal &upper() const { return m_upper; }
+	virtual const IModelVal *upper() const override { return &m_upper; }
 
 private:
 	ModelVal				m_lower;

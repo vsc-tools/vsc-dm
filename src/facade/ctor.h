@@ -25,6 +25,7 @@
 #include <vector>
 #include "ctor_ctxt.h"
 #include "obj.h"
+#include "vsc/IModelExpr.h"
 #include "DataTypeInt.h"
 #include "ModelConstraintScope.h"
 #include "ModelExpr.h"
@@ -70,11 +71,11 @@ public:
 
 	void pop_expr_mode();
 
-	void push_expr(ModelExpr *e);
+	void push_expr(IModelExpr *e);
 
-	ModelExpr *expr();
+	IModelExpr *expr();
 
-	ModelExpr *pop_expr();
+	IModelExpr *pop_expr();
 
 	uint32_t expr_depth() const { return m_expr_s.size(); }
 
@@ -118,7 +119,7 @@ public:
 	RandState *mk_randstate();
 
 private:
-	std::vector<ModelExprUP>					m_expr_s;
+	std::vector<IModelExprUP>					m_expr_s;
 	std::vector<ctor_ctxt_up>					m_scope_s;
 	std::vector<bool>							m_expr_mode;
 	std::unordered_map<int32_t, DataTypeIntUP>	m_si_type_m;

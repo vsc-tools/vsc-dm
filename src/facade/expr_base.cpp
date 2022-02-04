@@ -215,7 +215,7 @@ expr_base expr_base::operator ^ (const expr_base &rhs) {
 					rhs.core()));
 }
 
-expr_base expr_base::mk(ModelExpr *core) {
+expr_base expr_base::mk(IModelExpr *core) {
 	expr_base ret;
 	ctor::inst()->push_expr(core);
 	ret.m_core = core;

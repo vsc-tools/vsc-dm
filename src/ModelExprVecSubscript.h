@@ -6,29 +6,31 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprVecSubscript.h"
 
 namespace vsc {
 
-class ModelExprVecSubscript : public ModelExpr {
+class ModelExprVecSubscript : public IModelExprVecSubscript {
 public:
 	ModelExprVecSubscript(
-			ModelExpr		*expr,
-			ModelExpr		*subscript
+			IModelExpr		*expr,
+			IModelExpr		*subscript
 			);
 
 	virtual ~ModelExprVecSubscript();
 
 	virtual int32_t width() const override { return -1; }
 
-	ModelExpr *expr() const { return m_expr.get(); }
+	virtual IModelExpr *expr() const override { return m_expr.get(); }
 
-	ModelExpr *subscript() const { return m_subscript.get(); }
+	virtual IModelExpr *subscript() const override { return m_subscript.get(); }
+
+	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprVecSubscript(this); }
 private:
-	ModelExprUP				m_expr;
-	ModelExprUP				m_subscript;
+	IModelExprUP				m_expr;
+	IModelExprUP				m_subscript;
 };
 
 } /* namespace vsc */

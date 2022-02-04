@@ -25,9 +25,9 @@
 namespace vsc {
 
 ModelExprBin::ModelExprBin(
-		ModelExpr			*lhs,
+		IModelExpr			*lhs,
 		BinOp				op,
-		ModelExpr			*rhs) :
+		IModelExpr			*rhs) :
 			m_lhs(lhs), m_op(op), m_rhs(rhs) {
 
 	m_signed = false;

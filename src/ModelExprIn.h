@@ -6,30 +6,32 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprIn.h"
 #include "ModelExprRangelist.h"
 
 namespace vsc {
 
-class ModelExprIn : public ModelExpr {
+class ModelExprIn : public IModelExprIn {
 public:
 	ModelExprIn(
-			ModelExpr			*lhs,
-			ModelExprRangelist	*rangelist);
+			IModelExpr			*lhs,
+			IModelExprRangelist	*rangelist);
 
 	virtual ~ModelExprIn();
 
 	virtual int32_t width() const override { return 1; }
 
-	ModelExpr *lhs() const { return m_lhs.get(); }
+	IModelExpr *lhs() const { return m_lhs.get(); }
 
-	ModelExprRangelist *rangelist() const { return m_rangelist.get(); }
+	IModelExprRangelist *rangelist() const { return m_rangelist.get(); }
+
+	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprIn(this); }
 
 private:
-	ModelExprUP					m_lhs;
-	ModelExprRangelistUP		m_rangelist;
+	IModelExprUP					m_lhs;
+	IModelExprRangelistUP			m_rangelist;
 
 };
 

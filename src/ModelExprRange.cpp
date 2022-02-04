@@ -10,8 +10,8 @@
 namespace vsc {
 
 ModelExprRange::ModelExprRange(
-		ModelExpr		*lower,
-		ModelExpr		*upper) : m_lower(lower), m_upper(upper) {
+		IModelExpr		*lower,
+		IModelExpr		*upper) : m_lower(lower), m_upper(upper) {
 	// TODO Auto-generated constructor stub
 
 }

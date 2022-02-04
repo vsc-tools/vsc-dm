@@ -61,7 +61,7 @@ private:
 
 	BoolectorNode *toBoolNode(BoolectorNode *n);
 
-	node_info_t expr(ModelExpr *e, int32_t ctx_width);
+	node_info_t expr(IModelExpr *e, int32_t ctx_width);
 
 	BoolectorNode *extend(
 			BoolectorNode		*n,

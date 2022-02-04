@@ -10,8 +10,8 @@
 namespace vsc {
 
 ModelConstraintImplies::ModelConstraintImplies(
-		ModelExpr			*cond,
-		ModelConstraint		*body) : m_cond(cond), m_body(body) {
+		IModelExpr			*cond,
+		IModelConstraint	*body) : m_cond(cond), m_body(body) {
 	// TODO Auto-generated constructor stub
 
 }

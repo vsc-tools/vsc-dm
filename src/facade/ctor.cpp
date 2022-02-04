@@ -20,6 +20,7 @@
  */
 
 #include "ctor.h"
+#include "vsc/IModelExpr.h"
 #include "Debug.h"
 #include "ModelConstraintExpr.h"
 
@@ -150,19 +151,19 @@ void ctor::pop_expr_mode() {
 	m_expr_mode.pop_back();
 }
 
-void ctor::push_expr(ModelExpr *e) {
+void ctor::push_expr(IModelExpr *e) {
 	DEBUG_ENTER("push_expr %p", e);
-	m_expr_s.push_back(ModelExprUP(e));
+	m_expr_s.push_back(IModelExprUP(e));
 	DEBUG_LEAVE("push_expr");
 }
 
-ModelExpr *ctor::expr() {
+IModelExpr *ctor::expr() {
 	return (m_expr_s.size())?m_expr_s.back().get():0;
 }
 
-ModelExpr *ctor::pop_expr() {
+IModelExpr *ctor::pop_expr() {
 	DEBUG_ENTER("pop_expr %p", m_expr_s.back().get());
-	ModelExpr *ret = m_expr_s.back().release();
+	IModelExpr *ret = m_expr_s.back().release();
 
 	m_expr_s.pop_back();
 

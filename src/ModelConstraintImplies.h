@@ -6,28 +6,27 @@
  */
 
 #pragma once
-#include "ModelConstraint.h"
-#include "ModelExpr.h"
+#include "vsc/IModelConstraintImplies.h"
 
 namespace vsc {
 
-class ModelConstraintImplies : public ModelConstraint {
+class ModelConstraintImplies : public IModelConstraintImplies {
 public:
 	ModelConstraintImplies(
-			ModelExpr			*cond,
-			ModelConstraint		*body);
+			IModelExpr			*cond,
+			IModelConstraint	*body);
 
 	virtual ~ModelConstraintImplies();
 
-	ModelExpr *cond() const { return m_cond.get(); }
+	virtual IModelExpr *cond() const override { return m_cond.get(); }
 
-	ModelConstraint *body() const { return m_body.get(); }
+	virtual IModelConstraint *body() const override { return m_body.get(); }
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintImplies(this); }
 
 private:
-	ModelExprUP					m_cond;
-	ModelConstraintUP			m_body;
+	IModelExprUP				m_cond;
+	IModelConstraintUP			m_body;
 };
 
 } /* namespace vsc */

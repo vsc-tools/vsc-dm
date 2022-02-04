@@ -81,14 +81,14 @@ public:
 
 	expr_base operator ^ (const expr_base &rhs);
 
-	ModelExpr *core() const { return m_core; }
+	IModelExpr *core() const { return m_core; }
 
 	ModelVal val();
 
-	static expr_base mk(ModelExpr *core);
+	static expr_base mk(IModelExpr *core);
 
 protected:
-	ModelExpr					*m_core;
+	IModelExpr					*m_core;
 };
 
 } /* namespace facade */

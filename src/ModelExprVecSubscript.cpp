@@ -10,14 +10,18 @@
 namespace vsc {
 
 ModelExprVecSubscript::ModelExprVecSubscript(
-		ModelExpr			*expr,
-		ModelExpr			*subscript)
+		IModelExpr			*expr,
+		IModelExpr			*subscript)
 				: m_expr(expr), m_subscript(subscript) {
 
 }
 
 ModelExprVecSubscript::~ModelExprVecSubscript() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelExprVecSubscript::eval(IModelVal *dst) {
+	fprintf(stdout, "TODO: ModelExprVecSubscript::eval\n");
 }
 
 } /* namespace vsc */

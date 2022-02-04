@@ -35,13 +35,13 @@ expr_base (inside)(
 		std::initializer_list<expr_base>		rangelist,
 		const char						*file,
 		int32_t							lineno) {
-	std::vector<ModelExprRange *>	ranges;
+	std::vector<IModelExprRange *>	ranges;
 	for (auto it=rangelist.begin(); it!=rangelist.end(); it++) {
 		ctor::inst()->pop_expr();
 		ranges.push_back(new ModelExprRange(it->core(), 0));
 	}
 	ctor::inst()->pop_expr();
-	ModelExpr *cond_m = cond.core();
+	IModelExpr *cond_m = cond.core();
 
 	ModelExprRangelist *rl_m = new ModelExprRangelist(ranges);
 
@@ -53,13 +53,13 @@ expr_base (inside)(
 		const std::vector<expr_range>		&rangelist,
 		const char							*file,
 		int32_t								lineno) {
-	std::vector<ModelExprRange *>	ranges;
+	std::vector<IModelExprRange *>	ranges;
 	for (auto it=rangelist.begin(); it!=rangelist.end(); it++) {
 		// TODO: build elem/range as appropriate
 //		ranges.push_back(it->core());
 	}
 	ctor::inst()->pop_expr();
-	ModelExpr *cond_m = cond.core();
+	IModelExpr *cond_m = cond.core();
 
 	ModelExprRangelist *rl_m = new ModelExprRangelist(ranges);
 

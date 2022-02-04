@@ -10,13 +10,17 @@
 namespace vsc {
 
 ModelExprIn::ModelExprIn(
-		ModelExpr			*lhs,
-		ModelExprRangelist	*rangelist) : m_lhs(lhs), m_rangelist(rangelist) {
+		IModelExpr			*lhs,
+		IModelExprRangelist	*rangelist) : m_lhs(lhs), m_rangelist(rangelist) {
 
 }
 
 ModelExprIn::~ModelExprIn() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelExprIn::eval(IModelVal *dst) {
+	fprintf(stdout, "TODO: ModelExprIn::eval\n");
 }
 
 } /* namespace vsc */

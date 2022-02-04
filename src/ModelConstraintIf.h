@@ -6,6 +6,8 @@
  */
 
 #pragma once
+#include "vsc/IModelExpr.h"
+#include "vsc/IModelConstraint.h"
 #include "ModelExpr.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintScope.h"
@@ -15,32 +17,32 @@ namespace vsc {
 class ModelConstraintIf : public ModelConstraint {
 public:
 	ModelConstraintIf(
-			ModelExpr				*cond,
-			ModelConstraint			*true_c,
-			ModelConstraint			*false_c);
+			IModelExpr				*cond,
+			IModelConstraint		*true_c,
+			IModelConstraint		*false_c);
 
 	virtual ~ModelConstraintIf();
 
-	ModelExpr *cond() const { return m_cond.get(); }
+	IModelExpr *cond() const { return m_cond.get(); }
 
-	ModelConstraint *true_c() const { return m_true_c.get(); }
+	IModelConstraint *true_c() const { return m_true_c.get(); }
 
-	void true_c(ModelConstraint *c) {
-		m_true_c = ModelConstraintUP(c);
+	void true_c(IModelConstraint *c) {
+		m_true_c = IModelConstraintUP(c);
 	}
 
-	ModelConstraint *false_c() const { return m_false_c.get(); }
+	IModelConstraint *false_c() const { return m_false_c.get(); }
 
-	void false_c(ModelConstraint *c) {
-		m_false_c = ModelConstraintUP(c);
+	void false_c(IModelConstraint *c) {
+		m_false_c = IModelConstraintUP(c);
 	}
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintIf(this); }
 
 private:
-	ModelExprUP						m_cond;
-	ModelConstraintUP				m_true_c;
-	ModelConstraintUP				m_false_c;
+	IModelExprUP					m_cond;
+	IModelConstraintUP				m_true_c;
+	IModelConstraintUP				m_false_c;
 
 };
 

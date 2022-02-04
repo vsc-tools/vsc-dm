@@ -113,7 +113,7 @@ public:
 			ctor::inst()->pop_expr();
 			m_iff = e.core();
 		}
-		ModelExpr			*m_iff;
+		IModelExpr			*m_iff;
 	};
 
 	class bins;
@@ -157,8 +157,8 @@ public:
 
 	private:
 		ModelCoverpoint						*m_cp;
-		ModelExpr							*m_target;
-		ModelExpr							*m_iff;
+		IModelExpr							*m_target;
+		IModelExpr							*m_iff;
 		std::function<void()>				m_body;
 		std::function<void(options_t &)>	m_body_opts;
 		std::vector<bins *>					m_bins;

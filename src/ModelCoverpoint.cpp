@@ -11,9 +11,9 @@
 namespace vsc {
 
 ModelCoverpoint::ModelCoverpoint(
-		ModelExpr			*target,
+		IModelExpr			*target,
 		const std::string	&name,
-		ModelExpr			*iff) : m_target(target), m_name(name), m_iff(iff) {
+		IModelExpr			*iff) : m_target(target), m_name(name), m_iff(iff) {
 	m_hit_idx = -1;
 	m_n_bins = -1;
 	m_bins_val = 0;
