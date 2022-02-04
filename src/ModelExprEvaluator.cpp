@@ -27,7 +27,7 @@ void ModelExprEvaluator::visitModelExprBin(ModelExprBin *e) {
 	// TODO:
 }
 
-ModelVal ModelExprEvaluator::eval(ModelExpr *expr) {
+ModelVal ModelExprEvaluator::eval(IModelExpr *expr) {
 	expr->accept(this);
 	return m_val;
 }

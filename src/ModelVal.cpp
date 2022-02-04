@@ -56,6 +56,21 @@ ModelVal::ModelVal(const ModelVal &rhs) {
 	}
 }
 
+ModelVal::ModelVal(const IModelVal *rhs) {
+	m_bits = rhs->bits();
+
+	if (m_bits <= 64) {
+		m_val.v = rhs->val().v;
+
+		if (m_bits < 64) {
+			m_val.v &= (1ULL << m_bits)-1;
+		}
+	} else {
+		m_val.vp = new uint64_t[(m_bits-1)/64+1];
+		memcpy(m_val.vp, rhs->val().vp, sizeof(uint64_t)*((m_bits-1)/64+1));
+	}
+}
+
 void ModelVal::operator = (const ModelVal &rhs) {
 	// Clean up first
 	if (m_bits > 64 && m_val.vp) {

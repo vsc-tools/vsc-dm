@@ -13,14 +13,19 @@ namespace vsc {
 
 class ModelValRange : public IModelValRange {
 public:
-	ModelValRange(
-			const ModelVal	&lower) :
-				m_lower(lower), m_upper(lower) { }
+	ModelValRange(const IModelVal *lower);
 
 	ModelValRange(
-			const ModelVal	&lower,
-			const ModelVal	&upper) :
-				m_lower(lower), m_upper(upper) { }
+			const IModelVal	*lower,
+			const IModelVal	*upper);
+
+	ModelValRange(const IModelVal	&lower);
+
+	ModelValRange(
+			const IModelVal	&lower,
+			const IModelVal	&upper);
+
+	ModelValRange(const IModelValRange *rhs);
 
 	virtual ~ModelValRange() { }
 

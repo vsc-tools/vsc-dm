@@ -18,7 +18,7 @@ public:
 
 	virtual ~ModelExprEvaluator();
 
-	ModelVal eval(ModelExpr *expr);
+	ModelVal eval(IModelExpr *expr);
 
 	virtual void visitModelExprBin(ModelExprBin *e) override;
 

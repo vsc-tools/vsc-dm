@@ -18,7 +18,7 @@ DataTypeDomainRangeBuilder::~DataTypeDomainRangeBuilder() {
 	// TODO Auto-generated destructor stub
 }
 
-std::vector<ModelValRange> DataTypeDomainRangeBuilder::build(DataType *t) {
+ModelValRangelist DataTypeDomainRangeBuilder::build(DataType *t) {
 	m_domain.clear();
 	t->accept(this);
 	return m_domain;
@@ -26,7 +26,7 @@ std::vector<ModelValRange> DataTypeDomainRangeBuilder::build(DataType *t) {
 
 void DataTypeDomainRangeBuilder::visitDataTypeInt(DataTypeInt *t) {
 	if (t->is_signed()) {
-		m_domain.is_signed(true);
+		m_domain.setIsSigned(true);
 		if (t->width() > 64) {
 			// TODO:
 		} else if (t->width() == 64) {
@@ -40,7 +40,7 @@ void DataTypeDomainRangeBuilder::visitDataTypeInt(DataTypeInt *t) {
 					ModelVal(t->width(), (1ULL<<(t->width()-1))-1)));
 		}
 	} else {
-		m_domain.is_signed(false);
+		m_domain.setIsSigned(false);
 		if (t->width() > 64) {
 			// TODO:
 		} else if (t->width() == 64) {

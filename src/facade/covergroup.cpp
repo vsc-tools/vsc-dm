@@ -293,7 +293,7 @@ covergroup::bins::bins(
 	m_is_array = true;
 	if (sz.core()) {
 		ctor::inst()->pop_expr();
-		ModelExpr *sz_e = sz.core();
+		IModelExpr *sz_e = sz.core();
 		ModelVal sz_v = ModelExprEvaluator().eval(sz_e);
 		delete sz_e;
 

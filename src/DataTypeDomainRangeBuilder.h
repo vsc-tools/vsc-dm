@@ -23,7 +23,7 @@ public:
 
 	virtual ~DataTypeDomainRangeBuilder();
 
-	std::vector<ModelValRange> build(DataType *t);
+	ModelValRangelist build(DataType *t);
 
 	virtual void visitDataTypeInt(DataTypeInt *t) override;
 

@@ -26,6 +26,8 @@ public:
 
 	ModelVal(const ModelVal &rhs);
 
+	ModelVal(const IModelVal *rhs);
+
 	void operator = (const ModelVal &rhs);
 
 	virtual ~ModelVal();
