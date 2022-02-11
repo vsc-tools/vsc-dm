@@ -6,31 +6,38 @@
  */
 
 #pragma once
+#include "vsc/IModelExprCond.h"
 #include "ModelExpr.h"
 
 namespace vsc {
 
-class ModelExprCond : public ModelExpr {
+class ModelExprCond : public IModelExprCond {
 public:
 	ModelExprCond(
-			ModelExpr		*cond,
-			ModelExpr		*true_e,
-			ModelExpr		*false_e);
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e);
 
 	virtual ~ModelExprCond();
 
-	ModelExpr *cond() const { return m_cond.get(); }
+	virtual IModelExpr *getCond() const override {
+		return m_cond.get();
+	}
 
-	ModelExpr *true_e() const { return m_true_e.get(); }
+	virtual IModelExpr *getTrue() const override {
+		return m_true_e.get();
+	}
 
-	ModelExpr *false_e() const { return m_false_e.get(); }
+	virtual IModelExpr *getFalse() const override {
+		return m_false_e.get();
+	}
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprCond(this); }
 
 private:
-	ModelExprUP				m_cond;
-	ModelExprUP				m_true_e;
-	ModelExprUP				m_false_e;
+	IModelExprUP				m_cond;
+	IModelExprUP				m_true_e;
+	IModelExprUP				m_false_e;
 };
 
 } /* namespace vsc */

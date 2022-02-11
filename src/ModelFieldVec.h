@@ -12,11 +12,11 @@ namespace vsc {
 
 class ModelFieldVec : public ModelField {
 public:
-	ModelFieldVec(ModelField *size);
+	ModelFieldVec(IModelField *size);
 
 	virtual ~ModelFieldVec();
 
-	ModelField *size() const { return m_size.get(); }
+	IModelField *size() const { return m_size.get(); }
 
 	void size(ModelField *f) { m_size = ModelFieldUP(f); }
 
@@ -25,7 +25,7 @@ public:
 	void pop_back();
 
 protected:
-	ModelFieldUP					m_size;
+	IModelFieldUP					m_size;
 
 };
 

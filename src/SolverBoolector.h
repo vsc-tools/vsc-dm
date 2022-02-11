@@ -29,7 +29,7 @@
 #include <map>
 #include <unordered_map>
 
-#include "ISolver.h"
+#include "vsc/ISolver.h"
 
 struct BoolectorNode;
 struct Btor;

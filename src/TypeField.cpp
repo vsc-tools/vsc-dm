@@ -26,7 +26,7 @@ namespace vsc {
 TypeField::TypeField(
 		DataTypeStruct			*parent,
 		const std::string		&name,
-		DataType				*type,
+		IDataType				*type,
 		TypeFieldAttr			attr,
 		ModelVal				*init) :
 				m_parent(parent), m_name(name), m_type(type), m_attr(attr),

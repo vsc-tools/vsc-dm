@@ -10,9 +10,9 @@
 namespace vsc {
 
 ModelFieldVecRoot::ModelFieldVecRoot(
-		DataType			*type,
+		IDataType			*type,
 		const std::string	&name,
-		ModelField			*size) :
+		IModelField			*size) :
 				ModelFieldVec(size), m_type(type), m_name(name) {
 
 }

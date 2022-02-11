@@ -23,9 +23,9 @@ public:
 
 	virtual ~DataTypeDomainRangeBuilder();
 
-	ModelValRangelist build(DataType *t);
+	ModelValRangelist build(IDataType *t);
 
-	virtual void visitDataTypeInt(DataTypeInt *t) override;
+	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
 private:
 	ModelValRangelist						m_domain;

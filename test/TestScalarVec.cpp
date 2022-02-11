@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include "gtest/gtest.h"
 #include "TestScalarVec.h"
 
 namespace vsc {
@@ -28,22 +29,33 @@ TEST_F(TestScalarVec, smoke) {
 		my_c(const scope &s) : rand_obj(this) { }
 
 		rand_vec<ui_t<8>>			arr {"arr"};
+
+		constraint array_elem_c { "array_elem_c", [&] {
+			arr.foreach([&](auto i) {
+				// TODO:
+			});
+			/*
+			arr[0] == 1;
+			arr[1] == 2;
+			 */
+		}};
 	};
 
 	attr<my_c> c("c");
 
-	ASSERT_EQ(c->arr.size, 0);
+	ASSERT_EQ(c->arr.size(), 0);
 	c->arr.push_back(0);
-	ASSERT_EQ(c->arr.size, 1);
+	ASSERT_EQ(c->arr.size(), 1);
 	c->arr.push_back(1);
-	ASSERT_EQ(c->arr.size, 2);
+	ASSERT_EQ(c->arr.size(), 2);
 
 	ASSERT_TRUE(c->randomize());
 
-#ifdef UNDEFINED
-	for (uint32_t i=0; i<c->arr.size; i++) {
-		fprintf(stdout, "data[%d] %lld\n", i, (uint64_t)c->arr[i]);
+	for (uint32_t i=0; i<c->arr.size(); i++) {
+		fprintf(stdout, "data[%d] %lld\n", i, c->arr[i]());
+		fprintf(stdout, "data[%d] %lld\n", i, c->arr[i]());
 	}
+#ifdef UNDEFINED
 #endif
 
 }

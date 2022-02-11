@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "ISolver.h"
+#include "vsc/ISolver.h"
 #include "RandState.h"
 #include "SolveSet.h"
 
@@ -24,14 +24,14 @@ public:
 
 private:
 	void swizzle_field_l(
-			const std::vector<ModelField *>	&fields);
+			const std::vector<IModelField *>	&fields);
 
 	void swizzle_field(
-			ModelField 						*f,
+			IModelField						*f,
 			std::vector<ModelConstraintUP>	&constraints);
 
 	void create_rand_domain_constraint(
-			ModelField						*f,
+			IModelField						*f,
 			std::vector<ModelConstraintUP>	&constraints);
 
 private:

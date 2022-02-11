@@ -25,8 +25,7 @@
  *      Author: ballance
  */
 
-#ifndef SRC_SOLVER_RNG_H_
-#define SRC_SOLVER_RNG_H_
+#pragma once
 #include <stdint.h>
 #include <random>
 
@@ -55,4 +54,3 @@ private:
 
 } /* namespace vsc */
 
-#endif /* SRC_SOLVER_RNG_H_ */

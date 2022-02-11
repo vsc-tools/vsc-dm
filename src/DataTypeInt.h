@@ -6,14 +6,14 @@
  */
 
 #pragma once
+#include "vsc/IDataTypeInt.h"
 #include "DataType.h"
-#include "IDataTypeInt.h"
 
 namespace vsc {
 
 class DataTypeInt;
 using DataTypeIntUP=std::unique_ptr<DataTypeInt>;
-class DataTypeInt : public DataType {
+class DataTypeInt : public IDataTypeInt {
 public:
 	DataTypeInt(
 			bool			is_signed,
@@ -21,9 +21,9 @@ public:
 
 	virtual ~DataTypeInt();
 
-	bool is_signed() const { return m_is_signed; }
+	virtual bool is_signed() const override { return m_is_signed; }
 
-	int32_t width() const { return m_width; }
+	virtual int32_t width() const override { return m_width; }
 
 	virtual void accept(IVisitor *v) { v->visitDataTypeInt(this); }
 

@@ -24,7 +24,7 @@ public:
 
 	rand_attr<ui_t<32>>			size;
 
-	void push_back(uint32_t v);
+	void push_back(uint64_t v);
 
 	expr_base subscript(const expr_base &rhs);
 

@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "ISolver.h"
+#include "vsc/ISolver.h"
 #include "SolveSet.h"
 #include "VisitorBase.h"
 

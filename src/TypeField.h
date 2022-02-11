@@ -27,7 +27,7 @@ public:
 	TypeField(
 			DataTypeStruct		*parent,
 			const std::string	&name,
-			DataType			*type,
+			IDataType			*type,
 			TypeFieldAttr		attr,
 			ModelVal			*init);
 
@@ -35,14 +35,14 @@ public:
 
 	const std::string &name() const { return m_name; }
 
-	DataType *type() const { return m_type; }
+	IDataType *type() const { return m_type; }
 
 	virtual void accept(IVisitor *v) { v->visitTypeField(this); }
 
 protected:
 	DataTypeStruct			*m_parent;
 	std::string				m_name;
-	DataType				*m_type;
+	IDataType				*m_type;
 	TypeFieldAttr			m_attr;
 	ModelValUP				m_init;
 

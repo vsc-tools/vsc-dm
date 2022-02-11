@@ -43,10 +43,10 @@ vec_scalar::~vec_scalar() {
 	// TODO Auto-generated destructor stub
 }
 
-void vec_scalar::push_back(uint32_t v) {
+void vec_scalar::push_back(uint64_t v) {
 	ModelFieldVec *vec = static_cast<ModelFieldVec *>(m_field);
 	ModelFieldRoot *field = new ModelFieldRoot(
-			vec->datatype(),
+			vec->getDataType(),
 			"a");
 	field->val()->val_u(v);
 	vec->push_back(field);

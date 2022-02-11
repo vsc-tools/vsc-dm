@@ -52,18 +52,18 @@ void SolveSetSwizzlerPartsel::swizzle(
 }
 
 void SolveSetSwizzlerPartsel::swizzle_field_l(
-		const std::vector<ModelField *>		&fields) {
+		const std::vector<IModelField *>		&fields) {
 	DEBUG_ENTER("swizzle_field_l");
 
 	uint32_t max_swizzle = 4;
 	// Create a copy for random selection
-	std::vector<ModelField *> fields_c(fields.begin(), fields.end());
+	std::vector<IModelField *> fields_c(fields.begin(), fields.end());
 	std::vector<ModelConstraintUP> constraints;
 
 	DEBUG_ENTER("Select %d fields from %d", max_swizzle, fields_c.size());
 	for (uint32_t i=0; i<max_swizzle && fields_c.size(); i++) {
 		uint32_t target_idx = m_randstate->randint32(0, fields_c.size()-1);
-		ModelField *field = fields_c.at(target_idx);
+		IModelField *field = fields_c.at(target_idx);
 		fields_c.erase(fields_c.begin()+target_idx);
 		swizzle_field(field, constraints);
 		DEBUG("select field %s", field->name().c_str());
@@ -90,7 +90,7 @@ void SolveSetSwizzlerPartsel::swizzle_field_l(
 }
 
 void SolveSetSwizzlerPartsel::swizzle_field(
-		ModelField 							*f,
+		IModelField 						*f,
 		std::vector<ModelConstraintUP>		&constraints) {
 	DEBUG_ENTER("swizzle_field %s", f->name().c_str());
 
@@ -104,7 +104,7 @@ void SolveSetSwizzlerPartsel::swizzle_field(
 }
 
 void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
-			ModelField						*f,
+			IModelField						*f,
 			std::vector<ModelConstraintUP>	&constraints) {
 	DEBUG_ENTER("create_rand_domain_constraint %s", f->name().c_str());
 	// TODO: Should be able to incorporate min/max information.

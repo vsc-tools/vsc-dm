@@ -21,7 +21,7 @@ public:
 
 	virtual const std::string &name() const { return m_type->name(); }
 
-	virtual DataType *datatype() const { return m_type->type(); }
+	virtual IDataType *getDataType() const override { return m_type->type(); }
 
 	virtual void accept(IVisitor *v) { v->visitModelFieldType(this); }
 

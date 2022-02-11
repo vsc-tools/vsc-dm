@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "ISolver.h"
+#include "vsc/ISolver.h"
 #include "VisitorBase.h"
 
 namespace vsc {
@@ -18,15 +18,15 @@ public:
 
 	virtual ~CommitFieldValueVisitor();
 
-	void commit(ModelField *f);
+	void commit(IModelField *f);
 
-	virtual void visitDataTypeInt(DataTypeInt *t) override;
+	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
-	virtual void visitModelField(ModelField *f) override;
+	virtual void visitModelField(IModelField *f) override;
 
 private:
 	ISolver									*m_solver;
-	std::vector<ModelField *>				m_field_s;
+	std::vector<IModelField *>				m_field_s;
 
 };
 

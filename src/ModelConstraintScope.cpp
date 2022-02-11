@@ -32,7 +32,7 @@ ModelConstraintScope::~ModelConstraintScope() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelConstraintScope::add_constraint(ModelConstraint *c) {
+void ModelConstraintScope::add_constraint(IModelConstraint *c) {
 	m_constraints.push_back(ModelConstraintUP(c));
 }
 

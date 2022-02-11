@@ -13,6 +13,7 @@ namespace vsc {
 class ModelFieldRootVec {
 public:
 	ModelFieldRootVec();
+
 	virtual ~ModelFieldRootVec();
 };
 

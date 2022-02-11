@@ -25,18 +25,17 @@
  */
 
 #pragma once
-#include "DataTypeInt.h"
-#include "DataTypeStruct.h"
+#include "vsc/IVisitor.h"
 
+#include "vsc/IDataTypeInt.h"
+#include "vsc/IDataTypeStruct.h"
 
-#include "IVisitor.h"
-
-#include "ModelConstraintBlock.h"
-#include "ModelConstraintExpr.h"
-#include "ModelConstraintIf.h"
-#include "ModelConstraintImplies.h"
-#include "ModelConstraintScope.h"
-#include "ModelConstraintSoft.h"
+#include "vsc/IModelConstraintBlock.h"
+#include "vsc/IModelConstraintExpr.h"
+#include "vsc/IModelConstraintIf.h"
+#include "vsc/IModelConstraintImplies.h"
+#include "vsc/IModelConstraintScope.h"
+#include "vsc/IModelConstraintSoft.h"
 
 #include "ModelCoverCross.h"
 #include "ModelCovergroup.h"
@@ -69,23 +68,23 @@ public:
 
 	virtual ~VisitorBase();
 
-	virtual void visitDataTypeInt(DataTypeInt *t) override;
+	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
-	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
+	virtual void visitDataTypeStruct(IDataTypeStruct *t) override;
 
-	virtual void visitModelConstraint(ModelConstraint *c) override;
+	virtual void visitModelConstraint(IModelConstraint *c) override;
 
-	virtual void visitModelConstraintBlock(ModelConstraintBlock *c) override;
+	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) override;
 
-	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
+	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
+	virtual void visitModelConstraintIf(IModelConstraintIf *c) override;
 
-	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) override;
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override;
 
-	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
+	virtual void visitModelConstraintScope(IModelConstraintScope *c) override;
 
-	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;
+	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override;
 
 	virtual void visitModelCoverCross(ModelCoverCross *c) override;
 
@@ -115,7 +114,7 @@ public:
 
 	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) override;
 
-	virtual void visitModelField(ModelField *f) override;
+	virtual void visitModelField(IModelField *f) override;
 
 	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
 

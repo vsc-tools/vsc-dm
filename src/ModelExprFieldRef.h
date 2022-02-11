@@ -13,7 +13,7 @@ namespace vsc {
 
 class ModelExprFieldRef : public ModelExpr {
 public:
-	ModelExprFieldRef(ModelField *field);
+	ModelExprFieldRef(IModelField *field);
 
 	virtual ~ModelExprFieldRef();
 
@@ -21,14 +21,14 @@ public:
 		return m_field->val()->bits();
 	}
 
-	ModelField *field() const { return m_field; }
+	IModelField *field() const { return m_field; }
 
 	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) { v->visitModelExprFieldRef(this); }
 
 private:
-	ModelField					*m_field;
+	IModelField					*m_field;
 
 };
 

@@ -6,17 +6,22 @@
  */
 
 #pragma once
+#include "vsc/IModelConstraintBlock.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
 
-class ModelConstraintBlock : public ModelConstraintScope {
+class ModelConstraintBlock :
+		public virtual ModelConstraintScope,
+		public virtual IModelConstraintBlock {
 public:
 	ModelConstraintBlock(const std::string &name);
 
 	virtual ~ModelConstraintBlock();
 
-	const std::string &name() const { return m_name; }
+	virtual const std::string &name() const override {
+		return m_name;
+	}
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintBlock(this); }
 

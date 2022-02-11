@@ -9,74 +9,67 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "vsc/IAccept.h"
+#include "vsc/IDataType.h"
+#include "vsc/IModelField.h"
 #include "ModelConstraint.h"
 #include "ModelVal.h"
 #include "TypeField.h"
 
 namespace vsc {
 
-using ModelFieldFlags=uint32_t;
-static const uint32_t ModelFieldFlag_DeclRand = (1 << 0);
-static const uint32_t ModelFieldFlag_UsedRand = (1 << 1);
-static const uint32_t ModelFieldFlag_Resoved  = (1 << 2);
-static const uint32_t ModelFieldFlag_VecSize  = (1 << 3);
-
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;
-class ModelField : public IAccept {
+class ModelField : public IModelField {
 public:
-	ModelField(DataType *type);
+	ModelField(IDataType *type);
 
 	ModelField();
 
 	virtual ~ModelField();
 
-	virtual const std::string &name() const = 0;
+	virtual IModelField *getParent() const override { return m_parent; }
 
-	virtual DataType *datatype() const = 0;
+	virtual void setParent(IModelField *p) override { m_parent = p; }
 
-	ModelField *parent() const { return m_parent; }
-
-	void parent(ModelField *p) { m_parent = p; }
-
-	const std::vector<ModelConstraintUP> &constraints() const {
+	virtual const std::vector<IModelConstraintUP> &constraints() const override {
 		return m_constraints;
 	}
 
-	void add_constraint(ModelConstraint *c);
+	virtual void addConstraint(IModelConstraint *c) override;
 
-	const std::vector<ModelFieldUP> &fields() const { return m_fields; }
-
-	void add_field(ModelField *field);
-
-	const IModelVal *val() const { return &m_val; }
-
-	IModelVal *val() { return &m_val; }
-
-	ModelFieldFlags flags() const { return m_flags; }
-
-	void clear_flag(ModelFieldFlags flags) {
-		m_flags &= (~flags);
+	virtual const std::vector<IModelFieldUP> &fields() const override {
+		return m_fields;
 	}
 
-	void set_flag(ModelFieldFlags flags) {
-		m_flags |= flags;
+	virtual void addField(IModelField *field) override;
+
+	virtual const IModelVal *val() const override { return &m_val; }
+
+	virtual IModelVal *val() override { return &m_val; }
+
+	virtual ModelFieldFlag flags() const override { return m_flags; }
+
+	virtual void clearFlag(ModelFieldFlag flags) override {
+		m_flags = (m_flags & (~flags));
 	}
 
-	bool is_flag_set(ModelFieldFlags flags) const {
+	virtual void setFlag(ModelFieldFlag flags) override {
+		m_flags = (m_flags | flags);
+	}
+
+	virtual bool isFlagSet(ModelFieldFlag flags) const override {
 		return ((m_flags & flags) == flags);
 	}
 
 protected:
-	ModelField						*m_parent;
+	IModelField						*m_parent;
 
 	// Typically only really used for scalar fields
 	ModelVal						m_val;
 
-	std::vector<ModelFieldUP>		m_fields;
-	std::vector<ModelConstraintUP>	m_constraints;
-	ModelFieldFlags					m_flags;
+	std::vector<IModelFieldUP>		m_fields;
+	std::vector<IModelConstraintUP>	m_constraints;
+	ModelFieldFlag					m_flags;
 
 };
 

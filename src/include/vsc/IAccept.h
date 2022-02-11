@@ -7,7 +7,7 @@
 
 #pragma once
 #include <memory>
-#include "IVisitor.h"
+#include "vsc/IVisitor.h"
 
 namespace vsc {
 

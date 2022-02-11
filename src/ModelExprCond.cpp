@@ -10,9 +10,9 @@
 namespace vsc {
 
 ModelExprCond::ModelExprCond(
-		ModelExpr		*cond,
-		ModelExpr		*true_e,
-		ModelExpr		*false_e) :
+		IModelExpr		*cond,
+		IModelExpr		*true_e,
+		IModelExpr		*false_e) :
 			m_cond(cond), m_true_e(true_e), m_false_e(false_e) {
 	// TODO Auto-generated constructor stub
 

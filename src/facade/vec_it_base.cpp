@@ -10,8 +10,11 @@
 namespace vsc {
 namespace facade {
 
-vec_it_base::vec_it_base() {
-	// TODO Auto-generated constructor stub
+vec_it_base::vec_it_base(const expr_base &it) {
+
+}
+
+vec_it_base::vec_it_base(uint32_t idx) {
 
 }
 

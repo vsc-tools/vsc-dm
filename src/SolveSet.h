@@ -24,17 +24,17 @@ public:
 
 	virtual ~SolveSet();
 
-	void add_field(ModelField *f);
+	void add_field(IModelField *f);
 
 	void add_constraint(ModelConstraint *c);
 
 	void add_soft_constraint(ModelConstraintSoft *c);
 
-	const std::vector<ModelField *> &all_fields() const {
+	const std::vector<IModelField *> &all_fields() const {
 		return m_all_fields;
 	}
 
-	const std::vector<ModelField *> &rand_fields() const {
+	const std::vector<IModelField *> &rand_fields() const {
 		return m_rand_fields;
 	}
 
@@ -52,9 +52,9 @@ public:
 	void merge(SolveSet *src);
 
 private:
-	std::unordered_set<ModelField *>			m_field_s;
-	std::vector<ModelField *>					m_all_fields;
-	std::vector<ModelField *>					m_rand_fields;
+	std::unordered_set<IModelField *>			m_field_s;
+	std::vector<IModelField *>					m_all_fields;
+	std::vector<IModelField *>					m_rand_fields;
 	std::vector<ModelFieldVec *>				m_constrained_sz_vec;
 	std::unordered_set<ModelConstraint *>		m_constraint_s;
 	std::vector<ModelConstraint *>				m_constraints;

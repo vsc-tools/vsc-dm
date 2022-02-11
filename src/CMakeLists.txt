@@ -26,6 +26,7 @@ target_link_libraries(vsc
 	cadical
 	gmp
 	)
+add_dependencies(vsc Boolector Bitwuzla)
 
 add_library(vsc_static STATIC ${libvsc_SRC})
 
@@ -41,7 +42,7 @@ target_link_directories(vsc_static PRIVATE
     ${CMAKE_BINARY_DIR}/lib64
     )
 
-#add_dependencies(vsc_static Boolector Bitwuzla)
+add_dependencies(vsc_static Boolector Bitwuzla)
 
 add_subdirectory(facade)
 

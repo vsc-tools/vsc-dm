@@ -78,7 +78,7 @@ void constraint::build() {
 
 		ctor::inst()->pop_constraint_scope();
 		DEBUG("Adding constraint body (%d statements)", c->constraints().size());
-		ctor::inst()->build_field()->add_constraint(c);
+		ctor::inst()->build_field()->addConstraint(c);
 	}
 	DEBUG_LEAVE("build(phase=%d)", ctor::inst()->build_phase());
 }

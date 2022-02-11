@@ -49,12 +49,12 @@ TEST_F(TestFacadeSmoke, attr_assign) {
 
 	c->a = 5;
 	c->b = 7;
-	ASSERT_EQ(c->a, 5);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 5);
+	ASSERT_EQ(c->b(), 7);
 
 	c->a = c->b;
-	ASSERT_EQ(c->a, 7);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 7);
+	ASSERT_EQ(c->b(), 7);
 }
 
 TEST_F(TestFacadeSmoke, attr_assign_2) {
@@ -70,12 +70,12 @@ TEST_F(TestFacadeSmoke, attr_assign_2) {
 
 	c->a = 5;
 	c->b = 7;
-	ASSERT_EQ(c->a, 5);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 5);
+	ASSERT_EQ(c->b(), 7);
 
 	c->a = c->b;
-	ASSERT_EQ(c->a, 7);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 7);
+	ASSERT_EQ(c->b(), 7);
 }
 
 TEST_F(TestFacadeSmoke, attr_assign_3) {
@@ -91,15 +91,15 @@ TEST_F(TestFacadeSmoke, attr_assign_3) {
 
 	c->a = 5;
 	c->b = 7;
-	ASSERT_EQ(c->a, 5);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 5);
+	ASSERT_EQ(c->b(), 7);
 
 	c->a = c->b;
-	ASSERT_EQ(c->a, 7);
-	ASSERT_EQ(c->b, 7);
+	ASSERT_EQ(c->a(), 7);
+	ASSERT_EQ(c->b(), 7);
 
 	fprintf(stdout, "a=%lld\n",
-			(int64_t)c->a);
+			(int64_t)c->a());
 }
 
 TEST_F(TestFacadeSmoke, smoke_inh) {
@@ -143,8 +143,10 @@ TEST_F(TestFacadeSmoke, smoke_inh_attr) {
 		rand_attr<unsigned int>	c {"c"};
 
 		constraint				ab_c {"ab_c", [this] {
-			a() == b();
-			b() == c();
+			/*
+			a == b;
+			b == c;
+			 */
 		}};
 	};
 
@@ -223,10 +225,10 @@ TEST_F(TestFacadeSmoke, constraint_expr) {
 
 	for (uint32_t i=0; i<1000; i++) {
 		c->randomize();
-		ASSERT_NE(c->a, 0);
-		ASSERT_NE(c->b, 0);
-		ASSERT_NE(c->c, 0);
-		ASSERT_NE(c->a, c->c);
+		ASSERT_NE(c->a(), 0);
+		ASSERT_NE(c->b(), 0);
+		ASSERT_NE(c->c(), 0);
+		ASSERT_NE(c->a(), c->c());
 	}
 
 }

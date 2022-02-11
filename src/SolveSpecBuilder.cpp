@@ -48,20 +48,20 @@ SolveSpecBuilder::~SolveSpecBuilder() {
 }
 
 SolveSpec *SolveSpecBuilder::build(
-			const std::vector<ModelField *>			&fields,
+			const std::vector<IModelField *>		&fields,
 			const std::vector<ModelConstraint *>	&constraints
 			) {
 	DEBUG_ENTER("build %d fields %d constraints", fields.size(), constraints.size());
 
 	m_pass = 0;
-	for (std::vector<ModelField *>::const_iterator
+	for (std::vector<IModelField *>::const_iterator
 			it=fields.begin();
 			it!=fields.end(); it++) {
 		(*it)->accept(this);
 	}
 
 	m_pass = 1;
-	for (std::vector<ModelField *>::const_iterator
+	for (std::vector<IModelField *>::const_iterator
 			it=fields.begin();
 			it!=fields.end(); it++) {
 		(*it)->accept(this);
@@ -79,7 +79,7 @@ SolveSpec *SolveSpecBuilder::build(
 		}
 	}
 
-	std::vector<ModelField *> unconstrained;
+	std::vector<IModelField *> unconstrained;
 
 	SolveSpec *spec = new SolveSpec(
 			solvesets,
@@ -89,12 +89,12 @@ SolveSpec *SolveSpecBuilder::build(
 	return spec;
 }
 
-void SolveSpecBuilder::visitDataTypeInt(DataTypeInt *t) {
+void SolveSpecBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt");
 
 	if (m_pass == 0) {
 		// Save the field
-		ModelField *field = m_field_s.back();
+		IModelField *field = m_field_s.back();
 		auto it = m_unconstrained_m.find(field);
 
 		if (it == m_unconstrained_m.end()) {
@@ -135,7 +135,7 @@ void SolveSpecBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
 	DEBUG_LEAVE("visitModelExprFieldRef");
 }
 
-void SolveSpecBuilder::visitModelField(ModelField *f) {
+void SolveSpecBuilder::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
 	m_field_s.push_back(f);
 	VisitorBase::visitModelField(f);
@@ -157,9 +157,9 @@ void SolveSpecBuilder::constraint_leave(ModelConstraint *c) {
 	}
 }
 
-void SolveSpecBuilder::process_fieldref(ModelField *f) {
+void SolveSpecBuilder::process_fieldref(IModelField *f) {
 	DEBUG_ENTER("process_fieldref %s", f->name().c_str());
-	std::unordered_map<ModelField *, SolveSet *>::const_iterator f_it;
+	std::unordered_map<IModelField *, SolveSet *>::const_iterator f_it;
 
 	if ((f_it=m_solveset_field_m.find(f)) != m_solveset_field_m.end()) {
 		// This field is part of an existing solveset
@@ -176,7 +176,7 @@ void SolveSpecBuilder::process_fieldref(ModelField *f) {
 			DEBUG("Must merge this solve-set with the active one");
 
 			// Relink fields into the new consolidated solveset
-			for (std::vector<ModelField *>::const_iterator
+			for (std::vector<IModelField *>::const_iterator
 					it=f_it->second->all_fields().begin();
 					it!=f_it->second->all_fields().end(); it++) {
 				// Update the solveset this field is mapped to

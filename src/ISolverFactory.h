@@ -28,7 +28,7 @@
 #include <memory>
 #include <vector>
 
-#include "ISolver.h"
+#include "vsc/ISolver.h"
 
 namespace vsc {
 

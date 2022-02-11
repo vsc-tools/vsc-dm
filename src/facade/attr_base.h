@@ -40,9 +40,9 @@ public:
 
 	void idx(int32_t i) { m_idx = i; }
 
-	ModelField *field() const { return m_field; }
+	IModelField *field() const { return m_field; }
 
-	ModelField *release() { return m_field_u.release(); }
+	IModelField *release() { return m_field_u.release(); }
 
 protected:
 

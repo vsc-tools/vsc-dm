@@ -6,20 +6,25 @@ find_package(Threads REQUIRED)
 include (ExternalProject)
 
 ExternalProject_Add(
-  gtest
-  #  URL https://github.com/google/googletest/archive/master.zip
-  URL https://github.com/google/googletest/archive/refs/tags/release-1.11.0.zip
-  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-  # Disable install step
-  INSTALL_COMMAND ""
+  GTEST
+  PREFIX gtest
+  SOURCE_DIR ${PACKAGES_DIR}/gtest
+  CMAKE_CACHE_ARGS
+    -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
+    -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+    -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+    -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
+    -DCMAKE_BUILD_TYPE:STRING=Release
   )
   
-ExternalProject_Get_Property(gtest source_dir binary_dir)
+ExternalProject_Get_Property(GTEST source_dir binary_dir)
 
 # find_package(Gtest)
 
 add_library(libgtest IMPORTED STATIC GLOBAL)
-add_dependencies(libgtest gtest)
+add_dependencies(libgtest GTEST)
 
 set_target_properties(libgtest PROPERTIES
     "IMPORTED_LOCATION" "${binary_dir}/lib/libgtest.a"
@@ -71,6 +76,7 @@ target_link_libraries(test_libvsc
 	libgtest 
 	libgmock
 	)
+add_dependencies(test_libvsc GTEST)
 #set_property(TARGET test_libvsc PROPERTY INTERPROCEDURAL_OPTIMIZATION OFF)
 
 gtest_discover_tests(test_libvsc)

@@ -23,7 +23,7 @@
 
 namespace vsc {
 
-ModelExprFieldRef::ModelExprFieldRef(ModelField *field) : m_field(field) {
+ModelExprFieldRef::ModelExprFieldRef(IModelField *field) : m_field(field) {
 
 }
 

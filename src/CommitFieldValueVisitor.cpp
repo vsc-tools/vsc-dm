@@ -32,15 +32,15 @@ CommitFieldValueVisitor::~CommitFieldValueVisitor() {
 	// TODO Auto-generated destructor stub
 }
 
-void CommitFieldValueVisitor::commit(ModelField *f) {
+void CommitFieldValueVisitor::commit(IModelField *f) {
 	f->accept(this);
 }
 
-void CommitFieldValueVisitor::visitDataTypeInt(DataTypeInt *t) {
+void CommitFieldValueVisitor::visitDataTypeInt(IDataTypeInt *t) {
 
 }
 
-void CommitFieldValueVisitor::visitModelField(ModelField *f) {
+void CommitFieldValueVisitor::visitModelField(IModelField *f) {
 	m_solver->setFieldValue(f);
 }
 

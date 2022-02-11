@@ -54,7 +54,7 @@ Randomizer::~Randomizer() {
 }
 
 bool Randomizer::randomize(
-			const std::vector<ModelField *>			&fields,
+			const std::vector<IModelField *>		&fields,
 			const std::vector<ModelConstraint *>	&constraints,
 			bool									diagnose_failures) {
 	bool ret = true;

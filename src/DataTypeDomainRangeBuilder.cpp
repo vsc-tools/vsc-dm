@@ -18,13 +18,13 @@ DataTypeDomainRangeBuilder::~DataTypeDomainRangeBuilder() {
 	// TODO Auto-generated destructor stub
 }
 
-ModelValRangelist DataTypeDomainRangeBuilder::build(DataType *t) {
+ModelValRangelist DataTypeDomainRangeBuilder::build(IDataType *t) {
 	m_domain.clear();
 	t->accept(this);
 	return m_domain;
 }
 
-void DataTypeDomainRangeBuilder::visitDataTypeInt(DataTypeInt *t) {
+void DataTypeDomainRangeBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	if (t->is_signed()) {
 		m_domain.setIsSigned(true);
 		if (t->width() > 64) {

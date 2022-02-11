@@ -7,6 +7,7 @@
 
 #pragma once
 #include <vector>
+#include "vsc/IDataTypeStruct.h"
 #include "DataType.h"
 
 namespace vsc {
@@ -19,13 +20,15 @@ using TypeConstraintUP=std::unique_ptr<TypeConstraint>;
 
 class DataTypeStruct;
 using DataTypeStructUP=std::unique_ptr<DataTypeStruct>;
-class DataTypeStruct : public DataType {
+class DataTypeStruct : public IDataType {
 public:
 	DataTypeStruct(const std::string &name);
 
 	virtual ~DataTypeStruct();
 
-	const std::string &name() const { return m_name; }
+	virtual const std::string &name() const override {
+		return m_name;
+	}
 
 private:
 	std::string							m_name;

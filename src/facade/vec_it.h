@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "vec_it_base.h"
 
 namespace vsc {
 namespace facade {
@@ -18,8 +19,19 @@ class vec_it_idx {
 public:
 };
 
-template <> class vec_it<int> {
+template <int W> class vec_it<ui_t<W>> : public vec_it_base {
 public:
+	vec_it(const expr_base &idx) : vec_it_base(idx) { }
+
+	vec_it(uint32_t idx) : vec_it_base(idx) { }
+
+	uint64_t operator ()() const {
+		return 0;
+	}
+
+	void operator ()(uint64_t v) {
+
+	}
 
 };
 

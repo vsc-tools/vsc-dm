@@ -17,9 +17,9 @@ public:
 
 	virtual ~SetFieldUsedRandVisitor();
 
-	void set(ModelField *f);
+	void set(IModelField *f);
 
-	virtual void visitModelField(ModelField *f) override;
+	virtual void visitModelField(IModelField *f) override;
 
 private:
 	std::vector<bool>		m_decl_rand_s;

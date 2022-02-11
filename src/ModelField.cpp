@@ -24,13 +24,13 @@
 
 namespace vsc {
 
-ModelField::ModelField() : m_parent(0), m_flags(0) {
+ModelField::ModelField() : m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
 	// TODO Auto-generated constructor stub
 
 }
 
-ModelField::ModelField(DataType *type) :
-		m_parent(0), m_val(32), m_flags(0) {
+ModelField::ModelField(IDataType *type) :
+		m_parent(0), m_val(32), m_flags(ModelFieldFlag::NoFlags) {
 	if (type) {
 		m_val = ModelVal(DataTypeWidthVisitor().width(type).second);
 	}
@@ -43,14 +43,14 @@ ModelField::~ModelField() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelField::add_constraint(ModelConstraint *c) {
-	m_constraints.push_back(ModelConstraintUP(c));
+void ModelField::addConstraint(IModelConstraint *c) {
+	m_constraints.push_back(IModelConstraintUP(c));
 }
 
-void ModelField::add_field(ModelField *field) {
-	field->parent(this);
-	m_fields.push_back(ModelFieldUP(field));
+void ModelField::addField(IModelField *field) {
+	field->setParent(this);
+	m_fields.push_back(IModelFieldUP(field));
 }
-	void add_constraint(ModelConstraint *c);
+
 
 } /* namespace vsc */

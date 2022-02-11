@@ -49,49 +49,49 @@ VisitorBase::~VisitorBase() {
 	// TODO Auto-generated destructor stub
 }
 
-void VisitorBase::visitDataTypeInt(DataTypeInt *t) {
+void VisitorBase::visitDataTypeInt(IDataTypeInt *t) {
 
 }
 
-void VisitorBase::visitDataTypeStruct(DataTypeStruct *t) {
+void VisitorBase::visitDataTypeStruct(IDataTypeStruct *t) {
 
 }
 
-void VisitorBase::visitModelConstraint(ModelConstraint *c) {
+void VisitorBase::visitModelConstraint(IModelConstraint *c) {
 
 }
 
-void VisitorBase::visitModelConstraintBlock(ModelConstraintBlock *c) {
+void VisitorBase::visitModelConstraintBlock(IModelConstraintBlock *c) {
 	DEBUG_ENTER("visitModelConstraintBlock");
 	visitModelConstraintScope(c);
 	DEBUG_LEAVE("visitModelConstraintBlock");
 }
 
-void VisitorBase::visitModelConstraintExpr(ModelConstraintExpr *c) {
+void VisitorBase::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr");
 	visitModelConstraint(c);
 	c->expr()->accept(this);
 	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
-void VisitorBase::visitModelConstraintIf(ModelConstraintIf *c) {
+void VisitorBase::visitModelConstraintIf(IModelConstraintIf *c) {
 	DEBUG_ENTER("visitModelConstraintIf");
 	c->cond()->accept(this);
-	c->true_c()->accept(this);
-	if (c->false_c()) {
-		c->false_c()->accept(this);
+	c->getTrue()->accept(this);
+	if (c->getFalse()) {
+		c->getFalse()->accept(this);
 	}
 	DEBUG_LEAVE("visitModelConstraintIf");
 }
 
-void VisitorBase::visitModelConstraintImplies(ModelConstraintImplies *c) {
+void VisitorBase::visitModelConstraintImplies(IModelConstraintImplies *c) {
 	DEBUG_ENTER("visitModelConstraintImplies");
 	c->cond()->accept(this);
 	c->body()->accept(this);
 	DEBUG_LEAVE("visitModelConstraintImplies");
 }
 
-void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
+void VisitorBase::visitModelConstraintScope(IModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope n=%d", c->constraints().size());
 	for (auto it=c->constraints().begin();
 			it!=c->constraints().end(); it++) {
@@ -100,7 +100,7 @@ void VisitorBase::visitModelConstraintScope(ModelConstraintScope *c) {
 	DEBUG_LEAVE("visitModelConstraintScope n=%d", c->constraints().size());
 }
 
-void VisitorBase::visitModelConstraintSoft(ModelConstraintSoft *c) {
+void VisitorBase::visitModelConstraintSoft(IModelConstraintSoft *c) {
 	DEBUG_ENTER("visitModelConstraintSoft");
 	c->constraint()->accept(this);
 	DEBUG_LEAVE("visitModelConstraintSoft");
@@ -207,13 +207,13 @@ void VisitorBase::visitModelExprVecSubscript(ModelExprVecSubscript *e) {
 	DEBUG_LEAVE("visitModelExprVecSubscript");
 }
 
-void VisitorBase::visitModelField(ModelField *f) {
+void VisitorBase::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s n_fields=%d n_constraints=%d",
 			f->name().c_str(),
 			f->fields().size(),
 			f->constraints().size());
-	if (f->datatype()) {
-		f->datatype()->accept(this);
+	if (f->getDataType()) {
+		f->getDataType()->accept(this);
 	}
 	for (auto it=f->fields().begin();
 			it!=f->fields().end(); it++) {

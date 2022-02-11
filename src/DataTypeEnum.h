@@ -9,10 +9,11 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
+#include "vsc/IDataTypeEnum.h"
 
 namespace vsc {
 
-class DataTypeEnum {
+class DataTypeEnum : public IDataTypeEnum {
 public:
 	DataTypeEnum();
 

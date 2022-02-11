@@ -73,7 +73,7 @@ bool rand_obj::randomize() {
 	Randomizer randomizer(
 			solver_factory(),
 			m_randstate.get());
-	std::vector<ModelField *> 		fields;
+	std::vector<IModelField *> 		fields;
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
 
@@ -94,7 +94,7 @@ bool rand_obj::randomize_with(
 	Randomizer randomizer(
 			solver_factory(),
 			m_randstate.get());
-	std::vector<ModelField *> 		fields;
+	std::vector<IModelField *> 		fields;
 	std::vector<ModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
 
@@ -159,7 +159,7 @@ void rand_obj::build() {
 		m_field = new ModelFieldRoot(0, name());
 
 		if (ctor::inst()->build_field()) {
-			ctor::inst()->build_field()->add_field(m_field);
+			ctor::inst()->build_field()->addField(m_field);
 		} else {
 			m_field_u = ModelFieldRootUP(m_field);
 		}
@@ -253,7 +253,7 @@ void rand_obj::add_field(attr_base *f) {
 	f->idx(m_fields.size());
 	m_fields.push_back(f);
 
-	m_field->add_field(f->field());
+	m_field->addField(f->field());
 }
 
 ISolverFactory *rand_obj::solver_factory() {

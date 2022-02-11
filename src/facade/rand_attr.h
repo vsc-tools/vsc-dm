@@ -20,6 +20,7 @@
  */
 
 #pragma once
+#include <type_traits>
 #include "attr_cls.h"
 #include "attr_scalar.h"
 #include "enum_t.h"
@@ -51,10 +52,48 @@ public:
 			const scope &name,
 			const int_t	&ival=int_t(false, W, 0)) :
 				attr_scalar(false, W, ival) {
-		m_field->set_flag(ModelFieldFlag_DeclRand);
+		m_field->setFlag(ModelFieldFlag::DeclRand);
 	}
 
-	operator uint64_t() const { return val_u(); }
+	uint64_t operator ()() const {
+		return val_u();
+	}
+
+	void operator ()(uint64_t v) {
+		return val_u(v);
+	}
+
+	/*
+	template <typename = typename std::enable_if<(W<=8)>::type> void operator()(uint8_t v) {
+		val_u(v);
+	}
+	 */
+
+	/*
+	template <typename = typename std::enable_if<(W>8 && W<=16)>::type> uint16_t operator ()() const {
+		return val_u();
+	}
+
+	template <typename = typename std::enable_if<(W>8 && W<=16)>::type> void operator()(uint16_t v) {
+		val_u(v);
+	}
+
+	template <typename = typename std::enable_if<(W>16 && W<=32)>::type> uint32_t operator ()() const {
+		return val_u();
+	}
+
+	template <typename = typename std::enable_if<(W>16 && W<=32)>::type> void operator()(uint32_t v) {
+		val_u(v);
+	}
+
+	template <typename = typename std::enable_if<(W>32 && W<=64)>::type> uint64_t operator ()() const {
+		return val_u();
+	}
+
+	template <typename = typename std::enable_if<(W>32 && W<=64)>::type> void operator()(uint64_t v) {
+		val_u(v);
+	}
+	 */
 
 	const rand_attr<ui_t<W>> &operator = (uint64_t v) {
 		val_u(v);
@@ -103,7 +142,7 @@ private:
 			const scope 	&name,
 			bool			parentless) :
 		attr_scalar(false, W, int_t(false, W, 0), parentless) {
-		m_field->set_flag(ModelFieldFlag_DeclRand);
+		m_field->setFlag(ModelFieldFlag::DeclRand);
 	}
 };
 
@@ -114,10 +153,12 @@ public:
 			const scope &name,
 			const int_t &ival=int_t(true, W, 0)) :
 				attr_scalar(true, W, ival) {
-		m_field->set_flag(ModelFieldFlag_DeclRand);
+		m_field->setFlag(ModelFieldFlag::DeclRand);
 	}
 
-	operator int64_t () const { return val_s(); }
+	int64_t operator ()() const { return val_s(); }
+
+	void operator ()(int64_t v) { val_s(v); }
 
 	rand_attr<si_t<W>> *operator -> () {
 		return this;
@@ -155,7 +196,7 @@ public:
 			const scope		&name,
 			const int_t		&ival=int_t(true, 32, 0)) :
 				attr_scalar(true, 32, ival) {
-		m_field->set_flag(ModelFieldFlag_DeclRand);
+		m_field->setFlag(ModelFieldFlag::DeclRand);
 	}
 
 	int32_t operator ()() { return i32(); }
@@ -170,7 +211,7 @@ public:
 			const scope		&name,
 			const int_t		&ival=int_t(false, 32, 0)) :
 				attr_scalar(false, 32, ival) {
-		m_field->set_flag(ModelFieldFlag_DeclRand);
+		m_field->setFlag(ModelFieldFlag::DeclRand);
 	}
 
 	uint32_t operator ()() { return u32(); }

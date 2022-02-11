@@ -7,12 +7,13 @@
 
 #pragma once
 #include <unordered_map>
+#include "vsc/IContext.h"
 #include "DataTypeInt.h"
 #include "DataTypeStruct.h"
 
 namespace vsc {
 
-class Context {
+class Context : public IContext {
 public:
 	Context();
 

@@ -82,7 +82,7 @@ void attr_scalar::build() {
 	DEBUG_ENTER("build(phase=%d)", ctor::inst()->build_phase());
 	if (ctor::inst()->build_phase() == 0) {
 		if (ctor::inst()->build_field()) {
-			ctor::inst()->build_field()->add_field(m_field);
+			ctor::inst()->build_field()->addField(m_field);
 		} else {
 			m_field_u = ModelFieldUP(m_field);
 		}

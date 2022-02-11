@@ -6,15 +6,14 @@
  */
 
 #pragma once
-#include "vsc/IModelExpr.h"
-#include "vsc/IModelConstraint.h"
+#include "vsc/IModelConstraintIf.h"
 #include "ModelExpr.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
 
-class ModelConstraintIf : public ModelConstraint {
+class ModelConstraintIf : public IModelConstraintIf {
 public:
 	ModelConstraintIf(
 			IModelExpr				*cond,
@@ -23,17 +22,23 @@ public:
 
 	virtual ~ModelConstraintIf();
 
-	IModelExpr *cond() const { return m_cond.get(); }
+	virtual IModelExpr *cond() const override {
+		return m_cond.get();
+	}
 
-	IModelConstraint *true_c() const { return m_true_c.get(); }
+	virtual IModelConstraint *getTrue() const override {
+		return m_true_c.get();
+	}
 
-	void true_c(IModelConstraint *c) {
+	virtual void setTrue(IModelConstraint *c) override {
 		m_true_c = IModelConstraintUP(c);
 	}
 
-	IModelConstraint *false_c() const { return m_false_c.get(); }
+	virtual IModelConstraint *getFalse() const override {
+		return m_false_c.get();
+	}
 
-	void false_c(IModelConstraint *c) {
+	virtual void setFalse(IModelConstraint *c) override {
 		m_false_c = IModelConstraintUP(c);
 	}
 

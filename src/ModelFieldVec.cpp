@@ -9,9 +9,9 @@
 
 namespace vsc {
 
-ModelFieldVec::ModelFieldVec(ModelField *size) : m_size(size) {
-	m_size->parent(this);
-	m_size->set_flag(ModelFieldFlag_VecSize);
+ModelFieldVec::ModelFieldVec(IModelField *size) : m_size(size) {
+	m_size->setParent(this);
+	m_size->setFlag(ModelFieldFlag::VecSize);
 }
 
 ModelFieldVec::~ModelFieldVec() {

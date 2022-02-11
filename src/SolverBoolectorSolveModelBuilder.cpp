@@ -442,7 +442,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 
 void SolverBoolectorSolveModelBuilder::visitModelField(ModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
-	if (f->is_flag_set(ModelFieldFlag_UsedRand)) {
+	if (f->is_flag_set(ModelFieldFlag::UsedRand)) {
 		// Create a solver-variable representation for this
 		m_field_s.push_back(f);
 		if (f->datatype()) {

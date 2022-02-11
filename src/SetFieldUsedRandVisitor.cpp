@@ -46,24 +46,24 @@ SetFieldUsedRandVisitor::~SetFieldUsedRandVisitor() {
 	// TODO Auto-generated destructor stub
 }
 
-void SetFieldUsedRandVisitor::set(ModelField *f) {
+void SetFieldUsedRandVisitor::set(IModelField *f) {
 	DEBUG_ENTER("set %s", f->name().c_str());
 	m_decl_rand_s.clear();
 	f->accept(this);
 	DEBUG_LEAVE("set %s", f->name().c_str());
 }
 
-void SetFieldUsedRandVisitor::visitModelField(ModelField *f) {
+void SetFieldUsedRandVisitor::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s flags=0x%08x",
 			f->name().c_str(), f->flags());
 	if ((m_decl_rand_s.size() == 0 || m_decl_rand_s.back()) &&
-			f->is_flag_set(ModelFieldFlag_DeclRand)) {
-		f->set_flag(ModelFieldFlag_UsedRand);
+			f->isFlagSet(ModelFieldFlag::DeclRand)) {
+		f->setFlag(ModelFieldFlag::UsedRand);
 	}
 
 	m_decl_rand_s.push_back(
 			(m_decl_rand_s.size() == 0 ||
-				f->is_flag_set(ModelFieldFlag_DeclRand)));
+				f->isFlagSet(ModelFieldFlag::DeclRand)));
 	VisitorBase::visitModelField(f);
 	m_decl_rand_s.pop_back();
 

@@ -33,16 +33,16 @@ SolveSet::~SolveSet() {
 	// TODO Auto-generated destructor stub
 }
 
-void SolveSet::add_field(ModelField *f) {
+void SolveSet::add_field(IModelField *f) {
 	if (m_field_s.find(f) == m_field_s.end()) {
 		m_all_fields.push_back(f);
-		if (f->is_flag_set(ModelFieldFlag_UsedRand)) {
+		if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
 			m_rand_fields.push_back(f);
 		}
 		// If this is the size of a vector, save the vec
-		if (f->is_flag_set(ModelFieldFlag_VecSize)) {
+		if (f->isFlagSet(ModelFieldFlag::VecSize)) {
 			m_constrained_sz_vec.push_back(
-					static_cast<ModelFieldVec *>(f->parent()));
+					static_cast<ModelFieldVec *>(f->getParent()));
 		}
 		m_field_s.insert(f);
 	}

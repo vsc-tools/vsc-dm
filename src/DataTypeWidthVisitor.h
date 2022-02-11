@@ -16,9 +16,9 @@ public:
 
 	virtual ~DataTypeWidthVisitor();
 
-	std::pair<bool,int32_t> width(DataType *t);
+	std::pair<bool,int32_t> width(IDataType *t);
 
-	virtual void visitDataTypeInt(DataTypeInt *t) override;
+	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
 private:
 	bool					m_is_signed;

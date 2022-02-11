@@ -29,16 +29,16 @@
 
 namespace vsc {
 
-class DataTypeInt;
-class DataTypeStruct;
+class IDataTypeInt;
+class IDataTypeStruct;
 
-class ModelConstraint;
-class ModelConstraintBlock;
-class ModelConstraintExpr;
-class ModelConstraintIf;
-class ModelConstraintImplies;
-class ModelConstraintScope;
-class ModelConstraintSoft;
+class IModelConstraint;
+class IModelConstraintBlock;
+class IModelConstraintExpr;
+class IModelConstraintIf;
+class IModelConstraintImplies;
+class IModelConstraintScope;
+class IModelConstraintSoft;
 
 class ModelCoverCross;
 class ModelCovergroup;
@@ -56,7 +56,7 @@ class ModelExprVecSubscript;
 class ModelExprUnary;
 class ModelExprVal;
 
-class ModelField;
+class IModelField;
 class ModelFieldRoot;
 class ModelFieldType;
 class ModelFieldVec;
@@ -69,23 +69,23 @@ public:
 
 	virtual ~IVisitor() { }
 
-	virtual void visitDataTypeInt(DataTypeInt *t) = 0;
+	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;
 
-	virtual void visitDataTypeStruct(DataTypeStruct *t) = 0;
+	virtual void visitDataTypeStruct(IDataTypeStruct *t) = 0;
 
-	virtual void visitModelConstraint(ModelConstraint *c) = 0;
+	virtual void visitModelConstraint(IModelConstraint *c) = 0;
 
-	virtual void visitModelConstraintBlock(ModelConstraintBlock *c) = 0;
+	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) = 0;
 
-	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) = 0;
+	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) = 0;
 
-	virtual void visitModelConstraintIf(ModelConstraintIf *c) = 0;
+	virtual void visitModelConstraintIf(IModelConstraintIf *c) = 0;
 
-	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) = 0;
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) = 0;
 
-	virtual void visitModelConstraintScope(ModelConstraintScope *c) = 0;
+	virtual void visitModelConstraintScope(IModelConstraintScope *c) = 0;
 
-	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) = 0;
+	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) = 0;
 
 	virtual void visitModelCoverCross(ModelCoverCross *c) = 0;
 
@@ -115,7 +115,7 @@ public:
 
 	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) = 0;
 
-	virtual void visitModelField(ModelField *f) = 0;
+	virtual void visitModelField(IModelField *f) = 0;
 
 	virtual void visitModelFieldRoot(ModelFieldRoot *f) = 0;
 

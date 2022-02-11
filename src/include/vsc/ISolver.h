@@ -25,8 +25,8 @@
  */
 
 #pragma once
-#include "ModelConstraint.h"
-#include "ModelField.h"
+#include "vsc/IModelConstraint.h"
+#include "vsc/IModelField.h"
 
 namespace vsc {
 
@@ -42,19 +42,19 @@ public:
 	virtual ~ISolver() { }
 
 	// Creates solver data for a field
-	virtual void initField(ModelField *f) = 0;
+	virtual void initField(IModelField *f) = 0;
 
 	// Creates solver data for a constraint
-	virtual void initConstraint(ModelConstraint *c) = 0;
+	virtual void initConstraint(IModelConstraint *c) = 0;
 
-	virtual void addAssume(ModelConstraint *c) = 0;
+	virtual void addAssume(IModelConstraint *c) = 0;
 
-	virtual void addAssert(ModelConstraint *c) = 0;
+	virtual void addAssert(IModelConstraint *c) = 0;
 
 	virtual bool isSAT() = 0;
 
 	// Assign a value to a scalar field
-	virtual void setFieldValue(ModelField *f) = 0;
+	virtual void setFieldValue(IModelField *f) = 0;
 
 };
 

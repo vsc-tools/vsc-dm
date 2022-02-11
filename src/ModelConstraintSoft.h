@@ -6,18 +6,21 @@
  */
 
 #pragma once
+#include "vsc/IModelConstraintSoft.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintExpr.h"
 
 namespace vsc {
 
-class ModelConstraintSoft : public ModelConstraint {
+class ModelConstraintSoft : public IModelConstraintSoft {
 public:
 	ModelConstraintSoft(ModelConstraintExpr *constraint);
 
 	virtual ~ModelConstraintSoft();
 
-	ModelConstraintExpr *constraint() const { return m_constraint.get(); }
+	virtual ModelConstraintExpr *constraint() const override {
+		return m_constraint.get();
+	}
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintSoft(this); }
 

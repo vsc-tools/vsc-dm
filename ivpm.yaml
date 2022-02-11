@@ -14,8 +14,8 @@ package:
        url: https://github.com/boolector/btor2tools.git
      - name: cadical
        url: https://github.com/mballance/cadical.git
-     - name: glog
-       url: https://github.com/google/glog.git
+     - name: gtest
+       url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
      - name: gmp
        url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
      - name: mkdv
