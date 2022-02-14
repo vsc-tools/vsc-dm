@@ -50,31 +50,31 @@ public:
 	Btor *btor() const { return m_btor; }
 
 	// Creates solver data for a field (and possibly sub-fields)
-	virtual void initField(ModelField *f) override;
+	virtual void initField(IModelField *f) override;
 
 	// Creates solver data for a constraint
-	virtual void initConstraint(ModelConstraint *c) override;
+	virtual void initConstraint(IModelConstraint *c) override;
 
-	virtual void addAssume(ModelConstraint *c) override;
+	virtual void addAssume(IModelConstraint *c) override;
 
-	virtual void addAssert(ModelConstraint *c) override;
+	virtual void addAssert(IModelConstraint *c) override;
 
 	virtual bool isSAT() override;
 
-	virtual void setFieldValue(ModelField *f) override;
+	virtual void setFieldValue(IModelField *f) override;
 
 	BoolectorSort get_sort(int32_t width);
 
-	void addFieldData(ModelField *f, BoolectorNode *n);
+	void addFieldData(IModelField *f, BoolectorNode *n);
 
-	BoolectorNode *findFieldData(ModelField *f);
+	BoolectorNode *findFieldData(IModelField *f);
 
 
 private:
 	Btor													*m_btor;
 
-	std::unordered_map<ModelField *,BoolectorNode *>		m_field_node_m;
-	std::unordered_map<ModelConstraint *,BoolectorNode *>	m_constraint_node_m;
+	std::unordered_map<IModelField *,BoolectorNode *>		m_field_node_m;
+	std::unordered_map<IModelConstraint *,BoolectorNode *>	m_constraint_node_m;
 	std::unordered_map<uint32_t, BoolectorSort>				m_sort_m;
 	bool													m_issat_valid;
 	bool													m_issat;

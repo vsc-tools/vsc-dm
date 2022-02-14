@@ -69,12 +69,12 @@ SolverBoolector::~SolverBoolector() {
 }
 
 	// Creates solver data for a field
-void SolverBoolector::initField(ModelField *f) {
+void SolverBoolector::initField(IModelField *f) {
 	DEBUG_ENTER("initField %s", f->name().c_str());
 
-	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
+	auto it = m_field_node_m.find(f);
 
-	if ((it=m_field_node_m.find(f)) == m_field_node_m.end()) {
+	if (it == m_field_node_m.end()) {
 		BoolectorNode *node = SolverBoolectorSolveModelBuilder(this).build(f);
 		m_field_node_m.insert({f, node});
 		DEBUG("node width: %d", boolector_get_width(m_btor, node));
@@ -85,30 +85,26 @@ void SolverBoolector::initField(ModelField *f) {
 }
 
 	// Creates solver data for a constraint
-void SolverBoolector::initConstraint(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
+void SolverBoolector::initConstraint(IModelConstraint *c) {
+	auto it = m_constraint_node_m.find(c);
 
-	if ((it=m_constraint_node_m.find(c)) == m_constraint_node_m.end()) {
+	if (it == m_constraint_node_m.end()) {
 		BoolectorNode *node = SolverBoolectorSolveModelBuilder(this).build(c);
 		m_constraint_node_m.insert({c, node});
 		m_issat_valid = false;
 	}
 }
 
-void SolverBoolector::addAssume(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
-
-	it = m_constraint_node_m.find(c);
+void SolverBoolector::addAssume(IModelConstraint *c) {
+	auto it = m_constraint_node_m.find(c);
 	// TODO: assert ) == m_field_node_m.end()) {
 
 	m_issat_valid = false;
 	boolector_assume(m_btor, it->second);
 }
 
-void SolverBoolector::addAssert(ModelConstraint *c) {
-	std::unordered_map<ModelConstraint *, BoolectorNode *>::const_iterator it;
-
-	it = m_constraint_node_m.find(c);
+void SolverBoolector::addAssert(IModelConstraint *c) {
+	auto it = m_constraint_node_m.find(c);
 
 	// TODO: assert
 
@@ -126,11 +122,10 @@ bool SolverBoolector::isSAT() {
 	return m_issat;
 }
 
-void SolverBoolector::setFieldValue(ModelField *f) {
+void SolverBoolector::setFieldValue(IModelField *f) {
 	DEBUG_ENTER("setFieldValue %s", f->name().c_str());
-	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
 
-	it = m_field_node_m.find(f);
+	auto it = m_field_node_m.find(f);
 
 	// TODO: assert
 
@@ -162,14 +157,14 @@ BoolectorSort SolverBoolector::get_sort(int32_t width) {
 	}
 }
 
-void SolverBoolector::addFieldData(ModelField *f, BoolectorNode *n) {
+void SolverBoolector::addFieldData(IModelField *f, BoolectorNode *n) {
 	m_field_node_m.insert({f, n});
 }
 
-BoolectorNode *SolverBoolector::findFieldData(ModelField *f) {
-	std::unordered_map<ModelField *, BoolectorNode *>::const_iterator it;
+BoolectorNode *SolverBoolector::findFieldData(IModelField *f) {
+	auto it = m_field_node_m.find(f);
 
-	if ((it=m_field_node_m.find(f)) != m_field_node_m.end()) {
+	if (it != m_field_node_m.end()) {
 		return it->second;
 	} else {
 		return 0;

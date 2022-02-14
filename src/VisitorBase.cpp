@@ -133,39 +133,39 @@ void VisitorBase::visitModelCoverpoint(ModelCoverpoint *c) {
 	DEBUG_LEAVE("visitModelCoverpoint");
 }
 
-void VisitorBase::visitModelExprBin(ModelExprBin *e) {
+void VisitorBase::visitModelExprBin(IModelExprBin *e) {
 	DEBUG_ENTER("visitModelExprBin");
 	e->lhs()->accept(this);
 	e->rhs()->accept(this);
 	DEBUG_LEAVE("visitModelExprBin");
 }
 
-void VisitorBase::visitModelExprCond(ModelExprCond *e) {
-	e->cond()->accept(this);
-	e->true_e()->accept(this);
-	e->false_e()->accept(this);
+void VisitorBase::visitModelExprCond(IModelExprCond *e) {
+	e->getCond()->accept(this);
+	e->getTrue()->accept(this);
+	e->getFalse()->accept(this);
 }
 
-void VisitorBase::visitModelExprFieldRef(ModelExprFieldRef *e) {
+void VisitorBase::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	e->field()->accept(this);
 	DEBUG_LEAVE("visitModelExprFieldRef");
 }
 
-void VisitorBase::visitModelExprIn(ModelExprIn *e) {
+void VisitorBase::visitModelExprIn(IModelExprIn *e) {
 	DEBUG_ENTER("visitModelExprIn");
 	e->lhs()->accept(this);
 	e->rangelist()->accept(this);
 	DEBUG_LEAVE("visitModelExprIn");
 }
 
-void VisitorBase::visitModelExprPartSelect(ModelExprPartSelect *e) {
+void VisitorBase::visitModelExprPartSelect(IModelExprPartSelect *e) {
 	DEBUG_ENTER("visitModelExprPartSelect");
 	e->lhs()->accept(this);
 	DEBUG_LEAVE("visitModelExprPartSelect");
 }
 
-void VisitorBase::visitModelExprRange(ModelExprRange *e) {
+void VisitorBase::visitModelExprRange(IModelExprRange *e) {
 	DEBUG_ENTER("visitModelExprRange");
 	e->lower()->accept(this);
 	if (e->upper()) {
@@ -174,7 +174,7 @@ void VisitorBase::visitModelExprRange(ModelExprRange *e) {
 	DEBUG_LEAVE("visitModelExprRange");
 }
 
-void VisitorBase::visitModelExprRangelist(ModelExprRangelist *e) {
+void VisitorBase::visitModelExprRangelist(IModelExprRangelist *e) {
 	DEBUG_ENTER("visitModelExprRangelist");
 	for (auto it=e->ranges().begin(); it!=e->ranges().end(); it++) {
 		(*it)->accept(this);
@@ -182,25 +182,25 @@ void VisitorBase::visitModelExprRangelist(ModelExprRangelist *e) {
 	DEBUG_LEAVE("visitModelExprRangelist");
 }
 
-void VisitorBase::visitModelExprRef(ModelExprRef *e) {
+void VisitorBase::visitModelExprRef(IModelExprRef *e) {
 	DEBUG_ENTER("visitModelExprRef");
 	e->expr()->accept(this);
 	DEBUG_LEAVE("visitModelExprRef");
 }
 
-void VisitorBase::visitModelExprUnary(ModelExprUnary *e) {
+void VisitorBase::visitModelExprUnary(IModelExprUnary *e) {
 	DEBUG_ENTER("visitModelExprUnary");
 	e->expr()->accept(this);
 	DEBUG_LEAVE("visitModelExprUnary");
 }
 
-void VisitorBase::visitModelExprVal(ModelExprVal *e) {
+void VisitorBase::visitModelExprVal(IModelExprVal *e) {
 	DEBUG_ENTER("visitModelExprVal");
 
 	DEBUG_LEAVE("visitModelExprVal");
 }
 
-void VisitorBase::visitModelExprVecSubscript(ModelExprVecSubscript *e) {
+void VisitorBase::visitModelExprVecSubscript(IModelExprVecSubscript *e) {
 	DEBUG_ENTER("visitModelExprVecSubscript");
 	e->expr()->accept(this);
 	e->subscript()->accept(this);

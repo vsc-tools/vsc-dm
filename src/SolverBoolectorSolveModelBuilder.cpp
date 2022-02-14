@@ -48,7 +48,7 @@ SolverBoolectorSolveModelBuilder::~SolverBoolectorSolveModelBuilder() {
 	// TODO Auto-generated destructor stub
 }
 
-BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelField *f) {
+BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelField *f) {
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
@@ -57,7 +57,7 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelField *f) {
 	return m_node_i.second;
 }
 
-BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelConstraint *c) {
+BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelConstraint *c) {
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
@@ -75,7 +75,7 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(ModelConstraint *c) {
 	}
 }
 
-void SolverBoolectorSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
+void SolverBoolectorSolveModelBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt width=%d", t->width());
 	BoolectorNode *n = boolector_var(m_solver->btor(),
 			m_solver->get_sort(t->width()), 0);
@@ -83,15 +83,15 @@ void SolverBoolectorSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
 	DEBUG_LEAVE("visitDataTypeInt");
 }
 
-void SolverBoolectorSolveModelBuilder::visitDataTypeStruct(DataTypeStruct *t) {
+void SolverBoolectorSolveModelBuilder::visitDataTypeStruct(IDataTypeStruct *t) {
 
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraint(ModelConstraint *c) {
+void SolverBoolectorSolveModelBuilder::visitModelConstraint(IModelConstraint *c) {
 
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraintExpr(ModelConstraintExpr *c) {
+void SolverBoolectorSolveModelBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr");
 	m_node_i = {false, 0};
 
@@ -109,16 +109,16 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintExpr(ModelConstraintE
 	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(ModelConstraintIf *c) {
+void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(IModelConstraintIf *c) {
 	DEBUG_ENTER("visitModelConstrainIf");
 	c->cond()->accept(this);
 	BoolectorNode *cond_n = toBoolNode(m_node_i.second);
 
-	c->true_c()->accept(this);
+	c->getTrue()->accept(this);
 	BoolectorNode *true_n = toBoolNode(m_node_i.second);
 
-	if (c->false_c()) {
-		c->false_c()->accept(this);
+	if (c->getFalse()) {
+		c->getFalse()->accept(this);
 		BoolectorNode *false_n = toBoolNode(m_node_i.second);
 
 		m_node_i.second = boolector_cond(
@@ -140,7 +140,7 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(ModelConstraintIf 
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelConstraintImplies(
-		ModelConstraintImplies *c) {
+		IModelConstraintImplies *c) {
 	DEBUG_ENTER("visitModelConstraintImplies");
 	c->cond()->accept(this);
 	BoolectorNode *cond_n = toBoolNode(m_node_i.second);
@@ -156,7 +156,7 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintImplies(
 	DEBUG_LEAVE("visitModelConstraintImplies");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraintScope(ModelConstraintScope *c) {
+void SolverBoolectorSolveModelBuilder::visitModelConstraintScope(IModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope");
 	BoolectorNode *result = 0;
 
@@ -184,11 +184,11 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintScope(ModelConstraint
 	DEBUG_LEAVE("visitModelConstraintScope");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraintSoft(ModelConstraintSoft *c) {
+void SolverBoolectorSolveModelBuilder::visitModelConstraintSoft(IModelConstraintSoft *c) {
 
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
+void SolverBoolectorSolveModelBuilder::visitModelExprBin(IModelExprBin *e) {
 	DEBUG_ENTER("visitModelExprBin %s", BinOp2Str_s(e->op()));
 	int32_t ctx_width = m_width_s.back();
 
@@ -312,7 +312,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 	DEBUG_LEAVE("visitModelExprBin %s", BinOp2Str_s(e->op()));
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
+void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	// Note: this should only be used for scalar fields
 	BoolectorNode *n;
 	bool is_signed = false;
@@ -335,7 +335,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef 
 			e->field()->name().c_str(), m_node_i.second);
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
+void SolverBoolectorSolveModelBuilder::visitModelExprIn(IModelExprIn *e) {
 	DEBUG_ENTER("visitModelExprIn");
 	int32_t ctx_width = m_width_s.back();
 	node_info_t lhs_i = expr(e->lhs(), ctx_width);
@@ -413,7 +413,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelExprPartSelect(
-		ModelExprPartSelect *e) {
+		IModelExprPartSelect *e) {
 	int32_t ctx_width = m_width_s.back();
 	DEBUG_ENTER("visitModelExprPartSelect");
 	node_info_t lhs_i = expr(e->lhs(), ctx_width);
@@ -428,10 +428,10 @@ void SolverBoolectorSolveModelBuilder::visitModelExprPartSelect(
 	DEBUG_LEAVE("visitModelExprPartSelect");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
+void SolverBoolectorSolveModelBuilder::visitModelExprVal(IModelExprVal *e) {
 	DEBUG_ENTER("visitModelExprVal");
-	char *bits = (char *)alloca(e->val().bits()+1);
-	e->val().to_bits(bits);
+	char *bits = (char *)alloca(e->val()->bits()+1);
+	e->val()->to_bits(bits);
 
 	DEBUG("bits=%s", bits);
 	m_node_i.second = boolector_const(m_solver->btor(), bits);
@@ -440,13 +440,13 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 	DEBUG_LEAVE("visitModelExprVal");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelField(ModelField *f) {
+void SolverBoolectorSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
-	if (f->is_flag_set(ModelFieldFlag::UsedRand)) {
+	if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
 		// Create a solver-variable representation for this
 		m_field_s.push_back(f);
-		if (f->datatype()) {
-			f->datatype()->accept(this);
+		if (f->getDataType()) {
+			f->getDataType()->accept(this);
 		} else {
 			DEBUG("Note: no datatype");
 		}

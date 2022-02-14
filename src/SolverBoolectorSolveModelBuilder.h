@@ -17,37 +17,37 @@ public:
 
 	virtual ~SolverBoolectorSolveModelBuilder();
 
-	BoolectorNode *build(ModelField *f);
+	BoolectorNode *build(IModelField *f);
 
-	BoolectorNode *build(ModelConstraint *c);
+	BoolectorNode *build(IModelConstraint *c);
 
-	virtual void visitDataTypeInt(DataTypeInt *t) override;
+	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
-	virtual void visitDataTypeStruct(DataTypeStruct *t) override;
+	virtual void visitDataTypeStruct(IDataTypeStruct *t) override;
 
-	virtual void visitModelConstraint(ModelConstraint *c) override;
+	virtual void visitModelConstraint(IModelConstraint *c) override;
 
-	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
+	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
+	virtual void visitModelConstraintIf(IModelConstraintIf *c) override;
 
-	virtual void visitModelConstraintImplies(ModelConstraintImplies *c) override;
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override;
 
-	virtual void visitModelConstraintScope(ModelConstraintScope *c) override;
+	virtual void visitModelConstraintScope(IModelConstraintScope *c) override;
 
-	virtual void visitModelConstraintSoft(ModelConstraintSoft *c) override;
+	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override;
 
-	virtual void visitModelExprBin(ModelExprBin *e) override;
+	virtual void visitModelExprBin(IModelExprBin *e) override;
 
-	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
+	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
 
-	virtual void visitModelExprIn(ModelExprIn *e) override;
+	virtual void visitModelExprIn(IModelExprIn *e) override;
 
-	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) override;
+	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override;
 
-	virtual void visitModelExprVal(ModelExprVal *e) override;
+	virtual void visitModelExprVal(IModelExprVal *e) override;
 
-	virtual void visitModelField(ModelField *f) override;
+	virtual void visitModelField(IModelField *f) override;
 
 	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
 
@@ -71,7 +71,7 @@ private:
 
 private:
 	SolverBoolector						*m_solver;
-	std::vector<ModelField *>			m_field_s;
+	std::vector<IModelField *>			m_field_s;
 	std::pair<bool,BoolectorNode *>		m_node_i;
 	std::vector<int32_t>				m_width_s;
 };
