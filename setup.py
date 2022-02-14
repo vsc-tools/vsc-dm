@@ -232,7 +232,7 @@ setup(
             extra_compile_args=extra_compile_args,
             sources=[
                 os.path.join(libvsc_dir, 'python', "core.pyx"), 
-#                os.path.join(libvsc_dir, 'python', 'invoke_req_closure.cpp'),
+                os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
 #                os.path.join(libvsc_dir, 'python', 'TbLinkListenerClosure.cpp'),
 #                os.path.join(libvsc_dir, 'python', 'TimeCallbackClosure.cpp')
             ],
