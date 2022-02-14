@@ -6,12 +6,12 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprFieldRef.h"
 #include "ModelField.h"
 
 namespace vsc {
 
-class ModelExprFieldRef : public ModelExpr {
+class ModelExprFieldRef : public IModelExprFieldRef {
 public:
 	ModelExprFieldRef(IModelField *field);
 
@@ -21,7 +21,7 @@ public:
 		return m_field->val()->bits();
 	}
 
-	IModelField *field() const { return m_field; }
+	virtual IModelField *field() const override { return m_field; }
 
 	virtual void eval(IModelVal *dst) override;
 

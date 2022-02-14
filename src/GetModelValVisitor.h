@@ -20,7 +20,7 @@ public:
 			ModelField		*ctx,
 			ModelExpr		*expr);
 
-	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) override;
+	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override;
 
 private:
 	ModelField				*m_ctx;

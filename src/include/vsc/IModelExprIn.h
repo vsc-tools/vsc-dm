@@ -17,6 +17,10 @@ public:
 
 	virtual ~IModelExprIn() { }
 
+	virtual IModelExpr *lhs() const = 0;
+
+	virtual IModelExprRangelist *rangelist() const = 0;
+
 };
 
 }

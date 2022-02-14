@@ -20,27 +20,27 @@ public:
 
 	ModelVal eval(IModelExpr *expr);
 
-	virtual void visitModelExprBin(ModelExprBin *e) override;
+	virtual void visitModelExprBin(IModelExprBin *e) override;
 
-	virtual void visitModelExprCond(ModelExprCond *e) override;
+	virtual void visitModelExprCond(IModelExprCond *e) override;
 
-	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
+	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
 
-	virtual void visitModelExprIn(ModelExprIn *e) override;
+	virtual void visitModelExprIn(IModelExprIn *e) override;
 
-	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) override;
+	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override;
 
-	virtual void visitModelExprRange(ModelExprRange *e) override;
+	virtual void visitModelExprRange(IModelExprRange *e) override;
 
-	virtual void visitModelExprRangelist(ModelExprRangelist *e) override;
+	virtual void visitModelExprRangelist(IModelExprRangelist *e) override;
 
-	virtual void visitModelExprRef(ModelExprRef *e) override;
+	virtual void visitModelExprRef(IModelExprRef *e) override;
 
-	virtual void visitModelExprUnary(ModelExprUnary *e) override;
+	virtual void visitModelExprUnary(IModelExprUnary *e) override;
 
-	virtual void visitModelExprVal(ModelExprVal *e) override;
+	virtual void visitModelExprVal(IModelExprVal *e) override;
 
-	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) override;
+	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override;
 
 
 private:

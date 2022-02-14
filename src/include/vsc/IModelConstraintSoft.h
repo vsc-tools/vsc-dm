@@ -16,7 +16,7 @@ public:
 
 	virtual ~IModelConstraintSoft() { }
 
-	virtual ModelConstraintExpr *constraint() const = 0;
+	virtual IModelConstraintExpr *constraint() const = 0;
 
 };
 

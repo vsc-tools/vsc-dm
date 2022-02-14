@@ -10,7 +10,7 @@
 namespace vsc {
 
 ModelExprPartSelect::ModelExprPartSelect(
-		ModelExpr				*lhs,
+		IModelExpr				*lhs,
 		int32_t					upper,
 		int32_t					lower) :
 				m_lhs(lhs), m_upper(upper), m_lower(lower) {

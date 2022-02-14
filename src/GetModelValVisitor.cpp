@@ -26,7 +26,7 @@ ModelVal GetModelValVisitor::value(
 	return m_val;
 }
 
-void GetModelValVisitor::visitModelExprVecSubscript(ModelExprVecSubscript *e) {
+void GetModelValVisitor::visitModelExprVecSubscript(IModelExprVecSubscript *e) {
 	e->expr()->accept(this);
 
 	// TODO: Save field reference that we're indexing

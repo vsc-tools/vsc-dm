@@ -21,9 +21,9 @@ public:
 
 	virtual int32_t width() const override { return 1; }
 
-	IModelExpr *lhs() const { return m_lhs.get(); }
+	virtual IModelExpr *lhs() const override { return m_lhs.get(); }
 
-	IModelExprRangelist *rangelist() const { return m_rangelist.get(); }
+	virtual IModelExprRangelist *rangelist() const override { return m_rangelist.get(); }
 
 	virtual void eval(IModelVal *dst) override;
 

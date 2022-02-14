@@ -49,7 +49,7 @@ SolveSpecBuilder::~SolveSpecBuilder() {
 
 SolveSpec *SolveSpecBuilder::build(
 			const std::vector<IModelField *>		&fields,
-			const std::vector<ModelConstraint *>	&constraints
+			const std::vector<IModelConstraint *>	&constraints
 			) {
 	DEBUG_ENTER("build %d fields %d constraints", fields.size(), constraints.size());
 
@@ -61,14 +61,10 @@ SolveSpec *SolveSpecBuilder::build(
 	}
 
 	m_pass = 1;
-	for (std::vector<IModelField *>::const_iterator
-			it=fields.begin();
-			it!=fields.end(); it++) {
+	for (auto it=fields.begin(); it!=fields.end(); it++) {
 		(*it)->accept(this);
 	}
-	for (std::vector<ModelConstraint *>::const_iterator
-			it=constraints.begin();
-			it!=constraints.end(); it++) {
+	for (auto it=constraints.begin(); it!=constraints.end(); it++) {
 		(*it)->accept(this);
 	}
 
@@ -107,7 +103,7 @@ void SolveSpecBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_LEAVE("visitDataTypeInt");
 }
 
-void SolveSpecBuilder::visitModelConstraintExpr(ModelConstraintExpr *c) {
+void SolveSpecBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr pass=%d", m_pass);
 	constraint_enter(c);
 	VisitorBase::visitModelConstraintExpr(c);
@@ -115,7 +111,7 @@ void SolveSpecBuilder::visitModelConstraintExpr(ModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr pass=%d", m_pass);
 }
 
-void SolveSpecBuilder::visitModelConstraintIf(ModelConstraintIf *c) {
+void SolveSpecBuilder::visitModelConstraintIf(IModelConstraintIf *c) {
 	DEBUG_ENTER("visitModelConstraintIf");
 	constraint_enter(c);
 	VisitorBase::visitModelConstraintIf(c);
@@ -123,7 +119,7 @@ void SolveSpecBuilder::visitModelConstraintIf(ModelConstraintIf *c) {
 	DEBUG_LEAVE("visitModelConstraintIf");
 }
 
-void SolveSpecBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
+void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	if (m_pass == 0) {
 		// In pass 0, we're collecting fields
@@ -143,11 +139,11 @@ void SolveSpecBuilder::visitModelField(IModelField *f) {
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 
-void SolveSpecBuilder::constraint_enter(ModelConstraint *c) {
+void SolveSpecBuilder::constraint_enter(IModelConstraint *c) {
 	m_constraint_s.push_back(c);
 }
 
-void SolveSpecBuilder::constraint_leave(ModelConstraint *c) {
+void SolveSpecBuilder::constraint_leave(IModelConstraint *c) {
 	m_constraint_s.pop_back();
 
 	if (m_pass == 1 && m_constraint_s.size() == 0) {

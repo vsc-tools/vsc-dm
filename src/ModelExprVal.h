@@ -6,24 +6,26 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprVal.h"
 #include "ModelVal.h"
 
 namespace vsc {
 
-class ModelExprVal : public ModelExpr {
+class ModelExprVal : public IModelExprVal {
 public:
 	ModelExprVal();
 
-	ModelExprVal(const ModelVal &val);
+	ModelExprVal(const IModelVal *val);
+
+	ModelExprVal(const IModelVal &val);
 
 	virtual ~ModelExprVal();
 
 	virtual int32_t width() const override { return m_val.bits(); }
 
-	const ModelVal &val() const { return m_val; }
+	virtual const IModelVal *val() const override { return &m_val; }
 
-	ModelVal &val() { return m_val; }
+	virtual IModelVal  *val() { return &m_val; }
 
 	virtual void eval(IModelVal *dst) override;
 

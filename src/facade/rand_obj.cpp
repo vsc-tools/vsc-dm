@@ -73,8 +73,8 @@ bool rand_obj::randomize() {
 	Randomizer randomizer(
 			solver_factory(),
 			m_randstate.get());
-	std::vector<IModelField *> 		fields;
-	std::vector<ModelConstraint *> 	constraints;
+	std::vector<IModelField *> 			fields;
+	std::vector<IModelConstraint *> 	constraints;
 	bool diagnose_failures = false;
 
 	SetFieldUsedRandVisitor().set(m_field);
@@ -95,7 +95,7 @@ bool rand_obj::randomize_with(
 			solver_factory(),
 			m_randstate.get());
 	std::vector<IModelField *> 		fields;
-	std::vector<ModelConstraint *> 	constraints;
+	std::vector<IModelConstraint *>	constraints;
 	bool diagnose_failures = false;
 
 	// Collect 'with' constraints

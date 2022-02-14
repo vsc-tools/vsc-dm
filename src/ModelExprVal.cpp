@@ -13,7 +13,11 @@ ModelExprVal::ModelExprVal() {
 
 }
 
-ModelExprVal::ModelExprVal(const ModelVal &val) : m_val(val) {
+ModelExprVal::ModelExprVal(const IModelVal *val) : m_val(val) {
+
+}
+
+ModelExprVal::ModelExprVal(const IModelVal &val) : m_val(&val) {
 
 }
 

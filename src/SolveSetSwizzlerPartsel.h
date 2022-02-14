@@ -28,11 +28,11 @@ private:
 
 	void swizzle_field(
 			IModelField						*f,
-			std::vector<ModelConstraintUP>	&constraints);
+			std::vector<IModelConstraintUP>	&constraints);
 
 	void create_rand_domain_constraint(
 			IModelField						*f,
-			std::vector<ModelConstraintUP>	&constraints);
+			std::vector<IModelConstraintUP>	&constraints);
 
 private:
 	RandState				*m_randstate;

@@ -9,7 +9,7 @@
 
 namespace vsc {
 
-ModelExprRef::ModelExprRef(ModelExpr *expr) : m_expr(expr) {
+ModelExprRef::ModelExprRef(IModelExpr *expr) : m_expr(expr) {
 	// TODO Auto-generated constructor stub
 
 }

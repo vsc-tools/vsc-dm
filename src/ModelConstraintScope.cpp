@@ -33,7 +33,7 @@ ModelConstraintScope::~ModelConstraintScope() {
 }
 
 void ModelConstraintScope::add_constraint(IModelConstraint *c) {
-	m_constraints.push_back(ModelConstraintUP(c));
+	m_constraints.push_back(IModelConstraintUP(c));
 }
 
 } /* namespace vsc */

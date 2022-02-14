@@ -23,24 +23,24 @@ public:
 
 	SolveSpec *build(
 			const std::vector<IModelField *>		&fields,
-			const std::vector<ModelConstraint *>	&constraints
+			const std::vector<IModelConstraint *>	&constraints
 			);
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
-	virtual void visitModelConstraintExpr(ModelConstraintExpr *c) override;
+	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(ModelConstraintIf *c) override;
+	virtual void visitModelConstraintIf(IModelConstraintIf *c) override;
 
-	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) override;
+	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
 
 	virtual void visitModelField(IModelField *f) override;
 
 private:
 
-	void constraint_enter(ModelConstraint *c);
+	void constraint_enter(IModelConstraint *c);
 
-	void constraint_leave(ModelConstraint *c);
+	void constraint_leave(IModelConstraint *c);
 
 	void process_fieldref(IModelField *f);
 
@@ -53,7 +53,7 @@ private:
 	std::vector<IModelField *>					m_unconstrained_l;
 
 	std::unordered_map<IModelField*,SolveSet*>	m_solveset_field_m;
-	std::vector<ModelConstraint *>				m_constraint_s;
+	std::vector<IModelConstraint *>				m_constraint_s;
 
 	std::vector<IModelField *>					m_field_s;
 

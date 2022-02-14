@@ -6,30 +6,29 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
-#include "UnaryOp.h"
+#include "vsc/IModelExprUnary.h"
 
 namespace vsc {
 
-class ModelExprUnary : public ModelExpr {
+class ModelExprUnary : public IModelExprUnary {
 public:
 	ModelExprUnary(
-			ModelExpr		*expr,
+			IModelExpr		*expr,
 			UnaryOp			op
 			);
 
 	virtual ~ModelExprUnary();
 
-	ModelExpr *expr() const { return m_expr.get(); }
+	virtual IModelExpr *expr() const override { return m_expr.get(); }
 
-	UnaryOp op() const { return m_op; }
+	virtual UnaryOp op() const override { return m_op; }
 
 	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprUnary(this); }
 
 private:
-	ModelExprUP				m_expr;
+	IModelExprUP			m_expr;
 	UnaryOp					m_op;
 
 };

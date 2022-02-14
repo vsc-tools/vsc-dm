@@ -6,25 +6,26 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExpr.h"
+#include "vsc/IModelExprPartSelect.h"
 
 namespace vsc {
 
-class ModelExprPartSelect : public ModelExpr {
+class ModelExprPartSelect : public IModelExprPartSelect {
 public:
 	ModelExprPartSelect(
-			ModelExpr			*lhs,
+			IModelExpr			*lhs,
 			int32_t				upper,
 			int32_t				lower
 			);
 
 	virtual ~ModelExprPartSelect();
 
-	ModelExpr *lhs() const { return m_lhs.get(); }
+	virtual IModelExpr *lhs() const override { return m_lhs.get(); }
 
-	int32_t lower() const { return m_lower; }
+	virtual int32_t lower() const override { return m_lower; }
 
-	int32_t upper() const { return m_upper; }
+	virtual int32_t upper() const override { return m_upper; }
 
 	virtual int32_t width() const override { return m_upper-m_lower+1; }
 
@@ -33,7 +34,7 @@ public:
 	virtual void accept(IVisitor *v) { v->visitModelExprPartSelect(this); }
 
 private:
-	ModelExprUP					m_lhs;
+	IModelExprUP				m_lhs;
 	int32_t						m_upper;
 	int32_t						m_lower;
 };

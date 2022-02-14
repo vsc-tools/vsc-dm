@@ -5,9 +5,9 @@
  *      Author: mballance
  */
 #pragma once
+#include "vsc/IModelConstraint.h"
 #include "ISolverFactory.h"
 #include "ModelField.h"
-#include "ModelConstraint.h"
 #include "RandState.h"
 #include "RNG.h"
 
@@ -23,7 +23,7 @@ public:
 
 	bool randomize(
 			const std::vector<IModelField *>		&fields,
-			const std::vector<ModelConstraint *>	&constraints,
+			const std::vector<IModelConstraint *>	&constraints,
 			bool									diagnose_failures
 			);
 

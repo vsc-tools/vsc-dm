@@ -48,7 +48,7 @@ SolverBitwuzlaSolveModelBuilder::~SolverBitwuzlaSolveModelBuilder() {
 	// TODO Auto-generated destructor stub
 }
 
-const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(IModelField *f) {
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
@@ -57,7 +57,7 @@ const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelField *f) {
 	return m_node_i.second;
 }
 
-const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
+const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(IModelConstraint *c) {
 	DEBUG_ENTER("build(ModelConstraint)");
 	m_width_s.clear();
 	m_width_s.push_back(-1);
@@ -78,7 +78,7 @@ const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(ModelConstraint *c) {
 	}
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
+void SolverBitwuzlaSolveModelBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt");
 	const BitwuzlaTerm *n = bitwuzla_mk_const(m_solver->bitwuzla(),
 			m_solver->get_sort(t->width()), 0);
@@ -86,15 +86,15 @@ void SolverBitwuzlaSolveModelBuilder::visitDataTypeInt(DataTypeInt *t) {
 	DEBUG_LEAVE("visitDataTypeInt");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitDataTypeStruct(DataTypeStruct *t) {
+void SolverBitwuzlaSolveModelBuilder::visitDataTypeStruct(IDataTypeStruct *t) {
 
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelConstraint(ModelConstraint *c) {
+void SolverBitwuzlaSolveModelBuilder::visitModelConstraint(IModelConstraint *c) {
 
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelConstraintExpr(ModelConstraintExpr *c) {
+void SolverBitwuzlaSolveModelBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr");
 	m_node_i = {false, 0};
 
@@ -112,7 +112,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelConstraintExpr(ModelConstraintEx
 	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelConstraintScope(ModelConstraintScope *c) {
+void SolverBitwuzlaSolveModelBuilder::visitModelConstraintScope(IModelConstraintScope *c) {
 	DEBUG_ENTER("visitModelConstraintScope");
 	const BitwuzlaTerm *result = 0;
 
@@ -144,11 +144,11 @@ void SolverBitwuzlaSolveModelBuilder::visitModelConstraintScope(ModelConstraintS
 	DEBUG_LEAVE("visitModelConstraintScope");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelConstraintSoft(ModelConstraintSoft *c) {
+void SolverBitwuzlaSolveModelBuilder::visitModelConstraintSoft(IModelConstraintSoft *c) {
 
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
+void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(IModelExprBin *e) {
 	DEBUG_ENTER("visitModelExprBin");
 	int32_t ctx_width = m_width_s.back();
 
@@ -372,7 +372,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprBin(ModelExprBin *e) {
 	DEBUG_LEAVE("visitModelExprBin");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *e) {
+void SolverBitwuzlaSolveModelBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	// Note: this should only be used for scalar fields
 	const BitwuzlaTerm *n;
 	bool is_signed = false;
@@ -395,7 +395,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprFieldRef(ModelExprFieldRef *
 			e->field()->name().c_str(), m_node_i.second);
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
+void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(IModelExprIn *e) {
 	DEBUG_ENTER("visitModelExprIn");
 	int32_t ctx_width = m_width_s.back();
 	node_info_t lhs_i = expr(e->lhs(), ctx_width);
@@ -481,7 +481,7 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(ModelExprIn *e) {
 }
 
 void SolverBitwuzlaSolveModelBuilder::visitModelExprPartSelect(
-		ModelExprPartSelect *e) {
+		IModelExprPartSelect *e) {
 	int32_t ctx_width = m_width_s.back();
 	DEBUG_ENTER("visitModelExprPartSelect");
 	node_info_t lhs_i = expr(e->lhs(), ctx_width);
@@ -497,23 +497,23 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprPartSelect(
 	DEBUG_LEAVE("visitModelExprPartSelect");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
+void SolverBitwuzlaSolveModelBuilder::visitModelExprVal(IModelExprVal *e) {
 	DEBUG_ENTER("visitModelExprVal");
 
-	if (e->val().bits() <= 64) {
+	if (e->val()->bits() <= 64) {
 		m_node_i.second = bitwuzla_mk_bv_value_uint64(
 				m_solver->bitwuzla(),
-				m_solver->get_sort(e->val().bits()),
-				e->val().val_u());
+				m_solver->get_sort(e->val()->bits()),
+				e->val()->val_u());
 		m_node_i.first = false; // TODO:
 	} else {
-		char *bits = (char *)alloca(e->val().bits()+1);
-		e->val().to_bits(bits);
+		char *bits = (char *)alloca(e->val()->bits()+1);
+		e->val()->to_bits(bits);
 
 		DEBUG("bits=%s", bits);
 		m_node_i.second = bitwuzla_mk_bv_value(
 				m_solver->bitwuzla(),
-				m_solver->get_sort(e->val().bits()),
+				m_solver->get_sort(e->val()->bits()),
 				bits,
 				BITWUZLA_BV_BASE_BIN);
 		m_node_i.first = false; // TODO:
@@ -522,11 +522,11 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprVal(ModelExprVal *e) {
 	DEBUG_LEAVE("visitModelExprVal");
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelField(ModelField *f) {
+void SolverBitwuzlaSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
 	m_field_s.push_back(f);
-	if (f->datatype()) {
-		f->datatype()->accept(this);
+	if (f->getDataType()) {
+		f->getDataType()->accept(this);
 	} else {
 		DEBUG("Note: no datatype");
 	}

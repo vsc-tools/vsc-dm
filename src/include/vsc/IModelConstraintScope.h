@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <vector>
 #include "vsc/IModelConstraint.h"
 
 namespace vsc {

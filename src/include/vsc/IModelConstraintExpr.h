@@ -11,6 +11,8 @@
 
 namespace vsc {
 
+class IModelConstraintExpr;
+using IModelConstraintExprUP=std::unique_ptr<IModelConstraintExpr>;
 class IModelConstraintExpr : public IModelConstraint {
 public:
 

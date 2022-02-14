@@ -79,13 +79,13 @@ public:
 
 	uint32_t expr_depth() const { return m_expr_s.size(); }
 
-	void push_constraint_scope(ModelConstraintScope *s);
+	void push_constraint_scope(IModelConstraintScope *s);
 
-	ModelConstraintScope *constraint_scope() const {
+	IModelConstraintScope *constraint_scope() const {
 		return m_constraint_scope_s.back();
 	}
 
-	ModelConstraintScope *pop_constraint_scope();
+	IModelConstraintScope *pop_constraint_scope();
 
 	uint32_t build_phase() const { return m_build_phase_s.back(); }
 
@@ -124,7 +124,7 @@ private:
 	std::vector<bool>							m_expr_mode;
 	std::unordered_map<int32_t, DataTypeIntUP>	m_si_type_m;
 	std::unordered_map<int32_t, DataTypeIntUP>	m_ui_type_m;
-	std::vector<ModelConstraintScope *>			m_constraint_scope_s;
+	std::vector<IModelConstraintScope *>		m_constraint_scope_s;
 	std::vector<uint32_t>						m_build_phase_s;
 	std::vector<obj *>							m_build_scope_s;
 	std::vector<ModelField *>					m_build_field_s;

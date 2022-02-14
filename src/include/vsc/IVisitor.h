@@ -44,17 +44,17 @@ class ModelCoverCross;
 class ModelCovergroup;
 class ModelCoverpoint;
 
-class ModelExprBin;
-class ModelExprCond;
-class ModelExprFieldRef;
-class ModelExprIn;
-class ModelExprPartSelect;
-class ModelExprRange;
-class ModelExprRangelist;
-class ModelExprRef;
-class ModelExprVecSubscript;
-class ModelExprUnary;
-class ModelExprVal;
+class IModelExprBin;
+class IModelExprCond;
+class IModelExprFieldRef;
+class IModelExprIn;
+class IModelExprPartSelect;
+class IModelExprRange;
+class IModelExprRangelist;
+class IModelExprRef;
+class IModelExprVecSubscript;
+class IModelExprUnary;
+class IModelExprVal;
 
 class IModelField;
 class ModelFieldRoot;
@@ -93,27 +93,27 @@ public:
 
 	virtual void visitModelCoverpoint(ModelCoverpoint *c) = 0;
 
-	virtual void visitModelExprBin(ModelExprBin *e) = 0;
+	virtual void visitModelExprBin(IModelExprBin *e) = 0;
 
-	virtual void visitModelExprCond(ModelExprCond *e) = 0;
+	virtual void visitModelExprCond(IModelExprCond *e) = 0;
 
-	virtual void visitModelExprFieldRef(ModelExprFieldRef *e) = 0;
+	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) = 0;
 
-	virtual void visitModelExprIn(ModelExprIn *e) = 0;
+	virtual void visitModelExprIn(IModelExprIn *e) = 0;
 
-	virtual void visitModelExprPartSelect(ModelExprPartSelect *e) = 0;
+	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) = 0;
 
-	virtual void visitModelExprRange(ModelExprRange *e) = 0;
+	virtual void visitModelExprRange(IModelExprRange *e) = 0;
 
-	virtual void visitModelExprRangelist(ModelExprRangelist *e) = 0;
+	virtual void visitModelExprRangelist(IModelExprRangelist *e) = 0;
 
-	virtual void visitModelExprRef(ModelExprRef *e) = 0;
+	virtual void visitModelExprRef(IModelExprRef *e) = 0;
 
-	virtual void visitModelExprUnary(ModelExprUnary *e) = 0;
+	virtual void visitModelExprUnary(IModelExprUnary *e) = 0;
 
-	virtual void visitModelExprVal(ModelExprVal *e) = 0;
+	virtual void visitModelExprVal(IModelExprVal *e) = 0;
 
-	virtual void visitModelExprVecSubscript(ModelExprVecSubscript *e) = 0;
+	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) = 0;
 
 	virtual void visitModelField(IModelField *f) = 0;
 

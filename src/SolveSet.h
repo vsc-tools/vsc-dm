@@ -9,9 +9,9 @@
 #include <memory>
 #include <unordered_set>
 #include <vector>
-#include "ModelConstraint.h"
-#include "ModelConstraintSoft.h"
-#include "ModelField.h"
+#include "vsc/IModelConstraint.h"
+#include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelField.h"
 
 namespace vsc {
 
@@ -26,9 +26,9 @@ public:
 
 	void add_field(IModelField *f);
 
-	void add_constraint(ModelConstraint *c);
+	void add_constraint(IModelConstraint *c);
 
-	void add_soft_constraint(ModelConstraintSoft *c);
+	void add_soft_constraint(IModelConstraintSoft *c);
 
 	const std::vector<IModelField *> &all_fields() const {
 		return m_all_fields;
@@ -38,11 +38,11 @@ public:
 		return m_rand_fields;
 	}
 
-	const std::vector<ModelConstraint *> &constraints() const {
+	const std::vector<IModelConstraint *> &constraints() const {
 		return m_constraints;
 	}
 
-	const std::vector<ModelConstraintSoft *> &soft_constraints() const {
+	const std::vector<IModelConstraintSoft *> &soft_constraints() const {
 		return m_soft_constraints;
 	}
 
@@ -56,11 +56,11 @@ private:
 	std::vector<IModelField *>					m_all_fields;
 	std::vector<IModelField *>					m_rand_fields;
 	std::vector<ModelFieldVec *>				m_constrained_sz_vec;
-	std::unordered_set<ModelConstraint *>		m_constraint_s;
-	std::vector<ModelConstraint *>				m_constraints;
+	std::unordered_set<IModelConstraint *>		m_constraint_s;
+	std::vector<IModelConstraint *>				m_constraints;
 
-	std::unordered_set<ModelConstraintSoft *>	m_soft_constraint_s;
-	std::vector<ModelConstraintSoft *>			m_soft_constraints;
+	std::unordered_set<IModelConstraintSoft *>	m_soft_constraint_s;
+	std::vector<IModelConstraintSoft *>			m_soft_constraints;
 
 };
 

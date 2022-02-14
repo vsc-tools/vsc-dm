@@ -20,7 +20,7 @@ using TypeConstraintUP=std::unique_ptr<TypeConstraint>;
 
 class DataTypeStruct;
 using DataTypeStructUP=std::unique_ptr<DataTypeStruct>;
-class DataTypeStruct : public IDataType {
+class DataTypeStruct : public IDataTypeStruct {
 public:
 	DataTypeStruct(const std::string &name);
 

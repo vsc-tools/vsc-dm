@@ -18,14 +18,14 @@ public:
 
 	virtual ~ModelConstraintSoft();
 
-	virtual ModelConstraintExpr *constraint() const override {
+	virtual IModelConstraintExpr *constraint() const override {
 		return m_constraint.get();
 	}
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintSoft(this); }
 
 private:
-	ModelConstraintExprUP			m_constraint;
+	IModelConstraintExprUP			m_constraint;
 };
 
 } /* namespace vsc */

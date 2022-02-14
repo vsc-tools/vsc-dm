@@ -63,7 +63,7 @@ constraint_if_then constraint_if_then::else_if(
 			ctor::inst()->pop_expr(),
 			true_c,
 			0);
-	m_constraint->false_c(if_c);
+	m_constraint->setFalse(if_c);
 
 	ctor::inst()->push_constraint_scope(true_c);
 	body();
@@ -77,7 +77,7 @@ void constraint_if_then::else_then(
 		const char						*file,
 		int32_t							lineno) {
 	ModelConstraintScope *else_c = new ModelConstraintScope();
-	m_constraint->false_c(else_c);
+	m_constraint->setFalse(else_c);
 	ctor::inst()->push_constraint_scope(else_c);
 	body();
 	ctor::inst()->pop_constraint_scope();

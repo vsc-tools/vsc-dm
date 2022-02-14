@@ -6,22 +6,22 @@
  */
 
 #pragma once
-#include "ModelExpr.h"
+#include "vsc/IModelExprRef.h"
 
 namespace vsc {
 
-class ModelExprRef : public ModelExpr {
+class ModelExprRef : public IModelExprRef {
 public:
-	ModelExprRef(ModelExpr *expr);
+	ModelExprRef(IModelExpr *expr);
 
 	virtual ~ModelExprRef();
 
-	ModelExpr *expr() const { return m_expr; }
+	virtual IModelExpr *expr() const override { return m_expr; }
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprRef(this); }
 
 private:
-	ModelExpr				*m_expr;
+	IModelExpr				*m_expr;
 };
 
 } /* namespace vsc */

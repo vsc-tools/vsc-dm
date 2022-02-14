@@ -18,7 +18,7 @@ ModelExprEvaluator::~ModelExprEvaluator() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelExprEvaluator::visitModelExprBin(ModelExprBin *e) {
+void ModelExprEvaluator::visitModelExprBin(IModelExprBin *e) {
 	e->lhs()->accept(this);
 	ModelVal lhs_v = m_val;
 	e->rhs()->accept(this);
@@ -32,43 +32,43 @@ ModelVal ModelExprEvaluator::eval(IModelExpr *expr) {
 	return m_val;
 }
 
-void ModelExprEvaluator::visitModelExprCond(ModelExprCond *e) {
+void ModelExprEvaluator::visitModelExprCond(IModelExprCond *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprFieldRef(ModelExprFieldRef *e) {
+void ModelExprEvaluator::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	m_val.set(e->field()->val());
 }
 
-void ModelExprEvaluator::visitModelExprIn(ModelExprIn *e) {
+void ModelExprEvaluator::visitModelExprIn(IModelExprIn *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprPartSelect(ModelExprPartSelect *e) {
+void ModelExprEvaluator::visitModelExprPartSelect(IModelExprPartSelect *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprRange(ModelExprRange *e) {
+void ModelExprEvaluator::visitModelExprRange(IModelExprRange *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprRangelist(ModelExprRangelist *e) {
+void ModelExprEvaluator::visitModelExprRangelist(IModelExprRangelist *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprRef(ModelExprRef *e) {
+void ModelExprEvaluator::visitModelExprRef(IModelExprRef *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprUnary(ModelExprUnary *e) {
+void ModelExprEvaluator::visitModelExprUnary(IModelExprUnary *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprVal(ModelExprVal *e) {
+void ModelExprEvaluator::visitModelExprVal(IModelExprVal *e) {
 
 }
 
-void ModelExprEvaluator::visitModelExprVecSubscript(ModelExprVecSubscript *e) {
+void ModelExprEvaluator::visitModelExprVecSubscript(IModelExprVecSubscript *e) {
 
 }
 

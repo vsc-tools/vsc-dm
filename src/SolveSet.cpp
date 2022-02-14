@@ -48,14 +48,14 @@ void SolveSet::add_field(IModelField *f) {
 	}
 }
 
-void SolveSet::add_constraint(ModelConstraint *c) {
+void SolveSet::add_constraint(IModelConstraint *c) {
 	if (m_constraint_s.find(c) == m_constraint_s.end()) {
 		m_constraints.push_back(c);
 		m_constraint_s.insert(c);
 	}
 }
 
-void SolveSet::add_soft_constraint(ModelConstraintSoft *c) {
+void SolveSet::add_soft_constraint(IModelConstraintSoft *c) {
 	if (m_soft_constraint_s.find(c) == m_soft_constraint_s.end()) {
 		m_soft_constraints.push_back(c);
 		m_soft_constraint_s.insert(c);

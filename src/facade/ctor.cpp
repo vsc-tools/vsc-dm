@@ -171,15 +171,15 @@ IModelExpr *ctor::pop_expr() {
 	return ret;
 }
 
-void ctor::push_constraint_scope(ModelConstraintScope *c) {
+void ctor::push_constraint_scope(IModelConstraintScope *c) {
 	DEBUG_ENTER("push_constraint_scope");
 	m_constraint_scope_s.push_back(c);
 	DEBUG_LEAVE("push_constraint_scope");
 }
 
-ModelConstraintScope *ctor::pop_constraint_scope() {
+IModelConstraintScope *ctor::pop_constraint_scope() {
 	DEBUG_ENTER("pop_constraint_scope");
-	ModelConstraintScope *ret = m_constraint_scope_s.back();
+	IModelConstraintScope *ret = m_constraint_scope_s.back();
 	m_constraint_scope_s.pop_back();
 	for (auto it=m_expr_s.begin();
 			it!=m_expr_s.end(); it++) {
