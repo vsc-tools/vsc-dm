@@ -205,15 +205,15 @@ class build_ext(_build_ext):
 print("extra_compile_args=" + str(extra_compile_args))
 
 setup(
-  name = "tblink-rpc-core",
-  packages=['libvsc_core','tblink_rpc'],
+  name = "libvsc",
+  packages=['libvsc'],
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
   description = ("Provides the core TbLink-RPC library"),
   license = "Apache 2.0",
   keywords = ["SystemVerilog", "Verilog", "RTL", "Python"],
-  url = "https://github.com/tblink-rpc/tblink-rpc-core",
+  url = "https://github.com/fvutils/libvsc",
   entry_points={
     'console_scripts': [
       'tblink-rpc = tblink_rpc.__main__:main'
