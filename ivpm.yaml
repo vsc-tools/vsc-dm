@@ -2,6 +2,9 @@
 package:
    name: libvsc
    version: 0.0.1
+
+   setup-deps:
+     - cython
    
    dev-deps:
      - name: cython
