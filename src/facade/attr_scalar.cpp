@@ -92,6 +92,7 @@ void attr_scalar::build() {
 
 expr_base attr_scalar::operator ()() {
 	return expr_base::mk(new ModelExprFieldRef(field()));
+
 }
 
 /*

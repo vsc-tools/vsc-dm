@@ -18,4 +18,17 @@ VscImpl::~VscImpl() {
 	// TODO Auto-generated destructor stub
 }
 
+IVsc *VscImpl::inst() {
+	if (!m_inst) {
+		m_inst = IVscUP(new VscImpl());
+	}
+	return m_inst.get();
+}
+
+IVscUP VscImpl::m_inst;
+
 } /* namespace vsc */
+
+extern "C" vsc::IVsc *ivsc() {
+	return vsc::VscImpl::inst();
+}

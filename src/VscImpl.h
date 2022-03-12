@@ -16,8 +16,13 @@ public:
 
 	virtual ~VscImpl();
 
+	static IVsc *inst();
+
+private:
+	static IVscUP			m_inst;
 
 };
 
 } /* namespace vsc */
+
 

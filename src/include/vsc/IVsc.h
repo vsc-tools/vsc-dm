@@ -6,10 +6,13 @@
  */
 
 #pragma once
+#include <memory>
 #include "vsc/IContext.h"
 
 namespace vsc {
 
+class IVsc;
+using IVscUP=std::unique_ptr<IVsc>;
 class IVsc {
 public:
 	virtual ~IVsc() { }
