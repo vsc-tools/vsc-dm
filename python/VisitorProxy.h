@@ -8,6 +8,7 @@
 #pragma once
 #include <Python.h>
 #include "vsc/IVisitor.h"
+#include "vsc/IModelExprBin.h"
 
 class VisitorProxy : public vsc::IVisitor {
 public:
@@ -41,7 +42,9 @@ public:
 
 	virtual void visitModelExprBin(vsc::IModelExprBin *e) override;
 
-	virtual void visitModelExprCond(vsc::IModelExprCond *e) { }
+    void visitModelExprBinBase(vsc::IModelExprBin *e);
+
+	virtual void visitModelExprCond(vsc::IModelExprCond *e) override;
 
 	virtual void visitModelExprFieldRef(vsc::IModelExprFieldRef *e) { }
 

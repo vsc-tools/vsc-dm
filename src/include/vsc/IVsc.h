@@ -6,9 +6,12 @@
  */
 
 #pragma once
+#include <memory>
 
 namespace vsc {
 
+class IVsc;
+using IVscUP=std::unique_ptr<IVsc>;
 class IVsc {
 public:
 	virtual ~IVsc() { }

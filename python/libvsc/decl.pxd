@@ -14,10 +14,17 @@ from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
 #********************************************************************
+#* IAccept
+#********************************************************************
+cdef extern from "vsc/IAccept.h" namespace "vsc":
+    cdef cppclass IAccept:
+        void accept(IVisitor *)
+
+#********************************************************************
 #* IModelExpr
 #********************************************************************
 cdef extern from "vsc/IModelExpr.h" namespace "vsc":
-    cdef cppclass IModelExpr:
+    cdef cppclass IModelExpr(IAccept):
         pass
     
 cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
@@ -47,5 +54,19 @@ cdef extern from "vsc/IVisitor.h" namespace "vsc":
 cdef extern from "VisitorProxy.h":
     cdef cppclass VisitorProxy(IVisitor):
         VisitorProxy(cpy_ref.PyObject *)
+        void visitModelExprBinBase(IModelExprBin *)
         pass
+    
+#********************************************************************
+#* IVsc
+#********************************************************************
+cdef extern from "vsc/IVsc.h" namespace "vsc":
+    cdef cppclass IVsc:
+        pass
+
+#********************************************************************
+#* get_vsc
+#********************************************************************
+cdef extern from "vsc/loader.h":
+    IVsc *get_vsc(const char *path)
     
