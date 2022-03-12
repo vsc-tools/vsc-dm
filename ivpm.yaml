@@ -2,6 +2,9 @@
 package:
    name: libvsc
    version: 0.0.1
+
+   setup-deps:
+     - cython
    
    dev-deps:
      - name: cython
@@ -21,5 +24,21 @@ package:
      - name: mkdv
        url: https://github.com/fvutils/mkdv.git
        branch: schema-redo
+
+   deps:
+     - name: cython
+       src: pypi
+     - name: bitwuzla
+       url: https://github.com/mballance/bitwuzla.git
+     - name: boolector
+       url: https://github.com/boolector/boolector.git
+     - name: btor2tools
+       url: https://github.com/boolector/btor2tools.git
+     - name: cadical
+       url: https://github.com/mballance/cadical.git
+     - name: gtest
+       url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
+     - name: gmp
+       url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
        
-       
+
