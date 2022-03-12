@@ -6,12 +6,15 @@
  */
 
 #pragma once
+#include "vsc/IContext.h"
 
 namespace vsc {
 
 class IVsc {
 public:
 	virtual ~IVsc() { }
+
+	virtual IContext *mkContext() = 0;
 
 };
 

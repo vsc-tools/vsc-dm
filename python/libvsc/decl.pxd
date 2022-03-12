@@ -14,6 +14,21 @@ from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
 #********************************************************************
+#* IContext
+#********************************************************************
+cdef extern from "vsc/IContext.h" namespace "vsc":
+    cdef cppclass IContext:
+        pass
+    
+#********************************************************************
+#* IVsc
+#********************************************************************
+cdef extern from "vsc/IVsc.h" namespace "vsc":
+    cdef cppclass IVsc:
+        IContext *mkContext()
+        pass
+    
+#********************************************************************
 #* IModelExpr
 #********************************************************************
 cdef extern from "vsc/IModelExpr.h" namespace "vsc":
