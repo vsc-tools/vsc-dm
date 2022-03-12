@@ -30,16 +30,24 @@ public:
 
 	void addIntType(DataTypeInt		*t);
 
+	virtual IDataTypeInt *mkDataTypeInt(
+			bool			is_signed,
+			int32_t			width) override;
+
+	virtual IModelField *mkModelFieldRoot(
+			IDataType 			*type,
+			const std::string	&name) override;
+
 private:
 
 	std::unordered_map<std::string,DataTypeStructUP>		m_struct_type_m;
 	std::vector<DataTypeStruct *>							m_struct_type_l;
 
-	std::unordered_map<int32_t, DataTypeIntUP>				m_uint_type_m;
-	std::vector<DataTypeInt *>								m_uint_type_l;
+	std::unordered_map<int32_t, DataTypeInt*>				m_uint_type_m;
+	std::vector<DataTypeIntUP>								m_uint_type_l;
 
-	std::unordered_map<int32_t, DataTypeIntUP>				m_sint_type_m;
-	std::vector<DataTypeInt *>								m_sint_type_l;
+	std::unordered_map<int32_t, DataTypeInt*>				m_sint_type_m;
+	std::vector<DataTypeIntUP>								m_sint_type_l;
 
 };
 

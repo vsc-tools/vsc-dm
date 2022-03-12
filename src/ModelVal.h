@@ -46,6 +46,10 @@ public:
 
 	virtual void val_u(uint64_t v, int32_t width=-1) override;
 
+	virtual void set_val_u(uint64_t v, int32_t width=-1) override;
+
+	virtual void set_val_i(int64_t v, int32_t width=-1) override;
+
 	inline uint64_t val_u() const { return (bits()<=64)?val().v:val().vp[0]; }
 
 	virtual const val_t &val() const override { return m_val; }

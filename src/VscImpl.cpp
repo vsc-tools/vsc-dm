@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include "Context.h"
 #include "VscImpl.h"
 
 namespace vsc {
@@ -16,6 +17,10 @@ VscImpl::VscImpl() {
 
 VscImpl::~VscImpl() {
 	// TODO Auto-generated destructor stub
+}
+
+IContext *VscImpl::mkContext() {
+	return new Context();
 }
 
 IVsc *VscImpl::inst() {

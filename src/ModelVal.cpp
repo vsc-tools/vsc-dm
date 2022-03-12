@@ -287,6 +287,44 @@ void ModelVal::val_u(uint64_t v, int32_t width) {
 	}
 }
 
+void ModelVal::set_val_u(
+		uint64_t v,
+		int32_t width) {
+	if (width == -1) {
+		width = m_bits;
+	}
+	if (m_bits > 64) {
+		m_val.vp[0] = v;
+		if (width < 64) {
+			m_val.vp[0] &= (1ULL << width)-1;
+		}
+	} else {
+		m_val.v = v;
+		if (width < 64) {
+			m_val.v &= (1ULL << width)-1;
+		}
+	}
+}
+
+void ModelVal::set_val_i(
+		int64_t v,
+		int32_t width) {
+	if (width == -1) {
+		width = m_bits;
+	}
+	if (m_bits > 64) {
+		m_val.vp[0] = v;
+		if (width < 64) {
+			m_val.vp[0] &= (1ULL << width)-1;
+		}
+	} else {
+		m_val.v = v;
+		if (width < 64) {
+			m_val.v &= (1ULL << width)-1;
+		}
+	}
+}
+
 ModelVal ModelVal::slice(
 			int32_t		upper,
 			int32_t		lower) {

@@ -35,6 +35,10 @@ public:
 
 	virtual void val_u(uint64_t v, int32_t width=-1) = 0;
 
+	virtual void set_val_u(uint64_t v, int32_t width=-1) = 0;
+
+	virtual void set_val_i(int64_t v, int32_t width=-1) = 0;
+
 	virtual const val_t &val() const = 0;
 
 	virtual val_t &val() = 0;

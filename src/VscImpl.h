@@ -16,6 +16,8 @@ public:
 
 	virtual ~VscImpl();
 
+	virtual IContext *mkContext() override;
+
 	static IVsc *inst();
 
 private:
