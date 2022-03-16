@@ -39,4 +39,10 @@ ISolver *SolverFactoryDefault::createSolverInst(SolveSet *sset) {
 //	return new SolverBoolector();
 }
 
+ISolverFactory *SolverFactoryDefault::inst() {
+	return &m_inst;
+}
+
+SolverFactoryDefault SolverFactoryDefault::m_inst;
+
 } /* namespace vsc */

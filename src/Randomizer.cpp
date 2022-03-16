@@ -25,6 +25,7 @@
 #include "SolveSetSwizzlerPartsel.h"
 #include "SolveSpecBuilder.h"
 #include "SolveSetSolveModelBuilder.h"
+#include "SolverFactoryDefault.h"
 
 #undef EN_DEBUG_RANDOMIZER
 
@@ -43,9 +44,12 @@ namespace vsc {
 
 Randomizer::Randomizer(
 		ISolverFactory		*solver_factory,
-		RandState 			*randstate) :
+		IRandState 			*randstate) :
 				m_solver_factory(solver_factory), m_randstate(randstate) {
-	// TODO Auto-generated constructor stub
+
+	if (!m_solver_factory) {
+		m_solver_factory = SolverFactoryDefault::inst();
+	}
 
 }
 

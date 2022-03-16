@@ -28,7 +28,7 @@
 #include "attr_base.h"
 #include "obj_scope.h"
 #include "scope.h"
-#include "RandState.h"
+#include "vsc/IRandState.h"
 
 namespace vsc {
 
@@ -70,7 +70,7 @@ private:
 	std::unordered_map<std::string,int32_t>		m_constraint_name_m;
 	std::unordered_set<int32_t>					m_constraint_ov_s;
 	ISolverFactoryUP							m_solver_factory;
-	RandStateUP									m_randstate;
+	IRandStateUP								m_randstate;
 
 
 };

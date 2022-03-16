@@ -28,7 +28,7 @@ DEBUG_SCOPE(SolveSetSwizzlerPartSel);
 
 namespace vsc {
 
-SolveSetSwizzlerPartsel::SolveSetSwizzlerPartsel(RandState *randstate) :
+SolveSetSwizzlerPartsel::SolveSetSwizzlerPartsel(IRandState *randstate) :
 		m_randstate(randstate) {
 	m_solver = 0;
 	m_sset = 0;

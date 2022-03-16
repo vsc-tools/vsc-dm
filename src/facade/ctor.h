@@ -116,7 +116,7 @@ public:
 	/**
 	 * Derives a randstate from the master copy
 	 */
-	RandState *mk_randstate();
+	IRandState *mk_randstate();
 
 private:
 	std::vector<IModelExprUP>					m_expr_s;

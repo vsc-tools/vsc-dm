@@ -20,6 +20,8 @@
 
 #include "Context.h"
 #include "ModelFieldRoot.h"
+#include "Randomizer.h"
+#include "RandState.h"
 
 namespace vsc {
 
@@ -112,6 +114,16 @@ IModelField *Context::mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) {
 	return new ModelFieldRoot(type, name);
+}
+
+IRandomizer *Context::mkRandomizer(
+			ISolverFactory		*solver_factory,
+			IRandState			*randstate) {
+	return new Randomizer(solver_factory, randstate);
+}
+
+IRandState *Context::mkRandState(uint32_t seed) {
+	return new RandState(seed);
 }
 
 } /* namespace vsc */

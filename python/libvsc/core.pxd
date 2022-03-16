@@ -6,6 +6,7 @@ from libc.stdint cimport uint32_t
 from libc.stdint cimport uint64_t
 from libc.stdint cimport int64_t
 from libcpp cimport bool
+from libcpp.vector cimport vector as cpp_vector
 cimport cpython.ref as cpy_ref
 
 cdef class Vsc(object):
@@ -18,6 +19,8 @@ cdef class Context(object):
     
     cpdef mkDataTypeInt(self, bool is_signed, int width)
     cpdef mkModelFieldRoot(self, DataType type, name)
+    cpdef mkRandState(self, uint32_t seed)
+    cpdef mkRandomizer(self, SolverFactory, RandState)
     
 cdef class DataType(object):
     cdef decl.IDataType         *_hndl
@@ -31,6 +34,11 @@ cdef class DataTypeInt(DataType):
     cdef mk(decl.IDataTypeInt *, owned=*)
     
     cdef decl.IDataTypeInt *asTypeInt(self)
+    
+cdef class ModelConstraint(object):
+    cdef decl.IModelConstraint   *_hndl
+    cdef bool                    _owned
+    
     
 
 cdef class ModelExpr(object):
@@ -50,6 +58,7 @@ cdef class ModelExprBin(ModelExpr):
     
 cdef class ModelField(object):
     cdef decl.IModelField       *_hndl
+    cdef bool                   _owned
     
     cpdef name(self)
     cpdef getDataType(self)
@@ -74,6 +83,27 @@ cdef class ModelVal(object):
     
     @staticmethod 
     cdef mk(decl.IModelVal *, owned=*)
+    
+cdef class Randomizer(object):
+    cdef decl.IRandomizer      *_hndl
+    
+    cpdef randomize(self, list fields, list, bool)
+    
+    @staticmethod
+    cdef mk(decl.IRandomizer *hndl)
+    
+cdef class RandState(object):
+    cdef decl.IRandState       *_hndl
+    
+    cpdef randint32(self, int32_t, int32_t)
+    cpdef randbits(self, ModelVal)
+    
+    @staticmethod
+    cdef mk(decl.IRandState *)
+    
+cdef class SolverFactory(object):
+    cdef decl.ISolverFactory    *_hndl
+    
     
 cdef class VisitorBase(object):
     cdef decl.VisitorProxy      *_proxy

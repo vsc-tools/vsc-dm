@@ -68,7 +68,7 @@ rand_obj::~rand_obj() {
 
 bool rand_obj::randomize() {
 	if (!m_randstate) {
-		m_randstate = RandStateUP(ctor::inst()->mk_randstate());
+		m_randstate = IRandStateUP(ctor::inst()->mk_randstate());
 	}
 	Randomizer randomizer(
 			solver_factory(),
@@ -89,7 +89,7 @@ bool rand_obj::randomize() {
 bool rand_obj::randomize_with(
 		const std::function<void()> &body) {
 	if (!m_randstate) {
-		m_randstate = RandStateUP(ctor::inst()->mk_randstate());
+		m_randstate = IRandStateUP(ctor::inst()->mk_randstate());
 	}
 	Randomizer randomizer(
 			solver_factory(),

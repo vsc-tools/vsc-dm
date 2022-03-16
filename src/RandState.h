@@ -8,26 +8,27 @@
 #pragma once
 #include <random>
 #include <stdint.h>
+#include "vsc/IRandState.h"
 #include "ModelVal.h"
 
 namespace vsc {
 
 class RandState;
 using RandStateUP=std::unique_ptr<RandState>;
-class RandState {
+class RandState : public IRandState {
 public:
 	RandState(uint32_t seed);
 
 	virtual ~RandState();
 
-	int32_t randint32(
+	virtual int32_t randint32(
 			int32_t		min,
-			int32_t		max);
+			int32_t		max) override;
 
 	/**
 	 * Fills the value with a random bit pattern
 	 */
-	void randbits(IModelVal *val);
+	virtual void randbits(IModelVal *val) override;
 
 protected:
 	uint64_t next();

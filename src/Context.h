@@ -38,6 +38,12 @@ public:
 			IDataType 			*type,
 			const std::string	&name) override;
 
+	virtual IRandomizer *mkRandomizer(
+			ISolverFactory		*solver_factory,
+			IRandState			*randstate) override;
+
+	virtual IRandState *mkRandState(uint32_t seed) override;
+
 private:
 
 	std::unordered_map<std::string,DataTypeStructUP>		m_struct_type_m;

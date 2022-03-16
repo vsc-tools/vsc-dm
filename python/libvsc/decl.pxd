@@ -22,6 +22,8 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
     
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
+        IRandState *mkRandState(uint32_t)
+        IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
     
 #********************************************************************
 #* IDataType
@@ -49,6 +51,14 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
 cdef extern from "vsc/IAccept.h" namespace "vsc":
     cdef cppclass IAccept:
         void accept(IVisitor *)
+        
+#********************************************************************
+#* IModelConstraint
+#********************************************************************
+ctypedef IModelConstraint *IModelConstraintP
+cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
+    cdef cppclass IModelConstraint:
+        pass
 
 #********************************************************************
 #* IModelExpr
@@ -97,7 +107,32 @@ cdef extern from "vsc/IModelVal.h" namespace "vsc":
         void set_val_i(int64_t, int32_t)
         void set_val_u(uint64_t, int32_t)
         val_t &val()
+        
+#********************************************************************
+#* IRandomizer
+#********************************************************************
+cdef extern from "vsc/IRandomizer.h" namespace "vsc":
+    cdef cppclass IRandomizer:
+        bool randomize(
+            const cpp_vector[IModelFieldP]       &fields,
+            const cpp_vector[IModelConstraintP]  &constraints,
+            bool                                 diagnose_failures)
     
+#********************************************************************
+#* IRandState
+#********************************************************************
+cdef extern from "vsc/IRandState.h" namespace "vsc":
+    cdef cppclass IRandState:
+        int32_t randint32(int32_t, int32_t)
+        void randbits(IModelVal *)
+        
+#********************************************************************
+#* ISolverFactory
+#********************************************************************
+cdef extern from "vsc/ISolverFactory.h" namespace "vsc":
+    cdef cppclass ISolverFactory:
+        pass
+        
 #********************************************************************
 #* IVisitor
 #********************************************************************

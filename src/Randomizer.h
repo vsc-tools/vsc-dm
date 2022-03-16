@@ -6,30 +6,31 @@
  */
 #pragma once
 #include "vsc/IModelConstraint.h"
-#include "ISolverFactory.h"
+#include "vsc/ISolverFactory.h"
 #include "ModelField.h"
-#include "RandState.h"
+#include "vsc/IRandomizer.h"
+#include "vsc/IRandState.h"
 #include "RNG.h"
 
 namespace vsc {
 
-class Randomizer {
+class Randomizer : public IRandomizer {
 public:
 	Randomizer(
 			ISolverFactory		*solver_factory,
-			RandState			*randstate);
+			IRandState			*randstate);
 
 	virtual ~Randomizer();
 
-	bool randomize(
+	virtual bool randomize(
 			const std::vector<IModelField *>		&fields,
 			const std::vector<IModelConstraint *>	&constraints,
 			bool									diagnose_failures
-			);
+			) override;
 
 private:
 	ISolverFactory		*m_solver_factory;
-	RandState			*m_randstate;
+	IRandState			*m_randstate;
 
 };
 

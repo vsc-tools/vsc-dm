@@ -247,7 +247,7 @@ void ctor::pop_build_field() {
 	m_build_field_s.pop_back();
 }
 
-RandState *ctor::mk_randstate() {
+IRandState *ctor::mk_randstate() {
 	uint32_t seed = m_randstate.randint32(1, 0x7FFFFFFF);
 	return new RandState(seed);
 }

@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "ISolverFactory.h"
+#include "vsc/ISolverFactory.h"
 
 namespace vsc {
 
@@ -17,6 +17,11 @@ public:
 	virtual ~SolverFactoryDefault();
 
 	virtual ISolver *createSolverInst(SolveSet *sset) override;
+
+	static ISolverFactory *inst();
+
+private:
+	static SolverFactoryDefault			m_inst;
 
 };
 
