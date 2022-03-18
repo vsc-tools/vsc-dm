@@ -23,10 +23,10 @@
 #include "SolverBoolectorSolveModelBuilder.h"
 #include "boolector/boolector.h"
 
-#undef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
+#define EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
-DEBUG_SCOPE(SolverBoolectorSolveModelBuilder)
+DEBUG_SCOPE(SolverBoolectorSolveModelBuilder);
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBoolectorSolveModelBuilder, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBoolectorSolveModelBuilder, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...) DEBUG_BASE(SolverBoolectorSolveModelBuilder, fmt, ##__VA_ARGS__)

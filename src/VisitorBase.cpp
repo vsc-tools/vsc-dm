@@ -22,10 +22,10 @@
 #include "Debug.h"
 #include "VisitorBase.h"
 
-#undef EN_DEBUG_VISITOR_BASE
+#define EN_DEBUG_VISITOR_BASE
 
 #ifdef EN_DEBUG_VISITOR_BASE
-DEBUG_SCOPE(VisitorBase)
+DEBUG_SCOPE(VisitorBase);
 #define DEBUG_ENTER(fmt, ...) \
 	DEBUG_ENTER_BASE(VisitorBase, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) \

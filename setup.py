@@ -204,6 +204,20 @@ class build_ext(_build_ext):
 
 print("extra_compile_args=" + str(extra_compile_args))
 
+ext = Extension("libvsc.core",
+            extra_compile_args=extra_compile_args,
+            sources=[
+                os.path.join(libvsc_dir, 'python', "core.pyx"), 
+                os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
+            ],
+            language="c++",
+            include_dirs=[
+                os.path.join(libvsc_dir, 'src'),
+                os.path.join(libvsc_dir, 'src', 'include')
+            ]
+        )
+ext.cython_directives={'language_level' : '3'}
+
 setup(
   name = "libvsc",
   packages=['libvsc'],
@@ -227,30 +241,7 @@ setup(
     'cython'
   ],
   cmdclass={'build_ext': build_ext},
-  ext_modules=[
-        Extension("libvsc.core",
-            extra_compile_args=extra_compile_args,
-            sources=[
-                os.path.join(libvsc_dir, 'python', "core.pyx"), 
-                os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
-#                os.path.join(libvsc_dir, 'python', 'TbLinkListenerClosure.cpp'),
-#                os.path.join(libvsc_dir, 'python', 'TimeCallbackClosure.cpp')
-            ],
-            language="c++",
-            include_dirs=[
-                os.path.join(libvsc_dir, 'src'),
-                os.path.join(libvsc_dir, 'src', 'include')
-            ],
-#            library_dirs=[
-#                os.path.join(libvsc_dir, 'build', 'src')
-#            ],
-#            libraries=[
-#                "-Wl,--whole-archive",
-#                "vsc_static",
-#                "-Wl,--no-whole-archive",
-#            ]
-        )
-    ]
+  ext_modules=[ ext ]
 )
 
 

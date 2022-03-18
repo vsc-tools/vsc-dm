@@ -18,6 +18,8 @@ public:
 
 	virtual IContext *mkContext() override;
 
+	virtual IDebugMgr *getDebugMgr() override;
+
 	static IVsc *inst();
 
 private:

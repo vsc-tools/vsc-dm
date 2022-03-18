@@ -19,6 +19,9 @@
  */
 
 #include "Context.h"
+#include "ModelConstraintExpr.h"
+#include "ModelExprBin.h"
+#include "ModelExprFieldRef.h"
 #include "ModelFieldRoot.h"
 #include "Randomizer.h"
 #include "RandState.h"
@@ -81,6 +84,11 @@ DataTypeInt *Context::findIntType(
 	return 0;
 }
 
+IModelConstraintExpr *Context::mkModelConstraintExpr(
+			IModelExpr		*expr) {
+	return new ModelConstraintExpr(expr);
+}
+
 IDataTypeInt *Context::mkDataTypeInt(
 			bool			is_signed,
 			int32_t			width) {
@@ -108,6 +116,18 @@ IDataTypeInt *Context::mkDataTypeInt(
 		}
 	}
 	return ret;
+}
+
+IModelExprBin *Context::mkModelExprBin(
+			IModelExpr		*lhs,
+			BinOp			op,
+			IModelExpr		*rhs) {
+	return new ModelExprBin(lhs, op, rhs);
+}
+
+IModelExprFieldRef *Context::mkModelExprFieldRef(
+			IModelField		*field) {
+	return new ModelExprFieldRef(field);
 }
 
 IModelField *Context::mkModelFieldRoot(

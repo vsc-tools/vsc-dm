@@ -20,16 +20,38 @@
  */
 
 #include "Debug.h"
+#include "DebugMgr.h"
 
 namespace vsc {
 
-Debug::Debug() {
-	// TODO Auto-generated constructor stub
-
+Debug::Debug(const char *name) : m_en(false), m_name(name) {
+	m_mgr = DebugMgr::inst();
+	m_mgr->addDebug(this);
 }
 
 Debug::~Debug() {
 	// TODO Auto-generated destructor stub
+}
+
+void Debug::enter(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	m_mgr->enter(this, fmt, ap);
+	va_end(ap);
+}
+
+void Debug::leave(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	m_mgr->leave(this, fmt, ap);
+	va_end(ap);
+}
+
+void Debug::debug(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	m_mgr->debug(this, fmt, ap);
+	va_end(ap);
 }
 
 } /* namespace vsc */

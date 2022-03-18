@@ -13,7 +13,7 @@
 #include "ModelExprVal.h"
 #include "SolveSetSwizzlerPartsel.h"
 
-#undef EN_DEBUG_SOLVE_SET_SWIZZLER_PARTSEL
+#define EN_DEBUG_SOLVE_SET_SWIZZLER_PARTSEL
 
 #ifdef EN_DEBUG_SOLVE_SET_SWIZZLER_PARTSEL
 DEBUG_SCOPE(SolveSetSwizzlerPartSel);
@@ -117,7 +117,7 @@ void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
 	val.set(f->val());
 
 	m_randstate->randbits(&val);
-	DEBUG("randbits: 0x%08llx", val.u64());
+	DEBUG("randbits: 0x%08llx", val.val_u());
 //	uint32_t bit_pattern = m_randstate->randint32(0, (1 << width)-1);
 
 	uint32_t max_intervals = 6;

@@ -24,9 +24,10 @@
 #include "SolverBitwuzla.h"
 #include "SolverBitwuzlaSolveModelBuilder.h"
 
-#undef EN_DEBUG_SOLVER_BITWUZLA
+#define EN_DEBUG_SOLVER_BITWUZLA
 
 #ifdef EN_DEBUG_SOLVER_BITWUZLA
+DEBUG_SCOPE(SolverBitwuzla);
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...) DEBUG_BASE(SolverBitwuzla, fmt, ##__VA_ARGS__)

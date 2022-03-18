@@ -22,10 +22,10 @@
 #include "Debug.h"
 #include "SetFieldUsedRandVisitor.h"
 
-#undef EN_DEBUG_SET_FIELD_USED_RAND_VISITOR
+#define EN_DEBUG_SET_FIELD_USED_RAND_VISITOR
 
 #ifdef EN_DEBUG_SET_FIELD_USED_RAND_VISITOR
-DEBUG_SCOPE(SetFieldUsedRandVisitor)
+DEBUG_SCOPE(SetFieldUsedRandVisitor);
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SetFieldUsedRandVisitor, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SetFieldUsedRandVisitor, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...) DEBUG_BASE(SetFieldUsedRandVisitor, fmt, ##__VA_ARGS__)

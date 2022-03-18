@@ -21,9 +21,10 @@
 #include "Debug.h"
 #include "SolveSpecBuilder.h"
 
-#undef EN_DEBUG_SOLVE_SPEC_BUILDER
+#define EN_DEBUG_SOLVE_SPEC_BUILDER
+
 #ifdef EN_DEBUG_SOLVE_SPEC_BUILDER
-DEBUG_SCOPE(SolveSpecBuilder)
+DEBUG_SCOPE(SolveSpecBuilder);
 #define DEBUG_ENTER(fmt, ...) \
 		DEBUG_ENTER_BASE(SolveSpecBuilder, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) \
@@ -76,6 +77,12 @@ SolveSpec *SolveSpecBuilder::build(
 	}
 
 	std::vector<IModelField *> unconstrained;
+
+	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
+		if (*it) {
+			unconstrained.push_back(*it);
+		}
+	}
 
 	SolveSpec *spec = new SolveSpec(
 			solvesets,

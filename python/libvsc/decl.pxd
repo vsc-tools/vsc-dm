@@ -19,8 +19,11 @@ cimport cpython.ref as cpy_ref
 #********************************************************************
 cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
-    
+   
+        IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
+        IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
+        IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
@@ -37,6 +40,7 @@ cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
         pass
     
 ctypedef IDataTypeInt *IDataTypeIntP
+
 #********************************************************************
 #* IVsc
 #********************************************************************
@@ -59,6 +63,10 @@ ctypedef IModelConstraint *IModelConstraintP
 cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
     cdef cppclass IModelConstraint:
         pass
+    
+cdef extern from "vsc/IModelConstraintExpr.h" namespace "vsc":
+    cdef cppclass IModelConstraintExpr(IModelConstraint):
+        IModelExpr *expr() const
 
 #********************************************************************
 #* IModelExpr
@@ -67,7 +75,36 @@ cdef extern from "vsc/IModelExpr.h" namespace "vsc":
     cdef cppclass IModelExpr(IAccept):
         pass
     
+    
+cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
+    cdef cppclass IModelExprFieldRef(IModelExpr):
+        IModelField *field() const
+        
+#********************************************************************
+#* IModelExprBin
+#********************************************************************
 cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
+    cdef enum BinOp:
+       Eq      "vsc::BinOp::Eq"
+       Ne      "vsc::BinOp::Ne"
+       Gt      "vsc::BinOp::Gt"
+       Ge      "vsc::BinOp::Ge"
+       Lt      "vsc::BinOp::Lt"
+       Le      "vsc::BinOp::Le"
+       Add     "vsc::BinOp::Add"
+       Sub     "vsc::BinOp::Sub"
+       Div     "vsc::BinOp::Div"
+       Mul     "vsc::BinOp::Mul"
+       Mod     "vsc::BinOp::Mod"
+       BinAnd  "vsc::BinOp::BinAnd"
+       BinOr   "vsc::BinOp::BinOr" 
+       LogAnd  "vsc::BinOp::LogAnd"
+       LogOr   "vsc::BinOp::LogOr"
+       Sll     "vsc::BinOp::Sll"
+       Srl     "vsc::BinOp::Srl"
+       Xor     "vsc::BinOp::Xor"
+       Not     "vsc::BinOp::Not"
+        
     cdef cppclass IModelExprBin(IModelExpr):
         pass
 
@@ -78,17 +115,29 @@ ctypedef IModelVal *IModelValP
 ctypedef IModelField *IModelFieldP
 ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/IModelField.h" namespace "vsc":
+
+    cdef enum ModelFieldFlag:
+        NoFlags  "vsc::ModelFieldFlag::NoFlags"
+        DeclRand "vsc::ModelFieldFlag::DeclRand"
+        UsedRand "vsc::ModelFieldFlag::UsedRand"
+        Resolved "vsc::ModelFieldFlag::Resolved"
+        VecSize  "vsc::ModelFieldFlag::VecSize"
+        
     cdef cppclass IModelField(IAccept):
     
         const cpp_string &name()
         IDataType *getDataType()
         IModelField *getParent()
         void setParent(IModelField *)
-        # TODO: constraints
-        # TODO: fields
+        const cpp_vector[unique_ptr[IModelConstraint]] &constraints()
+        void addConstraint(IModelConstraintP)
         const cpp_vector[IModelFieldUP] &fields()
         void addField(IModelField *)
         IModelValP val()
+        
+        void clearFlag(ModelFieldFlag flags)
+        void setFlag(ModelFieldFlag flags)
+        bool isFlagSet(ModelFieldFlag flags)
         
         pass
     

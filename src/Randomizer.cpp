@@ -27,10 +27,10 @@
 #include "SolveSetSolveModelBuilder.h"
 #include "SolverFactoryDefault.h"
 
-#undef EN_DEBUG_RANDOMIZER
+#define EN_DEBUG_RANDOMIZER
 
 #ifdef EN_DEBUG_RANDOMIZER
-DEBUG_SCOPE(Randomizer)
+DEBUG_SCOPE(Randomizer);
 #define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(Randomizer, fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(Randomizer, fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...) DEBUG_BASE(Randomizer, fmt, ##__VA_ARGS__)

@@ -7,6 +7,7 @@ from libc.stdint cimport uint64_t
 from libc.stdint cimport int64_t
 from libcpp cimport bool
 from libcpp.vector cimport vector as cpp_vector
+from enum import IntFlag
 cimport cpython.ref as cpy_ref
 
 cdef class Vsc(object):
@@ -16,8 +17,11 @@ cdef class Vsc(object):
    
 cdef class Context(object):
     cdef decl.IContext               *_hndl
-    
+
+    cpdef mkModelConstraintExpr(self, ModelExpr)
     cpdef mkDataTypeInt(self, bool is_signed, int width)
+    cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
+    cpdef mkModelExprFieldRef(self, ModelField field)
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
@@ -39,8 +43,17 @@ cdef class ModelConstraint(object):
     cdef decl.IModelConstraint   *_hndl
     cdef bool                    _owned
     
-    
+    @staticmethod
+    cdef mk(decl.IModelConstraint *hndl, bool owned=*)
+   
+cdef class ModelConstraintExpr(ModelConstraint):
 
+    cpdef expr(self)
+
+    cdef decl.IModelConstraintExpr *asModelConstraintExpr(self)
+    @staticmethod
+    cdef mk(decl.IModelConstraintExpr *, bool owned=*)
+    
 cdef class ModelExpr(object):
     cdef decl.IModelExpr         *_hndl
     cdef bool                    _owned
@@ -48,7 +61,7 @@ cdef class ModelExpr(object):
     cpdef accept(self, VisitorBase v)
     
     @staticmethod
-    cdef mkWrapper(decl.IModelExpr *e)
+    cdef mk(decl.IModelExpr *e, bool owned=*)
 
 cdef class ModelExprBin(ModelExpr):
 
@@ -56,6 +69,15 @@ cdef class ModelExprBin(ModelExpr):
     cdef mkWrapper(decl.IModelExprBin *e)
     cdef decl.IModelExprBin *asExprBin(self)
     
+cdef class ModelExprFieldRef(ModelExpr):
+
+    cpdef field(self)
+
+    cdef decl.IModelExprFieldRef *asExprFieldRef(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprFieldRef *, bool owned=*)
+
 cdef class ModelField(object):
     cdef decl.IModelField       *_hndl
     cdef bool                   _owned
@@ -64,9 +86,15 @@ cdef class ModelField(object):
     cpdef getDataType(self)
     cpdef getParent(self)
     cpdef setParent(self, ModelField)
+    cpdef constraints(self)
+    cpdef addConstraint(self, ModelConstraint)
     cpdef fields(self)
     cpdef addField(self, ModelField)
     cpdef val(self)
+    
+    cpdef clearFlag(self, flags)
+    cpdef setFlag(self, flags)
+    cpdef isFlagSet(self, flags)
 
     @staticmethod
     cdef mk(decl.IModelField *, owned=*)

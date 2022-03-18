@@ -12,8 +12,10 @@ from libc.stdint cimport uint64_t
 from libc.stdint cimport int64_t
 from libcpp cimport bool
 from libcpp.cast cimport dynamic_cast
+from libcpp.cast cimport static_cast
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
+from enum import IntFlag, IntEnum
 
 
 _Context_inst = None
@@ -30,9 +32,30 @@ cdef class Context(object):
     
     def __dealloc__(self):
         del self._hndl
-        
+
     cpdef mkDataTypeInt(self, bool is_signed, int width):
         return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width))
+    
+    cpdef mkModelConstraintExpr(self, ModelExpr expr):
+        expr._owned = False
+        return ModelConstraintExpr.mk(self._hndl.mkModelConstraintExpr(expr._hndl))
+    
+    cpdef mkModelExprBin(self, 
+            ModelExpr           lhs,
+            op,
+            ModelExpr           rhs):
+        cdef int op_i = int(op)
+        lhs._owned = False
+        rhs._owned = False
+        return ModelExprBin.mk(
+            self._hndl.mkModelExprBin(
+                lhs._hndl,
+                <decl.BinOp>(op_i),
+                rhs._hndl))
+        
+    cpdef mkModelExprFieldRef(self, ModelField field):
+        return ModelExprFieldRef.mk(
+            self._hndl.mkModelExprFieldRef(field._hndl))
     
     cpdef mkModelFieldRoot(self, DataType type, name):
         cdef decl.IDataType *type_h = NULL
@@ -91,8 +114,30 @@ cdef class ModelConstraint(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+            
+    @staticmethod
+    cdef mk(decl.IModelConstraint *hndl, bool owned=True):
+        ret = ModelConstraint()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
 
     pass
+
+cdef class ModelConstraintExpr(ModelConstraint):
+
+    cpdef expr(self):
+        return ModelExpr.mk(self.asModelConstraintExpr().expr(), False)
+    
+    @staticmethod
+    cdef mk(decl.IModelConstraintExpr *hndl, bool owned=True):
+        ret = ModelConstraintExpr()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    cdef decl.IModelConstraintExpr *asModelConstraintExpr(self):
+        return <decl.IModelConstraintExpr *>(self._hndl)
 
 cdef class ModelExpr(object):
     
@@ -104,11 +149,32 @@ cdef class ModelExpr(object):
         pass
 
     @staticmethod
-    cdef mkWrapper(decl.IModelExpr *e):
+    cdef mk(decl.IModelExpr *e, bool owned=True):
         ret = ModelExpr()
-        ret._owned = False
+        ret._owned = owned
         ret._hndl = e
         return ret
+    
+class BinOp(IntEnum):
+    Eq      = decl.BinOp.Eq
+    Ne      = decl.BinOp.Ne
+    Gt      = decl.BinOp.Gt
+    Ge      = decl.BinOp.Ge
+    Lt      = decl.BinOp.Lt
+    Le      = decl.BinOp.Le
+    Add     = decl.BinOp.Add
+    Sub     = decl.BinOp.Sub 
+    Div     = decl.BinOp.Div
+    Mul     = decl.BinOp.Mul
+    Mod     = decl.BinOp.Mod
+    BinAnd  = decl.BinOp.BinAnd
+    BinOr   = decl.BinOp.BinOr
+    LogAnd  = decl.BinOp.LogAnd
+    LogOr   = decl.BinOp.LogOr
+    Sll     = decl.BinOp.Sll
+    Srl     = decl.BinOp.Srl
+    Xor     = decl.BinOp.Xor
+    Not     = decl.BinOp.Not
     
 cdef class ModelExprBin(ModelExpr):
     
@@ -121,6 +187,28 @@ cdef class ModelExprBin(ModelExpr):
     
     cdef decl.IModelExprBin *asExprBin(self):
         return <decl.IModelExprBin *>(self._hndl)
+    
+cdef class ModelExprFieldRef(ModelExpr):
+
+    cpdef field(self):
+        return ModelField.mk(self.asExprFieldRef().field(), False)
+    
+    cdef decl.IModelExprFieldRef *asExprFieldRef(self):
+        return <decl.IModelExprFieldRef *>(self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprFieldRef *hndl, bool owned=True):
+        ret = ModelExprFieldRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+class ModelFieldFlag(IntFlag):
+    NoFlags  = decl.ModelFieldFlag.NoFlags
+    DeclRand = decl.ModelFieldFlag.DeclRand
+    UsedRand = decl.ModelFieldFlag.UsedRand
+    Resolved = decl.ModelFieldFlag.Resolved
+    VecSize  = decl.ModelFieldFlag.VecSize
     
 cdef class ModelField(object):
 
@@ -140,6 +228,19 @@ cdef class ModelField(object):
     cpdef setParent(self, ModelField parent):
         self._hndl.setParent(parent._hndl)
         
+    cpdef constraints(self):
+        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *constraints_l = &self._hndl.constraints()
+        ret = []
+        
+        for i in range(constraints_l.size()):
+            ret.append(ModelConstraint.mk(constraints_l.at(i).get(), False))
+            
+        return ret
+        
+    cpdef addConstraint(self, ModelConstraint c):
+        c._owned = False
+        self._hndl.addConstraint(c._hndl)
+
     cpdef fields(self):
         cdef const cpp_vector[decl.IModelFieldUP] *fields_l = &self._hndl.fields()
         ret = []
@@ -157,6 +258,18 @@ cdef class ModelField(object):
         
     cpdef val(self):
         return ModelVal.mk(self._hndl.val(), False)
+    
+    cpdef clearFlag(self, flags):
+        cdef int flags_i = flags
+        self._hndl.clearFlag(<decl.ModelFieldFlag>(flags_i))
+    
+    cpdef setFlag(self, flags):
+        cdef int flags_i = flags
+        self._hndl.setFlag(<decl.ModelFieldFlag>(flags_i))
+    
+    cpdef isFlagSet(self, flags):
+        cdef int flags_i = flags
+        return self._hndl.isFlagSet(<decl.ModelFieldFlag>(flags_i))
         
     
     @staticmethod
@@ -222,6 +335,11 @@ cdef class Randomizer(object):
         for c in constraints:
             ccd = <ModelConstraint>(c)
             constraints_v.push_back(ccd._hndl)
+            
+        self._hndl.randomize(
+            fields_v,
+            constraints_v,
+            diagnose_failures)
             
         pass
     

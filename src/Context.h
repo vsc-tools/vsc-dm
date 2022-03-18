@@ -30,9 +30,21 @@ public:
 
 	void addIntType(DataTypeInt		*t);
 
+
 	virtual IDataTypeInt *mkDataTypeInt(
 			bool			is_signed,
 			int32_t			width) override;
+
+	virtual IModelConstraintExpr *mkModelConstraintExpr(
+			IModelExpr		*expr) override;
+
+	virtual IModelExprBin *mkModelExprBin(
+			IModelExpr		*lhs,
+			BinOp			op,
+			IModelExpr		*rhs) override;
+
+	virtual IModelExprFieldRef *mkModelExprFieldRef(
+			IModelField		*field) override;
 
 	virtual IModelField *mkModelFieldRoot(
 			IDataType 			*type,

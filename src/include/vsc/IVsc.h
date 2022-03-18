@@ -8,6 +8,7 @@
 #pragma once
 #include <memory>
 #include "vsc/IContext.h"
+#include "vsc/IDebugMgr.h"
 
 namespace vsc {
 
@@ -18,6 +19,8 @@ public:
 	virtual ~IVsc() { }
 
 	virtual IContext *mkContext() = 0;
+
+	virtual IDebugMgr *getDebugMgr() = 0;
 
 };
 

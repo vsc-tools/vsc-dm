@@ -24,7 +24,7 @@
 #include "SolverBoolector.h"
 #include "SolverBoolectorSolveModelBuilder.h"
 
-#undef EN_DEBUG_SOLVER_BOOLECTOR
+#define EN_DEBUG_SOLVER_BOOLECTOR
 
 #ifdef EN_DEBUG_SOLVER_BOOLECTOR
 DEBUG_SCOPE(SolverBoolector);
@@ -81,7 +81,7 @@ void SolverBoolector::initField(IModelField *f) {
 		m_issat_valid = false;
 	}
 
-	DEBUG_LEAVE("initField %s (width=%d)", f->name().c_str(), f->val().bits());
+	DEBUG_LEAVE("initField %s (width=%d)", f->name().c_str(), f->val()->bits());
 }
 
 	// Creates solver data for a constraint
@@ -142,7 +142,7 @@ void SolverBoolector::setFieldValue(IModelField *f) {
 
 	boolector_free_bv_assignment(m_btor, bits);
 	DEBUG_LEAVE("setFieldValue %s (0x%08llx)",
-			f->name().c_str(), f->val().u64());
+			f->name().c_str(), f->val()->val_u());
 }
 
 BoolectorSort SolverBoolector::get_sort(int32_t width) {

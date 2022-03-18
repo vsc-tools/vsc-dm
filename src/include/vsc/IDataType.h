@@ -12,6 +12,7 @@ namespace vsc {
 
 class IDataType;
 using IDataTypeUP=std::unique_ptr<IDataType>;
+using IDataTypeSP=std::shared_ptr<IDataType>;
 class IDataType : public IAccept{
 public:
 
