@@ -126,6 +126,16 @@ void ModelVal::bits(uint32_t b) {
 	m_bits = b;
 }
 
+void ModelVal::setBits(uint32_t b) {
+	// TODO: handle transitions between val and vec
+	if ((m_bits <= 64) != (b <= 64)) {
+		// I
+
+	}
+	fprintf(stdout, "ModelVal::bits: %d\n", b);
+	m_bits = b;
+}
+
 void ModelVal::to_bits(char *bits) const {
 	if (m_bits <= 64) {
 		char *ep = bits+m_bits;

@@ -1,9 +1,10 @@
 #****************************************************************************
 #* libvsc.core
 #****************************************************************************
-from libvsc cimport decl
 import os
+from enum import IntFlag, IntEnum
 from ctypes import CDLL
+from libvsc cimport decl
 cimport cpython.ref as cpy_ref
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
@@ -15,13 +16,11 @@ from libcpp.cast cimport dynamic_cast
 from libcpp.cast cimport static_cast
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
-from enum import IntFlag, IntEnum
 
 
 _Context_inst = None
 
 cdef class Context(object):
-#    cdef decl.IContext               *_hndl
 
     def __cinit__(self):
         vsc = Vsc_inst()
@@ -35,6 +34,9 @@ cdef class Context(object):
 
     cpdef mkDataTypeInt(self, bool is_signed, int width):
         return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width))
+    
+    cpdef mkModelConstraintBlock(self, name):
+        return ModelConstraintBlock.mk(self._hndl.mkModelConstraintBlock(name.encode()))
     
     cpdef mkModelConstraintExpr(self, ModelExpr expr):
         expr._owned = False
@@ -56,6 +58,12 @@ cdef class Context(object):
     cpdef mkModelExprFieldRef(self, ModelField field):
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
+        
+    cpdef mkModelExprVal(self, ModelVal v):
+        if v is not None:
+            return ModelExprVal.mk(self._hndl.mkModelExprVal(v._hndl))
+        else:
+            return ModelExprVal.mk(self._hndl.mkModelExprVal(NULL))
     
     cpdef mkModelFieldRoot(self, DataType type, name):
         cdef decl.IDataType *type_h = NULL
@@ -123,6 +131,41 @@ cdef class ModelConstraint(object):
         return ret
 
     pass
+
+cdef class ModelConstraintScope(ModelConstraint):
+    
+    cpdef constraints(self):
+        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *cl = &self.asModelConstraintScope().constraints()
+        ret = []
+        
+        for i in range(cl.size()):
+            ret.append(ModelConstraint.mk(cl.at(i).get(), False))
+        
+        return ret
+    
+    cpdef addConstraint(self, ModelConstraint c):
+        c._owned = False
+        self.asModelConstraintScope().add_constraint(c._hndl)
+    
+    cdef decl.IModelConstraintScope *asModelConstraintScope(self):
+        return <decl.IModelConstraintScope *>(self._hndl)
+    
+
+cdef class ModelConstraintBlock(ModelConstraintScope):
+
+    cpdef name(self):
+        return self.asModelConstraintBlock().name().decode()
+
+    cdef decl.IModelConstraintBlock *asModelConstraintBlock(self):
+        return <decl.IModelConstraintBlock *>(self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelConstraintBlock *hndl, bool owned=True):
+        ret = ModelConstraintBlock()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 
 cdef class ModelConstraintExpr(ModelConstraint):
 
@@ -203,6 +246,24 @@ cdef class ModelExprFieldRef(ModelExpr):
         ret._owned = owned
         return ret
     
+cdef class ModelExprVal(ModelExpr):
+    
+    cpdef width(self):
+        return self.asModelExprVal().width()
+        
+    cpdef val(self):
+        return ModelVal.mk(self.asModelExprVal().val(), False)
+    
+    cdef decl.IModelExprVal *asModelExprVal(self):
+        return <decl.IModelExprVal *>(self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprVal *hndl, bool owned=True):
+        ret = ModelExprVal()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 class ModelFieldFlag(IntFlag):
     NoFlags  = decl.ModelFieldFlag.NoFlags
     DeclRand = decl.ModelFieldFlag.DeclRand
@@ -287,6 +348,9 @@ cdef class ModelVal(object):
 
     cpdef bits(self):
         return self._hndl.bits()
+    
+    cpdef setBits(self, b):
+        self._hndl.setBits(b)
     
     cpdef val_u(self):
         if self._hndl.bits() <= 64:

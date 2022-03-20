@@ -35,6 +35,9 @@ public:
 			bool			is_signed,
 			int32_t			width) override;
 
+	virtual IModelConstraintBlock *mkModelConstraintBlock(
+			const std::string &name) override;
+
 	virtual IModelConstraintExpr *mkModelConstraintExpr(
 			IModelExpr		*expr) override;
 
@@ -45,6 +48,8 @@ public:
 
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
+
+	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
 	virtual IModelField *mkModelFieldRoot(
 			IDataType 			*type,

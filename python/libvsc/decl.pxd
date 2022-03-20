@@ -19,11 +19,12 @@ cimport cpython.ref as cpy_ref
 #********************************************************************
 cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
-   
+        IModelConstraintBlock *mkModelConstraintBlock(const cpp_string &)
         IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
+        IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
@@ -31,6 +32,8 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
 #********************************************************************
 #* IDataType
 #********************************************************************
+ctypedef IDataTypeInt *IDataTypeIntP
+
 cdef extern from "vsc/IDataType.h" namespace "vsc":
     cdef cppclass IDataType:
         pass
@@ -39,7 +42,6 @@ cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
     cdef cppclass IDataTypeInt(IDataType):
         pass
     
-ctypedef IDataTypeInt *IDataTypeIntP
 
 #********************************************************************
 #* IVsc
@@ -64,6 +66,15 @@ cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
     cdef cppclass IModelConstraint:
         pass
     
+cdef extern from "vsc/IModelConstraintScope.h" namespace "vsc":
+    cdef cppclass IModelConstraintScope(IModelConstraint):
+        const cpp_vector[unique_ptr[IModelConstraint]] &constraints() const
+        void add_constraint(IModelConstraint *)
+    
+cdef extern from "vsc/IModelConstraintBlock.h" namespace "vsc":
+    cdef cppclass IModelConstraintBlock(IModelConstraintScope):
+        const cpp_string &name()
+    
 cdef extern from "vsc/IModelConstraintExpr.h" namespace "vsc":
     cdef cppclass IModelConstraintExpr(IModelConstraint):
         IModelExpr *expr() const
@@ -79,6 +90,11 @@ cdef extern from "vsc/IModelExpr.h" namespace "vsc":
 cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
     cdef cppclass IModelExprFieldRef(IModelExpr):
         IModelField *field() const
+        
+cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
+    cdef cppclass IModelExprVal(IModelExpr):
+        int32_t width() const
+        IModelVal *val()
         
 #********************************************************************
 #* IModelExprBin
@@ -138,9 +154,8 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void clearFlag(ModelFieldFlag flags)
         void setFlag(ModelFieldFlag flags)
         bool isFlagSet(ModelFieldFlag flags)
-        
-        pass
-    
+
+
 #********************************************************************
 #* IModelVal
 #********************************************************************
@@ -151,6 +166,7 @@ cdef extern from "vsc/IModelVal.h" namespace "vsc":
     cdef cppclass IModelVal:
     
         uint32_t bits() const
+        void setBits(uint32_t)
         int64_t val_i() const
         uint64_t val_u() const
         void set_val_i(int64_t, int32_t)

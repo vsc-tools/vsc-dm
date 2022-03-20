@@ -19,9 +19,11 @@
  */
 
 #include "Context.h"
+#include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
+#include "ModelExprVal.h"
 #include "ModelFieldRoot.h"
 #include "Randomizer.h"
 #include "RandState.h"
@@ -84,6 +86,11 @@ DataTypeInt *Context::findIntType(
 	return 0;
 }
 
+IModelConstraintBlock *Context::mkModelConstraintBlock(
+			const std::string &name) {
+	return new ModelConstraintBlock(name);
+}
+
 IModelConstraintExpr *Context::mkModelConstraintExpr(
 			IModelExpr		*expr) {
 	return new ModelConstraintExpr(expr);
@@ -128,6 +135,14 @@ IModelExprBin *Context::mkModelExprBin(
 IModelExprFieldRef *Context::mkModelExprFieldRef(
 			IModelField		*field) {
 	return new ModelExprFieldRef(field);
+}
+
+IModelExprVal *Context::mkModelExprVal(IModelVal *v) {
+	if (v) {
+		return new ModelExprVal(v);
+	} else {
+		return new ModelExprVal();
+	}
 }
 
 IModelField *Context::mkModelFieldRoot(

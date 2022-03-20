@@ -18,10 +18,12 @@ cdef class Vsc(object):
 cdef class Context(object):
     cdef decl.IContext               *_hndl
 
+    cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
     cpdef mkDataTypeInt(self, bool is_signed, int width)
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
     cpdef mkModelExprFieldRef(self, ModelField field)
+    cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
@@ -45,6 +47,21 @@ cdef class ModelConstraint(object):
     
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=*)
+    
+cdef class ModelConstraintScope(ModelConstraint):
+    cpdef constraints(self)
+    cpdef addConstraint(self, ModelConstraint)
+    
+    cdef decl.IModelConstraintScope *asModelConstraintScope(self)
+    
+cdef class ModelConstraintBlock(ModelConstraintScope):
+    cpdef name(self)
+    
+    cdef decl.IModelConstraintBlock *asModelConstraintBlock(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelConstraintBlock *hndl, bool owned=*)
+    
    
 cdef class ModelConstraintExpr(ModelConstraint):
 
@@ -77,6 +94,16 @@ cdef class ModelExprFieldRef(ModelExpr):
     
     @staticmethod
     cdef mk(decl.IModelExprFieldRef *, bool owned=*)
+    
+cdef class ModelExprVal(ModelExpr):
+
+    cpdef width(self)
+    cpdef val(self)
+    
+    cdef decl.IModelExprVal *asModelExprVal(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprVal *, bool owned=*)
 
 cdef class ModelField(object):
     cdef decl.IModelField       *_hndl
@@ -104,6 +131,7 @@ cdef class ModelVal(object):
     cdef bool                   _owned
 
     cpdef bits(self)
+    cpdef setBits(self, b)
     cpdef val_u(self)
     cpdef val_i(self)
     cpdef set_val_i(self, int64_t v, int32_t bits=*)

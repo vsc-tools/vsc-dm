@@ -25,7 +25,7 @@ public:
 
 	virtual const IModelVal *val() const override { return &m_val; }
 
-	virtual IModelVal  *val() { return &m_val; }
+	virtual IModelVal *val() { return &m_val; }
 
 	virtual void eval(IModelVal *dst) override;
 

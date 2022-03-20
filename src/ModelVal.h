@@ -40,6 +40,8 @@ public:
 
 	virtual void bits(uint32_t b) override;
 
+	virtual void setBits(uint32_t b) override;
+
 	virtual void to_bits(char *bits) const override;
 
 	virtual void from_bits(const char *bits, int32_t width=-1) override;
