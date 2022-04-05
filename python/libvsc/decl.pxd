@@ -19,6 +19,7 @@ cimport cpython.ref as cpy_ref
 #********************************************************************
 cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
+        ICompoundSolver *mkCompoundSolver()
         IModelConstraintBlock *mkModelConstraintBlock(const cpp_string &)
         IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
@@ -28,6 +29,35 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
+        
+#********************************************************************
+#* ICompoundSolver
+#********************************************************************
+ctypedef IModelField *IModelFieldP
+ctypedef IModelConstraint *IModelConstraintP
+cdef extern from "vsc/ICompoundSolver.h" namespace "vsc":
+
+    cdef enum SolveFlags:
+        Randomize          "vsc::SolveFlags::Randomize"
+        RandomizeDeclRand  "vsc::SolveFlags::RandomizeDeclRand"
+        RandomizeTopFields "vsc::SolveFlags::RandomizeTopFields"
+        DiagnoseFailures   "vsc::SolveFlags::DiagnoseFailures"
+    
+    cdef cppclass ICompoundSolver:
+        
+        bool solve(
+            IRandState                          *randstate,
+            const cpp_vector[IModelFieldP]      &fields,
+            const cpp_vector[IModelConstraintP] &constraints,
+            SolveFlags                          flags)
+        
+        
+#********************************************************************
+#* IAccept
+#********************************************************************
+cdef extern from "vsc/IAccept.h" namespace "vsc":
+    cdef cppclass IAccept:
+        void accept(IVisitor *)
     
 #********************************************************************
 #* IDataType
@@ -35,7 +65,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
 ctypedef IDataTypeInt *IDataTypeIntP
 
 cdef extern from "vsc/IDataType.h" namespace "vsc":
-    cdef cppclass IDataType:
+    cdef cppclass IDataType(IAccept):
         pass
     
 cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
@@ -51,17 +81,11 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
         IContext *mkContext()
         pass
     
-#********************************************************************
-#* IAccept
-#********************************************************************
-cdef extern from "vsc/IAccept.h" namespace "vsc":
-    cdef cppclass IAccept:
-        void accept(IVisitor *)
         
 #********************************************************************
 #* IModelConstraint
 #********************************************************************
-ctypedef IModelConstraint *IModelConstraintP
+#ctypedef IModelConstraint *IModelConstraintP
 cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
     cdef cppclass IModelConstraint:
         pass
@@ -128,7 +152,7 @@ cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
 #* IModelField
 #********************************************************************
 ctypedef IModelVal *IModelValP
-ctypedef IModelField *IModelFieldP
+#ctypedef IModelField *IModelFieldP
 ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/IModelField.h" namespace "vsc":
 
@@ -198,6 +222,13 @@ cdef extern from "vsc/ISolverFactory.h" namespace "vsc":
     cdef cppclass ISolverFactory:
         pass
         
+#********************************************************************
+#* ITask
+#********************************************************************
+cdef extern from "vsc/ITask.h" namespace "vsc":
+    cdef cppclass ITask:
+        void apply(IAccept *)
+
 #********************************************************************
 #* IVisitor
 #********************************************************************

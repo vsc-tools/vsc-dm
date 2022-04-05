@@ -206,6 +206,10 @@ void SolveSpecBuilder::process_fieldref(IModelField *f) {
 			m_solveset_l.push_back(SolveSetUP(m_active_solveset));
 		}
 
+		// Remove the field from the unconstrained set
+		auto uc_it = m_unconstrained_m.find(f);
+		m_unconstrained_l.at(uc_it->second) = 0;
+
 		m_active_solveset->add_field(f);
 		m_solveset_field_m.insert({f, m_active_solveset});
 	}

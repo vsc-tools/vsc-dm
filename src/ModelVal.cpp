@@ -26,8 +26,6 @@
 namespace vsc {
 
 ModelVal::ModelVal() : m_val{0}, m_bits(0) {
-	// TODO Auto-generated constructor stub
-	fprintf(stdout, "ModelVal::ModelVal\n");
 
 }
 
@@ -122,7 +120,6 @@ void ModelVal::bits(uint32_t b) {
 		// I
 
 	}
-	fprintf(stdout, "ModelVal::bits: %d\n", b);
 	m_bits = b;
 }
 
@@ -132,7 +129,6 @@ void ModelVal::setBits(uint32_t b) {
 		// I
 
 	}
-	fprintf(stdout, "ModelVal::bits: %d\n", b);
 	m_bits = b;
 }
 

@@ -17,7 +17,6 @@ from libcpp.cast cimport static_cast
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
 
-
 _Context_inst = None
 
 cdef class Context(object):
@@ -31,6 +30,9 @@ cdef class Context(object):
     
     def __dealloc__(self):
         del self._hndl
+        
+    cpdef mkCompoundSolver(self):
+        return CompoundSolver.mk(self._hndl.mkCompoundSolver())
 
     cpdef mkDataTypeInt(self, bool is_signed, int width):
         return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width))
@@ -97,7 +99,54 @@ cdef class Context(object):
             _Context_inst = Context()
         return _Context_inst
     
+class SolveFlags(IntFlag):
+    Randomize            = decl.SolveFlags.Randomize
+    RandomizeDeclRand    = decl.SolveFlags.RandomizeDeclRand
+    RandomizeTopFields   = decl.SolveFlags.RandomizeTopFields
+    DiagnoseFailures     = decl.SolveFlags.DiagnoseFailures
+    
+cdef class CompoundSolver(object):
+
+    def __dealloc__(self):
+        del self._hndl
+    
+    cpdef solve(self, RandState rs, fields, constraints, flags):
+        cdef cpp_vector[decl.IModelFieldP] fields_v;
+        cdef cpp_vector[decl.IModelConstraintP] constraints_v;
+        cdef int flags_i = int(flags)
+        cdef ModelField field_t
+        cdef ModelConstraint constraint_t
+        
+        for f in fields:
+            field_t = <ModelField>(f)
+            fields_v.push_back(field_t._hndl)
+            
+        for c in constraints:
+            constraint_t = <ModelConstraint>(c)
+            constraints_v.push_back(constraint_t._hndl)
+        
+        return self._hndl.solve(
+            rs._hndl,
+            fields_v,
+            constraints_v,
+            <decl.SolveFlags>(flags_i))
+        
+    @staticmethod
+    cdef mk(decl.ICompoundSolver *hndl):
+        ret = CompoundSolver()
+        ret._hndl = hndl
+        return ret
+
+cdef class Accept(object):
+
+    cdef decl.IAccept *hndl(self):
+        return NULL
+            
+    
 cdef class DataType(object):
+
+#    cdef decl.IAccept *hndl(self):
+#        return self._hndl
 
     @staticmethod
     cdef mk(decl.IDataType *hndl, owned=True):
@@ -274,7 +323,8 @@ class ModelFieldFlag(IntFlag):
 cdef class ModelField(object):
 
     def __dealloc__(self):
-        if not self._owned:
+        if self._owned:
+            print("Delete field %s" % self.name())
             del self._hndl
 
     cpdef name(self):
@@ -437,6 +487,13 @@ cdef class SolverFactory(object):
 
     def __dealloc__(self):
         del self._hndl
+        
+#********************************************************************
+#* Task
+#********************************************************************
+cdef class Task(object):
+    cpdef apply(self, Accept it):
+        pass
 
 #********************************************************************
 #* VisitorBase

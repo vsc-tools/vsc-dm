@@ -10,13 +10,11 @@
 #include <string>
 #include "DataType.h"
 #include "vsc/IAccept.h"
+#include "vsc/TypeFieldAttr.h"
 #include "ModelVal.h"
 
 
 namespace vsc {
-
-using TypeFieldAttr=uint32_t;
-static const TypeFieldAttr TypeFieldAttr_Rand = (1 << 0);
 
 class DataTypeStruct;
 

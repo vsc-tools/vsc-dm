@@ -19,6 +19,8 @@
  */
 
 #include "Context.h"
+#include "CompoundSolverDefault.h"
+#include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
 #include "ModelExprBin.h"
@@ -27,6 +29,7 @@
 #include "ModelFieldRoot.h"
 #include "Randomizer.h"
 #include "RandState.h"
+#include "TaskSetUsedRand.h"
 
 namespace vsc {
 
@@ -39,51 +42,8 @@ Context::~Context() {
 	// TODO Auto-generated destructor stub
 }
 
-DataTypeStruct *Context::findStructType(const std::string &name) {
-	std::unordered_map<std::string, DataTypeStructUP>::const_iterator it;
-
-	if ((it=m_struct_type_m.find(name)) != m_struct_type_m.end()) {
-		return it->second.get();
-	} else {
-		return 0;
-	}
-}
-
-void Context::addStructType(DataTypeStruct *t) {
-	m_struct_type_m.insert({t->name(), DataTypeStructUP(t)});
-}
-
-DataTypeInt *Context::findIntType(
-		bool				is_signed,
-		int32_t				width,
-		bool				create) {
-	std::unordered_map<int32_t, DataTypeInt *>::const_iterator it;
-
-	if (is_signed) {
-		if ((it=m_sint_type_m.find(width)) != m_sint_type_m.end()) {
-			return it->second;
-		} else if (create) {
-			DataTypeInt *t = new DataTypeInt(is_signed, width);
-
-			m_sint_type_m.insert({width, t});
-			m_sint_type_l.push_back(DataTypeIntUP(t));
-
-			return t;
-		}
-	} else {
-		if ((it=m_uint_type_m.find(width)) != m_uint_type_m.end()) {
-			return it->second;
-		} else if (create) {
-			DataTypeInt *t = new DataTypeInt(is_signed, width);
-
-			m_uint_type_m.insert({width, t});
-			m_uint_type_l.push_back(DataTypeIntUP(t));
-
-			return t;
-		}
-	}
-
-	return 0;
+ICompoundSolver *Context::mkCompoundSolver() {
+	return new CompoundSolverDefault();
 }
 
 IModelConstraintBlock *Context::mkModelConstraintBlock(
@@ -96,33 +56,72 @@ IModelConstraintExpr *Context::mkModelConstraintExpr(
 	return new ModelConstraintExpr(expr);
 }
 
-IDataTypeInt *Context::mkDataTypeInt(
+IDataTypeInt *Context::findDataTypeInt(
 			bool			is_signed,
 			int32_t			width) {
-	DataTypeInt *ret = 0;
-
 	if (is_signed) {
 		auto it = m_sint_type_m.find(width);
-		if (it == m_sint_type_m.end()) {
-			// New type
-			ret = new DataTypeInt(is_signed, width);
-			m_sint_type_m.insert({width, ret});
-			m_sint_type_l.push_back(DataTypeIntUP(ret));
-		} else {
-			ret = it->second;
+		if (it != m_sint_type_m.end()) {
+			return it->second;
 		}
 	} else {
 		auto it = m_uint_type_m.find(width);
-		if (it == m_uint_type_m.end()) {
-			// New type
-			ret = new DataTypeInt(is_signed, width);
-			m_uint_type_m.insert({width, ret});
-			m_uint_type_l.push_back(DataTypeIntUP(ret));
-		} else {
-			ret = it->second;
+		if (it != m_uint_type_m.end()) {
+			return it->second;
 		}
 	}
-	return ret;
+	return 0;
+}
+
+IDataTypeInt *Context::mkDataTypeInt(
+			bool			is_signed,
+			int32_t			width) {
+	return new DataTypeInt(is_signed, width);
+}
+
+bool Context::addDataTypeInt(IDataTypeInt *t) {
+	if (t->is_signed()) {
+		auto it = m_sint_type_m.find(t->width());
+		if (it != m_sint_type_m.end()) {
+			m_sint_type_m.insert({t->width(), t});
+			m_sint_type_l.push_back(IDataTypeIntUP(t));
+			return true;
+		}
+	} else {
+		auto it = m_uint_type_m.find(t->width());
+		if (it != m_uint_type_m.end()) {
+			m_uint_type_m.insert({t->width(), t});
+			m_uint_type_l.push_back(IDataTypeIntUP(t));
+			return true;
+		}
+	}
+	return false;
+}
+
+IDataTypeStruct *Context::findDataTypeStruct(const std::string &name) {
+	auto it = m_struct_type_m.find(name);
+
+	if (it != m_struct_type_m.end()) {
+		return it->second;
+	} else {
+		return 0;
+	}
+}
+
+IDataTypeStruct *Context::mkDataTypeStruct(const std::string &name) {
+	return new DataTypeStruct(name);
+}
+
+bool Context::addDataTypeStruct(IDataTypeStruct *t) {
+	auto it = m_struct_type_m.find(t->name());
+
+	if (it == m_struct_type_m.end()) {
+		m_struct_type_m.insert({t->name(), t});
+		m_struct_type_l.push_back(IDataTypeStructUP(t));
+		return true;
+	} else {
+		return false;
+	}
 }
 
 IModelExprBin *Context::mkModelExprBin(
@@ -159,6 +158,17 @@ IRandomizer *Context::mkRandomizer(
 
 IRandState *Context::mkRandState(uint32_t seed) {
 	return new RandState(seed);
+}
+
+ITask *Context::mkTask(TaskE id) {
+	switch (id) {
+	/*
+	case TaskE::SetUsedRand:
+		return new TaskSetUsedRand();
+		 */
+	default:
+		return 0;
+	}
 }
 
 } /* namespace vsc */

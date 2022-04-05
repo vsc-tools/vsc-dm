@@ -34,4 +34,20 @@ DataTypeStruct::~DataTypeStruct() {
 	// TODO Auto-generated destructor stub
 }
 
+void DataTypeStruct::addField(ITypeField *f) {
+	m_fields.push_back(ITypeFieldUP(f));
+}
+
+const std::vector<ITypeFieldUP> &DataTypeStruct::getFields() const {
+	return m_fields;
+}
+
+void DataTypeStruct::addConstraint(ITypeConstraint *c) {
+	m_constraints.push_back(ITypeConstraintUP(c));
+}
+
+const std::vector<ITypeConstraintUP> &DataTypeStruct::getConstraints() const {
+	return m_constraints;
+}
+
 } /* namespace vsc */

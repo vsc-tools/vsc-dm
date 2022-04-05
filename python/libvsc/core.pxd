@@ -18,6 +18,7 @@ cdef class Vsc(object):
 cdef class Context(object):
     cdef decl.IContext               *_hndl
 
+    cpdef mkCompoundSolver(self)
     cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
     cpdef mkDataTypeInt(self, bool is_signed, int width)
@@ -27,9 +28,23 @@ cdef class Context(object):
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
+
+    
+cdef class CompoundSolver(object):
+    cdef decl.ICompoundSolver   *_hndl
+    
+    cpdef solve(self, RandState, fields, constraints, flags)
+    
+    @staticmethod
+    cdef mk(decl.ICompoundSolver *)
+    
+cdef class Accept(object):
+    cdef decl.IAccept *hndl(self)
     
 cdef class DataType(object):
     cdef decl.IDataType         *_hndl
+    
+#    cdef decl.IAccept *hndl(self)
     
     @staticmethod
     cdef mk(decl.IDataType *, owned=*)
@@ -159,6 +174,11 @@ cdef class RandState(object):
     
 cdef class SolverFactory(object):
     cdef decl.ISolverFactory    *_hndl
+    
+cdef class Task(object):
+    cdef decl.ITask             *_hndl
+    
+    cpdef apply(self, Accept it)
     
     
 cdef class VisitorBase(object):
