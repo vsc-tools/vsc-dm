@@ -42,6 +42,14 @@ const std::vector<ITypeFieldUP> &DataTypeStruct::getFields() const {
 	return m_fields;
 }
 
+ITypeField *DataTypeStruct::getField(int32_t idx) {
+	if (idx < 0 || idx >= m_fields.size()) {
+		return 0;
+	} else {
+		return m_fields.at(idx).get();
+	}
+}
+
 void DataTypeStruct::addConstraint(ITypeConstraint *c) {
 	m_constraints.push_back(ITypeConstraintUP(c));
 }

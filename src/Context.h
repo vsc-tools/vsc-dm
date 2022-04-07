@@ -68,6 +68,20 @@ public:
 
 	virtual ITask *mkTask(TaskE id) override;
 
+	virtual ITypeExprBin *mkTypeExprBin(
+			ITypeExpr		*lhs,
+			BinOp			op,
+			ITypeExpr		*rhs) override;
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
+
+	virtual ITypeField *mkTypeField(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init) override;
+
+
 private:
 
 	std::unordered_map<std::string,IDataTypeStruct *>		m_struct_type_m;

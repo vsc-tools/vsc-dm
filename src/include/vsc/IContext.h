@@ -18,6 +18,9 @@
 #include "vsc/IRandState.h"
 #include "vsc/ISolverFactory.h"
 #include "vsc/ITask.h"
+#include "vsc/ITypeExprBin.h"
+#include "vsc/ITypeExprFieldRef.h"
+#include "vsc/ITypeField.h"
 
 namespace vsc {
 
@@ -81,6 +84,18 @@ public:
 
 	virtual ITask *mkTask(TaskE id) = 0;
 
+	virtual ITypeExprBin *mkTypeExprBin(
+			ITypeExpr		*lhs,
+			BinOp			op,
+			ITypeExpr		*rhs) = 0;
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+
+	virtual ITypeField *mkTypeField(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init) = 0;
 
 };
 

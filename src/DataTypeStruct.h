@@ -34,6 +34,8 @@ public:
 
 	virtual const std::vector<ITypeFieldUP> &getFields() const override;
 
+	virtual ITypeField *getField(int32_t idx) override;
+
 	virtual void addConstraint(ITypeConstraint *c) override;
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override;

@@ -30,6 +30,9 @@
 #include "Randomizer.h"
 #include "RandState.h"
 #include "TaskSetUsedRand.h"
+#include "TypeExprBin.h"
+#include "TypeExprFieldRef.h"
+#include "TypeField.h"
 
 namespace vsc {
 
@@ -169,6 +172,29 @@ ITask *Context::mkTask(TaskE id) {
 	default:
 		return 0;
 	}
+}
+
+ITypeExprBin *Context::mkTypeExprBin(
+			ITypeExpr		*lhs,
+			BinOp			op,
+			ITypeExpr		*rhs) {
+	return new TypeExprBin(lhs, op, rhs);
+}
+
+ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
+	return new TypeExprFieldRef();
+}
+
+ITypeField *Context::mkTypeField(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init) {
+	return new TypeField(
+			name,
+			dtype,
+			attr,
+			init);
 }
 
 } /* namespace vsc */

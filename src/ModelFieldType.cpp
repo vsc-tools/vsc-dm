@@ -24,7 +24,7 @@
 namespace vsc {
 
 ModelFieldType::ModelFieldType(TypeField *type) :
-		ModelField(type->type()), m_type(type) {
+		ModelField(type->getDataType()), m_type(type) {
 	// TODO Auto-generated constructor stub
 
 }

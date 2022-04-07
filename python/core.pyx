@@ -33,9 +33,36 @@ cdef class Context(object):
         
     cpdef mkCompoundSolver(self):
         return CompoundSolver.mk(self._hndl.mkCompoundSolver())
+    
+    cpdef bool addDataTypeInt(self, DataTypeInt t):
+        t._owned = False
+        return self._hndl.addDataTypeInt(t.asTypeInt())
 
-    cpdef mkDataTypeInt(self, bool is_signed, int width):
-        return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width))
+    cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width):
+        cdef decl.IDataTypeInt *i = self._hndl.findDataTypeInt(is_signed, width)
+        
+        if i != NULL:
+            return DataTypeInt.mk(i, False)
+        else:
+            return None
+        
+    cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width):
+        return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width), True)
+
+    cpdef bool addDataTypeStruct(self, DataTypeStruct t):
+        t._owned = False
+        return self._hndl.addDataTypeStruct(t.asTypeStruct())
+        
+    cpdef DataTypeStruct findDataTypeStruct(self, name):
+        cdef decl.IDataTypeStruct *t = self._hndl.findDataTypeStruct(name.encode())
+        
+        if t != NULL:
+            return DataTypeStruct.mk(t, False)
+        else:
+            return None
+            
+    cpdef DataTypeStruct mkDataTypeStruct(self, name):
+        return DataTypeStruct.mk(self._hndl.mkDataTypeStruct(name.encode()), True)
     
     cpdef mkModelConstraintBlock(self, name):
         return ModelConstraintBlock.mk(self._hndl.mkModelConstraintBlock(name.encode()))
@@ -90,6 +117,35 @@ cdef class Context(object):
         return Randomizer.mk(self._hndl.mkRandomizer(
             sf_h,
             rs._hndl))
+        
+    cpdef TypeExprBin mkTypeExprBin(self, TypeExpr lhs, op, TypeExpr rhs):
+        cdef int op_i = int(op)
+        lhs._owned = False
+        rhs._owned = False
+        return TypeExprBin.mk(self._hndl.mkTypeExprBin(
+            lhs._hndl,
+            <decl.BinOp>(op_i),
+            rhs._hndl))
+        
+    cpdef TypeExprFieldRef mkTypeExprFieldRef(self):
+        return TypeExprFieldRef.mk(self._hndl.mkTypeExprFieldRef(), True)
+        
+    cpdef TypeField mkTypeField(self, 
+                                name, 
+                                DataType dtype, 
+                                attr,
+                                ModelVal init):
+        cdef decl.IModelVal *init_h = NULL
+        cdef int attr_i = int(attr)
+        
+        if init is not None:
+            init_h = init._hndl
+            
+        return TypeField.mk(self._hndl.mkTypeField(
+            name.encode(), 
+            dtype._hndl, 
+            <decl.TypeFieldAttr>(attr_i),
+            init_h))
     
     
     @staticmethod
@@ -148,23 +204,63 @@ cdef class DataType(object):
 #    cdef decl.IAccept *hndl(self):
 #        return self._hndl
 
+    def __dealloc__(self):
+        if self._owned:
+            del self._hndl
+
     @staticmethod
     cdef mk(decl.IDataType *hndl, owned=True):
         ret = DataType()
         ret._hndl = hndl
+        ret._owned = owned
         return ret
     
 
-cdef class DataTypeInt(object):
+cdef class DataTypeInt(DataType):
     
     @staticmethod
     cdef mk(decl.IDataTypeInt *hndl, owned=True):
         ret = DataTypeInt()
         ret._hndl = hndl
+        ret._owned = owned
         return ret
     
     cdef decl.IDataTypeInt *asTypeInt(self):
         return dynamic_cast[decl.IDataTypeIntP](self._hndl)
+    
+cdef class DataTypeStruct(DataType):
+
+    cpdef addField(self, TypeField f):
+        f._owned = False
+        self.asTypeStruct().addField(f._hndl)
+        
+    cpdef getFields(self):
+        pass
+    
+    cpdef TypeField getField(self, int32_t idx):
+        cdef decl.ITypeField *ret_h = self.asTypeStruct().getField(idx)
+        
+        if ret_h != NULL:
+            return TypeField.mk(ret_h, False)
+        else:
+            return None
+    
+    cpdef addConstraint(self, TypeConstraint c):
+        pass
+    
+    cpdef getConstraints(self):
+        pass
+    
+    @staticmethod
+    cdef mk(decl.IDataTypeStruct *hndl, owned=True):
+        ret = DataTypeStruct()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    cdef decl.IDataTypeStruct *asTypeStruct(self):
+        return dynamic_cast[decl.IDataTypeStructP](self._hndl)
+    
     
 cdef class ModelConstraint(object):
 
@@ -488,12 +584,149 @@ cdef class SolverFactory(object):
     def __dealloc__(self):
         del self._hndl
         
+cdef class TypeConstraint(object):
+    pass
+
+#********************************************************************
+#* TypeExpr
+#********************************************************************
+
+cdef class TypeExpr(object):
+    
+    def __dealloc__(self):
+        if self._owned:
+            del self._hndl
+            
+    @staticmethod
+    cdef TypeExpr mk(decl.ITypeExpr *hndl, owned=True):
+        ret = TypeExpr()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+            
+class TypeExprFieldRefElemKind(IntEnum):
+    Root = decl.TypeExprFieldRefElemKind.Root
+    IdxOffset = decl.TypeExprFieldRefElemKind.IdxOffset
+
+cdef class TypeExprFieldRefElem(object):
+
+    cpdef getKind(self):
+        cdef int kind_i = int(self._hndl.kind)
+        return TypeExprFieldRefElemKind(kind_i)
+
+    cpdef int32_t getIdx(self):
+        return self._hndl.idx
+    
+cdef class TypeExprBin(TypeExpr):
+    
+    cpdef TypeExpr lhs(self):
+        return TypeExpr.mk(self.asBin().lhs(), False)
+    
+    cpdef op(self):
+        cdef int op_i = <int>(self.asBin().op())
+        return BinOp(op_i)
+    
+    cpdef TypeExpr rhs(self):
+        return TypeExpr.mk(self.asBin().rhs(), False)
+
+    cdef decl.ITypeExprBin *asBin(self):
+        return dynamic_cast[decl.ITypeExprBinP](self._hndl)
+        
+    @staticmethod
+    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, owned=True):
+        ret = TypeExprBin()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret    
+    
+cdef class TypeExprFieldRef(TypeExpr):
+
+    cpdef addIdxRef(self, int32_t idx):
+        self.asFieldRef().addIdxRef(idx)
+        
+    cpdef addRootRef(self):
+        self.asFieldRef().addRootRef()
+        
+    cpdef uint32_t size(self):
+        return self.asFieldRef().size()
+    
+    cpdef TypeExprFieldRefElem at(self, idx):
+        cdef const decl.TypeExprFieldRefElem *elem = &self.asFieldRef().at(idx)
+        ret = TypeExprFieldRefElem()
+        ret._hndl = elem
+        return ret
+    
+    @staticmethod
+    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, owned=True):
+        ret = TypeExprFieldRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    cdef decl.ITypeExprFieldRef *asFieldRef(self):
+        return dynamic_cast[decl.ITypeExprFieldRefP](self._hndl)
+    
+        
+#********************************************************************
+#* TypeField
+#********************************************************************
+
+class TypeFieldAttr(IntFlag):
+    NoAttr = decl.TypeFieldAttr.NoAttr
+    Rand = decl.TypeFieldAttr.Rand
+    
+cdef class TypeField(object):
+
+    def __dealloc__(self):
+        if self._owned:
+            del self._hndl
+            
+    cpdef DataTypeStruct getParent(self):
+        cdef decl.IDataTypeStruct *p = self._hndl.getParent()
+        if p != NULL:
+            return DataTypeStruct.mk(p, False)
+        else:
+            return None
+
+    cpdef setParent(self, DataTypeStruct p):
+        self._hndl.setParent(p.asTypeStruct())
+        
+    cpdef name(self):
+        return self._hndl.name().decode()
+    
+    cpdef DataType getDataType(self):
+        cdef decl.IDataType *t = self._hndl.getDataType()
+        if t != NULL:
+            return DataType.mk(t, False)
+        else:
+            return None
+        
+    cpdef getAttr(self):
+        return 0
+    
+    cpdef ModelVal getInit(self):
+        cdef decl.IModelVal *i = self._hndl.getInit()
+        
+        if i != NULL:
+            return ModelVal.mk(i, False)
+        else:
+            return None
+
+    @staticmethod
+    cdef mk(decl.ITypeField *hndl, owned=True):
+        ret = TypeField()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    
 #********************************************************************
 #* Task
 #********************************************************************
 cdef class Task(object):
     cpdef apply(self, Accept it):
         pass
+    
 
 #********************************************************************
 #* VisitorBase

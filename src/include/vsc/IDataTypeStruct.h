@@ -27,6 +27,8 @@ public:
 
 	virtual const std::vector<ITypeFieldUP> &getFields() const = 0;
 
+	virtual ITypeField *getField(int32_t idx) = 0;
+
 	virtual void addConstraint(ITypeConstraint *c) = 0;
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
