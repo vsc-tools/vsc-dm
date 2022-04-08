@@ -30,6 +30,9 @@
 #include "Randomizer.h"
 #include "RandState.h"
 #include "TaskSetUsedRand.h"
+#include "TypeConstraintBlock.h"
+#include "TypeConstraintExpr.h"
+#include "TypeConstraintScope.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
 #include "TypeField.h"
@@ -172,6 +175,18 @@ ITask *Context::mkTask(TaskE id) {
 	default:
 		return 0;
 	}
+}
+
+ITypeConstraintBlock *Context::mkTypeConstraintBlock(const std::string &name) {
+	return new TypeConstraintBlock(name);
+}
+
+ITypeConstraintExpr *Context::mkTypeConstraintExpr(ITypeExpr *expr) {
+	return new TypeConstraintExpr(expr);
+}
+
+ITypeConstraintScope *Context::mkTypeConstraintScope() {
+	return new TypeConstraintScope();
 }
 
 ITypeExprBin *Context::mkTypeExprBin(

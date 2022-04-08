@@ -118,6 +118,18 @@ cdef class Context(object):
             sf_h,
             rs._hndl))
         
+    cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name):
+        return TypeConstraintBlock.mk(self._hndl.mkTypeConstraintBlock(
+            name.encode()), True)
+        
+    cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr e):
+        e._owned = False
+        return TypeConstraintExpr.mk(self._hndl.mkTypeConstraintExpr(
+            e._hndl))
+        
+    cpdef TypeConstraintScope mkTypeConstraintScope(self):
+        return TypeConstraintScope.mk(self._hndl.mkTypeConstraintScope())
+
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr lhs, op, TypeExpr rhs):
         cdef int op_i = int(op)
         lhs._owned = False
@@ -585,8 +597,62 @@ cdef class SolverFactory(object):
         del self._hndl
         
 cdef class TypeConstraint(object):
+
+    @staticmethod
+    cdef TypeConstraint mk(decl.ITypeConstraint *hndl, bool owned=True):
+        ret = TypeConstraint()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+        
     pass
 
+cdef class TypeConstraintExpr(TypeConstraint):
+
+    cpdef TypeExpr expr(self):
+        return TypeExpr.mk(self.asExpr().expr())
+
+    cdef decl.ITypeConstraintExpr *asExpr(self):
+        return dynamic_cast[decl.ITypeConstraintExprP](self._hndl)
+
+    @staticmethod
+    cdef TypeConstraintExpr mk(decl.ITypeConstraintExpr *hndl, bool owned=True):
+        ret = TypeConstraintExpr()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class TypeConstraintScope(TypeConstraint):
+    
+    cpdef addConstraint(self, TypeConstraint c):
+        c._owned = False
+        self.asScope().addConstraint(c._hndl)
+    
+    cdef decl.ITypeConstraintScope *asScope(self):
+        return dynamic_cast[decl.ITypeConstraintScopeP](self._hndl)
+    
+    @staticmethod
+    cdef TypeConstraintScope mk(decl.ITypeConstraintScope *hndl, bool owned=True):
+        ret = TypeConstraintScope()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeConstraintBlock(TypeConstraintScope):
+    
+    cpdef name(self):
+        return self.asBlock().name().decode()
+    
+    cdef decl.ITypeConstraintBlock *asBlock(self):
+        return dynamic_cast[decl.ITypeConstraintBlockP](self._hndl)
+    
+    @staticmethod
+    cdef TypeConstraintBlock mk(decl.ITypeConstraintBlock *hndl, bool owned=True):
+        ret = TypeConstraintBlock()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
 #********************************************************************
 #* TypeExpr
 #********************************************************************

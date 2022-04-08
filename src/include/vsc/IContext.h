@@ -18,6 +18,9 @@
 #include "vsc/IRandState.h"
 #include "vsc/ISolverFactory.h"
 #include "vsc/ITask.h"
+#include "vsc/ITypeConstraintBlock.h"
+#include "vsc/ITypeConstraintExpr.h"
+#include "vsc/ITypeConstraintScope.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
 #include "vsc/ITypeField.h"
@@ -88,6 +91,12 @@ public:
 			ITypeExpr		*lhs,
 			BinOp			op,
 			ITypeExpr		*rhs) = 0;
+
+	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
+
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) = 0;
+
+	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
 

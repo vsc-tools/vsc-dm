@@ -68,6 +68,12 @@ public:
 
 	virtual ITask *mkTask(TaskE id) override;
 
+	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override;
+
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) override;
+
+	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,

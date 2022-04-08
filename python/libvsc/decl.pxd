@@ -16,6 +16,9 @@ cimport cpython.ref as cpy_ref
 
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef ITypeConstraint *ITypeConstraintP
+ctypedef ITypeConstraintBlock *ITypeConstraintBlockP
+ctypedef ITypeConstraintExpr *ITypeConstraintExprP
+ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeField *ITypeFieldP
@@ -40,6 +43,9 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
+        ITypeConstraintBlock *mkTypeConstraintBlock(const cpp_string &)
+        ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *)
+        ITypeConstraintScope *mkTypeConstraintScope()
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
         ITypeField *mkTypeField(
@@ -262,6 +268,19 @@ cdef extern from "vsc/ITask.h" namespace "vsc":
 cdef extern from "vsc/ITypeConstraint.h" namespace "vsc":
     cdef cppclass ITypeConstraint:
         pass
+    
+cdef extern from "vsc/ITypeConstraintExpr.h" namespace "vsc":
+    cdef cppclass ITypeConstraintExpr(ITypeConstraint):
+        ITypeExpr *expr() const
+        
+cdef extern from "vsc/ITypeConstraintScope.h" namespace "vsc":
+    cdef cppclass ITypeConstraintScope(ITypeConstraint):
+        void addConstraint(ITypeConstraint *)
+        const cpp_vector[unique_ptr[ITypeConstraint]] &constraints() const
+        
+cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
+    cdef cppclass ITypeConstraintBlock(ITypeConstraintScope):
+        const cpp_string &name() const
     
 #********************************************************************
 #* ITypeExpr
