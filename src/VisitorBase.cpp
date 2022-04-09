@@ -229,11 +229,11 @@ void VisitorBase::visitModelField(IModelField *f) {
 			f->constraints().size());
 }
 
-void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {
+void VisitorBase::visitModelFieldRoot(IModelFieldRoot *f) {
 	visitModelField(f);
 }
 
-void VisitorBase::visitModelFieldType(ModelFieldType *f) {
+void VisitorBase::visitModelFieldType(IModelFieldType *f) {
 	visitModelField(f);
 
 }
@@ -247,7 +247,21 @@ void VisitorBase::visitModelFieldVecRoot(ModelFieldVecRoot *f) {
 	visitModelFieldVec(f);
 }
 
-void VisitorBase::visitTypeField(TypeField *f) {
+void VisitorBase::visitTypeExprBin(ITypeExprBin *e) {
+	e->lhs()->accept(this);
+	e->rhs()->accept(this);
+
+}
+
+void VisitorBase::visitTypeExprFieldRef(ITypeExprFieldRef *e) {
+
+}
+
+void VisitorBase::visitTypeExprVal(ITypeExprVal *e) {
+
+}
+
+void VisitorBase::visitTypeField(ITypeField *f) {
 }
 
 } /* namespace vsc */

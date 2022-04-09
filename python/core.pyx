@@ -14,6 +14,7 @@ from libc.stdint cimport int64_t
 from libcpp cimport bool
 from libcpp.cast cimport dynamic_cast
 from libcpp.cast cimport static_cast
+from libcpp.cast cimport const_cast
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
 
@@ -141,6 +142,12 @@ cdef class Context(object):
         
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self):
         return TypeExprFieldRef.mk(self._hndl.mkTypeExprFieldRef(), True)
+    
+    cpdef TypeExprVal mkTypeExprVal(self, ModelVal v):
+        if v is None:
+            return TypeExprVal.mk(self._hndl.mkTypeExprVal(NULL), True)
+        else:
+            return TypeExprVal.mk(self._hndl.mkTypeExprVal(v._hndl), True)
         
     cpdef TypeField mkTypeField(self, 
                                 name, 
@@ -475,6 +482,14 @@ cdef class ModelField(object):
         f._owned = False
         self._hndl.addField(f._hndl)
         
+    cpdef ModelField getField(self, int32_t idx):
+        cdef decl.IModelField *field = self._hndl.getField(idx)
+        
+        if field != NULL:
+            return ModelField.mk(field, False)
+        else:
+            return None
+        
     cpdef val(self):
         return ModelVal.mk(self._hndl.val(), False)
     
@@ -664,7 +679,7 @@ cdef class TypeExpr(object):
             del self._hndl
             
     @staticmethod
-    cdef TypeExpr mk(decl.ITypeExpr *hndl, owned=True):
+    cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=True):
         ret = TypeExpr()
         ret._hndl = hndl
         ret._owned = owned
@@ -699,7 +714,7 @@ cdef class TypeExprBin(TypeExpr):
         return dynamic_cast[decl.ITypeExprBinP](self._hndl)
         
     @staticmethod
-    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, owned=True):
+    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=True):
         ret = TypeExprBin()
         ret._hndl = hndl
         ret._owned = owned
@@ -723,7 +738,7 @@ cdef class TypeExprFieldRef(TypeExpr):
         return ret
     
     @staticmethod
-    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, owned=True):
+    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=True):
         ret = TypeExprFieldRef()
         ret._hndl = hndl
         ret._owned = owned
@@ -731,8 +746,23 @@ cdef class TypeExprFieldRef(TypeExpr):
     
     cdef decl.ITypeExprFieldRef *asFieldRef(self):
         return dynamic_cast[decl.ITypeExprFieldRefP](self._hndl)
+
+cdef class TypeExprVal(TypeExpr):
+    cpdef ModelVal val(self):
+        return ModelVal.mk(
+            const_cast[decl.IModelValP](self.asVal().val()), 
+            False)
     
-        
+    cdef decl.ITypeExprVal *asVal(self):
+        return dynamic_cast[decl.ITypeExprValP](self._hndl)
+    
+    @staticmethod
+    cdef TypeExprVal mk(decl.ITypeExprVal *hndl, bool owned=True):
+        ret = TypeExprVal()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 #********************************************************************
 #* TypeField
 #********************************************************************

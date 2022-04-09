@@ -54,8 +54,8 @@ protected:
 protected:
 	int32_t						m_idx;
 
-	ModelField					*m_field;
-	ModelFieldUP				m_field_u;
+	IModelField					*m_field;
+	IModelFieldUP				m_field_u;
 
 };
 

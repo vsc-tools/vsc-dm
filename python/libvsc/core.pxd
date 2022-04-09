@@ -38,6 +38,7 @@ cdef class Context(object):
     cpdef TypeConstraintScope mkTypeConstraintScope(self)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
+    cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
     cpdef TypeField mkTypeField(self, name, DataType, attr, ModelVal)
 
     
@@ -159,6 +160,7 @@ cdef class ModelField(object):
     cpdef addConstraint(self, ModelConstraint)
     cpdef fields(self)
     cpdef addField(self, ModelField)
+    cpdef ModelField getField(self, int32_t idx)
     cpdef val(self)
     
     cpdef clearFlag(self, flags)
@@ -246,7 +248,7 @@ cdef class TypeExpr(object):
     cdef bool                   _owned
     
     @staticmethod
-    cdef TypeExpr mk(decl.ITypeExpr *hndl, owned=*)
+    cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=*)
     
 cdef class TypeExprFieldRefElem(object):
     cdef const decl.TypeExprFieldRefElem   *_hndl
@@ -263,7 +265,7 @@ cdef class TypeExprBin(TypeExpr):
     cdef decl.ITypeExprBin *asBin(self)
         
     @staticmethod
-    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, owned=*)    
+    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=*)    
 
 cdef class TypeExprFieldRef(TypeExpr):
 
@@ -275,7 +277,15 @@ cdef class TypeExprFieldRef(TypeExpr):
     cdef decl.ITypeExprFieldRef *asFieldRef(self)
     
     @staticmethod
-    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, owned=*)
+    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=*)
+    
+cdef class TypeExprVal(TypeExpr):
+    cpdef ModelVal val(self)
+    
+    cdef decl.ITypeExprVal *asVal(self)
+    
+    @staticmethod
+    cdef TypeExprVal mk(decl.ITypeExprVal *hndl, bool owned=*)
     
 cdef class TypeField(object):
     cdef decl.ITypeField        *_hndl

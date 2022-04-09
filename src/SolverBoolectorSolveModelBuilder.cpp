@@ -463,13 +463,13 @@ void SolverBoolectorSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelFieldRoot(ModelFieldRoot *f) {
+void SolverBoolectorSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 	DEBUG_ENTER("visitModelFieldRoot %s", f->name().c_str());
 	VisitorBase::visitModelFieldRoot(f);
 	DEBUG_LEAVE("visitModelFieldRoot %s", f->name().c_str());
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelFieldType(ModelFieldType *f) {
+void SolverBoolectorSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
 
 }
 

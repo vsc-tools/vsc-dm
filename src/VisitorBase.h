@@ -57,6 +57,9 @@
 #include "ModelFieldType.h"
 #include "ModelFieldVec.h"
 #include "ModelFieldVecRoot.h"
+#include "TypeExprBin.h"
+#include "TypeExprFieldRef.h"
+#include "TypeExprVal.h"
 #include "TypeField.h"
 
 namespace vsc {
@@ -116,15 +119,21 @@ public:
 
 	virtual void visitModelField(IModelField *f) override;
 
-	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
+	virtual void visitModelFieldRoot(IModelFieldRoot *f) override;
 
-	virtual void visitModelFieldType(ModelFieldType *f) override;
+	virtual void visitModelFieldType(IModelFieldType *f) override;
 
 	virtual void visitModelFieldVec(ModelFieldVec *f) override;
 
 	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) override;
 
-	virtual void visitTypeField(TypeField *f) override;
+	virtual void visitTypeExprBin(ITypeExprBin *e) override;
+
+	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override;
+
+	virtual void visitTypeExprVal(ITypeExprVal *e) override;
+
+	virtual void visitTypeField(ITypeField *f) override;
 
 };
 

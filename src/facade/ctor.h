@@ -103,9 +103,9 @@ public:
 
 	void pop_build_scope();
 
-	ModelField *build_field() const;
+	IModelField *build_field() const;
 
-	void push_build_field(ModelField *f);
+	void push_build_field(IModelField *f);
 
 	void pop_build_field();
 
@@ -127,7 +127,7 @@ private:
 	std::vector<IModelConstraintScope *>		m_constraint_scope_s;
 	std::vector<uint32_t>						m_build_phase_s;
 	std::vector<obj *>							m_build_scope_s;
-	std::vector<ModelField *>					m_build_field_s;
+	std::vector<IModelField *>					m_build_field_s;
 	RandState									m_randstate;
 	static std::unique_ptr<ctor>				m_inst;
 

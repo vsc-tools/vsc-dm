@@ -30,7 +30,7 @@ public:
 		return m_path;
 	}
 
-	virtual void accept(IVisitor *v) override { /* TODO */; }
+	virtual void accept(IVisitor *v) override { v->visitTypeExprFieldRef(this); }
 
 private:
 	std::vector<TypeExprFieldRefElem>					m_path;

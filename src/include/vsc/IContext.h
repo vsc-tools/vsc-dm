@@ -23,6 +23,7 @@
 #include "vsc/ITypeConstraintScope.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
+#include "vsc/ITypeExprVal.h"
 #include "vsc/ITypeField.h"
 
 namespace vsc {
@@ -99,6 +100,8 @@ public:
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+
+	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) = 0;
 
 	virtual ITypeField *mkTypeField(
 			const std::string		&name,

@@ -534,13 +534,13 @@ void SolverBitwuzlaSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelFieldRoot(ModelFieldRoot *f) {
+void SolverBitwuzlaSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 	DEBUG_ENTER("visitModelFieldRoot %s", f->name().c_str());
 	VisitorBase::visitModelFieldRoot(f);
 	DEBUG_LEAVE("visitModelFieldRoot %s", f->name().c_str());
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(ModelFieldType *f) {
+void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
 
 }
 

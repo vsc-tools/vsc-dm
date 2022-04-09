@@ -52,5 +52,13 @@ void ModelField::addField(IModelField *field) {
 	m_fields.push_back(IModelFieldUP(field));
 }
 
+IModelField *ModelField::getField(int32_t idx) {
+	if (idx >= 0 && idx < m_fields.size()) {
+		return m_fields.at(idx).get();
+	} else {
+		return 0;
+	}
+}
+
 
 } /* namespace vsc */

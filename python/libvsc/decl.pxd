@@ -15,12 +15,16 @@ from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
 ctypedef IDataTypeStruct *IDataTypeStructP
+ctypedef IModelField *IModelFieldP
+ctypedef IModelConstraint *IModelConstraintP
+ctypedef IModelVal *IModelValP
 ctypedef ITypeConstraint *ITypeConstraintP
 ctypedef ITypeConstraintBlock *ITypeConstraintBlockP
 ctypedef ITypeConstraintExpr *ITypeConstraintExprP
 ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
+ctypedef ITypeExprVal *ITypeExprValP
 ctypedef ITypeField *ITypeFieldP
 
 #********************************************************************
@@ -48,6 +52,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         ITypeConstraintScope *mkTypeConstraintScope()
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
+        ITypeExprVal *mkTypeExprVal(IModelVal *)
         ITypeField *mkTypeField(
             const cpp_string &,
             IDataType *,
@@ -57,8 +62,6 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
 #********************************************************************
 #* ICompoundSolver
 #********************************************************************
-ctypedef IModelField *IModelFieldP
-ctypedef IModelConstraint *IModelConstraintP
 cdef extern from "vsc/ICompoundSolver.h" namespace "vsc":
 
     cdef enum SolveFlags:
@@ -184,7 +187,6 @@ cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
 #********************************************************************
 #* IModelField
 #********************************************************************
-ctypedef IModelVal *IModelValP
 #ctypedef IModelField *IModelFieldP
 ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/IModelField.h" namespace "vsc":
@@ -206,6 +208,7 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void addConstraint(IModelConstraintP)
         const cpp_vector[IModelFieldUP] &fields()
         void addField(IModelField *)
+        IModelField *getField(int32_t)
         IModelValP val()
         
         void clearFlag(ModelFieldFlag flags)
@@ -310,8 +313,13 @@ cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
         void addRootRef()
         uint32_t size() const
         const TypeExprFieldRefElem &at(int32_t) const
+
+cdef extern from "vsc/ITypeExprVal.h" namespace "vsc":
+
+    cdef cppclass ITypeExprVal(ITypeExpr):
         
-        
+        const IModelVal *val() const
+
 #********************************************************************
 #* ITypeField
 #********************************************************************

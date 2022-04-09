@@ -231,7 +231,7 @@ void ctor::pop_build_scope() {
 	m_build_scope_s.pop_back();
 }
 
-ModelField *ctor::build_field() const {
+IModelField *ctor::build_field() const {
 	if (m_build_field_s.size()) {
 		return m_build_field_s.back();;
 	} else {
@@ -239,7 +239,7 @@ ModelField *ctor::build_field() const {
 	}
 }
 
-void ctor::push_build_field(ModelField *f) {
+void ctor::push_build_field(IModelField *f) {
 	m_build_field_s.push_back(f);
 }
 

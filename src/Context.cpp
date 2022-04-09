@@ -35,6 +35,7 @@
 #include "TypeConstraintScope.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
+#include "TypeExprVal.h"
 #include "TypeField.h"
 
 namespace vsc {
@@ -198,6 +199,10 @@ ITypeExprBin *Context::mkTypeExprBin(
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
 	return new TypeExprFieldRef();
+}
+
+ITypeExprVal *Context::mkTypeExprVal(const IModelVal *v) {
+	return new TypeExprVal(v);
 }
 
 ITypeField *Context::mkTypeField(

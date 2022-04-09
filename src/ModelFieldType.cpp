@@ -23,14 +23,30 @@
 
 namespace vsc {
 
-ModelFieldType::ModelFieldType(TypeField *type) :
-		ModelField(type->getDataType()), m_type(type) {
-	// TODO Auto-generated constructor stub
+ModelFieldType::ModelFieldType(ITypeField *type) :
+		m_type(type), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
 
 }
 
 ModelFieldType::~ModelFieldType() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelFieldType::addConstraint(IModelConstraint *c) {
+	m_constraints.push_back(IModelConstraintUP(c));
+}
+
+void ModelFieldType::addField(IModelField *field) {
+	field->setParent(this);
+	m_fields.push_back(IModelFieldUP(field));
+}
+
+IModelField *ModelFieldType::getField(int32_t idx) {
+	if (idx >= 0 && idx < m_fields.size()) {
+		return m_fields.at(idx).get();
+	} else {
+		return 0;
+	}
 }
 
 } /* namespace vsc */

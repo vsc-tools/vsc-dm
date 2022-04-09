@@ -59,6 +59,8 @@ public:
 
 	virtual void addField(IModelField *field) = 0;
 
+	virtual IModelField *getField(int32_t idx) = 0;
+
 	virtual const IModelVal *val() const = 0;
 
 	virtual IModelVal *val() = 0;

@@ -81,6 +81,8 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
 
+	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) override;
+
 	virtual ITypeField *mkTypeField(
 			const std::string		&name,
 			IDataType				*dtype,

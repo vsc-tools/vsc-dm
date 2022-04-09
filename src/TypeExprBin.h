@@ -31,7 +31,7 @@ public:
 		return m_rhs.get();
 	}
 
-	virtual void accept(IVisitor *v) { /* TODO */ }
+	virtual void accept(IVisitor *v) { v->visitTypeExprBin(this); }
 
 private:
 	ITypeExprUP				m_lhs;

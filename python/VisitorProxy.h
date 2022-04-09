@@ -66,15 +66,21 @@ public:
 
 	virtual void visitModelField(vsc::IModelField *f) { }
 
-	virtual void visitModelFieldRoot(vsc::ModelFieldRoot *f) { }
+	virtual void visitModelFieldRoot(vsc::IModelFieldRoot *f) { }
 
-	virtual void visitModelFieldType(vsc::ModelFieldType *f) { }
+	virtual void visitModelFieldType(vsc::IModelFieldType *f) { }
 
 	virtual void visitModelFieldVec(vsc::ModelFieldVec *f) { }
 
 	virtual void visitModelFieldVecRoot(vsc::ModelFieldVecRoot *f) { }
 
-	virtual void visitTypeField(vsc::TypeField *f) { }
+	virtual void visitTypeExprBin(vsc::ITypeExprBin *e) override { }
+
+	virtual void visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) override { }
+
+	virtual void visitTypeExprVal(vsc::ITypeExprVal *e) override { }
+
+	virtual void visitTypeField(vsc::ITypeField *f) { }
 
 private:
 	PyObject				*m_obj;
