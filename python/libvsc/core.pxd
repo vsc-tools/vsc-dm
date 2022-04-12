@@ -18,6 +18,7 @@ cdef class Vsc(object):
 cdef class Context(object):
     cdef decl.IContext               *_hndl
 
+    cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
     cpdef mkCompoundSolver(self)
     cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
@@ -71,6 +72,7 @@ cdef class DataTypeInt(DataType):
     
 cdef class DataTypeStruct(DataType):
 
+    cpdef name(self)
     cpdef addField(self, TypeField f)
     cpdef getFields(self)
     cpdef TypeField getField(self, int32_t idx)

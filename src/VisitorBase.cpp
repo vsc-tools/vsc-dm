@@ -54,7 +54,13 @@ void VisitorBase::visitDataTypeInt(IDataTypeInt *t) {
 }
 
 void VisitorBase::visitDataTypeStruct(IDataTypeStruct *t) {
-
+	for (auto it=t->getFields().begin(); it!=t->getFields().end(); it++) {
+		(*it)->accept(this);
+	}
+	for (auto it=t->getConstraints().begin();
+			it!=t->getConstraints().end(); it++) {
+		(*it)->accept(this);
+	}
 }
 
 void VisitorBase::visitModelConstraint(IModelConstraint *c) {

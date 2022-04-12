@@ -14,6 +14,8 @@
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprVal.h"
+#include "vsc/IModelFieldRoot.h"
+#include "vsc/IModelFieldType.h"
 #include "vsc/IRandomizer.h"
 #include "vsc/IRandState.h"
 #include "vsc/ISolverFactory.h"
@@ -36,6 +38,10 @@ class IContext {
 public:
 
 	virtual ~IContext() { }
+
+	virtual IModelFieldRoot *buildModelField(
+			IDataTypeStruct			*dt,
+			const std::string		&name) = 0;
 
 	virtual ICompoundSolver *mkCompoundSolver() = 0;
 
@@ -75,9 +81,12 @@ public:
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) = 0;
 
-	virtual IModelField *mkModelFieldRoot(
+	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) = 0;
+
+	virtual IModelFieldType *mkModelFieldType(
+			ITypeField			*type) = 0;
 
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,

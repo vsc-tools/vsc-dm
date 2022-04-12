@@ -27,8 +27,10 @@
 #include "ModelExprFieldRef.h"
 #include "ModelExprVal.h"
 #include "ModelFieldRoot.h"
+#include "ModelFieldType.h"
 #include "Randomizer.h"
 #include "RandState.h"
+#include "TaskModelFieldBuilder.h"
 #include "TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
@@ -47,6 +49,12 @@ Context::Context() {
 
 Context::~Context() {
 	// TODO Auto-generated destructor stub
+}
+
+IModelFieldRoot *Context::buildModelField(
+		IDataTypeStruct			*dt,
+		const std::string		&name) {
+	return TaskModelFieldBuilder(this).build(dt, name);
 }
 
 ICompoundSolver *Context::mkCompoundSolver() {
@@ -151,10 +159,15 @@ IModelExprVal *Context::mkModelExprVal(IModelVal *v) {
 	}
 }
 
-IModelField *Context::mkModelFieldRoot(
+IModelFieldRoot *Context::mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) {
 	return new ModelFieldRoot(type, name);
+}
+
+IModelFieldType *Context::mkModelFieldType(
+			ITypeField			*type) {
+	return new ModelFieldType(type);
 }
 
 IRandomizer *Context::mkRandomizer(

@@ -11,6 +11,11 @@
 
 namespace vsc {
 
+/**
+ * Represents a field characterized by a datatype
+ * and name. No type information (eg declaration location)
+ * is available for the field itself.
+ */
 class IModelFieldRoot : public IModelField {
 public:
 

@@ -19,6 +19,10 @@ public:
 
 	virtual ~Context();
 
+	virtual IModelFieldRoot *buildModelField(
+			IDataTypeStruct			*dt,
+			const std::string		&name) override;
+
 	virtual ICompoundSolver *mkCompoundSolver() override;
 
 	virtual IDataTypeInt *findDataTypeInt(
@@ -56,9 +60,13 @@ public:
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
-	virtual IModelField *mkModelFieldRoot(
+	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) override;
+
+	virtual IModelFieldType *mkModelFieldType(
+			ITypeField			*type
+			) override;
 
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,

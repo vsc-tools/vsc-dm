@@ -32,6 +32,7 @@ ctypedef ITypeField *ITypeFieldP
 #********************************************************************
 cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
+        IModelFieldRoot *buildModelField(IDataTypeStruct *, const cpp_string &)
         ICompoundSolver *mkCompoundSolver()
         IModelConstraintBlock *mkModelConstraintBlock(const cpp_string &)
         IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
@@ -215,6 +216,14 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void setFlag(ModelFieldFlag flags)
         bool isFlagSet(ModelFieldFlag flags)
 
+cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
+
+    cdef cppclass IModelFieldRoot(IModelField):
+        pass
+    
+cdef extern from "vsc/IModelFieldType.h" namespace "vsc":
+    cdef cppclass IModelFieldType(IModelField):
+        pass
 
 #********************************************************************
 #* IModelVal

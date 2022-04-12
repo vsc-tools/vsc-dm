@@ -32,6 +32,10 @@ cdef class Context(object):
     def __dealloc__(self):
         del self._hndl
         
+    cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
+        return ModelField.mk(
+            self._hndl.buildModelField(dt.asTypeStruct(), name.encode()), True)
+    
     cpdef mkCompoundSolver(self):
         return CompoundSolver.mk(self._hndl.mkCompoundSolver())
     
@@ -248,6 +252,9 @@ cdef class DataTypeInt(DataType):
         return dynamic_cast[decl.IDataTypeIntP](self._hndl)
     
 cdef class DataTypeStruct(DataType):
+
+    cpdef name(self):
+        return self.asTypeStruct().name().decode()
 
     cpdef addField(self, TypeField f):
         f._owned = False
