@@ -70,9 +70,9 @@ public:
 
 	virtual void visitModelFieldType(vsc::IModelFieldType *f) { }
 
-	virtual void visitModelFieldVec(vsc::ModelFieldVec *f) { }
+	virtual void visitModelFieldVec(vsc::IModelFieldVec *f) { }
 
-	virtual void visitModelFieldVecRoot(vsc::ModelFieldVecRoot *f) { }
+	virtual void visitModelFieldVecRoot(vsc::IModelFieldVecRoot *f) { }
 
 	virtual void visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) override { }
 

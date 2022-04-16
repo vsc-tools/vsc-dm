@@ -59,8 +59,8 @@ class IModelExprVal;
 class IModelField;
 class IModelFieldRoot;
 class IModelFieldType;
-class ModelFieldVec;
-class ModelFieldVecRoot;
+class IModelFieldVec;
+class IModelFieldVecRoot;
 
 class ITypeConstraint;
 class ITypeConstraintBlock;
@@ -129,9 +129,9 @@ public:
 
 	virtual void visitModelFieldType(IModelFieldType *f) = 0;
 
-	virtual void visitModelFieldVec(ModelFieldVec *f) = 0;
+	virtual void visitModelFieldVec(IModelFieldVec *f) = 0;
 
-	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) = 0;
+	virtual void visitModelFieldVecRoot(IModelFieldVecRoot *f) = 0;
 
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) = 0;
 
