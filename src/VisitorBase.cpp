@@ -54,7 +54,13 @@ void VisitorBase::visitDataTypeInt(IDataTypeInt *t) {
 }
 
 void VisitorBase::visitDataTypeStruct(IDataTypeStruct *t) {
-
+	for (auto it=t->getFields().begin(); it!=t->getFields().end(); it++) {
+		(*it)->accept(this);
+	}
+	for (auto it=t->getConstraints().begin();
+			it!=t->getConstraints().end(); it++) {
+		(*it)->accept(this);
+	}
 }
 
 void VisitorBase::visitModelConstraint(IModelConstraint *c) {
@@ -229,11 +235,11 @@ void VisitorBase::visitModelField(IModelField *f) {
 			f->constraints().size());
 }
 
-void VisitorBase::visitModelFieldRoot(ModelFieldRoot *f) {
+void VisitorBase::visitModelFieldRoot(IModelFieldRoot *f) {
 	visitModelField(f);
 }
 
-void VisitorBase::visitModelFieldType(ModelFieldType *f) {
+void VisitorBase::visitModelFieldType(IModelFieldType *f) {
 	visitModelField(f);
 
 }
@@ -247,7 +253,36 @@ void VisitorBase::visitModelFieldVecRoot(ModelFieldVecRoot *f) {
 	visitModelFieldVec(f);
 }
 
-void VisitorBase::visitTypeField(TypeField *f) {
+void VisitorBase::visitTypeConstraintBlock(ITypeConstraintBlock *c) {
+	visitTypeConstraintScope(c);
+}
+
+void VisitorBase::visitTypeConstraintExpr(ITypeConstraintExpr *c) {
+	c->expr()->accept(this);
+}
+
+void VisitorBase::visitTypeConstraintScope(ITypeConstraintScope *c) {
+	for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+		(*it)->accept(this);
+	}
+}
+
+void VisitorBase::visitTypeExprBin(ITypeExprBin *e) {
+	e->lhs()->accept(this);
+	e->rhs()->accept(this);
+
+}
+
+void VisitorBase::visitTypeExprFieldRef(ITypeExprFieldRef *e) {
+
+}
+
+void VisitorBase::visitTypeExprVal(ITypeExprVal *e) {
+
+}
+
+void VisitorBase::visitTypeField(ITypeField *f) {
+	f->getDataType()->accept(this);
 }
 
 } /* namespace vsc */

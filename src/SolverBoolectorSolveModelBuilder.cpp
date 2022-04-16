@@ -463,14 +463,33 @@ void SolverBoolectorSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelFieldRoot(ModelFieldRoot *f) {
+void SolverBoolectorSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 	DEBUG_ENTER("visitModelFieldRoot %s", f->name().c_str());
 	VisitorBase::visitModelFieldRoot(f);
 	DEBUG_LEAVE("visitModelFieldRoot %s", f->name().c_str());
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelFieldType(ModelFieldType *f) {
+void SolverBoolectorSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
+	DEBUG_ENTER("visitModelFieldType %s", f->name().c_str());
+	if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
+		// Create a solver-variable representation for this
+		m_field_s.push_back(f);
+		if (f->getDataType()) {
+			f->getDataType()->accept(this);
+		} else {
+			DEBUG("Note: no datatype");
+		}
+		m_field_s.pop_back();
+	} else {
+		// Create a value node
+		char *bits = (char *)alloca(f->val()->bits()+1);
+		f->val()->to_bits(bits);
 
+		DEBUG("bits=%s", bits);
+		m_node_i.second = boolector_const(m_solver->btor(), bits);
+		m_node_i.first = false; // TODO:
+	}
+	DEBUG_LEAVE("visitModelFieldType %s", f->name().c_str());
 }
 
 BoolectorNode *SolverBoolectorSolveModelBuilder::toBoolNode(BoolectorNode *n) {

@@ -43,9 +43,15 @@ public:
 
 	virtual void addField(IModelField *field) override;
 
-	virtual const IModelVal *val() const override { return &m_val; }
+	virtual IModelField *getField(int32_t idx) override;
 
-	virtual IModelVal *val() override { return &m_val; }
+	virtual const IModelVal *val() const override {
+		return &m_val;
+	}
+
+	virtual IModelVal *val() override {
+		return &m_val;
+	}
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }
 

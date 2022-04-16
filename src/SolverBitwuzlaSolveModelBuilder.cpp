@@ -534,14 +534,22 @@ void SolverBitwuzlaSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelFieldRoot(ModelFieldRoot *f) {
+void SolverBitwuzlaSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 	DEBUG_ENTER("visitModelFieldRoot %s", f->name().c_str());
 	VisitorBase::visitModelFieldRoot(f);
 	DEBUG_LEAVE("visitModelFieldRoot %s", f->name().c_str());
 }
 
-void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(ModelFieldType *f) {
-
+void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
+	DEBUG_ENTER("visitModelFieldType");
+	m_field_s.push_back(f);
+	if (f->getDataType()) {
+		f->getDataType()->accept(this);
+	} else {
+		DEBUG("Note: no datatype");
+	}
+	m_field_s.pop_back();
+	DEBUG_LEAVE("visitModelFieldType");
 }
 
 const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::toBoolNode(const BitwuzlaTerm *n) {

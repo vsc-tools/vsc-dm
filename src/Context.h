@@ -19,21 +19,30 @@ public:
 
 	virtual ~Context();
 
-	DataTypeStruct *findStructType(const std::string &name);
+	virtual IModelFieldRoot *buildModelField(
+			IDataTypeStruct			*dt,
+			const std::string		&name) override;
 
-	void addStructType(DataTypeStruct *t);
+	virtual ICompoundSolver *mkCompoundSolver() override;
 
-	DataTypeInt *findIntType(
+	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
-			int32_t			width,
-			bool			create=true);
-
-	void addIntType(DataTypeInt		*t);
-
+			int32_t			width) override;
 
 	virtual IDataTypeInt *mkDataTypeInt(
 			bool			is_signed,
 			int32_t			width) override;
+
+	virtual bool addDataTypeInt(IDataTypeInt *t) override;
+
+	virtual IDataTypeStruct *findDataTypeStruct(
+			const std::string &name) override;
+
+	virtual IDataTypeStruct *mkDataTypeStruct(
+			const std::string &name) override;
+
+	virtual bool addDataTypeStruct(
+			IDataTypeStruct *t) override;
 
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override;
@@ -51,9 +60,13 @@ public:
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
-	virtual IModelField *mkModelFieldRoot(
+	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) override;
+
+	virtual IModelFieldType *mkModelFieldType(
+			ITypeField			*type
+			) override;
 
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,
@@ -61,16 +74,40 @@ public:
 
 	virtual IRandState *mkRandState(uint32_t seed) override;
 
+	virtual ITask *mkTask(TaskE id) override;
+
+	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override;
+
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) override;
+
+	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
+
+	virtual ITypeExprBin *mkTypeExprBin(
+			ITypeExpr		*lhs,
+			BinOp			op,
+			ITypeExpr		*rhs) override;
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
+
+	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) override;
+
+	virtual ITypeField *mkTypeField(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init) override;
+
+
 private:
 
-	std::unordered_map<std::string,DataTypeStructUP>		m_struct_type_m;
-	std::vector<DataTypeStruct *>							m_struct_type_l;
+	std::unordered_map<std::string,IDataTypeStruct *>		m_struct_type_m;
+	std::vector<IDataTypeStructUP>							m_struct_type_l;
 
-	std::unordered_map<int32_t, DataTypeInt*>				m_uint_type_m;
-	std::vector<DataTypeIntUP>								m_uint_type_l;
+	std::unordered_map<int32_t, IDataTypeInt*>				m_uint_type_m;
+	std::vector<IDataTypeIntUP>								m_uint_type_l;
 
-	std::unordered_map<int32_t, DataTypeInt*>				m_sint_type_m;
-	std::vector<DataTypeIntUP>								m_sint_type_l;
+	std::unordered_map<int32_t, IDataTypeInt*>				m_sint_type_m;
+	std::vector<IDataTypeIntUP>								m_sint_type_l;
 
 };
 

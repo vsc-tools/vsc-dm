@@ -14,20 +14,78 @@ from libc.stdint cimport int64_t
 from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
+ctypedef IDataTypeStruct *IDataTypeStructP
+ctypedef IModelField *IModelFieldP
+ctypedef IModelConstraint *IModelConstraintP
+ctypedef IModelVal *IModelValP
+ctypedef ITypeConstraint *ITypeConstraintP
+ctypedef ITypeConstraintBlock *ITypeConstraintBlockP
+ctypedef ITypeConstraintExpr *ITypeConstraintExprP
+ctypedef ITypeConstraintScope *ITypeConstraintScopeP
+ctypedef ITypeExprBin *ITypeExprBinP
+ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
+ctypedef ITypeExprVal *ITypeExprValP
+ctypedef ITypeField *ITypeFieldP
+
 #********************************************************************
 #* IContext
 #********************************************************************
 cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
+        IModelFieldRoot *buildModelField(IDataTypeStruct *, const cpp_string &)
+        ICompoundSolver *mkCompoundSolver()
         IModelConstraintBlock *mkModelConstraintBlock(const cpp_string &)
         IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
+        IDataTypeInt *findDataTypeInt(bool is_signed, int32_t width)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
+        bool addDataTypeInt(IDataTypeInt *)
+        IDataTypeStruct *findDataTypeStruct(const cpp_string &)
+        IDataTypeStruct *mkDataTypeStruct(const cpp_string &)
+        bool addDataTypeStruct(IDataTypeStruct *)
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
         IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
+        ITypeConstraintBlock *mkTypeConstraintBlock(const cpp_string &)
+        ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *)
+        ITypeConstraintScope *mkTypeConstraintScope()
+        ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
+        ITypeExprFieldRef *mkTypeExprFieldRef()
+        ITypeExprVal *mkTypeExprVal(IModelVal *)
+        ITypeField *mkTypeField(
+            const cpp_string &,
+            IDataType *,
+            TypeFieldAttr,
+            IModelVal *)
+        
+#********************************************************************
+#* ICompoundSolver
+#********************************************************************
+cdef extern from "vsc/ICompoundSolver.h" namespace "vsc":
+
+    cdef enum SolveFlags:
+        Randomize          "vsc::SolveFlags::Randomize"
+        RandomizeDeclRand  "vsc::SolveFlags::RandomizeDeclRand"
+        RandomizeTopFields "vsc::SolveFlags::RandomizeTopFields"
+        DiagnoseFailures   "vsc::SolveFlags::DiagnoseFailures"
+    
+    cdef cppclass ICompoundSolver:
+        
+        bool solve(
+            IRandState                          *randstate,
+            const cpp_vector[IModelFieldP]      &fields,
+            const cpp_vector[IModelConstraintP] &constraints,
+            SolveFlags                          flags)
+        
+        
+#********************************************************************
+#* IAccept
+#********************************************************************
+cdef extern from "vsc/IAccept.h" namespace "vsc":
+    cdef cppclass IAccept:
+        void accept(IVisitor *)
     
 #********************************************************************
 #* IDataType
@@ -35,13 +93,22 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
 ctypedef IDataTypeInt *IDataTypeIntP
 
 cdef extern from "vsc/IDataType.h" namespace "vsc":
-    cdef cppclass IDataType:
+    cdef cppclass IDataType(IAccept):
         pass
     
 cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
     cdef cppclass IDataTypeInt(IDataType):
         pass
     
+cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
+    cdef cppclass IDataTypeStruct(IDataType):
+        const cpp_string &name() const
+        void addField(ITypeField *)
+        ITypeField *getField(int32_t idx)
+        const cpp_vector[unique_ptr[ITypeField]] &getFields() const
+        void addConstraint(ITypeConstraint *)
+        const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
+        
 
 #********************************************************************
 #* IVsc
@@ -51,17 +118,11 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
         IContext *mkContext()
         pass
     
-#********************************************************************
-#* IAccept
-#********************************************************************
-cdef extern from "vsc/IAccept.h" namespace "vsc":
-    cdef cppclass IAccept:
-        void accept(IVisitor *)
         
 #********************************************************************
 #* IModelConstraint
 #********************************************************************
-ctypedef IModelConstraint *IModelConstraintP
+#ctypedef IModelConstraint *IModelConstraintP
 cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
     cdef cppclass IModelConstraint:
         pass
@@ -127,8 +188,7 @@ cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
 #********************************************************************
 #* IModelField
 #********************************************************************
-ctypedef IModelVal *IModelValP
-ctypedef IModelField *IModelFieldP
+#ctypedef IModelField *IModelFieldP
 ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/IModelField.h" namespace "vsc":
 
@@ -149,12 +209,21 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void addConstraint(IModelConstraintP)
         const cpp_vector[IModelFieldUP] &fields()
         void addField(IModelField *)
+        IModelField *getField(int32_t)
         IModelValP val()
         
         void clearFlag(ModelFieldFlag flags)
         void setFlag(ModelFieldFlag flags)
         bool isFlagSet(ModelFieldFlag flags)
 
+cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
+
+    cdef cppclass IModelFieldRoot(IModelField):
+        pass
+    
+cdef extern from "vsc/IModelFieldType.h" namespace "vsc":
+    cdef cppclass IModelFieldType(IModelField):
+        pass
 
 #********************************************************************
 #* IModelVal
@@ -198,6 +267,84 @@ cdef extern from "vsc/ISolverFactory.h" namespace "vsc":
     cdef cppclass ISolverFactory:
         pass
         
+#********************************************************************
+#* ITask
+#********************************************************************
+cdef extern from "vsc/ITask.h" namespace "vsc":
+    cdef cppclass ITask:
+        void apply(IAccept *)
+        
+#********************************************************************
+#* ITypeConstraint
+#********************************************************************
+cdef extern from "vsc/ITypeConstraint.h" namespace "vsc":
+    cdef cppclass ITypeConstraint:
+        pass
+    
+cdef extern from "vsc/ITypeConstraintExpr.h" namespace "vsc":
+    cdef cppclass ITypeConstraintExpr(ITypeConstraint):
+        ITypeExpr *expr() const
+        
+cdef extern from "vsc/ITypeConstraintScope.h" namespace "vsc":
+    cdef cppclass ITypeConstraintScope(ITypeConstraint):
+        void addConstraint(ITypeConstraint *)
+        const cpp_vector[unique_ptr[ITypeConstraint]] &constraints() const
+        
+cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
+    cdef cppclass ITypeConstraintBlock(ITypeConstraintScope):
+        const cpp_string &name() const
+    
+#********************************************************************
+#* ITypeExpr
+#********************************************************************
+
+cdef extern from "vsc/ITypeExpr.h" namespace "vsc":
+    cdef cppclass ITypeExpr:
+        pass
+    
+cdef extern from "vsc/ITypeExprBin.h" namespace "vsc":
+    cdef cppclass ITypeExprBin(ITypeExpr):
+        ITypeExpr *lhs() const
+        BinOp op() const
+        ITypeExpr *rhs() const
+    
+cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
+    cdef enum TypeExprFieldRefElemKind:
+        Root "vsc::TypeExprFieldRefElemKind::Root" 
+        IdxOffset "vsc::TypeExprFieldRefElemKind::IdxOffset" 
+        
+    cdef cppclass TypeExprFieldRefElem:
+        TypeExprFieldRefElemKind        kind
+        int32_t                         idx
+
+    cdef cppclass ITypeExprFieldRef(ITypeExpr):
+        void addIdxRef(int32_t)
+        void addRootRef()
+        uint32_t size() const
+        const TypeExprFieldRefElem &at(int32_t) const
+
+cdef extern from "vsc/ITypeExprVal.h" namespace "vsc":
+
+    cdef cppclass ITypeExprVal(ITypeExpr):
+        
+        const IModelVal *val() const
+
+#********************************************************************
+#* ITypeField
+#********************************************************************
+cdef extern from "vsc/ITypeField.h" namespace "vsc":
+    cdef enum TypeFieldAttr:
+        NoAttr        "vsc::TypeFieldAttr::NoAttr"
+        Rand          "vsc::TypeFieldAttr::Rand"
+    
+    cdef cppclass ITypeField:
+        IDataTypeStruct *getParent()
+        void setParent(IDataTypeStruct *)
+        const cpp_string &name() const
+        IDataType *getDataType() const
+        TypeFieldAttr getAttr() const
+        IModelVal *getInit() const
+
 #********************************************************************
 #* IVisitor
 #********************************************************************

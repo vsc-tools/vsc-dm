@@ -26,8 +26,6 @@
 namespace vsc {
 
 ModelVal::ModelVal() : m_val{0}, m_bits(0) {
-	// TODO Auto-generated constructor stub
-	fprintf(stdout, "ModelVal::ModelVal\n");
 
 }
 
@@ -57,17 +55,22 @@ ModelVal::ModelVal(const ModelVal &rhs) {
 }
 
 ModelVal::ModelVal(const IModelVal *rhs) {
-	m_bits = rhs->bits();
+	if (rhs) {
+		m_bits = rhs->bits();
 
-	if (m_bits <= 64) {
-		m_val.v = rhs->val().v;
+		if (m_bits <= 64) {
+			m_val.v = rhs->val().v;
 
-		if (m_bits < 64) {
-			m_val.v &= (1ULL << m_bits)-1;
+			if (m_bits < 64) {
+				m_val.v &= (1ULL << m_bits)-1;
+			}
+		} else {
+			m_val.vp = new uint64_t[(m_bits-1)/64+1];
+			memcpy(m_val.vp, rhs->val().vp, sizeof(uint64_t)*((m_bits-1)/64+1));
 		}
 	} else {
-		m_val.vp = new uint64_t[(m_bits-1)/64+1];
-		memcpy(m_val.vp, rhs->val().vp, sizeof(uint64_t)*((m_bits-1)/64+1));
+		m_bits = 0;
+		m_val.v = 0;
 	}
 }
 
@@ -122,7 +125,6 @@ void ModelVal::bits(uint32_t b) {
 		// I
 
 	}
-	fprintf(stdout, "ModelVal::bits: %d\n", b);
 	m_bits = b;
 }
 
@@ -132,7 +134,6 @@ void ModelVal::setBits(uint32_t b) {
 		// I
 
 	}
-	fprintf(stdout, "ModelVal::bits: %d\n", b);
 	m_bits = b;
 }
 

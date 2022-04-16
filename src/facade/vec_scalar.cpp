@@ -49,7 +49,8 @@ void vec_scalar::push_back(uint64_t v) {
 			vec->getDataType(),
 			"a");
 	field->val()->val_u(v);
-	vec->push_back(field);
+	// TODO:
+//	vec->push_back(field);
 }
 
 expr_base vec_scalar::subscript(const expr_base &rhs) {

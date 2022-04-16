@@ -49,9 +49,9 @@ public:
 
 	virtual void visitModelField(IModelField *f) override;
 
-	virtual void visitModelFieldRoot(ModelFieldRoot *f) override;
+	virtual void visitModelFieldRoot(IModelFieldRoot *f) override;
 
-	virtual void visitModelFieldType(ModelFieldType *f) override;
+	virtual void visitModelFieldType(IModelFieldType *f) override;
 
 private:
 

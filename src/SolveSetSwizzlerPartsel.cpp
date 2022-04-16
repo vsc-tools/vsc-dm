@@ -68,7 +68,8 @@ void SolveSetSwizzlerPartsel::swizzle_field_l(
 		swizzle_field(field, constraints);
 		DEBUG("select field %s", field->name().c_str());
 	}
-	DEBUG_LEAVE("Select %d fields from %d", max_swizzle, fields_c.size());
+	DEBUG_LEAVE("Select %d fields from %d (%d constraints)",
+			max_swizzle, fields_c.size(), constraints.size());
 
 	// Build out the solver representation
 	for (auto c_it=constraints.begin(); c_it!=constraints.end(); c_it++) {
@@ -112,13 +113,12 @@ void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
 	// TODO: should probably do this with 'val' to ensure we
 	// can handle wide variables
 	ModelVal val;
-	uint32_t width = val.bits();
+	uint32_t width = f->val()->bits();
 
 	val.set(f->val());
 
 	m_randstate->randbits(&val);
 	DEBUG("randbits: 0x%08llx", val.val_u());
-//	uint32_t bit_pattern = m_randstate->randint32(0, (1 << width)-1);
 
 	uint32_t max_intervals = 6;
 

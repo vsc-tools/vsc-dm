@@ -20,17 +20,44 @@
  */
 
 #include "ModelFieldType.h"
+#include "DataTypeWidthVisitor.h"
 
 namespace vsc {
 
-ModelFieldType::ModelFieldType(TypeField *type) :
-		ModelField(type->type()), m_type(type) {
-	// TODO Auto-generated constructor stub
+ModelFieldType::ModelFieldType(ITypeField *type) :
+		m_type(type), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
 
+	if ((type->getAttr() & TypeFieldAttr::Rand) != TypeFieldAttr::NoAttr) {
+		m_flags |= ModelFieldFlag::DeclRand;
+	}
+
+	// Obtain the width of scalar fields
+	std::pair<bool,int32_t> width = DataTypeWidthVisitor().width(type->getDataType());
+
+	if (width.second != -1) {
+		m_val.setBits(width.second);
+	}
 }
 
 ModelFieldType::~ModelFieldType() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelFieldType::addConstraint(IModelConstraint *c) {
+	m_constraints.push_back(IModelConstraintUP(c));
+}
+
+void ModelFieldType::addField(IModelField *field) {
+	field->setParent(this);
+	m_fields.push_back(IModelFieldUP(field));
+}
+
+IModelField *ModelFieldType::getField(int32_t idx) {
+	if (idx >= 0 && idx < m_fields.size()) {
+		return m_fields.at(idx).get();
+	} else {
+		return 0;
+	}
 }
 
 } /* namespace vsc */

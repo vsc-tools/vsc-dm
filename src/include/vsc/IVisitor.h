@@ -57,12 +57,20 @@ class IModelExprUnary;
 class IModelExprVal;
 
 class IModelField;
-class ModelFieldRoot;
-class ModelFieldType;
+class IModelFieldRoot;
+class IModelFieldType;
 class ModelFieldVec;
 class ModelFieldVecRoot;
 
-class TypeField;
+class ITypeConstraint;
+class ITypeConstraintBlock;
+class ITypeConstraintExpr;
+class ITypeConstraintScope;
+class ITypeExpr;
+class ITypeExprBin;
+class ITypeExprFieldRef;
+class ITypeExprVal;
+class ITypeField;
 
 class IVisitor {
 public:
@@ -117,15 +125,28 @@ public:
 
 	virtual void visitModelField(IModelField *f) = 0;
 
-	virtual void visitModelFieldRoot(ModelFieldRoot *f) = 0;
+	virtual void visitModelFieldRoot(IModelFieldRoot *f) = 0;
 
-	virtual void visitModelFieldType(ModelFieldType *f) = 0;
+	virtual void visitModelFieldType(IModelFieldType *f) = 0;
 
 	virtual void visitModelFieldVec(ModelFieldVec *f) = 0;
 
 	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) = 0;
 
-	virtual void visitTypeField(TypeField *f) = 0;
+	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) = 0;
+
+	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
+
+	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
+
+	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
+
+	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) = 0;
+
+	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
+
+	virtual void visitTypeField(ITypeField *f) = 0;
+
 
 };
 

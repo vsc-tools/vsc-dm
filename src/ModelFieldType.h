@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "vsc/IModelFieldType.h"
 #include "ModelField.h"
 
 namespace vsc {
@@ -13,20 +14,68 @@ namespace vsc {
 /**
  * Field instance based on a field-type declaration
  */
-class ModelFieldType : public ModelField {
+class ModelFieldType : public IModelFieldType {
 public:
-	ModelFieldType(TypeField *type);
+	ModelFieldType(ITypeField *type);
 
 	virtual ~ModelFieldType();
 
-	virtual const std::string &name() const { return m_type->name(); }
+	virtual const std::string &name() const override { return m_type->name(); }
 
-	virtual IDataType *getDataType() const override { return m_type->type(); }
+	virtual IDataType *getDataType() const override { return m_type->getDataType(); }
+
+	virtual IModelField *getParent() const override { return m_parent; }
+
+	virtual void setParent(IModelField *p) override { m_parent = p; }
+
+	virtual const std::vector<IModelConstraintUP> &constraints() const override {
+		return m_constraints;
+	}
+
+	virtual void addConstraint(IModelConstraint *c) override;
+
+	virtual const std::vector<IModelFieldUP> &fields() const override {
+		return m_fields;
+	}
+
+	virtual void addField(IModelField *field) override;
+
+	virtual IModelField *getField(int32_t idx) override;
+
+	virtual const IModelVal *val() const override {
+		return &m_val;
+	}
+
+	virtual IModelVal *val() override {
+		return &m_val;
+	}
+
+	virtual ModelFieldFlag flags() const override { return m_flags; }
+
+	virtual void clearFlag(ModelFieldFlag flags) override {
+		m_flags = (m_flags & (~flags));
+	}
+
+	virtual void setFlag(ModelFieldFlag flags) override {
+		m_flags = (m_flags | flags);
+	}
+
+	virtual bool isFlagSet(ModelFieldFlag flags) const override {
+		return ((m_flags & flags) == flags);
+	}
 
 	virtual void accept(IVisitor *v) { v->visitModelFieldType(this); }
 
 protected:
-	TypeField					*m_type;
+	ITypeField						*m_type;
+	IModelField						*m_parent;
+
+	// Typically only really used for scalar fields
+	ModelVal						m_val;
+
+	std::vector<IModelFieldUP>		m_fields;
+	std::vector<IModelConstraintUP>	m_constraints;
+	ModelFieldFlag					m_flags;
 
 };
 

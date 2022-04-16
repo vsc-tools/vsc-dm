@@ -10,41 +10,46 @@
 #include <string>
 #include "DataType.h"
 #include "vsc/IAccept.h"
-#include "ModelVal.h"
+#include "vsc/ITypeField.h"
+#include "vsc/IModelVal.h"
 
 
 namespace vsc {
-
-using TypeFieldAttr=uint32_t;
-static const TypeFieldAttr TypeFieldAttr_Rand = (1 << 0);
 
 class DataTypeStruct;
 
 class TypeField;
 using TypeFieldUP=std::unique_ptr<TypeField>;
-class TypeField : public virtual IAccept {
+class TypeField : public virtual ITypeField {
 public:
 	TypeField(
-			DataTypeStruct		*parent,
 			const std::string	&name,
 			IDataType			*type,
 			TypeFieldAttr		attr,
-			ModelVal			*init);
+			IModelVal			*init);
 
 	virtual ~TypeField();
 
+	virtual IDataTypeStruct *getParent() override { return m_parent; }
+
+	virtual void setParent(IDataTypeStruct *p) override { m_parent = p; }
+
 	const std::string &name() const { return m_name; }
 
-	IDataType *type() const { return m_type; }
+	virtual IDataType *getDataType() const override { return m_type; }
+
+	virtual TypeFieldAttr getAttr() const override { return m_attr; }
+
+	virtual IModelVal *getInit() const override { return m_init.get(); }
 
 	virtual void accept(IVisitor *v) { v->visitTypeField(this); }
 
 protected:
-	DataTypeStruct			*m_parent;
+	IDataTypeStruct			*m_parent;
 	std::string				m_name;
 	IDataType				*m_type;
 	TypeFieldAttr			m_attr;
-	ModelValUP				m_init;
+	IModelValUP				m_init;
 
 };
 

@@ -27,6 +27,12 @@ static inline ModelFieldFlag operator | (const ModelFieldFlag lhs, const ModelFi
 			static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
 }
 
+static inline ModelFieldFlag operator |= (ModelFieldFlag &lhs, const ModelFieldFlag rhs) {
+	lhs = static_cast<ModelFieldFlag>(
+			static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+	return lhs;
+}
+
 static inline ModelFieldFlag operator & (const ModelFieldFlag lhs, const ModelFieldFlag rhs) {
 	return static_cast<ModelFieldFlag>(
 			static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
@@ -58,6 +64,8 @@ public:
 	virtual const std::vector<IModelFieldUP> &fields() const = 0;
 
 	virtual void addField(IModelField *field) = 0;
+
+	virtual IModelField *getField(int32_t idx) = 0;
 
 	virtual const IModelVal *val() const = 0;
 

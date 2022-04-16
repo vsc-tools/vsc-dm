@@ -30,10 +30,22 @@ public:
 		return m_name;
 	}
 
+	virtual void addField(ITypeField *f) override;
+
+	virtual const std::vector<ITypeFieldUP> &getFields() const override;
+
+	virtual ITypeField *getField(int32_t idx) override;
+
+	virtual void addConstraint(ITypeConstraint *c) override;
+
+	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override;
+
+	virtual void accept(IVisitor *v) override { v->visitDataTypeStruct(this); }
+
 private:
 	std::string							m_name;
-	std::vector<TypeFieldUP>			m_fields;
-	std::vector<TypeConstraintUP>		m_constraints;
+	std::vector<ITypeFieldUP>			m_fields;
+	std::vector<ITypeConstraintUP>		m_constraints;
 
 };
 

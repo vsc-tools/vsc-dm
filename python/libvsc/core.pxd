@@ -7,7 +7,7 @@ from libc.stdint cimport uint64_t
 from libc.stdint cimport int64_t
 from libcpp cimport bool
 from libcpp.vector cimport vector as cpp_vector
-from enum import IntFlag
+from enum import IntFlag, IntEnum
 cimport cpython.ref as cpy_ref
 
 cdef class Vsc(object):
@@ -18,18 +18,47 @@ cdef class Vsc(object):
 cdef class Context(object):
     cdef decl.IContext               *_hndl
 
+    cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
+    cpdef mkCompoundSolver(self)
     cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
-    cpdef mkDataTypeInt(self, bool is_signed, int width)
+    cpdef bool addDataTypeInt(self, DataTypeInt)
+    cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width)
+    cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width)
+    cpdef bool addDataTypeStruct(self, DataTypeStruct)
+    cpdef DataTypeStruct findDataTypeStruct(self, name)
+    cpdef DataTypeStruct mkDataTypeStruct(self, name)
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
     cpdef mkModelExprFieldRef(self, ModelField field)
     cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
+    cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
+    cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
+    cpdef TypeConstraintScope mkTypeConstraintScope(self)
+    cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
+    cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
+    cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
+    cpdef TypeField mkTypeField(self, name, DataType, attr, ModelVal)
+
+    
+cdef class CompoundSolver(object):
+    cdef decl.ICompoundSolver   *_hndl
+    
+    cpdef solve(self, RandState, fields, constraints, flags)
+    
+    @staticmethod
+    cdef mk(decl.ICompoundSolver *)
+    
+cdef class Accept(object):
+    cdef decl.IAccept *hndl(self)
     
 cdef class DataType(object):
     cdef decl.IDataType         *_hndl
+    cdef bool                   _owned
+    
+#    cdef decl.IAccept *hndl(self)
     
     @staticmethod
     cdef mk(decl.IDataType *, owned=*)
@@ -40,6 +69,20 @@ cdef class DataTypeInt(DataType):
     cdef mk(decl.IDataTypeInt *, owned=*)
     
     cdef decl.IDataTypeInt *asTypeInt(self)
+    
+cdef class DataTypeStruct(DataType):
+
+    cpdef name(self)
+    cpdef addField(self, TypeField f)
+    cpdef getFields(self)
+    cpdef TypeField getField(self, int32_t idx)
+    cpdef addConstraint(self, TypeConstraint c)
+    cpdef getConstraints(self)
+
+    @staticmethod
+    cdef mk(decl.IDataTypeStruct *, owned=*)
+
+    cdef decl.IDataTypeStruct *asTypeStruct(self)
     
 cdef class ModelConstraint(object):
     cdef decl.IModelConstraint   *_hndl
@@ -79,6 +122,8 @@ cdef class ModelExpr(object):
     
     @staticmethod
     cdef mk(decl.IModelExpr *e, bool owned=*)
+    
+
 
 cdef class ModelExprBin(ModelExpr):
 
@@ -117,6 +162,7 @@ cdef class ModelField(object):
     cpdef addConstraint(self, ModelConstraint)
     cpdef fields(self)
     cpdef addField(self, ModelField)
+    cpdef ModelField getField(self, int32_t idx)
     cpdef val(self)
     
     cpdef clearFlag(self, flags)
@@ -159,6 +205,103 @@ cdef class RandState(object):
     
 cdef class SolverFactory(object):
     cdef decl.ISolverFactory    *_hndl
+    
+cdef class Task(object):
+    cdef decl.ITask             *_hndl
+    
+    cpdef apply(self, Accept it)
+    
+cdef class TypeConstraint(object):
+    cdef decl.ITypeConstraint   *_hndl
+    cdef bool                   _owned
+    
+    @staticmethod
+    cdef TypeConstraint mk(decl.ITypeConstraint *, bool owned=*)
+
+cdef class TypeConstraintExpr(TypeConstraint):
+
+    cpdef TypeExpr expr(self)
+
+    cdef decl.ITypeConstraintExpr *asExpr(self)
+
+    @staticmethod
+    cdef TypeConstraintExpr mk(decl.ITypeConstraint *, bool owned=*)
+   
+cdef class TypeConstraintScope(TypeConstraint):
+    
+    cpdef addConstraint(self, TypeConstraint)
+    
+    cdef decl.ITypeConstraintScope *asScope(self)
+    
+    @staticmethod
+    cdef TypeConstraintScope mk(decl.ITypeConstraintScope *, bool owned=*)
+    
+cdef class TypeConstraintBlock(TypeConstraintScope):
+    
+    cpdef name(self)
+    
+    cdef decl.ITypeConstraintBlock *asBlock(self)
+    
+    @staticmethod
+    cdef TypeConstraintBlock mk(decl.ITypeConstraintBlock *, bool owned=*)
+
+cdef class TypeExpr(object):
+    cdef decl.ITypeExpr         *_hndl
+    cdef bool                   _owned
+    
+    @staticmethod
+    cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=*)
+    
+cdef class TypeExprFieldRefElem(object):
+    cdef const decl.TypeExprFieldRefElem   *_hndl
+
+    cpdef getKind(self)
+    cpdef int32_t getIdx(self)
+
+cdef class TypeExprBin(TypeExpr):
+
+    cpdef TypeExpr lhs(self)
+    cpdef op(self)
+    cpdef TypeExpr rhs(self)
+
+    cdef decl.ITypeExprBin *asBin(self)
+        
+    @staticmethod
+    cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=*)    
+
+cdef class TypeExprFieldRef(TypeExpr):
+
+    cpdef addIdxRef(self, int32_t idx)
+    cpdef addRootRef(self)
+    cpdef uint32_t size(self)
+    cpdef TypeExprFieldRefElem at(self, idx)
+    
+    cdef decl.ITypeExprFieldRef *asFieldRef(self)
+    
+    @staticmethod
+    cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=*)
+    
+cdef class TypeExprVal(TypeExpr):
+    cpdef ModelVal val(self)
+    
+    cdef decl.ITypeExprVal *asVal(self)
+    
+    @staticmethod
+    cdef TypeExprVal mk(decl.ITypeExprVal *hndl, bool owned=*)
+    
+cdef class TypeField(object):
+    cdef decl.ITypeField        *_hndl
+    cdef bool                   _owned
+    
+    cpdef DataTypeStruct getParent(self)
+    cpdef setParent(self, DataTypeStruct)
+    cpdef name(self)
+    cpdef DataType getDataType(self)
+    cpdef getAttr(self)
+    cpdef ModelVal getInit(self)
+
+    @staticmethod
+    cdef mk(decl.ITypeField *, owned=*)
     
     
 cdef class VisitorBase(object):
