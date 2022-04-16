@@ -541,7 +541,15 @@ void SolverBitwuzlaSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 }
 
 void SolverBitwuzlaSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
-
+	DEBUG_ENTER("visitModelFieldType");
+	m_field_s.push_back(f);
+	if (f->getDataType()) {
+		f->getDataType()->accept(this);
+	} else {
+		DEBUG("Note: no datatype");
+	}
+	m_field_s.pop_back();
+	DEBUG_LEAVE("visitModelFieldType");
 }
 
 const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::toBoolNode(const BitwuzlaTerm *n) {

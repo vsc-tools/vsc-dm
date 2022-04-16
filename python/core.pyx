@@ -83,6 +83,12 @@ cdef class Context(object):
         cdef int op_i = int(op)
         lhs._owned = False
         rhs._owned = False
+        
+        if lhs._hndl == NULL:
+            raise Exception("lhs is NULL")
+        if rhs._hndl == NULL:
+            raise Exception("rhs is NULL")
+        
         return ModelExprBin.mk(
             self._hndl.mkModelExprBin(
                 lhs._hndl,
@@ -261,7 +267,11 @@ cdef class DataTypeStruct(DataType):
         self.asTypeStruct().addField(f._hndl)
         
     cpdef getFields(self):
-        pass
+        ret = []
+        for i in range(self.asTypeStruct().getFields().size()):
+            ret.append(TypeField.mk(
+                self.asTypeStruct().getFields().at(i).get(), False))
+        return ret
     
     cpdef TypeField getField(self, int32_t idx):
         cdef decl.ITypeField *ret_h = self.asTypeStruct().getField(idx)
@@ -272,10 +282,15 @@ cdef class DataTypeStruct(DataType):
             return None
     
     cpdef addConstraint(self, TypeConstraint c):
+        self.asTypeStruct().addConstraint(c._hndl)
         pass
     
     cpdef getConstraints(self):
-        pass
+        ret = []
+        for i in range(self.asTypeStruct().getConstraints().size()):
+            ret.append(TypeConstraint.mk(
+                self.asTypeStruct().getConstraints().at(i).get(), False))
+        return ret
     
     @staticmethod
     cdef mk(decl.IDataTypeStruct *hndl, owned=True):

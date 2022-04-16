@@ -27,11 +27,18 @@ public:
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override;
 
+	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override;
+
+	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override;
+
+	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override;
+
 private:
-	IContext					*m_ctxt;
-	std::string					m_name;
-	ITypeField					*m_type_field;
-	std::vector<IModelField *>	m_scopes;
+	IContext								*m_ctxt;
+	std::string								m_name;
+	ITypeField								*m_type_field;
+	std::vector<IModelField *>				m_field_s;
+	std::vector<IModelConstraintScope *>	m_constraint_s;
 
 
 };

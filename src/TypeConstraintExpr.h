@@ -21,7 +21,7 @@ public:
 		return m_expr.get();
 	}
 
-	virtual void accept(IVisitor *v) override { /* TODO */ }
+	virtual void accept(IVisitor *v) override { v->visitTypeConstraintExpr(this); }
 
 private:
 	ITypeExprUP					m_expr;

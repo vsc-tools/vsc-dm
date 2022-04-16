@@ -133,6 +133,12 @@ public:
 
 	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) = 0;
 
+	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) = 0;
+
+	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
+
+	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
+
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) = 0;

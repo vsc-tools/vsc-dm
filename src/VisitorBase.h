@@ -37,6 +37,10 @@
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
 
+#include "vsc/ITypeConstraintBlock.h"
+#include "vsc/ITypeConstraintExpr.h"
+#include "vsc/ITypeConstraintScope.h"
+
 #include "ModelCoverCross.h"
 #include "ModelCovergroup.h"
 #include "ModelCoverpoint.h"
@@ -126,6 +130,12 @@ public:
 	virtual void visitModelFieldVec(ModelFieldVec *f) override;
 
 	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) override;
+
+	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override;
+
+	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override;
+
+	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override;
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) override;
 

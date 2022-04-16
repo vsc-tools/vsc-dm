@@ -105,9 +105,9 @@ cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
         const cpp_string &name() const
         void addField(ITypeField *)
         ITypeField *getField(int32_t idx)
-        const cpp_vector[unique_ptr[ITypeFieldP]] &getFields() const
+        const cpp_vector[unique_ptr[ITypeField]] &getFields() const
         void addConstraint(ITypeConstraint *)
-        const cpp_vector[unique_ptr[ITypeConstraintP]] &getConstraints() const
+        const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
         
 
 #********************************************************************

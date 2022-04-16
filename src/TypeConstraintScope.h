@@ -22,7 +22,7 @@ public:
 		return m_constraints;
 	}
 
-	virtual void accept(IVisitor *v) override { /* TODO */ }
+	virtual void accept(IVisitor *v) override { v->visitTypeConstraintScope(this); }
 
 private:
 	std::vector<ITypeConstraintUP>			m_constraints;

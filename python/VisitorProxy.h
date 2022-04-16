@@ -74,6 +74,13 @@ public:
 
 	virtual void visitModelFieldVecRoot(vsc::ModelFieldVecRoot *f) { }
 
+	virtual void visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) override { }
+
+	virtual void visitTypeConstraintExpr(vsc::ITypeConstraintExpr *c) override { }
+
+	virtual void visitTypeConstraintScope(vsc::ITypeConstraintScope *c) override { }
+
+
 	virtual void visitTypeExprBin(vsc::ITypeExprBin *e) override { }
 
 	virtual void visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) override { }

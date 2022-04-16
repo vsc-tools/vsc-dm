@@ -26,7 +26,7 @@ public:
 		return m_constraints;
 	}
 
-	virtual void accept(IVisitor *v) override { /* TODO */ }
+	virtual void accept(IVisitor *v) override { v->visitTypeConstraintBlock(this); }
 
 private:
 	std::string							m_name;

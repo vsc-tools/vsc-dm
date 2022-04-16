@@ -253,6 +253,20 @@ void VisitorBase::visitModelFieldVecRoot(ModelFieldVecRoot *f) {
 	visitModelFieldVec(f);
 }
 
+void VisitorBase::visitTypeConstraintBlock(ITypeConstraintBlock *c) {
+	visitTypeConstraintScope(c);
+}
+
+void VisitorBase::visitTypeConstraintExpr(ITypeConstraintExpr *c) {
+	c->expr()->accept(this);
+}
+
+void VisitorBase::visitTypeConstraintScope(ITypeConstraintScope *c) {
+	for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+		(*it)->accept(this);
+	}
+}
+
 void VisitorBase::visitTypeExprBin(ITypeExprBin *e) {
 	e->lhs()->accept(this);
 	e->rhs()->accept(this);
@@ -268,6 +282,7 @@ void VisitorBase::visitTypeExprVal(ITypeExprVal *e) {
 }
 
 void VisitorBase::visitTypeField(ITypeField *f) {
+	f->getDataType()->accept(this);
 }
 
 } /* namespace vsc */
