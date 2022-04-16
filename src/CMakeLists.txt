@@ -46,4 +46,7 @@ add_dependencies(vsc_static Boolector Bitwuzla)
 
 add_subdirectory(facade)
 
+install(TARGETS vsc_static
+    DESTINATION lib
+    EXPORT libvsc-targets)
 
