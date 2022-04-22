@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "vsc/IDataType.h"
+#include "vsc/IModelStructCreateHook.h"
 #include "vsc/ITypeConstraint.h"
 #include "vsc/ITypeField.h"
 
@@ -32,6 +33,8 @@ public:
 	virtual void addConstraint(ITypeConstraint *c) = 0;
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
+
+	virtual void setCreateHook(IModelStructCreateHook *hook) = 0;
 
 };
 

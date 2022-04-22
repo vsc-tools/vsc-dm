@@ -40,7 +40,7 @@ ModelField::ModelField(IDataType *type) :
 }
 
 ModelField::~ModelField() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void ModelField::addConstraint(IModelConstraint *c) {
@@ -58,6 +58,14 @@ IModelField *ModelField::getField(int32_t idx) {
 	} else {
 		return 0;
 	}
+}
+
+void ModelField::setFieldData(IModelFieldData *data) {
+	m_data = IModelFieldDataUP(data);
+}
+
+IModelFieldData *ModelField::getFieldData() {
+	return m_data.get();
 }
 
 

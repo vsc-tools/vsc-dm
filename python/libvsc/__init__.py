@@ -1,2 +1,3 @@
 
-from libvsc.core import *
+#from libvsc import core
+#from libvsc.core import *

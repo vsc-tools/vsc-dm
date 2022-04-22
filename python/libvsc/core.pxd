@@ -13,10 +13,11 @@ cimport cpython.ref as cpy_ref
 cdef class Vsc(object):
     cdef decl.IVsc              *_hndl
     
-    cdef decl.IContext *mkContext(self)
+    cpdef Context mkContext(self)
    
 cdef class Context(object):
     cdef decl.IContext               *_hndl
+    cdef bool                        _owned
 
     cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
     cpdef mkCompoundSolver(self)
@@ -42,6 +43,9 @@ cdef class Context(object):
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
     cpdef TypeField mkTypeField(self, name, DataType, attr, ModelVal)
 
+    @staticmethod    
+    cdef mk(decl.IContext *hndl, bool owned=*)
+
     
 cdef class CompoundSolver(object):
     cdef decl.ICompoundSolver   *_hndl
@@ -61,12 +65,12 @@ cdef class DataType(object):
 #    cdef decl.IAccept *hndl(self)
     
     @staticmethod
-    cdef mk(decl.IDataType *, owned=*)
+    cdef mk(decl.IDataType *, bool owned=*)
 
 cdef class DataTypeInt(DataType):
 
     @staticmethod
-    cdef mk(decl.IDataTypeInt *, owned=*)
+    cdef mk(decl.IDataTypeInt *, bool owned=*)
     
     cdef decl.IDataTypeInt *asTypeInt(self)
     
@@ -80,7 +84,7 @@ cdef class DataTypeStruct(DataType):
     cpdef getConstraints(self)
 
     @staticmethod
-    cdef mk(decl.IDataTypeStruct *, owned=*)
+    cdef mk(decl.IDataTypeStruct *, bool owned=*)
 
     cdef decl.IDataTypeStruct *asTypeStruct(self)
     

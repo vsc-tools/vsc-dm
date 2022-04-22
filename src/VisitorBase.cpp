@@ -244,12 +244,12 @@ void VisitorBase::visitModelFieldType(IModelFieldType *f) {
 
 }
 
-void VisitorBase::visitModelFieldVec(ModelFieldVec *f) {
+void VisitorBase::visitModelFieldVec(IModelFieldVec *f) {
 	f->size()->accept(this);
 	visitModelField(f);
 }
 
-void VisitorBase::visitModelFieldVecRoot(ModelFieldVecRoot *f) {
+void VisitorBase::visitModelFieldVecRoot(IModelFieldVecRoot *f) {
 	visitModelFieldVec(f);
 }
 

@@ -8,6 +8,7 @@
 #pragma once
 #include <memory>
 #include <vector>
+#include "vsc/IModelFieldVec.h"
 #include "ModelField.h"
 #include "SolveSet.h"
 
@@ -41,7 +42,7 @@ public:
 private:
 	std::vector<SolveSetUP>			m_solvesets;
 	std::vector<IModelField *>		m_unconstrained;
-	std::vector<ModelFieldVec *>	m_unconstrained_sz_vec;
+	std::vector<IModelFieldVec *>	m_unconstrained_sz_vec;
 };
 
 } /* namespace vsc */

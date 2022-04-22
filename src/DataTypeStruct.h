@@ -40,12 +40,17 @@ public:
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override;
 
+	virtual void setCreateHook(IModelStructCreateHook *hook) override {
+		m_create_hook = IModelStructCreateHookUP(hook);
+	}
+
 	virtual void accept(IVisitor *v) override { v->visitDataTypeStruct(this); }
 
 private:
 	std::string							m_name;
 	std::vector<ITypeFieldUP>			m_fields;
 	std::vector<ITypeConstraintUP>		m_constraints;
+	IModelStructCreateHookUP			m_create_hook;
 
 };
 

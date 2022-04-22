@@ -64,6 +64,10 @@ public:
 		return ((m_flags & flags) == flags);
 	}
 
+	virtual void setFieldData(IModelFieldData *data) override;
+
+	virtual IModelFieldData *getFieldData() override;
+
 	virtual void accept(IVisitor *v) { v->visitModelFieldType(this); }
 
 protected:
@@ -76,6 +80,7 @@ protected:
 	std::vector<IModelFieldUP>		m_fields;
 	std::vector<IModelConstraintUP>	m_constraints;
 	ModelFieldFlag					m_flags;
+	IModelFieldDataUP				m_field_data;
 
 };
 

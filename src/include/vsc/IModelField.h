@@ -10,6 +10,7 @@
 #include "vsc/IAccept.h"
 #include "vsc/IDataType.h"
 #include "vsc/IModelConstraint.h"
+#include "vsc/IModelFieldData.h"
 #include "vsc/IModelVal.h"
 
 namespace vsc {
@@ -78,6 +79,10 @@ public:
 	virtual void setFlag(ModelFieldFlag flags) = 0;
 
 	virtual bool isFlagSet(ModelFieldFlag flags) const = 0;
+
+	virtual void setFieldData(IModelFieldData *data) = 0;
+
+	virtual IModelFieldData *getFieldData() = 0;
 
 };
 

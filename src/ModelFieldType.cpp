@@ -60,4 +60,12 @@ IModelField *ModelFieldType::getField(int32_t idx) {
 	}
 }
 
+void ModelFieldType::setFieldData(IModelFieldData *data) {
+	m_field_data = IModelFieldDataUP(data);
+}
+
+IModelFieldData *ModelFieldType::getFieldData() {
+	return m_field_data.get();
+}
+
 } /* namespace vsc */

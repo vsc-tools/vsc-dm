@@ -22,15 +22,9 @@ _Context_inst = None
 
 cdef class Context(object):
 
-    def __cinit__(self):
-        vsc = Vsc_inst()
-        self._hndl = vsc.mkContext()
-
-    def __init__(self):
-        pass
-    
     def __dealloc__(self):
-        del self._hndl
+        if self._owned:
+            del self._hndl
         
     cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
         return ModelField.mk(
@@ -175,7 +169,13 @@ cdef class Context(object):
             dtype._hndl, 
             <decl.TypeFieldAttr>(attr_i),
             init_h))
-    
+        
+    @staticmethod
+    cdef mk(decl.IContext *hndl, bool owned=True):
+        ret = Context()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
     @staticmethod
     def inst():
@@ -238,7 +238,7 @@ cdef class DataType(object):
             del self._hndl
 
     @staticmethod
-    cdef mk(decl.IDataType *hndl, owned=True):
+    cdef mk(decl.IDataType *hndl, bool owned=True):
         ret = DataType()
         ret._hndl = hndl
         ret._owned = owned
@@ -248,7 +248,7 @@ cdef class DataType(object):
 cdef class DataTypeInt(DataType):
     
     @staticmethod
-    cdef mk(decl.IDataTypeInt *hndl, owned=True):
+    cdef mk(decl.IDataTypeInt *hndl, bool owned=True):
         ret = DataTypeInt()
         ret._hndl = hndl
         ret._owned = owned
@@ -293,7 +293,7 @@ cdef class DataTypeStruct(DataType):
         return ret
     
     @staticmethod
-    cdef mk(decl.IDataTypeStruct *hndl, owned=True):
+    cdef mk(decl.IDataTypeStruct *hndl, bool owned=True):
         ret = DataTypeStruct()
         ret._hndl = hndl
         ret._owned = owned
@@ -863,6 +863,7 @@ cdef public void VisitorProxy_visitModelExprBin(obj, decl.IModelExprBin *e) with
 #********************************************************************
 #* Vsc
 #********************************************************************
+cdef Vsc _Vsc_inst = None
 cdef class Vsc(object):
     
     def __init__(self):
@@ -935,18 +936,19 @@ cdef class Vsc(object):
             lib_path = os.path.join(lib_dir, "libvsc.so")
             
         print("lib_path: %s" % lib_path)
-        self._hndl = decl.get_vsc(lib_path.encode())
+        self._hndl = decl.py_get_vsc(lib_path.encode())
         
         if self._hndl == NULL:
             raise Exception("Failed to load libvsc core library")
         
-    cdef decl.IContext *mkContext(self):
-        return self._hndl.mkContext()
-        
-cdef Vsc _Vsc_inst = None
-cdef Vsc Vsc_inst():
-    global _Vsc_inst
-    if _Vsc_inst is None:
-        _Vsc_inst = Vsc()
-    return _Vsc_inst
+    cpdef Context mkContext(self):
+        return Context.mk(self._hndl.mkContext(), True)
     
+    @staticmethod
+    def inst():
+        global _Vsc_inst
+        
+        if _Vsc_inst is None:
+            _Vsc_inst = Vsc()
+        return _Vsc_inst
+        

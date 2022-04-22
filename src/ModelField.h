@@ -8,6 +8,7 @@
 #pragma once
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 #include "vsc/IDataType.h"
 #include "vsc/IModelField.h"
@@ -67,6 +68,10 @@ public:
 		return ((m_flags & flags) == flags);
 	}
 
+	virtual void setFieldData(IModelFieldData *data) override;
+
+	virtual IModelFieldData *getFieldData() override;
+
 protected:
 	IModelField						*m_parent;
 
@@ -76,6 +81,7 @@ protected:
 	std::vector<IModelFieldUP>		m_fields;
 	std::vector<IModelConstraintUP>	m_constraints;
 	ModelFieldFlag					m_flags;
+	IModelFieldDataUP				m_data;
 
 };
 

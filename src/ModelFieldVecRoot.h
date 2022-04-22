@@ -6,12 +6,13 @@
  */
 
 #pragma once
+#include "vsc/IModelFieldVecRoot.h"
 #include "DataType.h"
 #include "ModelFieldVec.h"
 
 namespace vsc {
 
-class ModelFieldVecRoot : public ModelFieldVec {
+class ModelFieldVecRoot : public ModelFieldVec, public IModelFieldVecRoot {
 public:
 	ModelFieldVecRoot(
 			IDataType				*type,

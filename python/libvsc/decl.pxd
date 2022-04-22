@@ -369,8 +369,8 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
         pass
 
 #********************************************************************
-#* get_vsc
+#* py_get_vsc
 #********************************************************************
-cdef extern from "vsc/loader.h":
-    IVsc *get_vsc(const char *path)
+cdef extern IVsc *py_get_vsc(const char *path)
+#cdef extern from "py_get_vsc.h":
     

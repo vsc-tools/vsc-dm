@@ -127,9 +127,9 @@ public:
 
 	virtual void visitModelFieldType(IModelFieldType *f) override;
 
-	virtual void visitModelFieldVec(ModelFieldVec *f) override;
+	virtual void visitModelFieldVec(IModelFieldVec *f) override;
 
-	virtual void visitModelFieldVecRoot(ModelFieldVecRoot *f) override;
+	virtual void visitModelFieldVecRoot(IModelFieldVecRoot *f) override;
 
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override;
 

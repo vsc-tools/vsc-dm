@@ -12,6 +12,7 @@
 #include "vsc/IModelConstraint.h"
 #include "vsc/IModelConstraintSoft.h"
 #include "vsc/IModelField.h"
+#include "vsc/IModelFieldVec.h"
 
 namespace vsc {
 
@@ -55,7 +56,7 @@ private:
 	std::unordered_set<IModelField *>			m_field_s;
 	std::vector<IModelField *>					m_all_fields;
 	std::vector<IModelField *>					m_rand_fields;
-	std::vector<ModelFieldVec *>				m_constrained_sz_vec;
+	std::vector<IModelFieldVec *>				m_constrained_sz_vec;
 	std::unordered_set<IModelConstraint *>		m_constraint_s;
 	std::vector<IModelConstraint *>				m_constraints;
 
