@@ -235,7 +235,6 @@ setup(
     ]
   },
   install_requires=[
-      'pyyaml'
   ],
   setup_requires=[
     'setuptools_scm',
