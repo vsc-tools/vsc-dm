@@ -34,6 +34,8 @@ public:
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
 
+	virtual IModelStructCreateHook *getCreateHook() const = 0;
+
 	virtual void setCreateHook(IModelStructCreateHook *hook) = 0;
 
 };
