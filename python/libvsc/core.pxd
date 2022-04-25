@@ -82,6 +82,7 @@ cdef class DataTypeStruct(DataType):
     cpdef TypeField getField(self, int32_t idx)
     cpdef addConstraint(self, TypeConstraint c)
     cpdef getConstraints(self)
+    cpdef setCreateHook(self, hook_f)
 
     @staticmethod
     cdef mk(decl.IDataTypeStruct *, bool owned=*)

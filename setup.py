@@ -210,6 +210,7 @@ ext = Extension("libvsc.core",
                 os.path.join(libvsc_dir, 'python', "core.pyx"), 
                 os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
                 os.path.join(libvsc_dir, 'python', 'py_get_vsc.cpp'),
+                os.path.join(libvsc_dir, 'python', 'ModelStructCreateHookClosure.cpp'),
             ],
             language="c++",
             include_dirs=[

@@ -292,6 +292,10 @@ cdef class DataTypeStruct(DataType):
                 self.asTypeStruct().getConstraints().at(i).get(), False))
         return ret
     
+    cpdef setCreateHook(self, hook_f):
+        cdef decl.ModelStructCreateHookClosure *closure = new decl.ModelStructCreateHookClosure(<cpy_ref.PyObject *>(hook_f))
+        self.asTypeStruct().setCreateHook(closure)
+    
     @staticmethod
     cdef mk(decl.IDataTypeStruct *hndl, bool owned=True):
         ret = DataTypeStruct()
@@ -302,6 +306,11 @@ cdef class DataTypeStruct(DataType):
     cdef decl.IDataTypeStruct *asTypeStruct(self):
         return dynamic_cast[decl.IDataTypeStructP](self._hndl)
     
+cdef public void model_struct_create_hook_closure_invoke(
+    hook_f,
+    decl.IModelField  *field_h) with gil:
+    cdef ModelField field = ModelField.mk(field_h, False)
+    hook_f(field)
     
 cdef class ModelConstraint(object):
 

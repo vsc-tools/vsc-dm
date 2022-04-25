@@ -40,6 +40,10 @@ public:
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override;
 
+	virtual IModelStructCreateHook *getCreateHook() const override {
+		return m_create_hook.get();
+	}
+
 	virtual void setCreateHook(IModelStructCreateHook *hook) override {
 		m_create_hook = IModelStructCreateHookUP(hook);
 	}

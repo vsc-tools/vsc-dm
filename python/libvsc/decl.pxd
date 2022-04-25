@@ -108,6 +108,7 @@ cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
         const cpp_vector[unique_ptr[ITypeField]] &getFields() const
         void addConstraint(ITypeConstraint *)
         const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
+        void setCreateHook(IModelStructCreateHook *)
         
 
 #********************************************************************
@@ -224,6 +225,14 @@ cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
 cdef extern from "vsc/IModelFieldType.h" namespace "vsc":
     cdef cppclass IModelFieldType(IModelField):
         pass
+    
+cdef extern from "vsc/IModelStructCreateHook.h" namespace "vsc":
+    cdef cppclass IModelStructCreateHook:
+        pass
+    
+cdef extern from "ModelStructCreateHookClosure.h" namespace "vsc":
+    cdef cppclass ModelStructCreateHookClosure(IModelStructCreateHook):
+        ModelStructCreateHookClosure(cpy_ref.PyObject *)
 
 #********************************************************************
 #* IModelVal
