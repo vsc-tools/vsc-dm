@@ -28,6 +28,7 @@
 #include "ModelExprVal.h"
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
+#include "ModelVal.h"
 #include "Randomizer.h"
 #include "RandState.h"
 #include "TaskModelFieldBuilder.h"
@@ -168,6 +169,10 @@ IModelFieldRoot *Context::mkModelFieldRoot(
 IModelFieldType *Context::mkModelFieldType(
 			ITypeField			*type) {
 	return new ModelFieldType(type);
+}
+
+IModelVal *Context::mkModelVal() {
+	return new ModelVal();
 }
 
 IRandomizer *Context::mkRandomizer(

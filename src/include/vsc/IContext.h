@@ -88,10 +88,11 @@ public:
 	virtual IModelFieldType *mkModelFieldType(
 			ITypeField			*type) = 0;
 
+	virtual IModelVal *mkModelVal() = 0;
+
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) = 0;
-
 
 	virtual IRandState *mkRandState(uint32_t seed) = 0;
 

@@ -46,6 +46,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
         IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
+        IModelVal *mkModelVal()
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
         ITypeConstraintBlock *mkTypeConstraintBlock(const cpp_string &)

@@ -68,6 +68,8 @@ public:
 			ITypeField			*type
 			) override;
 
+	virtual IModelVal *mkModelVal() override;
+
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) override;

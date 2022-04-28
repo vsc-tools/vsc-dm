@@ -110,6 +110,9 @@ cdef class Context(object):
             name.encode()),
             True)
         
+    cpdef mkModelVal(self):
+        return ModelVal.mk(self._hndl.mkModelVal(), True)
+        
     cpdef mkRandState(self, uint32_t seed):
         return RandState.mk(self._hndl.mkRandState(seed))
     

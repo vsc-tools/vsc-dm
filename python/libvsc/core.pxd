@@ -33,6 +33,7 @@ cdef class Context(object):
     cpdef mkModelExprFieldRef(self, ModelField field)
     cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
+    cpdef mkModelVal(self)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)

@@ -45,7 +45,7 @@
 
 namespace vsc {
 
-class VisitorBase : public IVisitor {
+class VisitorBase : public virtual IVisitor {
 public:
 
 	virtual ~VisitorBase() { }
