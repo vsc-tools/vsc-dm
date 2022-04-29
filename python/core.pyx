@@ -165,6 +165,7 @@ cdef class Context(object):
         cdef int attr_i = int(attr)
         
         if init is not None:
+            init._owned = False
             init_h = init._hndl
             
         return TypeField.mk(self._hndl.mkTypeField(

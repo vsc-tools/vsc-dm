@@ -48,17 +48,19 @@ namespace vsc {
 class VisitorBase : public virtual IVisitor {
 public:
 
+	VisitorBase(IVisitor *this_p=0) : m_this((this_p)?this_p:this) { }
+
 	virtual ~VisitorBase() { }
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override { }
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
 		for (auto it=t->getFields().begin(); it!=t->getFields().end(); it++) {
-			(*it)->accept(this);
+			(*it)->accept(m_this);
 		}
 		for (auto it=t->getConstraints().begin();
 				it!=t->getConstraints().end(); it++) {
-			(*it)->accept(this);
+			(*it)->accept(m_this);
 		}
 	}
 
@@ -70,7 +72,7 @@ public:
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override {
 		visitModelConstraint(c);
-		c->expr()->accept(this);
+		c->expr()->accept(m_this);
 	}
 
 	virtual void visitModelConstraintIf(IModelConstraintIf *c) override { }
@@ -102,31 +104,31 @@ public:
 	virtual void visitModelExprRangelist(IModelExprRangelist *e) override { }
 
 	virtual void visitModelExprRef(IModelExprRef *e) override {
-		e->expr()->accept(this);
+		e->expr()->accept(m_this);
 	}
 
 	virtual void visitModelExprUnary(IModelExprUnary *e) override {
-		e->expr()->accept(this);
+		e->expr()->accept(m_this);
 	}
 
 	virtual void visitModelExprVal(IModelExprVal *e) override { }
 
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override {
-		e->expr()->accept(this);
-		e->subscript()->accept(this);
+		e->expr()->accept(m_this);
+		e->subscript()->accept(m_this);
 	}
 
 	virtual void visitModelField(IModelField *f) override {
 		if (f->getDataType()) {
-			f->getDataType()->accept(this);
+			f->getDataType()->accept(m_this);
 		}
 		for (auto it=f->fields().begin();
 				it!=f->fields().end(); it++) {
-			(*it)->accept(this);
+			(*it)->accept(m_this);
 		}
 		for (auto it=f->constraints().begin();
 				it!=f->constraints().end(); it++) {
-			(*it)->accept(this);
+			(*it)->accept(m_this);
 		}
 	}
 
@@ -139,7 +141,7 @@ public:
 	}
 
 	virtual void visitModelFieldVec(IModelFieldVec *f) override {
-		f->size()->accept(this);
+		f->size()->accept(m_this);
 		visitModelField(f);
 	}
 
@@ -152,18 +154,18 @@ public:
 	}
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
-		c->expr()->accept(this);
+		c->expr()->accept(m_this);
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
-			(*it)->accept(this);
+			(*it)->accept(m_this);
 		}
 	}
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {
-		e->lhs()->accept(this);
-		e->rhs()->accept(this);
+		e->lhs()->accept(m_this);
+		e->rhs()->accept(m_this);
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override { }
@@ -171,8 +173,11 @@ public:
 	virtual void visitTypeExprVal(ITypeExprVal *e) override { }
 
 	virtual void visitTypeField(ITypeField *f) override {
-		f->getDataType()->accept(this);
+		f->getDataType()->accept(m_this);
 	}
+
+protected:
+	IVisitor					*m_this;
 };
 
 }
