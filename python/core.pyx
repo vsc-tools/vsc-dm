@@ -539,13 +539,36 @@ cdef class ModelField(object):
     cpdef isFlagSet(self, flags):
         cdef int flags_i = flags
         return self._hndl.isFlagSet(<decl.ModelFieldFlag>(flags_i))
+    
+    cpdef setFieldData(self, data):
+        cdef decl.ModelFieldDataClosure *c = new decl.ModelFieldDataClosure(<cpy_ref.PyObject *>(data))
+        self._hndl.setFieldData(c)
         
+    cpdef getFieldData(self):
+        cdef decl.IModelFieldData *d = self._hndl.getFieldData()
+        
+        if d != NULL:
+            c = ModelFieldDataClosure.mk(d)
+            return c.getData()
+        else:
+            return None
     
     @staticmethod
     cdef mk(decl.IModelField *hndl, owned=True):
         ret = ModelField()
         ret._hndl = hndl
         ret._owned = owned
+        return ret
+    
+cdef class ModelFieldDataClosure(object):
+
+    cpdef getData(self):
+        return dynamic_cast[decl.ModelFieldDataClosureP](self._hndl).getData()
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldData *hndl):
+        ret = ModelFieldDataClosure()
+        ret._hndl = hndl
         return ret
 
 cdef class ModelVal(object):

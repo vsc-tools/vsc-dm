@@ -16,6 +16,8 @@ cimport cpython.ref as cpy_ref
 
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IModelField *IModelFieldP
+ctypedef IModelFieldData *IModelFieldDataP
+ctypedef ModelFieldDataClosure *ModelFieldDataClosureP
 ctypedef IModelConstraint *IModelConstraintP
 ctypedef IModelVal *IModelValP
 ctypedef ITypeConstraint *ITypeConstraintP
@@ -217,6 +219,18 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void clearFlag(ModelFieldFlag flags)
         void setFlag(ModelFieldFlag flags)
         bool isFlagSet(ModelFieldFlag flags)
+        
+        void setFieldData(IModelFieldData *)
+        IModelFieldData *getFieldData()
+        
+cdef extern from "vsc/IModelFieldData.h" namespace "vsc":
+    cdef cppclass IModelFieldData:
+        pass
+    
+cdef extern from "ModelFieldDataClosure.h" namespace "vsc":
+    cdef cppclass ModelFieldDataClosure(IModelFieldData):
+        ModelFieldDataClosure(cpy_ref.PyObject *)
+        object getData()
 
 cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
 

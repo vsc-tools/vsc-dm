@@ -174,9 +174,19 @@ cdef class ModelField(object):
     cpdef clearFlag(self, flags)
     cpdef setFlag(self, flags)
     cpdef isFlagSet(self, flags)
+    cpdef setFieldData(self, data)
+    cpdef getFieldData(self)
 
     @staticmethod
     cdef mk(decl.IModelField *, owned=*)
+    
+cdef class ModelFieldDataClosure(object):
+    cdef decl.IModelFieldData       *_hndl
+    
+    cpdef getData(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldData *)
 
 cdef class ModelVal(object):
     cdef decl.IModelVal         *_hndl
