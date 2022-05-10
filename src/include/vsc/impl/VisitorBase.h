@@ -28,6 +28,7 @@
 #include "vsc/IModelExprRangelist.h"
 #include "vsc/IModelExprRef.h"
 #include "vsc/IModelExprUnary.h"
+#include "vsc/IModelExprVal.h"
 #include "vsc/IModelExprVecSubscript.h"
 
 #include "vsc/IModelField.h"
@@ -36,11 +37,16 @@
 #include "vsc/IModelFieldVec.h"
 #include "vsc/IModelFieldVecRoot.h"
 
+#include "vsc/IModelVal.h"
+
 #include "vsc/ITypeExprBin.h"
 
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
 #include "vsc/ITypeConstraintScope.h"
+
+#include "vsc/ITypeField.h"
+#include "vsc/ITypeFieldRef.h"
 
 
 namespace vsc {
@@ -173,6 +179,10 @@ public:
 	virtual void visitTypeExprVal(ITypeExprVal *e) override { }
 
 	virtual void visitTypeField(ITypeField *f) override {
+		f->getDataType()->accept(m_this);
+	}
+
+	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
 		f->getDataType()->accept(m_this);
 	}
 

@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "SolverBoolector.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

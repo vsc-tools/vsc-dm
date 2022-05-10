@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <vector>
 #include <unordered_map>
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 #include "SolveSet.h"
 #include "SolveSpec.h"
 

@@ -8,7 +8,7 @@
 #pragma once
 #include <vector>
 #include "ModelVal.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

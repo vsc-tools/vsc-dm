@@ -8,7 +8,7 @@
 #pragma once
 #include <vector>
 #include "vsc/ITask.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

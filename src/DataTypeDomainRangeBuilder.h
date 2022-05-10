@@ -9,7 +9,7 @@
 #include <vector>
 #include "ModelVal.h"
 #include "ModelValRangelist.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "SolverBitwuzla.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

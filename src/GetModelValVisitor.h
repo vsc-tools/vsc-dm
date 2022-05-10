@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 
@@ -16,16 +16,16 @@ public:
 
 	virtual ~GetModelValVisitor();
 
-	ModelVal value(
-			ModelField		*ctx,
-			ModelExpr		*expr);
+	IModelVal *value(
+			IModelField		*ctx,
+			IModelExpr		*expr);
 
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override;
 
 private:
-	ModelField				*m_ctx;
-	ModelExpr				*m_expr;
-	ModelVal				m_val;
+	IModelField				*m_ctx;
+	IModelExpr				*m_expr;
+	IModelVal				*m_val;
 };
 
 } /* namespace vsc */

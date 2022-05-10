@@ -8,7 +8,7 @@
 #pragma once
 #include "vsc/ISolver.h"
 #include "SolveSet.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

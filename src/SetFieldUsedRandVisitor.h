@@ -7,7 +7,7 @@
 
 #pragma once
 #include <vector>
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 

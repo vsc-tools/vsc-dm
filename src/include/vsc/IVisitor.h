@@ -1,4 +1,3 @@
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -71,6 +70,7 @@ class ITypeExprBin;
 class ITypeExprFieldRef;
 class ITypeExprVal;
 class ITypeField;
+class ITypeFieldRef;
 
 class IVisitor {
 public:
@@ -146,6 +146,8 @@ public:
 	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
 
 	virtual void visitTypeField(ITypeField *f) = 0;
+
+	virtual void visitTypeFieldRef(ITypeFieldRef *f) = 0;
 
 
 };

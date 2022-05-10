@@ -40,6 +40,7 @@
 #include "TypeExprFieldRef.h"
 #include "TypeExprVal.h"
 #include "TypeField.h"
+#include "TypeFieldRef.h"
 
 namespace vsc {
 
@@ -233,6 +234,13 @@ ITypeField *Context::mkTypeField(
 			dtype,
 			attr,
 			init);
+}
+
+ITypeFieldRef *Context::mkTypeFieldRef(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr) {
+	return new TypeFieldRef(name, dtype, attr);
 }
 
 } /* namespace vsc */

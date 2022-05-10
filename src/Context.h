@@ -99,6 +99,11 @@ public:
 			TypeFieldAttr			attr,
 			IModelVal				*init) override;
 
+	virtual ITypeFieldRef *mkTypeFieldRef(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr) override;
+
 
 private:
 

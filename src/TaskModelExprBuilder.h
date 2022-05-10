@@ -7,7 +7,7 @@
 
 #pragma once
 #include "vsc/IContext.h"
-#include "VisitorBase.h"
+#include "vsc/impl/VisitorBase.h"
 
 namespace vsc {
 
