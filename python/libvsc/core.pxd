@@ -42,7 +42,8 @@ cdef class Context(object):
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
-    cpdef TypeField mkTypeField(self, name, DataType, attr, ModelVal)
+    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, attr, ModelVal)
+    cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
 
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
@@ -314,11 +315,23 @@ cdef class TypeField(object):
     cpdef name(self)
     cpdef DataType getDataType(self)
     cpdef getAttr(self)
-    cpdef ModelVal getInit(self)
 
     @staticmethod
     cdef mk(decl.ITypeField *, owned=*)
+
+cdef class TypeFieldPhy(TypeField):
+
+    cpdef ModelVal getInit(self)
     
+    cdef decl.ITypeFieldPhy *asPhy(self)
+    
+    @staticmethod
+    cdef mk(decl.ITypeFieldPhy *, owned=*)
+
+cdef class TypeFieldRef(TypeField):
+
+    @staticmethod
+    cdef mk(decl.ITypeFieldRef *, owned=*)    
     
 cdef class VisitorBase(object):
     cdef decl.VisitorProxy      *_proxy

@@ -25,8 +25,7 @@ public:
 	TypeField(
 			const std::string	&name,
 			IDataType			*type,
-			TypeFieldAttr		attr,
-			IModelVal			*init);
+			TypeFieldAttr		attr);
 
 	virtual ~TypeField();
 
@@ -40,16 +39,11 @@ public:
 
 	virtual TypeFieldAttr getAttr() const override { return m_attr; }
 
-	virtual IModelVal *getInit() const override { return m_init.get(); }
-
-	virtual void accept(IVisitor *v) { v->visitTypeField(this); }
-
 protected:
 	IDataTypeStruct			*m_parent;
 	std::string				m_name;
 	IDataType				*m_type;
 	TypeFieldAttr			m_attr;
-	IModelValUP				m_init;
 
 };
 

@@ -27,7 +27,8 @@ ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeExprVal *ITypeExprValP
-ctypedef ITypeField *ITypeFieldP
+ctypedef ITypeFieldPhy *ITypeFieldPhyP
+ctypedef ITypeFieldRef *ITypeFieldRefP
 
 #********************************************************************
 #* IContext
@@ -57,11 +58,15 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
         ITypeExprVal *mkTypeExprVal(IModelVal *)
-        ITypeField *mkTypeField(
+        ITypeFieldPhy *mkTypeFieldPhy(
             const cpp_string &,
             IDataType *,
             TypeFieldAttr,
             IModelVal *)
+        ITypeFieldRef *mkTypeFieldRef(
+            const cpp_string &,
+            IDataType *,
+            TypeFieldAttr)
         
 #********************************************************************
 #* ICompoundSolver
@@ -367,7 +372,16 @@ cdef extern from "vsc/ITypeField.h" namespace "vsc":
         const cpp_string &name() const
         IDataType *getDataType() const
         TypeFieldAttr getAttr() const
+        
+cdef extern from "vsc/ITypeFieldPhy.h" namespace "vsc":
+
+    cdef cppclass ITypeFieldPhy(ITypeField):
         IModelVal *getInit() const
+        
+cdef extern from "vsc/ITypeFieldRef.h" namespace "vsc":
+    
+    cdef cppclass ITypeFieldRef(ITypeField):
+        pass
 
 #********************************************************************
 #* IVisitor

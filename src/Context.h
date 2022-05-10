@@ -93,7 +93,7 @@ public:
 
 	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) override;
 
-	virtual ITypeField *mkTypeField(
+	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
 			TypeFieldAttr			attr,

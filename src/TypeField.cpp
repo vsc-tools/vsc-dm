@@ -26,10 +26,8 @@ namespace vsc {
 TypeField::TypeField(
 		const std::string		&name,
 		IDataType				*type,
-		TypeFieldAttr			attr,
-		IModelVal				*init) :
-				m_parent(0), m_name(name), m_type(type), m_attr(attr),
-				m_init(init) {
+		TypeFieldAttr			attr) :
+				m_parent(0), m_name(name), m_type(type), m_attr(attr) {
 	// TODO Auto-generated constructor stub
 
 }

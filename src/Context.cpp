@@ -39,7 +39,7 @@
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
 #include "TypeExprVal.h"
-#include "TypeField.h"
+#include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
 
 namespace vsc {
@@ -224,12 +224,12 @@ ITypeExprVal *Context::mkTypeExprVal(const IModelVal *v) {
 	return new TypeExprVal(v);
 }
 
-ITypeField *Context::mkTypeField(
+ITypeFieldPhy *Context::mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init) {
-	return new TypeField(
+	return new TypeFieldPhy(
 			name,
 			dtype,
 			attr,

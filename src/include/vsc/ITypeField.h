@@ -34,9 +34,6 @@ public:
 
 	virtual TypeFieldAttr getAttr() const = 0;
 
-	virtual IModelVal *getInit() const = 0;
-
-
 };
 
 }

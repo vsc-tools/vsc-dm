@@ -7,10 +7,11 @@
 
 #pragma once
 #include "vsc/ITypeFieldRef.h"
+#include "TypeField.h"
 
 namespace vsc {
 
-class TypeFieldRef : public ITypeFieldRef {
+class TypeFieldRef : public virtual ITypeFieldRef, public TypeField {
 public:
 	TypeFieldRef(
 			const std::string		&name,
@@ -19,24 +20,7 @@ public:
 
 	virtual ~TypeFieldRef();
 
-	virtual IDataTypeStruct *getParent() override { return m_parent; }
-
-	virtual void setParent(IDataTypeStruct *p) override { m_parent = p; }
-
-	virtual const std::string &name() const { return m_name; }
-
-	virtual IDataType *getDataType() const { return m_type; }
-
-	virtual TypeFieldAttr getAttr() const { return m_attr; }
-
 	virtual void accept(IVisitor *v) override { v->visitTypeFieldRef(this); }
-
-private:
-	IDataTypeStruct				*m_parent;
-
-	std::string					m_name;
-	IDataType					*m_type;
-	TypeFieldAttr				m_attr;
 
 };
 

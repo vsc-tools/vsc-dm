@@ -9,8 +9,10 @@
 
 namespace vsc {
 
-TypeFieldRef::TypeFieldRef() {
-	// TODO Auto-generated constructor stub
+TypeFieldRef::TypeFieldRef(
+		const std::string		&name,
+		IDataType				*type,
+		TypeFieldAttr			attr) : TypeField(name, type, attr) {
 
 }
 

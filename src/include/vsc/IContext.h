@@ -26,7 +26,7 @@
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
 #include "vsc/ITypeExprVal.h"
-#include "vsc/ITypeField.h"
+#include "vsc/ITypeFieldPhy.h"
 #include "vsc/ITypeFieldRef.h"
 
 namespace vsc {
@@ -114,7 +114,7 @@ public:
 
 	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) = 0;
 
-	virtual ITypeField *mkTypeField(
+	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
 			TypeFieldAttr			attr,

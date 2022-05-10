@@ -156,7 +156,7 @@ cdef class Context(object):
         else:
             return TypeExprVal.mk(self._hndl.mkTypeExprVal(v._hndl), True)
         
-    cpdef TypeField mkTypeField(self, 
+    cpdef TypeFieldPhy mkTypeFieldPhy(self, 
                                 name, 
                                 DataType dtype, 
                                 attr,
@@ -168,12 +168,24 @@ cdef class Context(object):
             init._owned = False
             init_h = init._hndl
             
-        return TypeField.mk(self._hndl.mkTypeField(
+        return TypeFieldPhy.mk(self._hndl.mkTypeFieldPhy(
             name.encode(), 
             dtype._hndl, 
             <decl.TypeFieldAttr>(attr_i),
             init_h))
         
+    cpdef TypeFieldRef mkTypeFieldRef(self, 
+                                name, 
+                                DataType dtype,
+                                attr):
+        cdef int attr_i = int(attr)
+#        attr_i = int(attr)
+        
+        return TypeFieldRef.mk(self._hndl.mkTypeFieldRef(
+            name.encode(), 
+            dtype._hndl, 
+            <decl.TypeFieldAttr>(attr_i)))
+
     @staticmethod
     cdef mk(decl.IContext *hndl, bool owned=True):
         ret = Context()
@@ -858,14 +870,6 @@ cdef class TypeField(object):
     cpdef getAttr(self):
         return 0
     
-    cpdef ModelVal getInit(self):
-        cdef decl.IModelVal *i = self._hndl.getInit()
-        
-        if i != NULL:
-            return ModelVal.mk(i, False)
-        else:
-            return None
-
     @staticmethod
     cdef mk(decl.ITypeField *hndl, owned=True):
         ret = TypeField()
@@ -873,6 +877,34 @@ cdef class TypeField(object):
         ret._owned = owned
         return ret
     
+cdef class TypeFieldPhy(TypeField):
+
+    cpdef ModelVal getInit(self):
+        cdef decl.IModelVal *i = self.asPhy().getInit()
+        
+        if i != NULL:
+            return ModelVal.mk(i, False)
+        else:
+            return None
+        
+    cdef decl.ITypeFieldPhy *asPhy(self):
+        return dynamic_cast[decl.ITypeFieldPhyP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.ITypeFieldPhy *hndl, owned=True):
+        ret = TypeFieldPhy()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeFieldRef(TypeField):
+
+    @staticmethod
+    cdef mk(decl.ITypeFieldRef *hndl, owned=True):
+        ret = TypeFieldRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret    
     
 #********************************************************************
 #* Task

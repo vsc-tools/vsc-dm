@@ -7,15 +7,16 @@
 
 #pragma once
 #include <Python.h>
-#include "vsc/IVisitor.h"
+#include "vsc/impl/VisitorBase.h"
 #include "vsc/IModelExprBin.h"
 
-class VisitorProxy : public vsc::IVisitor {
+class VisitorProxy : public vsc::VisitorBase {
 public:
 	VisitorProxy(PyObject *obj);
 
 	virtual ~VisitorProxy();
 
+#ifdef UNDEFINED
 	virtual void visitDataTypeInt(vsc::IDataTypeInt *t) { }
 
 	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) { }
@@ -39,6 +40,7 @@ public:
 	virtual void visitModelCovergroup(vsc::ModelCovergroup *c) { }
 
 	virtual void visitModelCoverpoint(vsc::ModelCoverpoint *c) { }
+#endif
 
 	virtual void visitModelExprBin(vsc::IModelExprBin *e) override;
 
@@ -46,6 +48,7 @@ public:
 
 	virtual void visitModelExprCond(vsc::IModelExprCond *e) override;
 
+#ifdef UNDEFINED
 	virtual void visitModelExprFieldRef(vsc::IModelExprFieldRef *e) { }
 
 	virtual void visitModelExprIn(vsc::IModelExprIn *e) { }
@@ -88,6 +91,7 @@ public:
 	virtual void visitTypeExprVal(vsc::ITypeExprVal *e) override { }
 
 	virtual void visitTypeField(vsc::ITypeField *f) { }
+#endif
 
 private:
 	PyObject				*m_obj;
