@@ -32,6 +32,7 @@
 #include "vsc/IModelExprVecSubscript.h"
 
 #include "vsc/IModelField.h"
+#include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
 #include "vsc/IModelFieldType.h"
 #include "vsc/IModelFieldVec.h"
@@ -136,6 +137,18 @@ public:
 				it!=f->constraints().end(); it++) {
 			(*it)->accept(m_this);
 		}
+	}
+
+	virtual void visitModelFieldRef(IModelFieldRef *f) override {
+		visitModelField(f);
+	}
+
+	virtual void visitModelFieldRefRoot(IModelFieldRef *f) override {
+		visitModelFieldRef(f);
+	}
+
+	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
+		visitModelFieldRef(f);
 	}
 
 	virtual void visitModelFieldRoot(IModelFieldRoot *f) override {

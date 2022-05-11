@@ -10,7 +10,7 @@
 
 namespace vsc {
 
-class IModelFieldRef : public IModelField {
+class IModelFieldRef : public virtual IModelField {
 public:
 
 	virtual ~IModelFieldRef() { }

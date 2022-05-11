@@ -14,6 +14,7 @@
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprVal.h"
+#include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
 #include "vsc/IModelFieldType.h"
 #include "vsc/IRandomizer.h"
@@ -81,6 +82,13 @@ public:
 			IModelField		*field) = 0;
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) = 0;
+
+	virtual IModelFieldRef *mkModelFieldRefRoot(
+			IDataType			*type,
+			const std::string	&name) = 0;
+
+	virtual IModelFieldRef *mkModelFieldRefType(
+			ITypeField			*type) = 0;
 
 	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,

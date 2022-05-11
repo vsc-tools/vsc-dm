@@ -26,6 +26,8 @@
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprVal.h"
+#include "ModelFieldRefRoot.h"
+#include "ModelFieldRefType.h"
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
 #include "ModelVal.h"
@@ -159,6 +161,16 @@ IModelExprVal *Context::mkModelExprVal(IModelVal *v) {
 	} else {
 		return new ModelExprVal();
 	}
+}
+
+IModelFieldRef *Context::mkModelFieldRefRoot(
+			IDataType 			*type,
+			const std::string	&name) {
+	return new ModelFieldRefRoot(type, name);
+}
+
+IModelFieldRef *Context::mkModelFieldRefType(ITypeField *type) {
+	return new ModelFieldRefType(type);
 }
 
 IModelFieldRoot *Context::mkModelFieldRoot(

@@ -60,6 +60,13 @@ public:
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
+	virtual IModelFieldRef *mkModelFieldRefRoot(
+			IDataType 			*type,
+			const std::string	&name) override;
+
+	virtual IModelFieldRef *mkModelFieldRefType(
+			ITypeField			*type) override;
+
 	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
 			const std::string	&name) override;

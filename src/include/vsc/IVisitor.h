@@ -56,6 +56,7 @@ class IModelExprUnary;
 class IModelExprVal;
 
 class IModelField;
+class IModelFieldRef;
 class IModelFieldRoot;
 class IModelFieldType;
 class IModelFieldVec;
@@ -124,6 +125,12 @@ public:
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) = 0;
 
 	virtual void visitModelField(IModelField *f) = 0;
+
+	virtual void visitModelFieldRef(IModelFieldRef *f) = 0;
+
+	virtual void visitModelFieldRefRoot(IModelFieldRef *f) = 0;
+
+	virtual void visitModelFieldRefType(IModelFieldRef *f) = 0;
 
 	virtual void visitModelFieldRoot(IModelFieldRoot *f) = 0;
 

@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <memory>
 #include "vsc/IModelField.h"
 #include "vsc/IModelConstraint.h"
 #include "vsc/IRandState.h"
@@ -52,7 +53,8 @@ static inline SolveFlags operator ~ (const SolveFlags lhs) {
 	return static_cast<SolveFlags>(~static_cast<uint32_t>(lhs));
 }
 
-
+class ICompoundSolver;
+using ICompoundSolverUP=std::unique_ptr<ICompoundSolver>;
 class ICompoundSolver {
 public:
 
