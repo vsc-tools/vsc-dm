@@ -55,7 +55,7 @@ Context::~Context() {
 	// TODO Auto-generated destructor stub
 }
 
-IModelFieldRoot *Context::buildModelField(
+IModelField *Context::buildModelField(
 		IDataTypeStruct			*dt,
 		const std::string		&name) {
 	return TaskModelFieldBuilder(this).build(dt, name);

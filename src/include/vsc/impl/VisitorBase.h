@@ -47,6 +47,7 @@
 #include "vsc/ITypeConstraintScope.h"
 
 #include "vsc/ITypeField.h"
+#include "vsc/ITypeFieldPhy.h"
 #include "vsc/ITypeFieldRef.h"
 
 
@@ -192,11 +193,19 @@ public:
 	virtual void visitTypeExprVal(ITypeExprVal *e) override { }
 
 	virtual void visitTypeField(ITypeField *f) override {
-		f->getDataType()->accept(m_this);
+		if (f->getDataType()) {
+			f->getDataType()->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
+		m_this->visitTypeField(f);
 	}
 
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
-		f->getDataType()->accept(m_this);
+		if (f->getDataType()) {
+			f->getDataType()->accept(m_this);
+		}
 	}
 
 protected:

@@ -111,6 +111,18 @@ public:
 		m_delegate->visitModelField(f);
 	}
 
+	virtual void visitModelFieldRef(IModelFieldRef *f) override {
+		m_delegate->visitModelFieldRef(f);
+	}
+
+	virtual void visitModelFieldRefRoot(IModelFieldRef *f) override {
+		m_delegate->visitModelFieldRefRoot(f);
+	}
+
+	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
+		m_delegate->visitModelFieldRefType(f);
+	}
+
 	virtual void visitModelFieldRoot(IModelFieldRoot *f) override {
 		m_delegate->visitModelFieldRoot(f);
 	}
@@ -153,6 +165,14 @@ public:
 
 	virtual void visitTypeField(ITypeField *f) override {
 		m_delegate->visitTypeField(f);
+	}
+
+	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
+		m_delegate->visitTypeFieldPhy(f);
+	}
+
+	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
+		m_delegate->visitTypeFieldRef(f);
 	}
 
 protected:

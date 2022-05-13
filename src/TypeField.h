@@ -37,6 +37,8 @@ public:
 
 	virtual IDataType *getDataType() const override { return m_type; }
 
+	virtual void setDataType(IDataType *t) override { m_type = t; }
+
 	virtual TypeFieldAttr getAttr() const override { return m_attr; }
 
 protected:

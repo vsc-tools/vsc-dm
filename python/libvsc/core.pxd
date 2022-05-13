@@ -317,7 +317,7 @@ cdef class TypeField(object):
     cpdef getAttr(self)
 
     @staticmethod
-    cdef mk(decl.ITypeField *, owned=*)
+    cdef mk(decl.ITypeField *, bool owned=*)
 
 cdef class TypeFieldPhy(TypeField):
 
@@ -326,12 +326,12 @@ cdef class TypeFieldPhy(TypeField):
     cdef decl.ITypeFieldPhy *asPhy(self)
     
     @staticmethod
-    cdef mk(decl.ITypeFieldPhy *, owned=*)
+    cdef mk(decl.ITypeFieldPhy *, bool owned=*)
 
 cdef class TypeFieldRef(TypeField):
 
     @staticmethod
-    cdef mk(decl.ITypeFieldRef *, owned=*)    
+    cdef mk(decl.ITypeFieldRef *, bool owned=*)    
     
 cdef class VisitorBase(object):
     cdef decl.VisitorProxy      *_proxy

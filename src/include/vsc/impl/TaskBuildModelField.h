@@ -41,7 +41,7 @@ public:
 		return m_field_s.at(0);
 	}
 
-	virtual void visitTypeField(ITypeField *f) override {
+	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
 		IModelFieldType *field = m_ctxt->mkModelFieldType(f);
 		m_field_s.back()->addField(field);
 

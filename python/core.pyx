@@ -871,7 +871,7 @@ cdef class TypeField(object):
         return 0
     
     @staticmethod
-    cdef mk(decl.ITypeField *hndl, owned=True):
+    cdef mk(decl.ITypeField *hndl, bool owned=True):
         ret = TypeField()
         ret._hndl = hndl
         ret._owned = owned
@@ -891,7 +891,7 @@ cdef class TypeFieldPhy(TypeField):
         return dynamic_cast[decl.ITypeFieldPhyP](self._hndl)
 
     @staticmethod
-    cdef mk(decl.ITypeFieldPhy *hndl, owned=True):
+    cdef mk(decl.ITypeFieldPhy *hndl, bool owned=True):
         ret = TypeFieldPhy()
         ret._hndl = hndl
         ret._owned = owned
@@ -900,7 +900,7 @@ cdef class TypeFieldPhy(TypeField):
 cdef class TypeFieldRef(TypeField):
 
     @staticmethod
-    cdef mk(decl.ITypeFieldRef *hndl, owned=True):
+    cdef mk(decl.ITypeFieldRef *hndl, bool owned=True):
         ret = TypeFieldRef()
         ret._hndl = hndl
         ret._owned = owned

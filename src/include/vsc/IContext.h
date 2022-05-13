@@ -41,7 +41,7 @@ public:
 
 	virtual ~IContext() { }
 
-	virtual IModelFieldRoot *buildModelField(
+	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) = 0;
 

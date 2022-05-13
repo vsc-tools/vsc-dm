@@ -19,7 +19,7 @@ public:
 
 	virtual ~Context();
 
-	virtual IModelFieldRoot *buildModelField(
+	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) override;
 

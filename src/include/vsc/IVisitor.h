@@ -71,6 +71,7 @@ class ITypeExprBin;
 class ITypeExprFieldRef;
 class ITypeExprVal;
 class ITypeField;
+class ITypeFieldPhy;
 class ITypeFieldRef;
 
 class IVisitor {
@@ -153,6 +154,8 @@ public:
 	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
 
 	virtual void visitTypeField(ITypeField *f) = 0;
+
+	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) = 0;
 
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) = 0;
 

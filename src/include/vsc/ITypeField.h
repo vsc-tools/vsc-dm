@@ -32,6 +32,8 @@ public:
 
 	virtual IDataType *getDataType() const = 0;
 
+	virtual void setDataType(IDataType *t) = 0;
+
 	virtual TypeFieldAttr getAttr() const = 0;
 
 };
