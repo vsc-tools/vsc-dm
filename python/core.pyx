@@ -566,7 +566,7 @@ cdef class ModelField(object):
             return None
     
     @staticmethod
-    cdef mk(decl.IModelField *hndl, owned=True):
+    cdef mk(decl.IModelField *hndl, bool owned=True):
         ret = ModelField()
         ret._hndl = hndl
         ret._owned = owned

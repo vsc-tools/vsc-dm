@@ -179,7 +179,7 @@ cdef class ModelField(object):
     cpdef getFieldData(self)
 
     @staticmethod
-    cdef mk(decl.IModelField *, owned=*)
+    cdef mk(decl.IModelField *, bool owned=*)
     
 cdef class ModelFieldDataClosure(object):
     cdef decl.IModelFieldData       *_hndl
