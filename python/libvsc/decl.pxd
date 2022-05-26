@@ -17,6 +17,7 @@ cimport cpython.ref as cpy_ref
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
+ctypedef IModelFieldRoot *IModelFieldRootP
 ctypedef IModelFieldData *IModelFieldDataP
 ctypedef ModelFieldDataClosure *ModelFieldDataClosureP
 ctypedef IModelConstraint *IModelConstraintP
@@ -247,6 +248,7 @@ cdef extern from "ModelFieldDataClosure.h" namespace "vsc":
 cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
 
     cdef cppclass IModelFieldRoot(IModelField):
+        void setName(const cpp_string &)
         pass
     
 cdef extern from "vsc/IModelFieldType.h" namespace "vsc":

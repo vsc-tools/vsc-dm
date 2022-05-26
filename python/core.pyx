@@ -18,7 +18,7 @@ from libcpp.cast cimport const_cast
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
 
-_Context_inst = None
+cdef Context _Context_inst = None
 
 cdef class Context(object):
 
@@ -75,6 +75,11 @@ cdef class Context(object):
             op,
             ModelExpr           rhs):
         cdef int op_i = int(op)
+        if not lhs._owned:
+            raise Exception("lhs must be free, but is owned")
+        if not rhs._owned:
+            raise Exception("rhs must be free, but is owned")
+        
         lhs._owned = False
         rhs._owned = False
         
@@ -105,7 +110,7 @@ cdef class Context(object):
         if type is not None:
             type_h = type._hndl
             
-        return ModelField.mk(self._hndl.mkModelFieldRoot(
+        return ModelFieldRoot.mk(self._hndl.mkModelFieldRoot(
             type_h, 
             name.encode()),
             True)
@@ -197,7 +202,8 @@ cdef class Context(object):
     def inst():
         global _Context_inst
         if _Context_inst is None:
-            _Context_inst = Context()
+            vsc = Vsc.inst()
+            _Context_inst = vsc.mkContext()
         return _Context_inst
     
 class SolveFlags(IntFlag):
@@ -331,8 +337,9 @@ cdef public void model_struct_create_hook_closure_invoke(
 cdef class ModelConstraint(object):
 
     def __dealloc__(self):
-        if self._owned:
+        if self._owned and self._hndl != NULL:
             del self._hndl
+            self._hndl = NULL
             
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=True):
@@ -568,6 +575,21 @@ cdef class ModelField(object):
     @staticmethod
     cdef mk(decl.IModelField *hndl, bool owned=True):
         ret = ModelField()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class ModelFieldRoot(ModelField):
+
+    cpdef setName(self, name):
+        self.asRoot().setName(name.encode())
+
+    cdef decl.IModelFieldRoot *asRoot(self):
+        return dynamic_cast[decl.IModelFieldRootP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldRoot *hndl, bool owned=True):
+        ret = ModelFieldRoot()
         ret._hndl = hndl
         ret._owned = owned
         return ret

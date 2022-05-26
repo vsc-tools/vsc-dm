@@ -20,6 +20,7 @@
  */
 
 #include "ModelFieldRoot.h"
+#include "DataTypeWidthVisitor.h"
 
 namespace vsc {
 
@@ -27,6 +28,12 @@ ModelFieldRoot::ModelFieldRoot(
 		IDataType			*type,
 		const std::string	&name) :
 				m_type(type), m_name(name), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
+	if (type) {
+		std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(type);
+		if (width.second > 0) {
+			m_val.setBits(width.second);
+		}
+	}
 
 }
 

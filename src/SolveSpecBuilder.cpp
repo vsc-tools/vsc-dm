@@ -65,8 +65,11 @@ SolveSpec *SolveSpecBuilder::build(
 	for (auto it=fields.begin(); it!=fields.end(); it++) {
 		(*it)->accept(this);
 	}
+
 	for (auto it=constraints.begin(); it!=constraints.end(); it++) {
+		DEBUG_ENTER("Visiting constraint");
 		(*it)->accept(this);
+		DEBUG_LEAVE("Visiting constraint");
 	}
 
 	std::vector<SolveSet *> solvesets;

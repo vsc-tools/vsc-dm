@@ -87,7 +87,13 @@ public:
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { }
 
-	virtual void visitModelConstraintScope(IModelConstraintScope *c) override { }
+	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
+		for (std::vector<IModelConstraintUP>::const_iterator
+				it=c->constraints().begin();
+				it!=c->constraints().end(); it++) {
+			it->get()->accept(m_this);
+		}
+	}
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { }
 
@@ -97,13 +103,23 @@ public:
 
 	virtual void visitModelCoverpoint(ModelCoverpoint *c) override { }
 
-	virtual void visitModelExprBin(IModelExprBin *e) override { }
+	virtual void visitModelExprBin(IModelExprBin *e) override {
+		e->lhs()->accept(m_this);
+		e->rhs()->accept(m_this);
+	}
 
-	virtual void visitModelExprCond(IModelExprCond *e) override { }
+	virtual void visitModelExprCond(IModelExprCond *e) override {
+		e->getCond()->accept(m_this);
+		e->getTrue()->accept(m_this);
+		e->getFalse()->accept(m_this);
+	}
 
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override { }
 
-	virtual void visitModelExprIn(IModelExprIn *e) override { }
+	virtual void visitModelExprIn(IModelExprIn *e) override {
+		e->lhs()->accept(m_this);
+		e->rangelist()->accept(m_this);
+	}
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override { }
 

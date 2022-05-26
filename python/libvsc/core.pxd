@@ -181,6 +181,15 @@ cdef class ModelField(object):
     @staticmethod
     cdef mk(decl.IModelField *, bool owned=*)
     
+cdef class ModelFieldRoot(ModelField):
+
+    cpdef setName(self, name)
+
+    cdef decl.IModelFieldRoot *asRoot(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldRoot *, bool owned=*)
+    
 cdef class ModelFieldDataClosure(object):
     cdef decl.IModelFieldData       *_hndl
     
