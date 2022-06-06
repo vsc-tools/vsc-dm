@@ -21,6 +21,8 @@ struct TypeExprFieldRefElem {
 	int32_t							idx;
 };
 
+class ITypeExprFieldRef;
+using ITypeExprFieldRefUP=std::unique_ptr<ITypeExprFieldRef>;
 class ITypeExprFieldRef : public ITypeExpr {
 public:
 

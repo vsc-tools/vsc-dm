@@ -42,7 +42,7 @@ cdef class Context(object):
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
-    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, attr, ModelVal)
+    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ModelVal)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
 
     @staticmethod    

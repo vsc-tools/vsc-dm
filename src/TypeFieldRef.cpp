@@ -12,7 +12,7 @@ namespace vsc {
 TypeFieldRef::TypeFieldRef(
 		const std::string		&name,
 		IDataType				*type,
-		TypeFieldAttr			attr) : TypeField(name, type, attr) {
+		TypeFieldAttr			attr) : TypeField(name, type, false, attr) {
 
 }
 

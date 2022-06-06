@@ -63,6 +63,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         ITypeFieldPhy *mkTypeFieldPhy(
             const cpp_string &,
             IDataType *,
+            bool,
             TypeFieldAttr,
             IModelVal *)
         ITypeFieldRef *mkTypeFieldRef(

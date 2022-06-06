@@ -239,11 +239,13 @@ ITypeExprVal *Context::mkTypeExprVal(const IModelVal *v) {
 ITypeFieldPhy *Context::mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
+			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init) {
 	return new TypeFieldPhy(
 			name,
 			dtype,
+			own_dtype,
 			attr,
 			init);
 }

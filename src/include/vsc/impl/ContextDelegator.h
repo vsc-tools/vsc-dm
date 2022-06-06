@@ -159,9 +159,10 @@ public:
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
+			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init) override {
-		return m_ctxt->mkTypeFieldPhy(name, dtype, attr, init);
+		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init);
 	}
 
 	virtual ITypeFieldRef *mkTypeFieldRef(

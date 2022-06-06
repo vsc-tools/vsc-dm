@@ -16,6 +16,7 @@ public:
 	TypeFieldPhy(
 			const std::string	&name,
 			IDataType			*type,
+			bool				own_type,
 			TypeFieldAttr		attr,
 			IModelVal			*init);
 

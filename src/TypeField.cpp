@@ -26,9 +26,12 @@ namespace vsc {
 TypeField::TypeField(
 		const std::string		&name,
 		IDataType				*type,
+		bool					own_type,
 		TypeFieldAttr			attr) :
 				m_parent(0), m_name(name), m_type(type), m_attr(attr) {
-	// TODO Auto-generated constructor stub
+	if (own_type) {
+		m_type_owned = vsc::IDataTypeUP(type);
+	}
 
 }
 

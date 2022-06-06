@@ -125,6 +125,7 @@ public:
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
+			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init) = 0;
 

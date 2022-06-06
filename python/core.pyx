@@ -164,6 +164,7 @@ cdef class Context(object):
     cpdef TypeFieldPhy mkTypeFieldPhy(self, 
                                 name, 
                                 DataType dtype, 
+                                bool own_dtype,
                                 attr,
                                 ModelVal init):
         cdef decl.IModelVal *init_h = NULL
@@ -176,6 +177,7 @@ cdef class Context(object):
         return TypeFieldPhy.mk(self._hndl.mkTypeFieldPhy(
             name.encode(), 
             dtype._hndl, 
+            own_dtype,
             <decl.TypeFieldAttr>(attr_i),
             init_h))
         

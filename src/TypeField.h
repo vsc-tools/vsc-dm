@@ -25,6 +25,7 @@ public:
 	TypeField(
 			const std::string	&name,
 			IDataType			*type,
+			bool				own_type,
 			TypeFieldAttr		attr);
 
 	virtual ~TypeField();
@@ -45,6 +46,7 @@ protected:
 	IDataTypeStruct			*m_parent;
 	std::string				m_name;
 	IDataType				*m_type;
+	IDataTypeUP				m_type_owned;
 	TypeFieldAttr			m_attr;
 
 };

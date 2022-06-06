@@ -12,8 +12,9 @@ namespace vsc {
 TypeFieldPhy::TypeFieldPhy(
 		const std::string	&name,
 		IDataType			*type,
+		bool				own_type,
 		TypeFieldAttr		attr,
-		IModelVal			*init) : TypeField(name, type, attr), m_init(init) {
+		IModelVal			*init) : TypeField(name, type, own_type, attr), m_init(init) {
 
 }
 
