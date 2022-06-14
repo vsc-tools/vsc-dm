@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include "vsc/IContext.h"
+#include "vsc/IModelBuildContext.h"
 #include "vsc/impl/VisitorBase.h"
 
 
@@ -15,10 +15,9 @@ namespace vsc {
 class TaskBuildModelExpr : public VisitorBase {
 public:
 	TaskBuildModelExpr(
-			IContext		*ctxt,
-			IModelField 	*scope,
-			IVisitor		*this_p=0):
-				VisitorBase(this_p), m_ctxt(ctxt), m_scope(scope), m_expr(0) { }
+			IModelBuildContext	*ctxt,
+			IVisitor			*this_p=0):
+				VisitorBase(this_p), m_ctxt(ctxt), m_expr(0) { }
 
 	virtual ~TaskBuildModelExpr() { }
 
@@ -27,7 +26,7 @@ public:
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {
 		IModelExpr *lhs = expr(e->lhs());
 		IModelExpr *rhs = expr(e->rhs());
-		m_expr = m_ctxt->mkModelExprBin(lhs, e->op(), rhs);
+		m_expr = m_ctxt->ctxt()->mkModelExprBin(lhs, e->op(), rhs);
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
@@ -35,10 +34,10 @@ public:
 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {
 			case TypeExprFieldRefElemKind::Root: {
-				f = m_scope;
+				f = m_ctxt->getField();
 			} break;
 			case TypeExprFieldRefElemKind::IdxOffset: {
-				f = m_scope->getField(it->idx);
+				f = m_ctxt->getField()->getField(it->idx);
 			} break;
 
 			default:
@@ -46,11 +45,11 @@ public:
 			}
 		}
 
-		m_expr = m_ctxt->mkModelExprFieldRef(f);
+		m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
 	}
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
-		m_expr = m_ctxt->mkModelExprVal(e->val());
+		m_expr = m_ctxt->ctxt()->mkModelExprVal(e->val());
 	}
 
 	virtual void visitTypeField(ITypeField *f) override {
@@ -65,8 +64,7 @@ protected:
 	}
 
 protected:
-	IContext					*m_ctxt;
-	IModelField					*m_scope;
+	IModelBuildContext			*m_ctxt;
 	IModelExpr					*m_expr;
 
 };

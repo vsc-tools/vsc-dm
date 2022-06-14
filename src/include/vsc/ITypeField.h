@@ -34,6 +34,8 @@ public:
 
 	virtual void setDataType(IDataType *t) = 0;
 
+	virtual ITypeField *getField(int32_t idx) = 0;
+
 	virtual TypeFieldAttr getAttr() const = 0;
 
 };

@@ -891,6 +891,9 @@ cdef class TypeField(object):
         else:
             return None
         
+    cpdef TypeField getField(self, idx):
+        return TypeField.mk(self._hndl.getField(idx), False)
+        
     cpdef getAttr(self):
         return 0
     

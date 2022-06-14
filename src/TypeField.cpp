@@ -20,6 +20,7 @@
  */
 
 #include "TypeField.h"
+#include "vsc/IDataTypeStruct.h"
 
 namespace vsc {
 
@@ -37,6 +38,15 @@ TypeField::TypeField(
 
 TypeField::~TypeField() {
 	// TODO Auto-generated destructor stub
+}
+
+ITypeField *TypeField::getField(int32_t idx) {
+	IDataTypeStruct *s = dynamic_cast<IDataTypeStruct *>(getDataType());
+	if (s) {
+		return s->getField(idx);
+	} else {
+		return 0;
+	}
 }
 
 } /* namespace vsc */

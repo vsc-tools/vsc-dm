@@ -323,6 +323,7 @@ cdef class TypeField(object):
     cpdef setParent(self, DataTypeStruct)
     cpdef name(self)
     cpdef DataType getDataType(self)
+    cpdef TypeField getField(self, idx)
     cpdef getAttr(self)
 
     @staticmethod

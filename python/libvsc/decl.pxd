@@ -381,6 +381,7 @@ cdef extern from "vsc/ITypeField.h" namespace "vsc":
         void setParent(IDataTypeStruct *)
         const cpp_string &name() const
         IDataType *getDataType() const
+        ITypeField *getField(int32_t)
         TypeFieldAttr getAttr() const
         
 cdef extern from "vsc/ITypeFieldPhy.h" namespace "vsc":

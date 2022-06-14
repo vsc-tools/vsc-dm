@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "vsc/IContext.h"
+#include "vsc/IModelBuildContext.h"
 #include "vsc/impl/TaskBuildModelExpr.h"
 #include "vsc/impl/VisitorBase.h"
 
@@ -16,7 +17,7 @@ namespace vsc {
 class TaskBuildModelField : public VisitorBase {
 public:
 
-	TaskBuildModelField(IContext *ctxt, IVisitor *this_p=0) :
+	TaskBuildModelField(IModelBuildContext *ctxt, IVisitor *this_p=0) :
 		VisitorBase(this_p), m_ctxt(ctxt), m_type_field(0) { }
 
 	virtual ~TaskBuildModelField() { }
@@ -42,7 +43,7 @@ public:
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
-		IModelFieldType *field = m_ctxt->mkModelFieldType(f);
+		IModelFieldType *field = m_ctxt->ctxt()->mkModelFieldType(f);
 		m_field_s.back()->addField(field);
 
 		if (f->getInit()) {
@@ -60,7 +61,7 @@ public:
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
 		if (m_field_s.size() == 0) {
-			IModelFieldRoot *field = m_ctxt->mkModelFieldRoot(t, m_name);
+			IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(t, m_name);
 
 			m_field_s.push_back(field);
 		}
@@ -70,7 +71,7 @@ public:
 	}
 
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override {
-		IModelConstraintBlock *cm = m_ctxt->mkModelConstraintBlock(c->name());
+		IModelConstraintBlock *cm = m_ctxt->ctxt()->mkModelConstraintBlock(c->name());
 
 		m_constraint_s.push_back(cm);
 		for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
@@ -86,10 +87,9 @@ public:
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
 		// Convert type expression to a model expression
-		IModelExpr *expr = TaskBuildModelExpr(
-				m_ctxt, m_field_s.back()).build(c->expr());
+		IModelExpr *expr = TaskBuildModelExpr(m_ctxt).build(c->expr());
 
-		IModelConstraintExpr *cm = m_ctxt->mkModelConstraintExpr(expr);
+		IModelConstraintExpr *cm = m_ctxt->ctxt()->mkModelConstraintExpr(expr);
 
 		m_constraint_s.back()->add_constraint(cm);
 	}
@@ -99,7 +99,7 @@ public:
 	}
 
 protected:
-	IContext								*m_ctxt;
+	IModelBuildContext						*m_ctxt;
 	std::string								m_name;
 	ITypeField								*m_type_field;
 	std::vector<IModelField *>				m_field_s;

@@ -40,6 +40,8 @@ public:
 
 	virtual void setDataType(IDataType *t) override { m_type = t; }
 
+	virtual ITypeField *getField(int32_t idx) override;
+
 	virtual TypeFieldAttr getAttr() const override { return m_attr; }
 
 protected:
