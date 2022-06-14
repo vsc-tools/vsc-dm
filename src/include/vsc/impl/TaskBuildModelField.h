@@ -24,35 +24,26 @@ public:
 
 	const std::string &name() const { return m_name; }
 
-	void pushField(IModelField *field) {
-		m_field_s.push_back(field);
-	}
-
-	const std::vector<IModelField *> &getFields() const {
-		return m_field_s;
-	}
-
 	virtual IModelField *build(IDataTypeStruct *type, const std::string &name) {
-		m_field_s.clear();
 		m_constraint_s.clear();
 		m_name = name; // TODO:
 		m_type_field = 0;
 		type->accept(m_this);
 
-		return m_field_s.at(0);
+		return m_ctxt->getField(0);
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
 		IModelFieldType *field = m_ctxt->ctxt()->mkModelFieldType(f);
-		m_field_s.back()->addField(field);
+		m_ctxt->getField(-1)->addField(field);
 
 		if (f->getInit()) {
 			field->val()->set(f->getInit());
 		}
 
-		m_field_s.push_back(field);
+		m_ctxt->pushField(field);
 		VisitorBase::visitTypeField(f);
-		m_field_s.pop_back();
+		m_ctxt->popField();
 	}
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {
@@ -60,10 +51,10 @@ public:
 	}
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
-		if (m_field_s.size() == 0) {
+		if (m_ctxt->fieldStackSize() == 0) {
 			IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(t, m_name);
 
-			m_field_s.push_back(field);
+			m_ctxt->pushField(field);
 		}
 
 		// Visit the members
@@ -81,7 +72,7 @@ public:
 		m_constraint_s.pop_back();
 
 		if (m_constraint_s.size() == 0) {
-			m_field_s.back()->addConstraint(cm);
+			m_ctxt->getField(-1)->addConstraint(cm);
 		}
 	}
 
@@ -102,7 +93,6 @@ protected:
 	IModelBuildContext						*m_ctxt;
 	std::string								m_name;
 	ITypeField								*m_type_field;
-	std::vector<IModelField *>				m_field_s;
 	std::vector<IModelConstraintScope *>	m_constraint_s;
 };
 

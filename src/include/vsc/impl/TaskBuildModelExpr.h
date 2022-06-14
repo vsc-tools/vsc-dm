@@ -34,10 +34,10 @@ public:
 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {
 			case TypeExprFieldRefElemKind::Root: {
-				f = m_ctxt->getField();
+				f = m_ctxt->getField(-1);
 			} break;
 			case TypeExprFieldRefElemKind::IdxOffset: {
-				f = m_ctxt->getField()->getField(it->idx);
+				f = m_ctxt->getField(-1)->getField(it->idx);
 			} break;
 
 			default:

@@ -21,7 +21,9 @@ public:
 
 	virtual void popField() = 0;
 
-	virtual IModelField *getField(int32_t offset=0) = 0;
+	virtual int32_t fieldStackSize() = 0;
+
+	virtual IModelField *getField(int32_t offset) = 0;
 
 };
 

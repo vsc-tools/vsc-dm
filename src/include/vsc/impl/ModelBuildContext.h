@@ -28,8 +28,14 @@ public:
 		m_field_s.pop_back();
 	}
 
-	virtual IModelField *getField(int32_t offset=0) override {
-		return m_field_s.at(m_field_s.size()-offset-1);
+	virtual int32_t fieldStackSize() override { return m_field_s.size(); }
+
+	virtual IModelField *getField(int32_t offset) override {
+		if (offset < 0) {
+			return m_field_s.at(m_field_s.size()+offset);
+		} else {
+			return m_field_s.at(offset);
+		}
 	}
 
 protected:
