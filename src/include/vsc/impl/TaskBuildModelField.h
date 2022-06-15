@@ -36,6 +36,7 @@ public:
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
 		IModelFieldType *field = m_ctxt->ctxt()->mkModelFieldType(f);
 		m_ctxt->getField(-1)->addField(field);
+		fprintf(stdout, "visitTypeFieldPhy: %s\n", f->name().c_str());
 
 		if (f->getInit()) {
 			field->val()->set(f->getInit());

@@ -24,7 +24,7 @@ public:
 
 	virtual IModelVal *getInit() const override { return m_init.get(); }
 
-	virtual void accept(IVisitor *v) { v->visitTypeField(this); }
+	virtual void accept(IVisitor *v) { v->visitTypeFieldPhy(this); }
 
 private:
 	IModelValUP				m_init;

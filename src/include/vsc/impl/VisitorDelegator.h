@@ -164,10 +164,12 @@ public:
 	}
 
 	virtual void visitTypeField(ITypeField *f) override {
+		fprintf(stdout, "visitTypeField\n");
 		m_delegate->visitTypeField(f);
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
+		fprintf(stdout, "visitTypeFieldPhy\n");
 		m_delegate->visitTypeFieldPhy(f);
 	}
 
