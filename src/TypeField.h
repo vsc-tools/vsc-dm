@@ -34,6 +34,10 @@ public:
 
 	virtual void setParent(IDataTypeStruct *p) override { m_parent = p; }
 
+	virtual int32_t getIndex() override { return m_idx; }
+
+	virtual void setIndex(int32_t idx) override { m_idx = idx; }
+
 	const std::string &name() const { return m_name; }
 
 	virtual IDataType *getDataType() const override { return m_type; }
@@ -46,6 +50,7 @@ public:
 
 protected:
 	IDataTypeStruct			*m_parent;
+	int32_t					m_idx;
 	std::string				m_name;
 	IDataType				*m_type;
 	IDataTypeUP				m_type_owned;

@@ -28,6 +28,10 @@ public:
 
 	virtual void setParent(IDataTypeStruct *p) = 0;
 
+	virtual int32_t getIndex() = 0;
+
+	virtual void setIndex(int32_t) = 0;
+
 	virtual const std::string &name() const = 0;
 
 	virtual IDataType *getDataType() const = 0;

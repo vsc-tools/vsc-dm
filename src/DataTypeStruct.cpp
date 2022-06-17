@@ -35,6 +35,8 @@ DataTypeStruct::~DataTypeStruct() {
 }
 
 void DataTypeStruct::addField(ITypeField *f) {
+	f->setIndex(m_fields.size());
+	f->setParent(this);
 	m_fields.push_back(ITypeFieldUP(f));
 }
 

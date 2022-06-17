@@ -321,6 +321,8 @@ cdef class TypeField(object):
     
     cpdef DataTypeStruct getParent(self)
     cpdef setParent(self, DataTypeStruct)
+    cpdef getIndex(self)
+    cpdef setIndex(self, idx)
     cpdef name(self)
     cpdef DataType getDataType(self)
     cpdef TypeField getField(self, idx)

@@ -881,6 +881,12 @@ cdef class TypeField(object):
     cpdef setParent(self, DataTypeStruct p):
         self._hndl.setParent(p.asTypeStruct())
         
+    cpdef getIndex(self):
+        return self._hndl.getIndex()
+    
+    cpdef setIndex(self, idx):
+        self._hndl.setIndex(idx)
+        
     cpdef name(self):
         return self._hndl.name().decode()
     
