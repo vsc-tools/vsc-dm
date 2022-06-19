@@ -350,6 +350,7 @@ cdef extern from "vsc/ITypeExprBin.h" namespace "vsc":
 cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
     cdef enum TypeExprFieldRefElemKind:
         Root "vsc::TypeExprFieldRefElemKind::Root" 
+        ActiveScope "vsc::TypeExprFieldRefElemKind::ActiveScope" 
         IdxOffset "vsc::TypeExprFieldRefElemKind::IdxOffset" 
         
     cdef cppclass TypeExprFieldRefElem:
@@ -358,6 +359,7 @@ cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
 
     cdef cppclass ITypeExprFieldRef(ITypeExpr):
         void addIdxRef(int32_t)
+        void addActiveScopeRef(int32_t)
         void addRootRef()
         uint32_t size() const
         const TypeExprFieldRefElem &at(int32_t) const

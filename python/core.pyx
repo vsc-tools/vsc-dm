@@ -822,6 +822,9 @@ cdef class TypeExprFieldRef(TypeExpr):
     cpdef addRootRef(self):
         self.asFieldRef().addRootRef()
         
+    cpdef addActiveScopeRef(self, off):
+        self.asFieldRef().addActiveScopeRef(off)
+        
     cpdef uint32_t size(self):
         return self.asFieldRef().size()
     

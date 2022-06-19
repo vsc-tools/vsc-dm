@@ -36,6 +36,9 @@ public:
 			case TypeExprFieldRefElemKind::Root: {
 				f = m_ctxt->getField(-1);
 			} break;
+			case TypeExprFieldRefElemKind::ActiveScope: {
+				f = m_ctxt->getField(it->idx);
+			} break;
 			case TypeExprFieldRefElemKind::IdxOffset: {
 				f = m_ctxt->getField(-1)->getField(it->idx);
 			} break;

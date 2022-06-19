@@ -45,7 +45,7 @@ static inline ModelFieldFlag operator ~ (const ModelFieldFlag lhs) {
 
 class IModelField;
 using IModelFieldUP=std::unique_ptr<IModelField>;
-class IModelField : public IAccept {
+class IModelField : public virtual IAccept {
 public:
 
 	virtual ~IModelField() { }
@@ -67,6 +67,10 @@ public:
 	virtual void addField(IModelField *field) = 0;
 
 	virtual IModelField *getField(int32_t idx) = 0;
+
+	template <class T> T *getFieldT(int32_t idx) {
+		return dynamic_cast<T *>(getField(idx));
+	}
 
 	virtual const IModelVal *val() const = 0;
 

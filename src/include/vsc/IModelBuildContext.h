@@ -25,6 +25,10 @@ public:
 
 	virtual IModelField *getField(int32_t offset) = 0;
 
+	template <class T> T *getFieldT(int32_t offset) {
+		return dynamic_cast<T *>(getField(offset));
+	}
+
 };
 
 }

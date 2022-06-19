@@ -30,7 +30,9 @@ public:
 		m_type_field = 0;
 		type->accept(m_this);
 
-		return m_ctxt->getField(0);
+		IModelField *ret = m_ctxt->getField(0);
+		m_ctxt->popField();
+		return ret;
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
@@ -45,6 +47,12 @@ public:
 		m_ctxt->pushField(field);
 		VisitorBase::visitTypeField(f);
 		m_ctxt->popField();
+	}
+
+	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
+		fprintf(stdout, "visitTypeFieldRef: %s\n", f->name().c_str());
+		IModelFieldRef *field = m_ctxt->ctxt()->mkModelFieldRefType(f);
+		m_ctxt->getField(-1)->addField(field);
 	}
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {

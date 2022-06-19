@@ -13,6 +13,7 @@ namespace vsc {
 
 enum class TypeExprFieldRefElemKind {
 	Root,
+	ActiveScope,
 	IdxOffset
 };
 
@@ -29,6 +30,8 @@ public:
 	virtual ~ITypeExprFieldRef() { }
 
 	virtual void addIdxRef(int32_t idx) = 0;
+
+	virtual void addActiveScopeRef(int32_t off) = 0;
 
 	virtual void addRootRef() = 0;
 

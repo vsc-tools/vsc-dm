@@ -36,6 +36,10 @@ public:
 
 	virtual IDataType *getDataType() const = 0;
 
+	template <class T> T *getDataTypeT() const {
+		return dynamic_cast<T *>(getDataType());
+	}
+
 	virtual void setDataType(IDataType *t) = 0;
 
 	virtual ITypeField *getField(int32_t idx) = 0;

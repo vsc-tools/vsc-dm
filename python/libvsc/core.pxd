@@ -299,6 +299,7 @@ cdef class TypeExprFieldRef(TypeExpr):
 
     cpdef addIdxRef(self, int32_t idx)
     cpdef addRootRef(self)
+    cpdef addActiveScopeRef(self, off)
     cpdef uint32_t size(self)
     cpdef TypeExprFieldRefElem at(self, idx)
     

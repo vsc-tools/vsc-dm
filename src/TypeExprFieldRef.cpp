@@ -22,6 +22,10 @@ void TypeExprFieldRef::addIdxRef(int32_t idx) {
 	m_path.push_back({TypeExprFieldRefElemKind::IdxOffset, idx});
 }
 
+void TypeExprFieldRef::addActiveScopeRef(int32_t off) {
+	m_path.push_back({TypeExprFieldRefElemKind::ActiveScope, off});
+}
+
 void TypeExprFieldRef::addRootRef() {
 	m_path.push_back({TypeExprFieldRefElemKind::Root, -1});
 }

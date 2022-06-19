@@ -17,7 +17,9 @@ class TaskBuildModelConstraint : public VisitorBase {
 public:
 
 	TaskBuildModelConstraint(
-			IModelBuildContext		*ctxt) : m_ctxt(ctxt), m_constraint(0)  { }
+			IModelBuildContext		*ctxt,
+			IVisitor				*this_p=0) :
+				VisitorBase(this_p), m_ctxt(ctxt), m_constraint(0)  { }
 
 	virtual ~TaskBuildModelConstraint() { }
 

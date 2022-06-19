@@ -18,6 +18,8 @@ public:
 
 	virtual void addIdxRef(int32_t idx) override;
 
+	virtual void addActiveScopeRef(int32_t off) override;
+
 	virtual void addRootRef() override;
 
 	virtual uint32_t size() const override { return m_path.size(); }
