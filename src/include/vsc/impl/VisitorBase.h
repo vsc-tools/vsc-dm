@@ -41,6 +41,8 @@
 #include "vsc/IModelVal.h"
 
 #include "vsc/ITypeExprBin.h"
+#include "vsc/ITypeExprRange.h"
+#include "vsc/ITypeExprRangelist.h"
 
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
@@ -205,6 +207,23 @@ public:
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override { }
+
+	virtual void visitTypeExprRange(ITypeExprRange *e) override {
+		if (e->lower()) {
+			e->lower()->accept(m_this);
+		}
+		if (e->upper()) {
+			e->upper()->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) override {
+		for (std::vector<ITypeExprRangeUP>::const_iterator
+				it=e->getRanges().begin();
+				it!=e->getRanges().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override { }
 

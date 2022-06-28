@@ -14,11 +14,13 @@ namespace vsc {
 
 class DataType;
 typedef std::unique_ptr<DataType> DataTypeUP;
-class DataType : public IDataType {
+class DataType : public virtual IDataType {
 public:
 	DataType();
 
 	virtual ~DataType();
+
+	virtual void finalize() override { }
 
 #ifdef UNDEFINED
 	/**

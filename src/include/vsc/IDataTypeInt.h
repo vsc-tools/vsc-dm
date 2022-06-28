@@ -12,7 +12,7 @@ namespace vsc {
 
 class IDataTypeInt;
 using IDataTypeIntUP=std::unique_ptr<IDataTypeInt>;
-class IDataTypeInt : public IDataType {
+class IDataTypeInt : public virtual IDataType {
 public:
 
 	virtual ~IDataTypeInt() { }

@@ -18,6 +18,40 @@ ModelValOp::~ModelValOp() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelValOp::add(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+	if (op1->bits() <= 64 && op2->bits() <= 64) {
+		if (op1->bits() > op2->bits()) {
+			dst->bits(op1->bits());
+		} else {
+			dst->bits(op2->bits());
+		}
+		dst->set_val_u(op1->val_u()+op2->val_u());
+	} else {
+		// TODO:
+	}
+	;
+}
+
+void ModelValOp::add_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			int64_t			op2,
+			uint32_t		bits) {
+	if (op1->bits() <= 64) {
+		if (op1->bits() > bits) {
+			dst->bits(op1->bits());
+		} else {
+			dst->bits(bits);
+		}
+		dst->set_val_i(op1->val_i()+op2, bits);
+	} else {
+		// TODO:
+	}
+}
+
 void ModelValOp::eq(
 			IModelVal		*dst,
 			const IModelVal	*op1,

@@ -18,6 +18,10 @@ public:
 
 	virtual ~IDataType() { }
 
+	// Notify datatype that no more information
+	// will be added.
+	virtual void finalize() = 0;
+
 
 };
 

@@ -15,6 +15,17 @@ public:
 	ModelValOp();
 	virtual ~ModelValOp();
 
+	static void add(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2);
+
+	static void add_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			int64_t			op2,
+			uint32_t		bits);
+
 	static void eq(
 			IModelVal		*dst,
 			const IModelVal	*op1,

@@ -159,6 +159,14 @@ public:
 		m_delegate->visitTypeExprFieldRef(e);
 	}
 
+	virtual void visitTypeExprRange(ITypeExprRange *e) override {
+		m_delegate->visitTypeExprRange(e);
+	}
+
+	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) override {
+		m_delegate->visitTypeExprRangelist(e);
+	}
+
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
 		m_delegate->visitTypeExprVal(e);
 	}

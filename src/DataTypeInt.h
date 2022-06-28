@@ -13,7 +13,7 @@ namespace vsc {
 
 class DataTypeInt;
 using DataTypeIntUP=std::unique_ptr<DataTypeInt>;
-class DataTypeInt : public IDataTypeInt {
+class DataTypeInt : public IDataTypeInt, public virtual DataType {
 public:
 	DataTypeInt(
 			bool			is_signed,

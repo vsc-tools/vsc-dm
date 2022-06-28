@@ -69,3 +69,23 @@ private:
 
 } /* namespace vsc */
 
+namespace std {
+template <>
+struct hash<vsc::ModelVal>
+{
+  std::size_t operator()(const vsc::ModelVal & k) const
+  {
+    using std::size_t;
+    using std::hash;
+    using std::string;
+
+    // Compute individual hash values for first,
+    // second and third and combine them using XOR
+    // and bit shifting:
+
+    return (k.bits() ^ k.val_u());
+  }
+};
+
+}
+

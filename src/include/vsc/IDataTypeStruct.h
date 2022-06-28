@@ -17,7 +17,7 @@ namespace vsc {
 
 class IDataTypeStruct;
 using IDataTypeStructUP=std::unique_ptr<IDataTypeStruct>;
-class IDataTypeStruct : public IDataType {
+class IDataTypeStruct : public virtual IDataType {
 public:
 
 	virtual ~IDataTypeStruct() { }

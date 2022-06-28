@@ -69,6 +69,8 @@ class ITypeConstraintScope;
 class ITypeExpr;
 class ITypeExprBin;
 class ITypeExprFieldRef;
+class ITypeExprRange;
+class ITypeExprRangelist;
 class ITypeExprVal;
 class ITypeField;
 class ITypeFieldPhy;
@@ -150,6 +152,10 @@ public:
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) = 0;
+
+	virtual void visitTypeExprRange(ITypeExprRange *e) = 0;
+
+	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) = 0;
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
 

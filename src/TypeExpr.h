@@ -10,7 +10,7 @@
 
 namespace vsc {
 
-class TypeExpr : public ITypeExpr {
+class TypeExpr : public virtual ITypeExpr {
 public:
 	TypeExpr();
 
