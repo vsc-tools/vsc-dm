@@ -20,6 +20,7 @@
 
 #include "Context.h"
 #include "CompoundSolverDefault.h"
+#include "DataTypeEnum.h"
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
@@ -63,6 +64,36 @@ IModelField *Context::buildModelField(
 
 ICompoundSolver *Context::mkCompoundSolver() {
 	return new CompoundSolverDefault();
+}
+
+IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
+	std::unordered_map<std::string, IDataTypeEnum *>::const_iterator it;
+	it = m_enum_type_m.find(name);
+
+	if (it != m_enum_type_m.end()) {
+		return it->second;
+	} else {
+		return 0;
+	}
+}
+
+IDataTypeEnum *Context::mkDataTypeEnum(
+			const std::string 	&name,
+			bool				is_signed) {
+	return new DataTypeEnum(name, is_signed);
+}
+
+bool Context::addDataTypeEnum(IDataTypeEnum *e) {
+	std::unordered_map<std::string, IDataTypeEnum *>::const_iterator it;
+	it = m_enum_type_m.find(e->name());
+
+	if (it != m_enum_type_m.end()) {
+		m_enum_type_m.insert({e->name(), e});
+		m_enum_type_l.push_back(IDataTypeEnumUP(e));
+		return true;
+	} else {
+		return false;
+	}
 }
 
 IModelConstraintBlock *Context::mkModelConstraintBlock(

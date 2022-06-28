@@ -14,8 +14,10 @@
 
 namespace vsc {
 
-DataTypeEnum::DataTypeEnum() {
-	// TODO Auto-generated constructor stub
+DataTypeEnum::DataTypeEnum(
+		const std::string	&name,
+		bool 				is_signed) :
+				m_name(name), m_is_signed(is_signed) {
 
 }
 
@@ -100,16 +102,28 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 								new TypeExprVal(*start),
 								new TypeExprVal(*prev));
 					}
+					rl->addRange(rng);
 
 					start = it;
 				}
 			} else {
+				TypeExprRange *rng = 0;
+
 				// Have from start..prev to stick in a range
 				if (start == prev) {
 					// Single-value range
+					rng = new TypeExprRange(
+							true,
+							new TypeExprVal(*start),
+							0);
 				} else {
-
+					// Extends start..prev
+					rng = new TypeExprRange(
+							false,
+							new TypeExprVal(*start),
+							new TypeExprVal(*prev));
 				}
+				rl->addRange(rng);
 			}
 		}
 	}

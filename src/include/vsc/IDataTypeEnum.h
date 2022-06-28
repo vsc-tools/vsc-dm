@@ -19,6 +19,8 @@ public:
 
 	virtual ~IDataTypeEnum() { }
 
+	virtual const std::string &name() const = 0;
+
 	virtual bool isSigned() const = 0;
 
 	virtual bool addEnumerator(

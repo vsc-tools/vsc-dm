@@ -28,6 +28,7 @@
 
 namespace vsc {
 
+class IDataTypeEnum;
 class IDataTypeInt;
 class IDataTypeStruct;
 
@@ -80,6 +81,8 @@ class IVisitor {
 public:
 
 	virtual ~IVisitor() { }
+
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) = 0;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;
 

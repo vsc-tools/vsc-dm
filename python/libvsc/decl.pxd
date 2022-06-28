@@ -14,6 +14,8 @@ from libc.stdint cimport int64_t
 from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
+ctypedef IDataTypeEnum *IDataTypeEnumP
+ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
@@ -28,6 +30,9 @@ ctypedef ITypeConstraintExpr *ITypeConstraintExprP
 ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
+ctypedef ITypeExprRange *ITypeExprRangeP
+ctypedef unique_ptr[ITypeExprRange] ITypeExprRangeUP
+ctypedef ITypeExprRangelist *ITypeExprRangelistP
 ctypedef ITypeExprVal *ITypeExprValP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
 ctypedef ITypeFieldRef *ITypeFieldRefP
@@ -39,6 +44,11 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
     cdef cppclass IContext:
         IModelFieldRoot *buildModelField(IDataTypeStruct *, const cpp_string &)
         ICompoundSolver *mkCompoundSolver()
+        IDataTypeEnum *findDataTypeEnum(const cpp_string &)
+        IDataTypeEnum *mkDataTypeEnum(
+            const cpp_string        &name,
+            bool                    is_signed)
+        bool addDataTypeEnum(IDataTypeEnum *)
         IModelConstraintBlock *mkModelConstraintBlock(const cpp_string &)
         IModelConstraintExpr *mkModelConstraintExpr(IModelExpr *expr)
         IDataTypeInt *findDataTypeInt(bool is_signed, int32_t width)
@@ -101,11 +111,18 @@ cdef extern from "vsc/IAccept.h" namespace "vsc":
 #********************************************************************
 #* IDataType
 #********************************************************************
-ctypedef IDataTypeInt *IDataTypeIntP
 
 cdef extern from "vsc/IDataType.h" namespace "vsc":
     cdef cppclass IDataType(IAccept):
         pass
+    
+cdef extern from "vsc/IDataTypeEnum.h" namespace "vsc":
+    cdef cppclass IDataTypeEnum(IDataType):
+        const cpp_string &name() const
+        bool isSigned() const
+        bool addEnumerator(
+            const cpp_string    &name,
+            const IModelVal     *val)
     
 cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
     cdef cppclass IDataTypeInt(IDataType):
@@ -363,6 +380,17 @@ cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
         void addRootRef()
         uint32_t size() const
         const TypeExprFieldRefElem &at(int32_t) const
+        
+cdef extern from "vsc/ITypeExprRange.h" namespace "vsc":
+    cdef cppclass ITypeExprRange(ITypeExpr):
+        bool isSingle()
+        ITypeExpr *lower() const
+        ITypeExpr *upper() const
+        
+cdef extern from "vsc/ITypeExprRangelist.h" namespace "vsc":
+    cdef cppclass ITypeExprRangelist:
+        void addRange(ITypeExprRange *)
+        const cpp_vector[ITypeExprRangeUP] &getRanges() const
 
 cdef extern from "vsc/ITypeExprVal.h" namespace "vsc":
 

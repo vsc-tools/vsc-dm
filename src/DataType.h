@@ -20,7 +20,7 @@ public:
 
 	virtual ~DataType();
 
-	virtual void finalize() override { }
+//	virtual void finalize() override { }
 
 #ifdef UNDEFINED
 	/**

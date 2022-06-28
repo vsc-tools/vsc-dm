@@ -25,6 +25,14 @@ public:
 
 	virtual ICompoundSolver *mkCompoundSolver() override;
 
+	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override;
+
+	virtual IDataTypeEnum *mkDataTypeEnum(
+			const std::string 	&name,
+			bool				is_signed) override;
+
+	virtual bool addDataTypeEnum(IDataTypeEnum *e) override;
+
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
 			int32_t			width) override;
@@ -114,6 +122,8 @@ public:
 
 
 private:
+	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
+	std::vector<IDataTypeEnumUP>							m_enum_type_l;
 
 	std::unordered_map<std::string,IDataTypeStruct *>		m_struct_type_m;
 	std::vector<IDataTypeStructUP>							m_struct_type_l;

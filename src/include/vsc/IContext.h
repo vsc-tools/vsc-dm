@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/ICompoundSolver.h"
+#include "vsc/IDataTypeEnum.h"
 #include "vsc/IDataTypeInt.h"
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
@@ -46,6 +47,14 @@ public:
 			const std::string		&name) = 0;
 
 	virtual ICompoundSolver *mkCompoundSolver() = 0;
+
+	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) = 0;
+
+	virtual IDataTypeEnum *mkDataTypeEnum(
+			const std::string 	&name,
+			bool				is_signed) = 0;
+
+	virtual bool addDataTypeEnum(IDataTypeEnum *e) = 0;
 
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,

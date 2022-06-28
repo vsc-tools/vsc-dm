@@ -8,6 +8,7 @@
 #pragma once
 #include "vsc/IVisitor.h"
 
+#include "vsc/IDataTypeEnum.h"
 #include "vsc/IDataTypeInt.h"
 #include "vsc/IDataTypeStruct.h"
 
@@ -61,6 +62,8 @@ public:
 	VisitorBase(IVisitor *this_p=0) : m_this((this_p)?this_p:this) { }
 
 	virtual ~VisitorBase() { }
+
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) override { }
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override { }
 

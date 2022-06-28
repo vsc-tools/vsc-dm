@@ -18,9 +18,19 @@ namespace vsc {
 
 class DataTypeEnum : public IDataTypeEnum {
 public:
-	DataTypeEnum();
+	DataTypeEnum(
+			const std::string		&name,
+			bool 					is_signed);
 
 	virtual ~DataTypeEnum();
+
+	const std::string &name() const override {
+		return m_name;
+	}
+
+	bool isSigned() const override {
+		return m_is_signed;
+	}
 
 	virtual bool addEnumerator(
 			const std::string	&name,
@@ -28,7 +38,11 @@ public:
 
 	virtual ITypeExprRangelist *getDomain() override;
 
+	virtual void accept(IVisitor *v) override { v->visitDataTypeEnum(this); }
+
 private:
+	std::string										m_name;
+	bool											m_is_signed;
 	std::unordered_map<std::string,ModelVal>		m_enum_val_m;
 	std::unordered_map<ModelVal,std::string>		m_val_enum_m;
 	ITypeExprRangelistUP							m_domain;

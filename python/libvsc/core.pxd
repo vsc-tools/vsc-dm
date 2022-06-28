@@ -21,6 +21,11 @@ cdef class Context(object):
 
     cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
     cpdef mkCompoundSolver(self)
+    cpdef DataTypeEnum findDataTypeEnum(self, name)
+    cpdef DataTypeEnum mkDataTypeEnum(self,
+        name,
+        bool is_signed)
+    cpdef addDataTypeEnum(self, DataTypeEnum)
     cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
     cpdef bool addDataTypeInt(self, DataTypeInt)
@@ -68,6 +73,15 @@ cdef class DataType(object):
     
     @staticmethod
     cdef mk(decl.IDataType *, bool owned=*)
+    
+cdef class DataTypeEnum(DataType):
+
+    cpdef name(self)
+    
+    @staticmethod
+    cdef mk(decl.IDataTypeEnum *, bool owned=*)
+    
+    cdef decl.IDataTypeEnum *asEnum(self)
 
 cdef class DataTypeInt(DataType):
 
@@ -277,6 +291,20 @@ cdef class TypeExpr(object):
     
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=*)
+    
+cdef class TypeExprRange(TypeExpr):
+
+    cpdef isSingle(self)
+
+    cpdef TypeExpr lower(self)
+    
+    cpdef TypeExpr upper(self)
+  
+    cdef decl.ITypeExprRange *asRange(self)
+      
+    @staticmethod
+    cdef TypeExprRange mk(decl.ITypeExprRange *, bool owned=*)
+    
     
 cdef class TypeExprFieldRefElem(object):
     cdef const decl.TypeExprFieldRefElem   *_hndl

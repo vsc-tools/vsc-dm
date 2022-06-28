@@ -33,6 +33,23 @@ cdef class Context(object):
     cpdef mkCompoundSolver(self):
         return CompoundSolver.mk(self._hndl.mkCompoundSolver())
     
+    cpdef DataTypeEnum findDataTypeEnum(self, name):
+        cdef decl.IDataTypeEnum *e = self._hndl.findDataTypeEnum(name.encode())
+        if e != NULL:
+            return DataTypeEnum.mk(e, False)
+        else:
+            return None
+        
+    cpdef DataTypeEnum mkDataTypeEnum(self,
+            name,
+            bool is_signed):
+        return DataTypeEnum.mk(
+            self._hndl.mkDataTypeEnum(name.encode, is_signed),
+            True)
+    
+    cpdef addDataTypeEnum(self, DataTypeEnum e):
+        return self._hndl.addDataTypeEnum(e.asEnum())
+    
     cpdef bool addDataTypeInt(self, DataTypeInt t):
         t._owned = False
         return self._hndl.addDataTypeInt(t.asTypeInt())
@@ -267,6 +284,20 @@ cdef class DataType(object):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+    
+cdef class DataTypeEnum(DataType):
+    cpdef name(self):
+        return self.asEnum().name().decode()
+    
+    @staticmethod
+    cdef mk(decl.IDataTypeEnum *hndl, bool owned=True):
+        ret = DataTypeEnum()
+        ret._hndl = hndl
+        ret.owned = owned
+        return ret
+    
+    cdef decl.IDataTypeEnum *asEnum(self):
+        return dynamic_cast[decl.IDataTypeEnumP](self._hndl)
     
 
 cdef class DataTypeInt(DataType):
@@ -778,6 +809,39 @@ cdef class TypeExpr(object):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+    
+cdef class TypeExprRange(TypeExpr):
+
+    cpdef isSingle(self):
+        return self.asRange().isSingle()
+
+    cpdef TypeExpr lower(self):
+        cdef decl.ITypeExpr *e = self.asRange().lower()
+        
+        if e != NULL:
+            return TypeExpr.mk(e, False)
+        else:
+            return None
+    
+    cpdef TypeExpr upper(self):
+        cdef decl.ITypeExpr *e = self.asRange().upper()
+        
+        if e != NULL:
+            return TypeExpr.mk(e, False)
+        else:
+            return None
+        
+    cdef decl.ITypeExprRange *asRange(self):
+        return dynamic_cast[decl.ITypeExprRangeP](self._hndl)
+      
+    @staticmethod
+    cdef TypeExprRange mk(decl.ITypeExprRange *hndl, bool owned=True):
+        ret = TypeExprRange()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    
             
 class TypeExprFieldRefElemKind(IntEnum):
     Root = decl.TypeExprFieldRefElemKind.Root

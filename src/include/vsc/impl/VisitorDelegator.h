@@ -15,6 +15,10 @@ public:
 
 	VisitorDelegator(IVisitor *delegate) : m_delegate(delegate) { }
 
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) override {
+		m_delegate->visitDataTypeEnum(t);
+	}
+
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {
 		m_delegate->visitDataTypeInt(t);
 	}
