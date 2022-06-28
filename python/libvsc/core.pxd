@@ -78,10 +78,16 @@ cdef class DataTypeEnum(DataType):
 
     cpdef name(self)
     
-    @staticmethod
-    cdef mk(decl.IDataTypeEnum *, bool owned=*)
+    cpdef isSigned(self)
+    
+    cpdef addEnumerator(self, name, ModelVal val)
+    
+    cpdef getDomain(self)
     
     cdef decl.IDataTypeEnum *asEnum(self)
+    
+    @staticmethod
+    cdef mk(decl.IDataTypeEnum *, bool owned=*)
 
 cdef class DataTypeInt(DataType):
 
@@ -304,7 +310,17 @@ cdef class TypeExprRange(TypeExpr):
       
     @staticmethod
     cdef TypeExprRange mk(decl.ITypeExprRange *, bool owned=*)
+
+cdef class TypeExprRangelist(TypeExpr):    
+
+    cpdef addRange(self, TypeExprRange r)
     
+    cpdef getRanges(self)
+    
+    cdef decl.ITypeExprRangelist *asRangelist(self)
+
+    @staticmethod
+    cdef TypeExprRangelist mk(decl.ITypeExprRangelist *hndl, bool owned=*)
     
 cdef class TypeExprFieldRefElem(object):
     cdef const decl.TypeExprFieldRefElem   *_hndl

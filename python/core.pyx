@@ -44,7 +44,7 @@ cdef class Context(object):
             name,
             bool is_signed):
         return DataTypeEnum.mk(
-            self._hndl.mkDataTypeEnum(name.encode, is_signed),
+            self._hndl.mkDataTypeEnum(name.encode(), is_signed),
             True)
     
     cpdef addDataTypeEnum(self, DataTypeEnum e):
@@ -289,16 +289,29 @@ cdef class DataTypeEnum(DataType):
     cpdef name(self):
         return self.asEnum().name().decode()
     
-    @staticmethod
-    cdef mk(decl.IDataTypeEnum *hndl, bool owned=True):
-        ret = DataTypeEnum()
-        ret._hndl = hndl
-        ret.owned = owned
-        return ret
+    cpdef isSigned(self):
+        return self.asEnum().isSigned()
+    
+    cpdef addEnumerator(self, name, ModelVal val):
+        return self.asEnum().addEnumerator(
+            name.encode(),
+            val._hndl)
+    
+    
+    cpdef getDomain(self):
+        return TypeExprRangelist.mk(
+            self.asEnum().getDomain(),
+            False)
     
     cdef decl.IDataTypeEnum *asEnum(self):
         return dynamic_cast[decl.IDataTypeEnumP](self._hndl)
     
+    @staticmethod
+    cdef mk(decl.IDataTypeEnum *hndl, bool owned=True):
+        ret = DataTypeEnum()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
 
 cdef class DataTypeInt(DataType):
     
@@ -840,9 +853,33 @@ cdef class TypeExprRange(TypeExpr):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+
+cdef class TypeExprRangelist(TypeExpr):
     
+    cpdef addRange(self, TypeExprRange r):
+        if not r._owned:
+            raise Exception("Range must own its data")
+        r._owned = False
+        self.asRangelist().addRange(r.asRange())
     
-            
+    cpdef getRanges(self):
+        ret = []
+        for i in range(self.asRangelist().getRanges().size()):
+            ret.append(TypeExprRange.mk(
+                self.asRangelist().getRanges().at(i).get(),
+                False))
+        return ret
+    
+    cdef decl.ITypeExprRangelist *asRangelist(self):
+        return dynamic_cast[decl.ITypeExprRangelistP](self._hndl)
+
+    @staticmethod
+    cdef TypeExprRangelist mk(decl.ITypeExprRangelist *hndl, bool owned=True):
+        ret = TypeExprRangelist()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 class TypeExprFieldRefElemKind(IntEnum):
     Root = decl.TypeExprFieldRefElemKind.Root
     IdxOffset = decl.TypeExprFieldRefElemKind.IdxOffset

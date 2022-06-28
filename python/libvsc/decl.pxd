@@ -123,6 +123,7 @@ cdef extern from "vsc/IDataTypeEnum.h" namespace "vsc":
         bool addEnumerator(
             const cpp_string    &name,
             const IModelVal     *val)
+        ITypeExprRangelist *getDomain()
     
 cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
     cdef cppclass IDataTypeInt(IDataType):
@@ -388,7 +389,7 @@ cdef extern from "vsc/ITypeExprRange.h" namespace "vsc":
         ITypeExpr *upper() const
         
 cdef extern from "vsc/ITypeExprRangelist.h" namespace "vsc":
-    cdef cppclass ITypeExprRangelist:
+    cdef cppclass ITypeExprRangelist(ITypeExpr):
         void addRange(ITypeExprRange *)
         const cpp_vector[ITypeExprRangeUP] &getRanges() const
 
