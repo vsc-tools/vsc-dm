@@ -14,12 +14,18 @@ from libc.stdint cimport int64_t
 from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
+ctypedef IAccept *IAcceptP
 ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
+ctypedef IModelExpr *IModelExprP
+ctypedef IModelExprRange *IModelExprRangeP
+ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
+ctypedef IModelExprRangelist *IModelExprRangelistP
 ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
 ctypedef IModelFieldRoot *IModelFieldRootP
+ctypedef IModelFieldType *IModelFieldTypeP
 ctypedef IModelFieldData *IModelFieldDataP
 ctypedef ModelFieldDataClosure *ModelFieldDataClosureP
 ctypedef IModelConstraint *IModelConstraintP
@@ -59,6 +65,8 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         bool addDataTypeStruct(IDataTypeStruct *)
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
+        IModelExprRange *mkModelExprRange(bool, IModelExpr *, IModelExpr *)
+        IModelExprRangelist *mkModelExprRangelist()
         IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IModelVal *mkModelVal()
@@ -69,6 +77,8 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         ITypeConstraintScope *mkTypeConstraintScope()
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
+        ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
+        ITypeExprRangelist *mkTypeExprRangelist()
         ITypeExprVal *mkTypeExprVal(IModelVal *)
         ITypeFieldPhy *mkTypeFieldPhy(
             const cpp_string &,
@@ -181,7 +191,18 @@ cdef extern from "vsc/IModelExpr.h" namespace "vsc":
 cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
     cdef cppclass IModelExprFieldRef(IModelExpr):
         IModelField *field() const
+
+cdef extern from "vsc/IModelExprRange.h" namespace "vsc":
+    cdef cppclass IModelExprRange(IModelExpr):
+        bool isSingle() const
+        IModelExpr *lower() const
+        IModelExpr *upper() const
         
+cdef extern from "vsc/IModelExprRangelist.h" namespace "vsc":
+    cdef cppclass IModelExprRangelist(IModelExpr):
+        const cpp_vector[IModelExprRangeUP] &ranges() const
+        
+                
 cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
     cdef cppclass IModelExprVal(IModelExpr):
         int32_t width() const
@@ -455,4 +476,14 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
 #********************************************************************
 cdef extern IVsc *py_get_vsc(const char *path)
 #cdef extern from "py_get_vsc.h":
+    
+#********************************************************************
+#* VscTasks
+#********************************************************************
+
+cdef extern from "VscTasks.h" namespace "vsc":
+    cdef extern IModelField *Task_BuildModelField(
+        IContext *ctxt,
+        IDataType *dt, 
+        const cpp_string &name)
     

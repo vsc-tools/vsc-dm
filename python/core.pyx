@@ -115,6 +115,25 @@ cdef class Context(object):
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
         
+    cpdef mkModelExprRange(self, bool is_single, ModelExpr lower, ModelExpr upper):
+        cdef decl.IModelExpr *l = NULL
+        cdef decl.IModelExpr *u = NULL
+        
+        if lower is not None:
+            l = lower._hndl
+            lower._owned = False
+            
+        if upper is not None:
+            u = upper._hndl
+            upper._owned = False
+            
+        return ModelExprRange.mk(
+            self._hndl.mkModelExprRange(is_single, l, u), True)
+        
+    cpdef mkModelExprRangelist(self):
+        return ModelExprRangelist.mk(
+            self._hndl.mkModelExprRangelist(), True)
+        
     cpdef mkModelExprVal(self, ModelVal v):
         if v is not None:
             return ModelExprVal.mk(self._hndl.mkModelExprVal(v._hndl))
@@ -171,6 +190,27 @@ cdef class Context(object):
         
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self):
         return TypeExprFieldRef.mk(self._hndl.mkTypeExprFieldRef(), True)
+    
+    cpdef TypeExprRange mkTypeExprRange(self,
+                                        bool is_single,
+                                        TypeExpr lower,
+                                        TypeExpr upper):
+        cdef decl.ITypeExpr *l = NULL
+        cdef decl.ITypeExpr *u = NULL
+        if lower is not None:
+            l = lower._hndl
+        if upper is not None:
+            u = upper._hndl
+            
+        return TypeExprRange.mk(self._hndl.mkTypeExprRange(
+            is_single,
+            l,
+            u), True)
+        
+    cpdef TypeExprRangelist mkTypeExprRangelist(self):
+        return TypeExprRangelist.mk(
+            self._hndl.mkTypeExprRangelist(),
+            True)
     
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal v):
         if v is None:
@@ -280,10 +320,7 @@ cdef class DataType(object):
 
     @staticmethod
     cdef mk(decl.IDataType *hndl, bool owned=True):
-        ret = DataType()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
+        return WrapperBuilder().mkDataType(hndl, owned)
     
 cdef class DataTypeEnum(DataType):
     cpdef name(self):
@@ -510,6 +547,53 @@ cdef class ModelExprFieldRef(ModelExpr):
         ret._owned = owned
         return ret
     
+cdef class ModelExprRange(ModelExpr):
+    cpdef isSingle(self):
+        return self.asRange().isSingle()
+    
+    cpdef ModelExpr lower(self):
+        cdef decl.IModelExpr *t = self.asRange().lower()
+        if t != NULL:
+            return ModelExpr.mk(t, False)
+        else:
+            return None
+    
+    cpdef ModelExpr upper(self):
+        cdef decl.IModelExpr *t = self.asRange().upper()
+        if t != NULL:
+            return ModelExpr.mk(t, False)
+        else:
+            return None
+    
+    cdef decl.IModelExprRange *asRange(self):
+        return dynamic_cast[decl.IModelExprRangeP](self._hndl)
+    
+    @staticmethod 
+    cdef mk(decl.IModelExprRange *hndl, bool owned=True):
+        ret = ModelExprRange()
+        ret._hndl = hndl
+        ret._owned = owned
+        
+cdef class ModelExprRangelist(ModelExpr):
+
+    cpdef ranges(self):
+        ret = []
+        for i in range(self.asRangelist().ranges().size()):
+            ret.append(ModelExprRange.mk(
+                self.asRangelist().ranges().at(i).get(), False))
+        return ret
+    
+    cdef decl.IModelExprRangelist *asRangelist(self):
+        return dynamic_cast[decl.IModelExprRangelistP](self._hndl)
+    
+    @staticmethod 
+    cdef mk(decl.IModelExprRangelist *hndl, bool owned=True):
+        ret = ModelExprRangelist()
+        ret._hndl = hndl
+        ret._owned = owned
+    
+    
+    
 cdef class ModelExprVal(ModelExpr):
     
     cpdef width(self):
@@ -620,10 +704,10 @@ cdef class ModelField(object):
     
     @staticmethod
     cdef mk(decl.IModelField *hndl, bool owned=True):
-        ret = ModelField()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
+        return WrapperBuilder().mkModelField(hndl, owned)
+    
+cdef class ModelFieldRef(ModelField):
+    pass
     
 cdef class ModelFieldRoot(ModelField):
 
@@ -636,6 +720,18 @@ cdef class ModelFieldRoot(ModelField):
     @staticmethod
     cdef mk(decl.IModelFieldRoot *hndl, bool owned=True):
         ret = ModelFieldRoot()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class ModelFieldType(ModelField):
+
+    cdef decl.IModelFieldType *asType(self):
+        return dynamic_cast[decl.IModelFieldTypeP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldType *hndl, bool owned=True):
+        ret = ModelFieldType()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -1057,13 +1153,80 @@ cdef class Task(object):
 cdef class VisitorBase(object):
 
     def __init__(self):
-        _proxy = new decl.VisitorProxy(<cpy_ref.PyObject *>(self))
+        self._proxy = new decl.VisitorProxy(<cpy_ref.PyObject *>(self))
+        
+    def __dealloc__(self):
+        del self._proxy
+        
+    cpdef visit(self, obj):
+        cdef decl.IAccept *acceptor = NULL
+        cdef DataType dt
+        if isinstance(obj, DataType):
+            dt = <DataType>(obj)
+            acceptor = dt._hndl
+            
+        if acceptor != NULL:
+            acceptor.accept(self._proxy)
+            
+        print("obj._hndl: %s" % str(obj._hndl))
+#        acceptor = dynamic_cast[decl.IAcceptP](obj._hndl)
+        
+    cpdef visitDataTypeEnum(self, DataTypeEnum t):
+        pass
+    
+    cpdef visitDataTypeInt(self, DataTypeInt t):
+        pass
+    
+    cpdef visitDataTypeStruct(self, DataTypeStruct t):
+        pass
         
     cpdef visitModelExprBin(self, ModelExprBin e):
         self._proxy.visitModelExprBinBase(e.asExprBin())
         
+    cpdef void visitModelFieldRef(self, ModelFieldRef f):
+        pass
+
+    cpdef void visitModelFieldRefRoot(self, ModelFieldRef f):
+        pass
+
+    cpdef void visitModelFieldRefType(self, ModelFieldRef f):
+        pass
+
+    cpdef void visitModelFieldRoot(self, ModelFieldRoot f):
+        pass
+
+    cpdef void visitModelFieldType(self, ModelFieldType f):
+        pass
+        
+cdef public void VisitorProxy_visitDataTypeEnum(obj, decl.IDataTypeEnum *t) with gil:
+    obj.visitDataTypeEnum(DataTypeEnum.mk(t, False))
+
+cdef public void VisitorProxy_visitDataTypeInt(obj, decl.IDataTypeInt *t) with gil:
+    obj.visitDataTypeInt(DataTypeInt.mk(t, False))
+
+cdef public void VisitorProxy_visitDataTypeStruct(obj, decl.IDataTypeStruct *t) with gil:
+    obj.visitDataTypeStruct(DataTypeStruct.mk(t, False))
+        
 cdef public void VisitorProxy_visitModelExprBin(obj, decl.IModelExprBin *e) with gil:
-    obj.visitModelExprBin(ModelExprBin.mkWrapper(e))
+    obj.visitModelExprBin(ModelExprBin.mk(e, False))
+    
+cdef public void VisitorProxy_visitModelFieldRef(obj, decl.IModelFieldRef *f) with gil:
+#    obj.visitModelFieldRef(ModelFieldRef.mk(f, False))
+    pass
+
+cdef public void VisitorProxy_visitModelFieldRefRoot(obj, decl.IModelFieldRef *f) with gil:
+#    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
+    pass
+
+cdef public void VisitorProxy_visitModelFieldRefType(obj, decl.IModelFieldRef *f) with gil:
+#    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
+    pass
+
+cdef public void VisitorProxy_visitModelFieldRoot(obj, decl.IModelFieldRoot *f) with gil:
+    obj.visitModelFieldRoot(ModelFieldRoot.mk(f, False))
+
+cdef public void VisitorProxy_visitModelFieldType(obj, decl.IModelFieldType *f) with gil:
+    obj.visitModelFieldType(ModelFieldType.mk(f, False))
         
 #********************************************************************
 #* Vsc
@@ -1156,4 +1319,62 @@ cdef class Vsc(object):
         if _Vsc_inst is None:
             _Vsc_inst = Vsc()
         return _Vsc_inst
+    
+#********************************************************************    
+#* WrapperBuilder
+#********************************************************************
+cdef class WrapperBuilder(VisitorBase):
+    
+    def __init__(self):
+        super().__init__()
         
+    cpdef visitDataTypeEnum(self, DataTypeEnum t):
+        self._data_Type = t
+    
+    cpdef visitDataTypeInt(self, DataTypeInt t):
+        self._data_Type = t
+    
+    cpdef visitDataTypeStruct(self, DataTypeStruct t):
+        self._data_Type = t
+        
+    cpdef void visitModelFieldRef(self, ModelFieldRef f):
+        self._model_field = f
+
+    cpdef void visitModelFieldRefRoot(self, ModelFieldRef f):
+        self._model_field = f
+
+    cpdef void visitModelFieldRefType(self, ModelFieldRef f):
+        self._model_field = f
+
+    cpdef void visitModelFieldRoot(self, ModelFieldRoot f):
+        print("visitModelFieldRoot")
+        self._model_field = f
+
+    cpdef void visitModelFieldType(self, ModelFieldType f):
+        self._model_field = f
+    
+    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned):
+        obj.accept(self._proxy)
+        self._data_type._owned = owned
+        return self._data_type
+    
+    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned):
+        print("mkModelField")
+        obj.accept(self._proxy)
+        print("WrapperBuilder.mkModelField: %s" % str(self._model_field))
+        self._model_field._owned = owned
+        return self._model_field
+    
+cdef _WrapperBuilderInst = None
+
+        
+#********************************************************************    
+#* VscTasks
+#********************************************************************
+cpdef ModelField Task_ModelBuildField(Context ctxt, DataType dt, name):
+    return ModelField.mk(decl.Task_BuildModelField(
+        ctxt._hndl,
+        dt._hndl,
+        name.encode()),
+        True)
+

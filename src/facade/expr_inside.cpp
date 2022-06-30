@@ -38,7 +38,7 @@ expr_base (inside)(
 	std::vector<IModelExprRange *>	ranges;
 	for (auto it=rangelist.begin(); it!=rangelist.end(); it++) {
 		ctor::inst()->pop_expr();
-		ranges.push_back(new ModelExprRange(it->core(), 0));
+		ranges.push_back(new ModelExprRange(true, it->core(), 0));
 	}
 	ctor::inst()->pop_expr();
 	IModelExpr *cond_m = cond.core();

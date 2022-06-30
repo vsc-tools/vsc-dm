@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/IModelField.h"
+#include "vsc/IModelFieldFactory.h"
 
 namespace vsc {
 
@@ -22,6 +23,10 @@ public:
 	virtual void push_back(IModelField *f) = 0;
 
 	virtual void pop_back() = 0;
+
+	virtual IModelFieldFactory *getFieldFactory() = 0;
+
+	virtual void setFieldFactory(IModelFieldFactory *) = 0;
 
 };
 

@@ -24,7 +24,7 @@ public:
 
 	const std::string &name() const { return m_name; }
 
-	virtual IModelField *build(IDataTypeStruct *type, const std::string &name) {
+	virtual IModelField *build(IDataType *type, const std::string &name) {
 		m_constraint_s.clear();
 		m_name = name; // TODO:
 		m_type_field = 0;
@@ -32,12 +32,16 @@ public:
 
 		IModelField *ret = m_ctxt->getField(0);
 		m_ctxt->popField();
+
+		fprintf(stdout, "TaskBuildModelField: %p\n", ret);
 		return ret;
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
 		IModelFieldType *field = m_ctxt->ctxt()->mkModelFieldType(f);
-		m_ctxt->getField(-1)->addField(field);
+
+		addField(field);
+
 		fprintf(stdout, "visitTypeFieldPhy: %s\n", f->name().c_str());
 
 		if (f->getInit()) {
@@ -52,11 +56,22 @@ public:
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
 		fprintf(stdout, "visitTypeFieldRef: %s\n", f->name().c_str());
 		IModelFieldRef *field = m_ctxt->ctxt()->mkModelFieldRefType(f);
-		m_ctxt->getField(-1)->addField(field);
+		addField(field);
+	}
+
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) override {
+		IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(
+				t,
+				m_name);
+		fprintf(stdout, "visitDataTypeEnum: %p\n", field);
+		addField(field);
 	}
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {
-		;
+		IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(
+				t,
+				m_name);
+		addField(field);
 	}
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
@@ -96,6 +111,15 @@ public:
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		VisitorBase::visitTypeConstraintScope(c);
+	}
+
+protected:
+	void addField(IModelField *f) {
+		if (m_ctxt->fieldStackSize() == 0) {
+			m_ctxt->pushField(f);
+		} else {
+			m_ctxt->getField(-1)->addField(f);
+		}
 	}
 
 protected:

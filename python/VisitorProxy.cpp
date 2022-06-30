@@ -9,12 +9,12 @@
 #include "core.h"
 
 VisitorProxy::VisitorProxy(PyObject *obj) : m_obj(obj) {
-	// TODO Auto-generated constructor stub
+	Py_INCREF(m_obj);
 
 }
 
 VisitorProxy::~VisitorProxy() {
-	// TODO Auto-generated destructor stub
+	Py_DECREF(m_obj);
 }
 
 void VisitorProxy::visitModelExprBin(vsc::IModelExprBin *e) {
@@ -30,4 +30,24 @@ void VisitorProxy::visitModelExprCond(vsc::IModelExprCond *e) {
 //	VisitorProxy_visitModelExprCond(e);
 }
 
+void VisitorProxy::visitModelFieldRef(vsc::IModelFieldRef *f) {
+	VisitorProxy_visitModelFieldRef(m_obj, f);
+}
+
+void VisitorProxy::visitModelFieldRefRoot(vsc::IModelFieldRef *f) {
+	VisitorProxy_visitModelFieldRefRoot(m_obj, f);
+}
+
+void VisitorProxy::visitModelFieldRefType(vsc::IModelFieldRef *f) {
+	VisitorProxy_visitModelFieldRefType(m_obj, f);
+}
+
+void VisitorProxy::visitModelFieldRoot(vsc::IModelFieldRoot *f) {
+	fprintf(stdout, "visitModelFieldRoot\n");
+	VisitorProxy_visitModelFieldRoot(m_obj, f);
+}
+
+void VisitorProxy::visitModelFieldType(vsc::IModelFieldType *f) {
+	VisitorProxy_visitModelFieldType(m_obj, f);
+}
 

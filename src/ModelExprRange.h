@@ -15,12 +15,15 @@ using ModelExprRangeUP=std::unique_ptr<ModelExprRange>;
 class ModelExprRange : public IModelExprRange {
 public:
 	ModelExprRange(
+			bool			is_single,
 			IModelExpr		*lower,
 			IModelExpr		*upper);
 
 	virtual ~ModelExprRange();
 
 	virtual int32_t width() const override;
+
+	virtual bool isSingle() const override { return m_is_single; }
 
 	virtual IModelExpr *lower() const override { return m_lower.get(); }
 
@@ -31,6 +34,7 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelExprRange(this); }
 
 private:
+	bool					m_is_single;
 	IModelExprUP			m_lower;
 	IModelExprUP			m_upper;
 };

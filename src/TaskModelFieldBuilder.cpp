@@ -50,6 +50,9 @@ IModelFieldRoot *TaskModelFieldBuilder::build(
 	m_type_field = 0;
 	type->accept(this);
 	DEBUG_LEAVE("build");
+	fprintf(stdout, "TaskModelFieldBuilder: %p %p\n",
+			m_field_s.at(0),
+			dynamic_cast<IModelFieldRoot *>(m_field_s.at(0)));
 	return dynamic_cast<IModelFieldRoot *>(m_field_s.at(0));
 }
 

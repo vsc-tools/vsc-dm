@@ -68,11 +68,19 @@ public:
 	virtual void visitModelExprVecSubscript(vsc::IModelExprVecSubscript *e) { }
 
 	virtual void visitModelField(vsc::IModelField *f) { }
+#endif
 
-	virtual void visitModelFieldRoot(vsc::IModelFieldRoot *f) { }
+	virtual void visitModelFieldRef(vsc::IModelFieldRef *f) override;
 
-	virtual void visitModelFieldType(vsc::IModelFieldType *f) { }
+	virtual void visitModelFieldRefRoot(vsc::IModelFieldRef *f) override;
 
+	virtual void visitModelFieldRefType(vsc::IModelFieldRef *f) override;
+
+	virtual void visitModelFieldRoot(vsc::IModelFieldRoot *f) override;
+
+	virtual void visitModelFieldType(vsc::IModelFieldType *f) override;
+
+#ifdef UNDEFINED
 	virtual void visitModelFieldVec(vsc::IModelFieldVec *f) { }
 
 	virtual void visitModelFieldVecRoot(vsc::IModelFieldVecRoot *f) { }

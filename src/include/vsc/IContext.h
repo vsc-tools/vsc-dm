@@ -14,6 +14,8 @@
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
+#include "vsc/IModelExprRange.h"
+#include "vsc/IModelExprRangelist.h"
 #include "vsc/IModelExprVal.h"
 #include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
@@ -27,6 +29,8 @@
 #include "vsc/ITypeConstraintScope.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
+#include "vsc/ITypeExprRange.h"
+#include "vsc/ITypeExprRangelist.h"
 #include "vsc/ITypeExprVal.h"
 #include "vsc/ITypeFieldPhy.h"
 #include "vsc/ITypeFieldRef.h"
@@ -90,6 +94,13 @@ public:
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) = 0;
 
+	virtual IModelExprRange *mkModelExprRange(
+			bool			is_single,
+			IModelExpr		*lower,
+			IModelExpr		*upper) = 0;
+
+	virtual IModelExprRangelist *mkModelExprRangelist() = 0;
+
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) = 0;
 
 	virtual IModelFieldRef *mkModelFieldRefRoot(
@@ -128,6 +139,13 @@ public:
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+
+	virtual ITypeExprRange *mkTypeExprRange(
+			bool				is_single,
+			ITypeExpr			*lower,
+			ITypeExpr			*upper) = 0;
+
+	virtual ITypeExprRangelist *mkTypeExprRangelist() = 0;
 
 	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) = 0;
 

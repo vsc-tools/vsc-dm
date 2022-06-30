@@ -152,6 +152,17 @@ public:
 		return m_ctxt->mkTypeExprFieldRef();
 	}
 
+	virtual IModelExprRange *mkModelExprRange(
+			bool			is_single,
+			IModelExpr		*lower,
+			IModelExpr		*upper) override {
+		return m_ctxt->mkModelExprRange(is_single, lower, upper);
+	}
+
+	virtual IModelExprRangelist *mkModelExprRangelist() override {
+		return m_ctxt->mkModelExprRangelist();
+	}
+
 	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *v) override {
 		return m_ctxt->mkTypeExprVal(v);
 	}

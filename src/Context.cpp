@@ -26,6 +26,8 @@
 #include "ModelConstraintExpr.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
+#include "ModelExprRange.h"
+#include "ModelExprRangelist.h"
 #include "ModelExprVal.h"
 #include "ModelFieldRefRoot.h"
 #include "ModelFieldRefType.h"
@@ -41,6 +43,8 @@
 #include "TypeConstraintScope.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
+#include "TypeExprRange.h"
+#include "TypeExprRangelist.h"
 #include "TypeExprVal.h"
 #include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
@@ -186,6 +190,20 @@ IModelExprFieldRef *Context::mkModelExprFieldRef(
 	return new ModelExprFieldRef(field);
 }
 
+IModelExprRange *Context::mkModelExprRange(
+			bool			is_single,
+			IModelExpr		*lower,
+			IModelExpr		*upper) {
+	return new ModelExprRange(
+			is_single,
+			lower,
+			upper);
+}
+
+IModelExprRangelist *Context::mkModelExprRangelist() {
+	return new ModelExprRangelist();
+}
+
 IModelExprVal *Context::mkModelExprVal(IModelVal *v) {
 	if (v) {
 		return new ModelExprVal(v);
@@ -261,6 +279,20 @@ ITypeExprBin *Context::mkTypeExprBin(
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
 	return new TypeExprFieldRef();
+}
+
+ITypeExprRange *Context::mkTypeExprRange(
+			bool				is_single,
+			ITypeExpr			*lower,
+			ITypeExpr			*upper) {
+	return new TypeExprRange(
+			is_single,
+			lower,
+			upper);
+}
+
+ITypeExprRangelist *Context::mkTypeExprRangelist() {
+	return new TypeExprRangelist();
 }
 
 ITypeExprVal *Context::mkTypeExprVal(const IModelVal *v) {

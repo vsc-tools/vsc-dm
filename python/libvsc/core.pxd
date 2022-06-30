@@ -36,6 +36,8 @@ cdef class Context(object):
     cpdef DataTypeStruct mkDataTypeStruct(self, name)
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
     cpdef mkModelExprFieldRef(self, ModelField field)
+    cpdef mkModelExprRange(self, bool, ModelExpr, ModelExpr)
+    cpdef mkModelExprRangelist(self)
     cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkModelVal(self)
@@ -46,6 +48,8 @@ cdef class Context(object):
     cpdef TypeConstraintScope mkTypeConstraintScope(self)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
+    cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
+    cpdef TypeExprRangelist mkTypeExprRangelist(self)
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
     cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ModelVal)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
@@ -167,6 +171,28 @@ cdef class ModelExprFieldRef(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprFieldRef *, bool owned=*)
     
+cdef class ModelExprRange(ModelExpr):
+    cpdef isSingle(self)
+    
+    cpdef ModelExpr lower(self)
+    
+    cpdef ModelExpr upper(self)
+    
+    cdef decl.IModelExprRange *asRange(self)
+    
+    @staticmethod 
+    cdef mk(decl.IModelExprRange *, bool owned=*)
+    
+cdef class ModelExprRangelist(ModelExpr): 
+    
+    cpdef ranges(self)
+    
+    cdef decl.IModelExprRangelist *asRangelist(self)
+    
+    @staticmethod 
+    cdef mk(decl.IModelExprRangelist *, bool owned=*)
+        
+    
 cdef class ModelExprVal(ModelExpr):
 
     cpdef width(self)
@@ -201,6 +227,9 @@ cdef class ModelField(object):
     @staticmethod
     cdef mk(decl.IModelField *, bool owned=*)
     
+cdef class ModelFieldRef(ModelField):
+    pass
+    
 cdef class ModelFieldRoot(ModelField):
 
     cpdef setName(self, name)
@@ -209,6 +238,13 @@ cdef class ModelFieldRoot(ModelField):
     
     @staticmethod
     cdef mk(decl.IModelFieldRoot *, bool owned=*)
+    
+cdef class ModelFieldType(ModelField):
+
+    cdef decl.IModelFieldType *asType(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldType *, bool owned=*)
     
 cdef class ModelFieldDataClosure(object):
     cdef decl.IModelFieldData       *_hndl
@@ -393,4 +429,39 @@ cdef class TypeFieldRef(TypeField):
 cdef class VisitorBase(object):
     cdef decl.VisitorProxy      *_proxy
     
+    cpdef visit(self, obj)
+    
+    cpdef visitDataTypeEnum(self, DataTypeEnum t)
+    
+    cpdef visitDataTypeInt(self, DataTypeInt t)
+    
+    cpdef visitDataTypeStruct(self, DataTypeStruct t)
+    
     cpdef visitModelExprBin(self, ModelExprBin e)
+    
+    cpdef void visitModelFieldRef(self, ModelFieldRef f)
+
+    cpdef void visitModelFieldRefRoot(self, ModelFieldRef f)
+
+    cpdef void visitModelFieldRefType(self, ModelFieldRef f)
+
+    cpdef void visitModelFieldRoot(self, ModelFieldRoot f)
+
+    cpdef void visitModelFieldType(self, ModelFieldType f)
+    
+cdef class WrapperBuilder(VisitorBase):
+    cdef DataType _data_type
+    cdef ModelField _model_field
+    
+    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned)
+    
+    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned)
+    
+    
+#********************************************************************    
+#* VscTasks
+#********************************************************************
+cpdef ModelField Task_ModelBuildField(
+    Context     ctxt,
+    DataType    dt, 
+    name)

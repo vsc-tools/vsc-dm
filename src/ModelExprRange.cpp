@@ -10,8 +10,10 @@
 namespace vsc {
 
 ModelExprRange::ModelExprRange(
+		bool			is_single,
 		IModelExpr		*lower,
-		IModelExpr		*upper) : m_lower(lower), m_upper(upper) {
+		IModelExpr		*upper) :
+				m_is_single(is_single), m_lower(lower), m_upper(upper) {
 	// TODO Auto-generated constructor stub
 
 }

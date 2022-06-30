@@ -17,6 +17,8 @@ public:
 
 	virtual ~IModelExprRange() { }
 
+	virtual bool isSingle() const = 0;
+
 	virtual IModelExpr *lower() const = 0;
 
 	virtual IModelExpr *upper() const = 0;

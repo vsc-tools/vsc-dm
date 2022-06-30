@@ -66,6 +66,13 @@ public:
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
 
+	virtual IModelExprRange *mkModelExprRange(
+			bool			is_single,
+			IModelExpr		*lower,
+			IModelExpr		*upper) override;
+
+	virtual IModelExprRangelist *mkModelExprRangelist() override;
+
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
 	virtual IModelFieldRef *mkModelFieldRefRoot(
@@ -105,6 +112,13 @@ public:
 			ITypeExpr		*rhs) override;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
+
+	virtual ITypeExprRange *mkTypeExprRange(
+			bool				is_single,
+			ITypeExpr			*lower,
+			ITypeExpr			*upper) override;
+
+	virtual ITypeExprRangelist *mkTypeExprRangelist() override;
 
 	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) override;
 
