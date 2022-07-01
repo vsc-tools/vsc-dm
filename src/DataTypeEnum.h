@@ -32,6 +32,8 @@ public:
 		return m_is_signed;
 	}
 
+	virtual int32_t getWidth() override;
+
 	virtual bool addEnumerator(
 			const std::string	&name,
 			const IModelVal		*val) override;
@@ -46,6 +48,7 @@ private:
 	std::unordered_map<std::string,ModelVal>		m_enum_val_m;
 	std::unordered_map<ModelVal,std::string>		m_val_enum_m;
 	ITypeExprRangelistUP							m_domain;
+	int32_t											m_width;
 
 };
 

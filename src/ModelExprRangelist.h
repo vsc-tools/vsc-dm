@@ -29,6 +29,14 @@ public:
 		return m_ranges;
 	}
 
+	virtual const std::vector<IModelExprRangeUP> &getRanges() const override {
+		return m_ranges;
+	}
+
+	virtual void addRange(IModelExprRange *range) override {
+		m_ranges.push_back(IModelExprRangeUP(range));
+	}
+
 	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprRangelist(this); }

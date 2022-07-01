@@ -21,8 +21,6 @@ public:
 
 	virtual const std::string &name() const = 0;
 
-	virtual bool isSigned() const = 0;
-
 	virtual bool addEnumerator(
 			const std::string	&name,
 			const IModelVal		*val) = 0;

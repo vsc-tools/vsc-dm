@@ -26,6 +26,7 @@
 #include "ModelConstraintExpr.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
+#include "ModelExprIn.h"
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
 #include "ModelExprVal.h"
@@ -188,6 +189,12 @@ IModelExprBin *Context::mkModelExprBin(
 IModelExprFieldRef *Context::mkModelExprFieldRef(
 			IModelField		*field) {
 	return new ModelExprFieldRef(field);
+}
+
+IModelExprIn *Context::mkModelExprIn(
+			IModelExpr				*lhs,
+			IModelExprRangelist		*rnglist) {
+	return new ModelExprIn(lhs, rnglist);
 }
 
 IModelExprRange *Context::mkModelExprRange(

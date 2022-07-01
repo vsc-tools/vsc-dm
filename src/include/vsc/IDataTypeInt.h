@@ -6,13 +6,13 @@
  */
 
 #pragma once
-#include "vsc/IDataType.h"
+#include "vsc/IDataTypeScalar.h"
 
 namespace vsc {
 
 class IDataTypeInt;
 using IDataTypeIntUP=std::unique_ptr<IDataTypeInt>;
-class IDataTypeInt : public virtual IDataType {
+class IDataTypeInt : public virtual IDataTypeScalar {
 public:
 
 	virtual ~IDataTypeInt() { }

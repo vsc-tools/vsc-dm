@@ -23,6 +23,10 @@ public:
 
 	virtual IModelExpr *build(ITypeExpr *e) { return expr(e); }
 
+	template <class T> T *buildT(ITypeExpr *e) {
+		return dynamic_cast<T *>(build(e));
+	}
+
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {
 		IModelExpr *lhs = expr(e->lhs());
 		IModelExpr *rhs = expr(e->rhs());
@@ -49,6 +53,46 @@ public:
 		}
 
 		m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
+	}
+
+	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) override {
+		IModelExprRangelist *rl = m_ctxt->ctxt()->mkModelExprRangelist();
+
+		// TODO: Should really have a 'const' variant where everything
+		// just flattens out
+
+		for (std::vector<ITypeExprRangeUP>::const_iterator
+				it=e->getRanges().begin();
+				it!=e->getRanges().end(); it++) {
+			if ((*it)->isSingle()) {
+				rl->addRange(m_ctxt->ctxt()->mkModelExprRange(
+						true,
+						expr((*it)->lower()),
+						0));
+			} else {
+				if ((*it)->lower() && (*it)->upper()) {
+					IModelExpr *lower = expr((*it)->lower());
+					IModelExpr *upper = expr((*it)->upper());
+
+					rl->addRange(m_ctxt->ctxt()->mkModelExprRange(
+						false,
+						lower,
+						upper));
+				} else if ((*it)->lower()) {
+					rl->addRange(m_ctxt->ctxt()->mkModelExprRange(
+						false,
+						expr((*it)->lower()),
+						0));
+				} else {
+					rl->addRange(m_ctxt->ctxt()->mkModelExprRange(
+						false,
+						0,
+						expr((*it)->upper())));
+				}
+			}
+		}
+
+		m_expr = rl;
 	}
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {

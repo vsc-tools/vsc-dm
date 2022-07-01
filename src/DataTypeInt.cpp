@@ -19,6 +19,7 @@
  */
 
 #include "DataTypeInt.h"
+#include "TypeExprRangelist.h"
 
 namespace vsc {
 
@@ -31,6 +32,18 @@ DataTypeInt::DataTypeInt(
 
 DataTypeInt::~DataTypeInt() {
 	// TODO Auto-generated destructor stub
+}
+
+ITypeExprRangelist *DataTypeInt::getDomain() {
+	if (!m_domain) {
+		m_domain = ITypeExprRangelistUP(new TypeExprRangelist());
+		if (m_is_signed) {
+
+		} else {
+
+		}
+	}
+	return m_domain.get();
 }
 
 } /* namespace vsc */

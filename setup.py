@@ -39,12 +39,18 @@ if not os.path.isdir(os.path.join(cwd, "build")):
 #if not os.path.isdir(os.path.join(libvsc_dir, "python/libvsc")):
 #    os.makedirs(os.path.join(tblink_vsc, "python/libvsc"))
 
+if _DEBUG:
+    BUILD_TYPE = "-DCMAKE_BUILD_TYPE=Debug"
+else:
+    BUILD_TYPE = "-DCMAKE_BUILD_TYPE=Release"
+
 # Run configure...
 result = subprocess.run(
     ["cmake", 
      libvsc_dir,
      "-GNinja",
-     "-DCMAKE_BUILD_TYPE=Debug",
+#     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
+     BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
      ],
     cwd=os.path.join(cwd, "build"))

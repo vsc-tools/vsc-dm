@@ -41,8 +41,16 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
+	static bool sge(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
 	static void uge(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	static bool uge(
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
@@ -51,8 +59,16 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
+	static bool sgt(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
 	static void ugt(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	static bool ugt(
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
@@ -61,8 +77,16 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
+	static bool sle(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
 	static void ule(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	static bool ule(
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
@@ -71,8 +95,16 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
+	static bool slt(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
 	static void ult(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	static bool ult(
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 

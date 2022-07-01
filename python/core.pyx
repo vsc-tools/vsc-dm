@@ -959,6 +959,11 @@ cdef class TypeExprRangelist(TypeExpr):
         self.asRangelist().addRange(r.asRange())
     
     cpdef getRanges(self):
+        cdef decl.ITypeExprRangelist *rl = self.asRangelist()
+        if rl == NULL:
+            print("rl is NULL")
+        else:
+            print("rl is OK")
         ret = []
         for i in range(self.asRangelist().getRanges().size()):
             ret.append(TypeExprRange.mk(
@@ -972,6 +977,8 @@ cdef class TypeExprRangelist(TypeExpr):
     @staticmethod
     cdef TypeExprRangelist mk(decl.ITypeExprRangelist *hndl, bool owned=True):
         ret = TypeExprRangelist()
+        if hndl == NULL:
+            raise Exception("Attempting to create null TypeExprRangelist")
         ret._hndl = hndl
         ret._owned = owned
         return ret

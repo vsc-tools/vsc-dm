@@ -26,6 +26,8 @@ public:
 			const std::vector<IModelConstraint *>	&constraints
 			);
 
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) override;
+
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;

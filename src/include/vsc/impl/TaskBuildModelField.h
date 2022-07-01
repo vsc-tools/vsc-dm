@@ -11,7 +11,9 @@
 #include "vsc/IContext.h"
 #include "vsc/IModelBuildContext.h"
 #include "vsc/impl/TaskBuildModelExpr.h"
+#include "vsc/impl/TaskEvalTypeExpr.h"
 #include "vsc/impl/VisitorBase.h"
+#include "TaskBuildModelExpr.h"
 
 namespace vsc {
 class TaskBuildModelField : public VisitorBase {
@@ -60,10 +62,23 @@ public:
 	}
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override {
+		ITypeExprRangelist *domain = t->getDomain();
 		IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(
 				t,
 				m_name);
-		fprintf(stdout, "visitDataTypeEnum: %p\n", field);
+
+		TaskEvalTypeExpr().eval(
+				field->val(),
+				domain->getRanges().at(0).get()->lower());
+
+		// Build a constraint for the domain
+		field->addConstraint(
+				m_ctxt->ctxt()->mkModelConstraintExpr(
+						m_ctxt->ctxt()->mkModelExprIn(
+								m_ctxt->ctxt()->mkModelExprFieldRef(field),
+								TaskBuildModelExpr(m_ctxt).buildT<IModelExprRangelist>(domain)
+								)));
+
 		addField(field);
 	}
 

@@ -95,6 +95,24 @@ SolveSpec *SolveSpecBuilder::build(
 	return spec;
 }
 
+void SolveSpecBuilder::visitDataTypeEnum(IDataTypeEnum *t) {
+	DEBUG_ENTER("visitDataTypeEnum");
+
+	if (m_pass == 0) {
+		// Save the field
+		IModelField *field = m_field_s.back();
+		auto it = m_unconstrained_m.find(field);
+
+		if (it == m_unconstrained_m.end()) {
+			DEBUG("Add field %s to unconstrained set", field->name().c_str());
+			m_unconstrained_m.insert({field, m_unconstrained_l.size()});
+			m_unconstrained_l.push_back(field);
+		}
+	}
+
+	DEBUG_LEAVE("visitDataTypeEnum");
+}
+
 void SolveSpecBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt");
 
@@ -144,7 +162,18 @@ void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 void SolveSpecBuilder::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
 	m_field_s.push_back(f);
-	VisitorBase::visitModelField(f);
+	if (m_pass == 0) {
+		if (f->getDataType()) {
+			f->getDataType()->accept(this);
+		}
+		for (std::vector<IModelFieldUP>::const_iterator
+				it=f->fields().begin();
+				it!=f->fields().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	} else {
+		VisitorBase::visitModelField(f);
+	}
 	m_field_s.pop_back();
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }
@@ -211,7 +240,12 @@ void SolveSpecBuilder::process_fieldref(IModelField *f) {
 
 		// Remove the field from the unconstrained set
 		auto uc_it = m_unconstrained_m.find(f);
-		m_unconstrained_l.at(uc_it->second) = 0;
+		if (uc_it != m_unconstrained_m.end()) {
+			m_unconstrained_l.at(uc_it->second) = 0;
+		} else {
+			fprintf(stdout, "Field %s isn't in the unconstrained list\n",
+					f->name().c_str());
+		}
 
 		m_active_solveset->add_field(f);
 		m_solveset_field_m.insert({f, m_active_solveset});

@@ -85,6 +85,12 @@ public:
 		return m_ctxt->mkModelExprFieldRef(field);
 	}
 
+	virtual IModelExprIn *mkModelExprIn(
+			IModelExpr				*lhs,
+			IModelExprRangelist		*rhs) override {
+		return m_ctxt->mkModelExprIn(lhs, rhs);
+	}
+
 	virtual IModelExprVal *mkModelExprVal(IModelVal *v) override {
 		return m_ctxt->mkModelExprVal(v);
 	}

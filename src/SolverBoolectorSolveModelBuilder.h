@@ -21,6 +21,8 @@ public:
 
 	BoolectorNode *build(IModelConstraint *c);
 
+	virtual void visitDataTypeEnum(IDataTypeEnum *t) override;
+
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override;

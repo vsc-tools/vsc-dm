@@ -20,6 +20,10 @@ public:
 
 	virtual const std::vector<IModelExprRangeUP> &ranges() const = 0;
 
+	virtual const std::vector<IModelExprRangeUP> &getRanges() const = 0;
+
+	virtual void addRange(IModelExprRange *range) = 0;
+
 };
 
 }

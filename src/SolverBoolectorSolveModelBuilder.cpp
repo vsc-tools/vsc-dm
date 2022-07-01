@@ -75,6 +75,15 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelConstraint *c) {
 	}
 }
 
+void SolverBoolectorSolveModelBuilder::visitDataTypeEnum(IDataTypeEnum *t) {
+	DEBUG_ENTER("visitDataTypeEnum");
+	int32_t width = t->getWidth(); // TODO: should calculate from definition
+	BoolectorNode *n = boolector_var(m_solver->btor(),
+			m_solver->get_sort(width), 0);
+	m_node_i = {t->isSigned(), n};
+	DEBUG_LEAVE("visitDataTypeEnum");
+}
+
 void SolverBoolectorSolveModelBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt width=%d", t->width());
 	BoolectorNode *n = boolector_var(m_solver->btor(),

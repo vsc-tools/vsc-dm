@@ -78,6 +78,15 @@ const BitwuzlaTerm *SolverBitwuzlaSolveModelBuilder::build(IModelConstraint *c) 
 	}
 }
 
+void SolverBitwuzlaSolveModelBuilder::visitDataTypeEnum(IDataTypeEnum *t) {
+	DEBUG_ENTER("visitDataTypeInt");
+	int32_t width = t->getWidth(); // TODO: should calculate from definition
+	const BitwuzlaTerm *n = bitwuzla_mk_const(m_solver->bitwuzla(),
+			m_solver->get_sort(width), 0);
+	m_node_i = {t->isSigned(), n};
+	DEBUG_LEAVE("visitDataTypeInt");
+}
+
 void SolverBitwuzlaSolveModelBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_ENTER("visitDataTypeInt");
 	const BitwuzlaTerm *n = bitwuzla_mk_const(m_solver->bitwuzla(),
@@ -423,6 +432,8 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(IModelExprIn *e) {
 			// Dual-value
 			node_info_t rvl_i = expr((*r_it)->lower(), ctx_width);
 			node_info_t rvu_i = expr((*r_it)->upper(), ctx_width);
+			rvl_i.second = extend(rvl_i.second, ctx_width, is_signed);
+			rvu_i.second = extend(rvu_i.second, ctx_width, is_signed);
 			if (is_signed) {
 				t = bitwuzla_mk_term2(
 						m_solver->bitwuzla(),
@@ -438,19 +449,21 @@ void SolverBitwuzlaSolveModelBuilder::visitModelExprIn(IModelExprIn *e) {
 								lhs_i.second,
 								rvu_i.second));
 			} else {
-				t =	bitwuzla_mk_term2(
-						m_solver->bitwuzla(),
-						BITWUZLA_KIND_BV_AND,
-						bitwuzla_mk_term2(
+				const BitwuzlaTerm *l1 = bitwuzla_mk_term2(
 								m_solver->bitwuzla(),
 								BITWUZLA_KIND_BV_UGE,
 								lhs_i.second,
-								rvl_i.second),
-						bitwuzla_mk_term2(
+								rvl_i.second);
+				const BitwuzlaTerm *l2 = bitwuzla_mk_term2(
 								m_solver->bitwuzla(),
 								BITWUZLA_KIND_BV_ULE,
 								lhs_i.second,
-								rvu_i.second));
+								rvu_i.second);
+				t =	bitwuzla_mk_term2(
+						m_solver->bitwuzla(),
+						BITWUZLA_KIND_BV_AND,
+						l1,
+						l2);
 			}
 		} else {
 			// Single value
@@ -530,6 +543,8 @@ void SolverBitwuzlaSolveModelBuilder::visitModelField(IModelField *f) {
 	} else {
 		DEBUG("Note: no datatype");
 	}
+
+	// TODO: must handle
 	m_field_s.pop_back();
 	DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 }

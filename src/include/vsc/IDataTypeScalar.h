@@ -17,6 +17,11 @@ public:
 	virtual ~IDataTypeScalar() { }
 
 	virtual ITypeExprRangelist *getDomain() = 0;
+
+	virtual bool isSigned() const = 0;
+
+	virtual int32_t getWidth() = 0;
+
 };
 
 

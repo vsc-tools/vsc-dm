@@ -113,6 +113,10 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
 
+	virtual IModelExprIn *mkModelExprIn(
+			IModelExpr				*lhs,
+			IModelExprRangelist		*rnglist) override;
+
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,
