@@ -23,7 +23,9 @@ public:
 
 	virtual ~IModelFieldFactory() { }
 
-	virtual IModelField *create(const std::string &name) = 0;
+	virtual IModelField *create(
+			const std::string 	&name,
+			IModelField			*vec) = 0;
 
 };
 

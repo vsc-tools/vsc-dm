@@ -40,6 +40,7 @@ cdef class Context(object):
     cpdef mkModelExprRangelist(self)
     cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
+    cpdef mkModelFieldVecRoot(self, DataType type, name)
     cpdef mkModelVal(self)
     cpdef mkRandState(self, uint32_t seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
@@ -245,6 +246,22 @@ cdef class ModelFieldType(ModelField):
     
     @staticmethod
     cdef mk(decl.IModelFieldType *, bool owned=*)
+    
+cdef class ModelFieldVec(ModelField):
+
+    cdef decl.IModelFieldVec *asVec(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVec *, bool owned=*)
+    
+cdef class ModelFieldVecRoot(ModelFieldVec):
+
+    cpdef void setName(self, name)
+
+    cdef decl.IModelFieldVecRoot *asVecRoot(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVecRoot *, bool owned=*)
     
 cdef class ModelFieldDataClosure(object):
     cdef decl.IModelFieldData       *_hndl

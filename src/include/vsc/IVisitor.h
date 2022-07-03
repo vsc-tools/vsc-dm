@@ -76,6 +76,7 @@ class ITypeExprVal;
 class ITypeField;
 class ITypeFieldPhy;
 class ITypeFieldRef;
+class ITypeFieldVec;
 
 class IVisitor {
 public:
@@ -167,6 +168,8 @@ public:
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) = 0;
 
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) = 0;
+
+	virtual void visitTypeFieldVec(ITypeFieldVec *f) = 0;
 
 
 };

@@ -11,16 +11,24 @@
 
 namespace vsc {
 
-class IModelFieldVec : public IModelField {
+class IModelFieldVec : public virtual IModelField {
 public:
 
 	virtual ~IModelFieldVec() { }
 
-	virtual IModelField *size() const = 0;
+	/**
+	 * Returns a handle to the size property
+	 */
+	virtual IModelField *getSizeRef() const = 0;
 
-	virtual void size(IModelField *f) = 0;
+	/**
+	 * Returns the number of elements currently in the vector
+	 */
+	virtual uint32_t getSize() const = 0;
 
 	virtual void push_back(IModelField *f) = 0;
+
+	virtual IModelField *at(uint32_t idx) = 0;
 
 	virtual void pop_back() = 0;
 

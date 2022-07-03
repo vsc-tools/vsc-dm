@@ -44,7 +44,7 @@ vec_scalar::~vec_scalar() {
 }
 
 void vec_scalar::push_back(uint64_t v) {
-	ModelFieldVec *vec = static_cast<ModelFieldVec *>(m_field);
+	IModelFieldVec *vec = dynamic_cast<IModelFieldVec *>(m_field);
 	ModelFieldRoot *field = new ModelFieldRoot(
 			vec->getDataType(),
 			"a");

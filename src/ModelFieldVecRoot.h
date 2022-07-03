@@ -12,16 +12,18 @@
 
 namespace vsc {
 
-class ModelFieldVecRoot : public ModelFieldVec, public IModelFieldVecRoot {
+class ModelFieldVecRoot : public virtual IModelFieldVecRoot, public virtual ModelFieldVec {
 public:
 	ModelFieldVecRoot(
+			IContext				*ctxt,
 			IDataType				*type,
-			const std::string		&name,
-			IModelField				*size);
+			const std::string		&name);
 
 	virtual ~ModelFieldVecRoot();
 
 	virtual const std::string &name() const override { return m_name; }
+
+	virtual void setName(const std::string &name) { m_name = name; }
 
 	virtual IDataType *getDataType() const override { return m_type; }
 

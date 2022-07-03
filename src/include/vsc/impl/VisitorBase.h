@@ -52,6 +52,7 @@
 #include "vsc/ITypeField.h"
 #include "vsc/ITypeFieldPhy.h"
 #include "vsc/ITypeFieldRef.h"
+#include "vsc/ITypeFieldVec.h"
 
 
 namespace vsc {
@@ -182,7 +183,7 @@ public:
 	}
 
 	virtual void visitModelFieldVec(IModelFieldVec *f) override {
-		f->size()->accept(m_this);
+		f->getSizeRef()->accept(m_this);
 		visitModelField(f);
 	}
 
@@ -241,6 +242,12 @@ public:
 	}
 
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
+		if (f->getDataType()) {
+			f->getDataType()->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeFieldVec(ITypeFieldVec *f) override {
 		if (f->getDataType()) {
 			f->getDataType()->accept(m_this);
 		}

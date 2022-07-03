@@ -6,26 +6,39 @@
  */
 
 #pragma once
+#include "vsc/IContext.h"
+#include "vsc/IModelFieldVec.h"
 #include "ModelField.h"
 
 namespace vsc {
 
-class ModelFieldVec : public ModelField {
+class ModelFieldVec : public virtual IModelFieldVec, public virtual ModelField {
 public:
-	ModelFieldVec(IModelField *size);
+	ModelFieldVec(IContext *ctxt);
 
 	virtual ~ModelFieldVec();
 
-	IModelField *size() const { return m_size.get(); }
+	virtual IModelField *getSizeRef() const override { return m_size.get(); }
 
-	void size(ModelField *f) { m_size = ModelFieldUP(f); }
+	virtual uint32_t getSize() const override { return m_fields.size(); }
 
-	void push_back(ModelField *f);
+	virtual void push_back(IModelField *f) override;
 
-	void pop_back();
+	virtual IModelField *at(uint32_t idx) override;
+
+	virtual void pop_back() override;
+
+	virtual IModelFieldFactory *getFieldFactory() override {
+		return m_factory.get();
+	}
+
+	virtual void setFieldFactory(IModelFieldFactory *f) override {
+		m_factory = IModelFieldFactoryUP(f);
+	}
 
 protected:
 	IModelFieldUP					m_size;
+	IModelFieldFactoryUP			m_factory;
 
 };
 

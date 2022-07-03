@@ -34,6 +34,7 @@
 #include "ModelFieldRefType.h"
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
+#include "ModelFieldVecRoot.h"
 #include "ModelVal.h"
 #include "Randomizer.h"
 #include "RandState.h"
@@ -49,6 +50,7 @@
 #include "TypeExprVal.h"
 #include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
+#include "TypeFieldVec.h"
 
 namespace vsc {
 
@@ -179,6 +181,24 @@ bool Context::addDataTypeStruct(IDataTypeStruct *t) {
 	}
 }
 
+IDataTypeVec *Context::findDataTypeVec(IDataType *t) {
+	std::unordered_map<IDataType*,IDataTypeVec*>::const_iterator it;
+
+	if ((it=m_vec_type_m.find(t)) != m_vec_type_m.end()) {
+		return it->second;
+	} else {
+		return 0;
+	}
+}
+
+IDataTypeVec *Context::mkDataTypeVec(IDataType *t) {
+
+}
+
+bool *Context::addDataTypeVec(IDataTypeVec *t) {
+
+}
+
 IModelExprBin *Context::mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
@@ -238,6 +258,15 @@ IModelFieldRoot *Context::mkModelFieldRoot(
 IModelFieldType *Context::mkModelFieldType(
 			ITypeField			*type) {
 	return new ModelFieldType(type);
+}
+
+IModelFieldVec *Context::mkModelFieldVecRoot(
+			IDataType			*type,
+			const std::string	&name) {
+	return new ModelFieldVecRoot(
+			this,
+			type,
+			name);
 }
 
 IModelVal *Context::mkModelVal() {
@@ -325,6 +354,15 @@ ITypeFieldRef *Context::mkTypeFieldRef(
 			IDataType				*dtype,
 			TypeFieldAttr			attr) {
 	return new TypeFieldRef(name, dtype, attr);
+}
+
+ITypeFieldVec *Context::mkTypeFieldVec(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init_sz) {
+	return new TypeFieldVec(this, name, dtype, own_dtype, attr, init_sz);
 }
 
 } /* namespace vsc */

@@ -18,6 +18,7 @@ ctypedef IAccept *IAcceptP
 ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
+ctypedef IDataTypeVec *IDataTypeVecP
 ctypedef IModelExpr *IModelExprP
 ctypedef IModelExprRange *IModelExprRangeP
 ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
@@ -26,6 +27,8 @@ ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
 ctypedef IModelFieldRoot *IModelFieldRootP
 ctypedef IModelFieldType *IModelFieldTypeP
+ctypedef IModelFieldVec *IModelFieldVecP
+ctypedef IModelFieldVecRoot *IModelFieldVecRootP
 ctypedef IModelFieldData *IModelFieldDataP
 ctypedef ModelFieldDataClosure *ModelFieldDataClosureP
 ctypedef IModelConstraint *IModelConstraintP
@@ -69,6 +72,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         IModelExprRangelist *mkModelExprRangelist()
         IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
+        IModelFieldVec *mkModelFieldVecRoot(IDataType *, const cpp_string &)
         IModelVal *mkModelVal()
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
@@ -148,7 +152,10 @@ cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
         void addConstraint(ITypeConstraint *)
         const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
         void setCreateHook(IModelStructCreateHook *)
-        
+       
+cdef extern from "vsc/IDataTypeVec.h" namespace "vsc":
+    cdef cppclass IDataTypeVec(IDataType):
+        IDataType *getElemType() const
 
 #********************************************************************
 #* IVsc
@@ -275,6 +282,26 @@ cdef extern from "vsc/IModelFieldRef.h" namespace "vsc":
         
         void setRef(IModelField *)
         IModelField *getRef() const
+        
+cdef extern from "vsc/IModelFieldFactory.h" namespace "vsc":
+    cdef cppclass IModelFieldFactory:
+        IModelField *create(const cpp_string &, IModelField *)
+        
+cdef extern from "vsc/IModelFieldVec.h" namespace "vsc":
+    cdef cppclass IModelFieldVec(IModelField):
+        IModelField *getSizeRef() const
+        uint32_t getSize() const
+        void push_back(IModelField *)
+        IModelField *at(uint32_t idx)
+        void pop_back()
+        IModelFieldFactory *getFieldFactory()
+        void setFieldFactory(IModelFieldFactory *)
+        
+cdef extern from "vsc/IModelFieldVecRoot.h" namespace "vsc":
+
+    cdef cppclass IModelFieldVecRoot(IModelFieldVec):
+        void setName(const cpp_string &)
+        pass
 
 cdef extern from "vsc/IModelFieldData.h" namespace "vsc":
     cdef cppclass IModelFieldData:

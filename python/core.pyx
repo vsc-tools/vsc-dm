@@ -151,6 +151,16 @@ cdef class Context(object):
             name.encode()),
             True)
         
+    cpdef mkModelFieldVecRoot(self, DataType type, name):
+        cdef decl.IDataType *type_h = NULL
+        
+        if type is not None:
+            type_h = type._hndl
+        
+        return ModelFieldVecRoot.mk(self._hndl.mkModelFieldVecRoot(
+            type_h,
+            name.encode()))
+        
     cpdef mkModelVal(self):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
         
@@ -736,6 +746,33 @@ cdef class ModelFieldType(ModelField):
         ret._owned = owned
         return ret
     
+cdef class ModelFieldVec(ModelField):
+
+    cdef decl.IModelFieldVec *asVec(self):
+        return dynamic_cast[decl.IModelFieldVecP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVec *hndl, bool owned=True):
+        ret = ModelFieldVec()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class ModelFieldVecRoot(ModelFieldVec):
+
+    cpdef void setName(self, name):
+        self.asVecRoot().setName(name.encode())
+
+    cdef decl.IModelFieldVecRoot *asVecRoot(self):
+        return dynamic_cast[decl.IModelFieldVecRootP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVecRoot *hndl, bool owned=True):
+        ret = ModelFieldVecRoot()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 cdef class ModelFieldDataClosure(object):
 
     cpdef getData(self):

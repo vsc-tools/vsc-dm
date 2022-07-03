@@ -42,7 +42,7 @@ void SolveSet::add_field(IModelField *f) {
 		// If this is the size of a vector, save the vec
 		if (f->isFlagSet(ModelFieldFlag::VecSize)) {
 			m_constrained_sz_vec.push_back(
-					static_cast<IModelFieldVec *>(f->getParent()));
+					dynamic_cast<IModelFieldVec *>(f->getParent()));
 		}
 		m_field_s.insert(f);
 	}
