@@ -111,6 +111,15 @@ cdef class Context(object):
                 <decl.BinOp>(op_i),
                 rhs._hndl))
         
+    cpdef mkModelExprIn(self, ModelExpr lhs, ModelExprRangelist rhs):
+        lhs._owned = False
+        rhs._owned = False
+        
+        return ModelExprIn.mk(
+            self._hndl.mkModelExprIn(
+                lhs.asExpr(),
+                rhs.asRangelist()))
+        
     cpdef mkModelExprFieldRef(self, ModelField field):
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
@@ -500,7 +509,9 @@ cdef class ModelExpr(object):
     
     cpdef accept(self, VisitorBase v):
         self._hndl.accept(v._proxy)
-        pass
+    
+    cdef decl.IModelExpr *asExpr(self):
+        return self._hndl
 
     @staticmethod
     cdef mk(decl.IModelExpr *e, bool owned=True):
@@ -541,6 +552,18 @@ cdef class ModelExprBin(ModelExpr):
     
     cdef decl.IModelExprBin *asExprBin(self):
         return <decl.IModelExprBin *>(self._hndl)
+    
+cdef class ModelExprIn(ModelExpr):
+
+    @staticmethod
+    cdef mk(decl.IModelExprIn *hndl, bool owned=True):
+        ret = ModelExprIn()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    cdef decl.IModelExprIn *asExprIn(self):
+        return dynamic_cast[decl.IModelExprInP](self._hndl)
     
 cdef class ModelExprFieldRef(ModelExpr):
 
@@ -583,6 +606,7 @@ cdef class ModelExprRange(ModelExpr):
         ret = ModelExprRange()
         ret._hndl = hndl
         ret._owned = owned
+        return ret
         
 cdef class ModelExprRangelist(ModelExpr):
 
@@ -593,6 +617,9 @@ cdef class ModelExprRangelist(ModelExpr):
                 self.asRangelist().ranges().at(i).get(), False))
         return ret
     
+    cpdef addRange(self, ModelExprRange r):
+        self.asRangelist().addRange(r.asRange())
+    
     cdef decl.IModelExprRangelist *asRangelist(self):
         return dynamic_cast[decl.IModelExprRangelistP](self._hndl)
     
@@ -601,8 +628,7 @@ cdef class ModelExprRangelist(ModelExpr):
         ret = ModelExprRangelist()
         ret._hndl = hndl
         ret._owned = owned
-    
-    
+        return ret
     
 cdef class ModelExprVal(ModelExpr):
     
@@ -747,6 +773,12 @@ cdef class ModelFieldType(ModelField):
         return ret
     
 cdef class ModelFieldVec(ModelField):
+
+    cpdef getSizeRef(self):
+        return ModelField.mk(self.asVec().getSizeRef(), False)
+    
+    cpdef getSize(self):
+        return self.asVec().getSize()
 
     cdef decl.IModelFieldVec *asVec(self):
         return dynamic_cast[decl.IModelFieldVecP](self._hndl)

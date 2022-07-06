@@ -35,6 +35,7 @@ cdef class Context(object):
     cpdef DataTypeStruct findDataTypeStruct(self, name)
     cpdef DataTypeStruct mkDataTypeStruct(self, name)
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
+    cpdef mkModelExprIn(self, ModelExpr, ModelExprRangelist)
     cpdef mkModelExprFieldRef(self, ModelField field)
     cpdef mkModelExprRange(self, bool, ModelExpr, ModelExpr)
     cpdef mkModelExprRangelist(self)
@@ -152,6 +153,8 @@ cdef class ModelExpr(object):
     
     cpdef accept(self, VisitorBase v)
     
+    cdef decl.IModelExpr *asExpr(self)
+    
     @staticmethod
     cdef mk(decl.IModelExpr *e, bool owned=*)
     
@@ -162,6 +165,14 @@ cdef class ModelExprBin(ModelExpr):
     @staticmethod
     cdef mkWrapper(decl.IModelExprBin *e)
     cdef decl.IModelExprBin *asExprBin(self)
+    
+cdef class ModelExprIn(ModelExpr):
+
+    @staticmethod
+    cdef mk(decl.IModelExprIn *e, bool owned=*)
+    
+    cdef decl.IModelExprIn *asExprIn(self)
+
     
 cdef class ModelExprFieldRef(ModelExpr):
 
@@ -187,6 +198,8 @@ cdef class ModelExprRange(ModelExpr):
 cdef class ModelExprRangelist(ModelExpr): 
     
     cpdef ranges(self)
+    
+    cpdef addRange(self, ModelExprRange)
     
     cdef decl.IModelExprRangelist *asRangelist(self)
     
@@ -249,6 +262,10 @@ cdef class ModelFieldType(ModelField):
     
 cdef class ModelFieldVec(ModelField):
 
+    cpdef getSizeRef(self)
+    
+    cpdef getSize(self)
+    
     cdef decl.IModelFieldVec *asVec(self)
     
     @staticmethod

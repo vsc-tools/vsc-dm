@@ -21,7 +21,7 @@ DebugMgr::~DebugMgr() {
 
 void DebugMgr::addDebug(Debug *dbg) {
 	m_debug_ep_m.insert({dbg->name(), dbg});
-//	dbg->set_en(true);
+	dbg->set_en(true);
 }
 
 void DebugMgr::setFlags(

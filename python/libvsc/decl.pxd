@@ -20,6 +20,7 @@ ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IDataTypeVec *IDataTypeVecP
 ctypedef IModelExpr *IModelExprP
+ctypedef IModelExprIn *IModelExprInP
 ctypedef IModelExprRange *IModelExprRangeP
 ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
 ctypedef IModelExprRangelist *IModelExprRangelistP
@@ -68,6 +69,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         bool addDataTypeStruct(IDataTypeStruct *)
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
+        IModelExprIn *mkModelExprIn(IModelExpr *, IModelExprRangelist *)
         IModelExprRange *mkModelExprRange(bool, IModelExpr *, IModelExpr *)
         IModelExprRangelist *mkModelExprRangelist()
         IModelExprVal *mkModelExprVal(IModelVal *)
@@ -208,6 +210,7 @@ cdef extern from "vsc/IModelExprRange.h" namespace "vsc":
 cdef extern from "vsc/IModelExprRangelist.h" namespace "vsc":
     cdef cppclass IModelExprRangelist(IModelExpr):
         const cpp_vector[IModelExprRangeUP] &ranges() const
+        void addRange(IModelExprRange *)
         
                 
 cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
@@ -220,27 +223,30 @@ cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
 #********************************************************************
 cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
     cdef enum BinOp:
-       Eq      "vsc::BinOp::Eq"
-       Ne      "vsc::BinOp::Ne"
-       Gt      "vsc::BinOp::Gt"
-       Ge      "vsc::BinOp::Ge"
-       Lt      "vsc::BinOp::Lt"
-       Le      "vsc::BinOp::Le"
-       Add     "vsc::BinOp::Add"
-       Sub     "vsc::BinOp::Sub"
-       Div     "vsc::BinOp::Div"
-       Mul     "vsc::BinOp::Mul"
-       Mod     "vsc::BinOp::Mod"
-       BinAnd  "vsc::BinOp::BinAnd"
-       BinOr   "vsc::BinOp::BinOr" 
-       LogAnd  "vsc::BinOp::LogAnd"
-       LogOr   "vsc::BinOp::LogOr"
-       Sll     "vsc::BinOp::Sll"
-       Srl     "vsc::BinOp::Srl"
-       Xor     "vsc::BinOp::Xor"
-       Not     "vsc::BinOp::Not"
+        Eq      "vsc::BinOp::Eq"
+        Ne      "vsc::BinOp::Ne"
+        Gt      "vsc::BinOp::Gt"
+        Ge      "vsc::BinOp::Ge"
+        Lt      "vsc::BinOp::Lt"
+        Le      "vsc::BinOp::Le"
+        Add     "vsc::BinOp::Add"
+        Sub     "vsc::BinOp::Sub"
+        Div     "vsc::BinOp::Div"
+        Mul     "vsc::BinOp::Mul"
+        Mod     "vsc::BinOp::Mod"
+        BinAnd  "vsc::BinOp::BinAnd"
+        BinOr   "vsc::BinOp::BinOr" 
+        LogAnd  "vsc::BinOp::LogAnd"
+        LogOr   "vsc::BinOp::LogOr"
+        Sll     "vsc::BinOp::Sll"
+        Srl     "vsc::BinOp::Srl"
+        Xor     "vsc::BinOp::Xor"
+        Not     "vsc::BinOp::Not"
         
     cdef cppclass IModelExprBin(IModelExpr):
+        pass
+    
+    cdef cppclass IModelExprIn(IModelExpr):
         pass
 
 #********************************************************************
