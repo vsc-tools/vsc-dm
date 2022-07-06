@@ -27,6 +27,7 @@
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
+#include "ModelExprPartSelect.h"
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
 #include "ModelExprVal.h"
@@ -215,6 +216,13 @@ IModelExprIn *Context::mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) {
 	return new ModelExprIn(lhs, rnglist);
+}
+
+IModelExprPartSelect *Context::mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) {
+	return new ModelExprPartSelect(lhs, lower, upper);
 }
 
 IModelExprRange *Context::mkModelExprRange(

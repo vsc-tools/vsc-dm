@@ -73,6 +73,11 @@ public:
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
 
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) override;
+
 	virtual IModelExprRange *mkModelExprRange(
 			bool			is_single,
 			IModelExpr		*lower,

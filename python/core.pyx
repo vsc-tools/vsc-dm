@@ -124,6 +124,10 @@ cdef class Context(object):
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
         
+    cpdef mkModelExprPartSelect(self, ModelExpr lhs, int32_t lower, int32_t upper):
+        return ModelExprPartSelect.mk(
+            self._hndl.mkModelExprPartSelect(lhs.asExpr(), lower, upper), True)
+        
     cpdef mkModelExprRange(self, bool is_single, ModelExpr lower, ModelExpr upper):
         cdef decl.IModelExpr *l = NULL
         cdef decl.IModelExpr *u = NULL
@@ -580,6 +584,27 @@ cdef class ModelExprFieldRef(ModelExpr):
         ret._owned = owned
         return ret
     
+cdef class ModelExprPartSelect(ModelExpr):
+
+    cpdef lhs(self):
+        return ModelExpr.mk(self.asPartSelect().lhs(), False)
+    
+    cpdef int32_t lower(self):
+        return self.asPartSelect().lower()
+    
+    cpdef int32_t upper(self):
+        return self.asPartSelect().upper()
+    
+    cdef decl.IModelExprPartSelect *asPartSelect(self):
+        return dynamic_cast[decl.IModelExprPartSelectP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprPartSelect *hndl, bool owned=True):
+        ret = ModelExprPartSelect()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
 cdef class ModelExprRange(ModelExpr):
     cpdef isSingle(self):
         return self.asRange().isSingle()
@@ -626,6 +651,29 @@ cdef class ModelExprRangelist(ModelExpr):
     @staticmethod 
     cdef mk(decl.IModelExprRangelist *hndl, bool owned=True):
         ret = ModelExprRangelist()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+class UnaryOp(IntEnum):
+    Not = decl.UnaryOp.Un_Not
+    
+    
+cdef class ModelExprUnary(ModelExpr):
+
+    cpdef ModelExpr expr(self):
+        return ModelExpr.mk(self.asUnary().expr(), False)
+        
+    cpdef op(self):
+        op_i = int(self.asUnary().op())
+        return UnaryOp(op_i)
+    
+    cdef decl.IModelExprUnary *asUnary(self):
+        return dynamic_cast[decl.IModelExprUnaryP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprUnary *hndl, bool owned=True): 
+        ret = ModelExprUnary()
         ret._hndl = hndl
         ret._owned = owned
         return ret

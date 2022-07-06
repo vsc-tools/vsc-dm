@@ -37,6 +37,7 @@ cdef class Context(object):
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)
     cpdef mkModelExprIn(self, ModelExpr, ModelExprRangelist)
     cpdef mkModelExprFieldRef(self, ModelField field)
+    cpdef mkModelExprPartSelect(self, ModelExpr lhs, int32_t lower, int32_t upper)
     cpdef mkModelExprRange(self, bool, ModelExpr, ModelExpr)
     cpdef mkModelExprRangelist(self)
     cpdef mkModelExprVal(self, ModelVal)
@@ -183,6 +184,19 @@ cdef class ModelExprFieldRef(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprFieldRef *, bool owned=*)
     
+cdef class ModelExprPartSelect(ModelExpr):
+
+    cpdef lhs(self)
+    
+    cpdef int32_t lower(self)
+    
+    cpdef int32_t upper(self)
+    
+    cdef decl.IModelExprPartSelect *asPartSelect(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprPartSelect *, bool owned=*)
+    
 cdef class ModelExprRange(ModelExpr):
     cpdef isSingle(self)
     
@@ -205,6 +219,16 @@ cdef class ModelExprRangelist(ModelExpr):
     
     @staticmethod 
     cdef mk(decl.IModelExprRangelist *, bool owned=*)
+    
+cdef class ModelExprUnary(ModelExpr):
+
+    cpdef ModelExpr expr(self)
+    cpdef op(self)
+    
+    cdef decl.IModelExprUnary *asUnary(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprUnary *, bool owned=*)
         
     
 cdef class ModelExprVal(ModelExpr):

@@ -17,6 +17,7 @@
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprIn.h"
+#include "vsc/IModelExprPartSelect.h"
 #include "vsc/IModelExprRange.h"
 #include "vsc/IModelExprRangelist.h"
 #include "vsc/IModelExprVal.h"
@@ -107,6 +108,11 @@ public:
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) = 0;
+
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) = 0;
 
 	virtual IModelExprRange *mkModelExprRange(
 			bool			is_single,
