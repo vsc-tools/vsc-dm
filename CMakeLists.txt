@@ -17,9 +17,9 @@ if (NOT PACKAGES_DIR)
 
 
   # Testing is only enabled when libvsc is the top-level project
-  enable_testing()
+#  enable_testing()
 
-  add_subdirectory(test)
+#  add_subdirectory(test)
 endif()
 
 set (GMP_DIR "${PACKAGES_DIR}/gmp")
@@ -36,8 +36,9 @@ ExternalProject_Add(GMP
   #  ${gmp_DOWNLOAD}
   #  PATCH_COMMAND cmake -DPATCH_DIR=${CMAKE_CURRENT_SOURCE_DIR}/patches -P ${CMAKE_CURRENT_SOURCE_DIR}/patches/btor2tools/btor2tools.cmake
   CMAKE_CACHE_ARGS
-    CONFIGURE_COMMAND sh -c "CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --disable-shared"
+    CONFIGURE_COMMAND sh -c "CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --enable-cxx"
     BUILD_COMMAND sh -c "make -j`nproc`"
+#    INSTALL_COMMAND sh -c "mkdir <INSTALL_DIR>/shlib" COMMAND sh -c "make install" COMMAND sh -c "mv <INSTALL_DIR>/lib/*.so* <INSTALL_DIR>/shlib"
     INSTALL_COMMAND sh -c "make install"
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
     -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}

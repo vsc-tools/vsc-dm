@@ -17,6 +17,7 @@ target_include_directories(vsc PUBLIC
 target_link_directories(vsc PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
+    ${CMAKE_BINARY_DIR}/gmp/lib
     )
   
 target_link_libraries(vsc 
