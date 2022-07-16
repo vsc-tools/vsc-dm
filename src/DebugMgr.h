@@ -10,6 +10,7 @@
 #include <stdarg.h>
 #include <unordered_map>
 #include <memory>
+#include <string>
 #include <vector>
 #include "vsc/IDebugMgr.h"
 
