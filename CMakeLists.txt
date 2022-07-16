@@ -39,7 +39,11 @@ ExternalProject_Add(GMP
   #  ${gmp_DOWNLOAD}
   #  PATCH_COMMAND cmake -DPATCH_DIR=${CMAKE_CURRENT_SOURCE_DIR}/patches -P ${CMAKE_CURRENT_SOURCE_DIR}/patches/btor2tools/btor2tools.cmake
   CMAKE_CACHE_ARGS
+if(APPLE)
+    CONFIGURE_COMMAND sh -c "${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --enable-cxx"
+else()
     CONFIGURE_COMMAND sh -c "CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --enable-cxx"
+endif()
     BUILD_COMMAND sh -c "make -j`nproc`"
 #    INSTALL_COMMAND sh -c "mkdir <INSTALL_DIR>/shlib" COMMAND sh -c "make install" COMMAND sh -c "mv <INSTALL_DIR>/lib/*.so* <INSTALL_DIR>/shlib"
     INSTALL_COMMAND sh -c "make install"
@@ -169,14 +173,4 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 add_subdirectory(src)
 
-
-#add_subdirectory(src)
-#add_subdirectory(deps)
-
-
-#    test
-#    deps)
-#    "${PROJECT_SOURCE_DIR}/test")
-
-#add_subdirectory(src)
 
