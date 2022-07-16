@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/IModelBuildContext.h"
+#include "vsc/ITypeExprFieldRef.h"
 #include "vsc/impl/VisitorBase.h"
 
 

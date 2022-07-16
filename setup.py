@@ -4,6 +4,7 @@
 import os
 import subprocess
 import shutil
+import sys
 import sysconfig
 from setuptools import setup
 from distutils.extension import Extension
@@ -74,6 +75,9 @@ if _DEBUG:
     extra_compile_args += ["-g", "-O0", "-DDEBUG=%s" % _DEBUG_LEVEL, "-UNDEBUG"]
 else:
     extra_compile_args += ["-DNDEBUG", "-O3"]
+
+if sys.platform == "darwin":
+    extra_compile_args += ["-std=c++11"]
 
 def find_source(bases):
     ret = []
@@ -160,9 +164,16 @@ class build_ext(_build_ext):
         package = ".".join(modpath[:-1])
         package_dir = build_py.get_package_dir(package)
 
+        if sys.platform == "darwin":
+            ext = ".dylib"
+        else:
+            ext = ".so"
+
+        pref = "lib"
+
         copy_file(
-            os.path.join(cwd, "build", "src", "libvsc.so"),
-            os.path.join(package_dir, "libvsc.so"))
+            os.path.join(cwd, "build", "src", "%svsc%s" % (pref, ext)),
+            os.path.join(package_dir, "%svsc%s" % (pref, ext)))
                 
         dest_filename = os.path.join(package_dir, filename)
         
