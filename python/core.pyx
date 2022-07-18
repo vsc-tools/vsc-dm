@@ -86,6 +86,25 @@ cdef class Context(object):
     cpdef mkModelConstraintExpr(self, ModelExpr expr):
         expr._owned = False
         return ModelConstraintExpr.mk(self._hndl.mkModelConstraintExpr(expr._hndl))
+
+    cpdef mkModelConstraintIfElse(self, 
+        ModelExpr           cond,
+        ModelConstraint     true_c,
+        ModelConstraint     false_c):
+        cdef decl.IModelConstraint *false_p = NULL
+
+        cond._owned = False
+        true_c._owned = False
+        if false_c is not None:
+            false_c._owned = False
+            false_p = false_c.asConstraint()
+
+        return ModelConstraintIfElse.mk(
+            self._hndl.mkModelConstraintIfElse(
+                cond.asExpr(),
+                true_c.asConstraint(),
+                false_p
+            ), True)
     
     cpdef mkModelExprBin(self, 
             ModelExpr           lhs,
@@ -198,6 +217,23 @@ cdef class Context(object):
         e._owned = False
         return TypeConstraintExpr.mk(self._hndl.mkTypeConstraintExpr(
             e._hndl))
+
+    cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
+        TypeExpr        cond,
+        TypeConstraint  true_c,
+        TypeConstraint  false_c):
+        cdef decl.ITypeConstraint *false_cp = NULL
+
+        cond._owned = False
+        true_c._owned = False
+        if false_c is not None:
+            false_c._owned = False
+            false_cp = false_c.asConstraint()
+
+        return TypeConstraintIfElse.mk(self._hndl.mkTypeConstraintIfElse(
+            cond.asExpr(),
+            true_c.asConstraint(),
+            false_cp), True)
         
     cpdef TypeConstraintScope mkTypeConstraintScope(self):
         return TypeConstraintScope.mk(self._hndl.mkTypeConstraintScope())
@@ -446,6 +482,9 @@ cdef class ModelConstraint(object):
         if self._owned and self._hndl != NULL:
             del self._hndl
             self._hndl = NULL
+
+    cdef decl.IModelConstraint *asConstraint(self):
+        return self._hndl
             
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=True):
@@ -505,6 +544,38 @@ cdef class ModelConstraintExpr(ModelConstraint):
     
     cdef decl.IModelConstraintExpr *asModelConstraintExpr(self):
         return <decl.IModelConstraintExpr *>(self._hndl)
+
+cdef class ModelConstraintIfElse(ModelConstraint):
+    cpdef getCond(self):
+        return ModelExpr.mk(self.asIfElse().getCond(), False)
+
+    cpdef getTrue(self):
+        return ModelConstraint.mk(self.asIfElse().getTrue(), False)
+
+    cpdef getFalse(self):
+        if self.asIfElse().getFalse() != NULL:
+            return ModelConstraint.mk(self.asIfElse().getFalse(), False)
+        else:
+            return None
+
+    cpdef setFalse(self, ModelConstraint c):
+        cdef decl.IModelConstraint *cp = NULL
+
+        if c is not None:
+            c._owned = False
+            cp = c.asConstraint()
+        self.asIfElse().setFalse(cp)
+
+    cdef decl.IModelConstraintIfElse *asIfElse(self):
+        return dynamic_cast[decl.IModelConstraintIfElseP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintIfElse *hndl, bool owned=True):
+        ret = ModelConstraintIfElse()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
 
 cdef class ModelExpr(object):
     
@@ -964,6 +1035,9 @@ cdef class SolverFactory(object):
         
 cdef class TypeConstraint(object):
 
+    cdef decl.ITypeConstraint *asConstraint(self):
+        return self._hndl
+
     @staticmethod
     cdef TypeConstraint mk(decl.ITypeConstraint *hndl, bool owned=True):
         ret = TypeConstraint()
@@ -984,6 +1058,38 @@ cdef class TypeConstraintExpr(TypeConstraint):
     @staticmethod
     cdef TypeConstraintExpr mk(decl.ITypeConstraintExpr *hndl, bool owned=True):
         ret = TypeConstraintExpr()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeConstraintIfElse(TypeConstraint):
+    cpdef getCond(self):
+        return TypeExpr.mk(self.asIfElse().getCond(), False)
+
+    cpdef getTrue(self):
+        return TypeConstraint.mk(self.asIfElse().getTrue(), False)
+
+    cpdef getFalse(self):
+        if self.asIfElse().getFalse() != NULL:
+            return TypeConstraint.mk(self.asIfElse().getFalse(), False)
+        else:
+            return None
+
+    cpdef setFalse(self, TypeConstraint c):
+        cdef decl.ITypeConstraint *cp = NULL
+        
+        if c is not None:
+            c._owned = False
+            cp = c.asConstraint()
+        
+        self.asIfElse().setFalse(cp)
+
+    cdef decl.ITypeConstraintIfElse *asIfElse(self):
+        return dynamic_cast[decl.ITypeConstraintIfElseP](self._hndl)
+
+    @staticmethod
+    cdef TypeConstraintIfElse mk(decl.ITypeConstraintIfElse *hndl, bool owned=True):
+        ret = TypeConstraintIfElse()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -1028,6 +1134,9 @@ cdef class TypeExpr(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+
+    cdef decl.ITypeExpr *asExpr(self):
+        return self._hndl
             
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=True):

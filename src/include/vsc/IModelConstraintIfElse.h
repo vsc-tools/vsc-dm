@@ -11,14 +11,14 @@
 
 namespace vsc {
 
-class IModelConstraintIf;
-using IModelConstraintIfUP=std::unique_ptr<IModelConstraintIf>;
-class IModelConstraintIf : public IModelConstraint {
+class IModelConstraintIfElse;
+using IModelConstraintIfElseUP=std::unique_ptr<IModelConstraintIfElse>;
+class IModelConstraintIfElse : public IModelConstraint {
 public:
 
-	virtual ~IModelConstraintIf() { }
+	virtual ~IModelConstraintIfElse() { }
 
-	virtual IModelExpr *cond() const = 0;
+	virtual IModelExpr *getCond() const = 0;
 
 	virtual IModelConstraint *getTrue() const = 0;
 

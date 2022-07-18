@@ -118,9 +118,9 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintExpr(IModelConstraint
 	DEBUG_LEAVE("visitModelConstraintExpr");
 }
 
-void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(IModelConstraintIf *c) {
-	DEBUG_ENTER("visitModelConstrainIf");
-	c->cond()->accept(this);
+void SolverBoolectorSolveModelBuilder::visitModelConstraintIfElse(IModelConstraintIfElse *c) {
+	DEBUG_ENTER("visitModelConstrainIfElse");
+	c->getCond()->accept(this);
 	BoolectorNode *cond_n = toBoolNode(m_node_i.second);
 
 	c->getTrue()->accept(this);
@@ -145,7 +145,7 @@ void SolverBoolectorSolveModelBuilder::visitModelConstraintIf(IModelConstraintIf
 		m_node_i.first = false;
 	}
 
-	DEBUG_LEAVE("visitModelConstrainIf");
+	DEBUG_LEAVE("visitModelConstrainIfElse");
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelConstraintImplies(

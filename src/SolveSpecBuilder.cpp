@@ -139,10 +139,10 @@ void SolveSpecBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr pass=%d", m_pass);
 }
 
-void SolveSpecBuilder::visitModelConstraintIf(IModelConstraintIf *c) {
+void SolveSpecBuilder::visitModelConstraintIfElse(IModelConstraintIfElse *c) {
 	DEBUG_ENTER("visitModelConstraintIf");
 	constraint_enter(c);
-	VisitorBase::visitModelConstraintIf(c);
+	VisitorBase::visitModelConstraintIfElse(c);
 	constraint_leave(c);
 	DEBUG_LEAVE("visitModelConstraintIf");
 }

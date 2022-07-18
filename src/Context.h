@@ -65,6 +65,11 @@ public:
 	virtual IModelConstraintExpr *mkModelConstraintExpr(
 			IModelExpr		*expr) override;
 
+	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) override;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
@@ -119,6 +124,11 @@ public:
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override;
 
 	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) override;
+
+	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) override;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
 

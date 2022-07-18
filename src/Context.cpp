@@ -24,6 +24,7 @@
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
+#include "ModelConstraintIfElse.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
@@ -43,6 +44,7 @@
 #include "TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
+#include "TypeConstraintIfElse.h"
 #include "TypeConstraintScope.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
@@ -112,6 +114,13 @@ IModelConstraintBlock *Context::mkModelConstraintBlock(
 IModelConstraintExpr *Context::mkModelConstraintExpr(
 			IModelExpr		*expr) {
 	return new ModelConstraintExpr(expr);
+}
+
+IModelConstraintIfElse *Context::mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) {
+	return new ModelConstraintIfElse(cond, true_c, false_c);
 }
 
 IDataTypeInt *Context::findDataTypeInt(
@@ -308,6 +317,13 @@ ITypeConstraintBlock *Context::mkTypeConstraintBlock(const std::string &name) {
 
 ITypeConstraintExpr *Context::mkTypeConstraintExpr(ITypeExpr *expr) {
 	return new TypeConstraintExpr(expr);
+}
+
+ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) {
+	return new TypeConstraintIfElse(cond, true_c, false_c);
 }
 
 ITypeConstraintScope *Context::mkTypeConstraintScope() {

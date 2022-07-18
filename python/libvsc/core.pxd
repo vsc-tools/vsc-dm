@@ -28,6 +28,10 @@ cdef class Context(object):
     cpdef addDataTypeEnum(self, DataTypeEnum)
     cpdef mkModelConstraintBlock(self, name)
     cpdef mkModelConstraintExpr(self, ModelExpr)
+    cpdef mkModelConstraintIfElse(self, 
+        ModelExpr           cond,
+        ModelConstraint     true_c,
+        ModelConstraint     false_c)
     cpdef bool addDataTypeInt(self, DataTypeInt)
     cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width)
     cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width)
@@ -48,6 +52,10 @@ cdef class Context(object):
     cpdef mkRandomizer(self, SolverFactory, RandState)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
+    cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
+        TypeExpr        cond,
+        TypeConstraint  true_c,
+        TypeConstraint  false_c)
     cpdef TypeConstraintScope mkTypeConstraintScope(self)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
@@ -121,6 +129,8 @@ cdef class DataTypeStruct(DataType):
 cdef class ModelConstraint(object):
     cdef decl.IModelConstraint   *_hndl
     cdef bool                    _owned
+
+    cdef decl.IModelConstraint *asConstraint(self)
     
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=*)
@@ -147,6 +157,17 @@ cdef class ModelConstraintExpr(ModelConstraint):
     cdef decl.IModelConstraintExpr *asModelConstraintExpr(self)
     @staticmethod
     cdef mk(decl.IModelConstraintExpr *, bool owned=*)
+
+cdef class ModelConstraintIfElse(ModelConstraint):
+    cpdef getCond(self)
+    cpdef getTrue(self)
+    cpdef getFalse(self)
+    cpdef setFalse(self, ModelConstraint c)
+
+    cdef decl.IModelConstraintIfElse *asIfElse(self)
+    @staticmethod
+    cdef mk(decl.IModelConstraintIfElse *, bool owned=*)
+    
     
 cdef class ModelExpr(object):
     cdef decl.IModelExpr         *_hndl
@@ -354,6 +375,8 @@ cdef class Task(object):
 cdef class TypeConstraint(object):
     cdef decl.ITypeConstraint   *_hndl
     cdef bool                   _owned
+
+    cdef decl.ITypeConstraint *asConstraint(self)
     
     @staticmethod
     cdef TypeConstraint mk(decl.ITypeConstraint *, bool owned=*)
@@ -366,6 +389,17 @@ cdef class TypeConstraintExpr(TypeConstraint):
 
     @staticmethod
     cdef TypeConstraintExpr mk(decl.ITypeConstraint *, bool owned=*)
+
+cdef class TypeConstraintIfElse(TypeConstraint):
+    cpdef getCond(self)
+    cpdef getTrue(self)
+    cpdef getFalse(self)
+    cpdef setFalse(self, TypeConstraint c)
+
+    cdef decl.ITypeConstraintIfElse *asIfElse(self)
+
+    @staticmethod
+    cdef TypeConstraintIfElse mk(decl.ITypeConstraintIfElse *hndl, bool owned=*)
    
 cdef class TypeConstraintScope(TypeConstraint):
     
@@ -388,6 +422,8 @@ cdef class TypeConstraintBlock(TypeConstraintScope):
 cdef class TypeExpr(object):
     cdef decl.ITypeExpr         *_hndl
     cdef bool                   _owned
+
+    cdef decl.ITypeExpr *asExpr(self)
     
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=*)

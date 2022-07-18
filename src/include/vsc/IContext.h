@@ -13,6 +13,7 @@
 #include "vsc/IDataTypeVec.h"
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
+#include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
@@ -30,6 +31,7 @@
 #include "vsc/ITask.h"
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
+#include "vsc/ITypeConstraintIfElse.h"
 #include "vsc/ITypeConstraintScope.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
@@ -97,6 +99,11 @@ public:
 	virtual IModelConstraintExpr *mkModelConstraintExpr(
 			IModelExpr		*expr) = 0;
 
+	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) = 0;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
@@ -159,6 +166,11 @@ public:
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
 
 	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) = 0;
+
+	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) = 0;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 

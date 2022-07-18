@@ -15,14 +15,14 @@ namespace vsc {
 
 class ModelConstraintIfElse : public IModelConstraintIfElse {
 public:
-	ModelConstraintIf(
+	ModelConstraintIfElse(
 			IModelExpr				*cond,
 			IModelConstraint		*true_c,
 			IModelConstraint		*false_c);
 
 	virtual ~ModelConstraintIfElse();
 
-	virtual IModelExpr *cond() const override {
+	virtual IModelExpr *getCond() const override {
 		return m_cond.get();
 	}
 
