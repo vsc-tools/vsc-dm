@@ -18,14 +18,20 @@ ctypedef IAccept *IAcceptP
 ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
+ctypedef IDataTypeVec *IDataTypeVecP
 ctypedef IModelExpr *IModelExprP
+ctypedef IModelExprIn *IModelExprInP
+ctypedef IModelExprPartSelect *IModelExprPartSelectP
 ctypedef IModelExprRange *IModelExprRangeP
 ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
 ctypedef IModelExprRangelist *IModelExprRangelistP
+ctypedef IModelExprUnary *IModelExprUnaryP
 ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
 ctypedef IModelFieldRoot *IModelFieldRootP
 ctypedef IModelFieldType *IModelFieldTypeP
+ctypedef IModelFieldVec *IModelFieldVecP
+ctypedef IModelFieldVecRoot *IModelFieldVecRootP
 ctypedef IModelFieldData *IModelFieldDataP
 ctypedef ModelFieldDataClosure *ModelFieldDataClosureP
 ctypedef IModelConstraint *IModelConstraintP
@@ -65,10 +71,14 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         bool addDataTypeStruct(IDataTypeStruct *)
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
+        IModelExprIn *mkModelExprIn(IModelExpr *, IModelExprRangelist *)
+        IModelExprPartSelect *mkModelExprPartSelect(IModelExpr *, int32_t , int32_t )
         IModelExprRange *mkModelExprRange(bool, IModelExpr *, IModelExpr *)
         IModelExprRangelist *mkModelExprRangelist()
+        IModelExprUnary *mkModelExprUnary(IModelExpr *lhs, UnaryOp op)
         IModelExprVal *mkModelExprVal(IModelVal *)
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
+        IModelFieldVec *mkModelFieldVecRoot(IDataType *, const cpp_string &)
         IModelVal *mkModelVal()
         IRandState *mkRandState(uint32_t)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
@@ -148,7 +158,10 @@ cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
         void addConstraint(ITypeConstraint *)
         const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
         void setCreateHook(IModelStructCreateHook *)
-        
+       
+cdef extern from "vsc/IDataTypeVec.h" namespace "vsc":
+    cdef cppclass IDataTypeVec(IDataType):
+        IDataType *getElemType() const
 
 #********************************************************************
 #* IVsc
@@ -191,6 +204,12 @@ cdef extern from "vsc/IModelExpr.h" namespace "vsc":
 cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
     cdef cppclass IModelExprFieldRef(IModelExpr):
         IModelField *field() const
+        
+cdef extern from "vsc/IModelExprPartSelect.h" namespace "vsc":
+    cdef cppclass IModelExprPartSelect(IModelExpr):
+        IModelExpr *lhs() const
+        int32_t lower() const
+        int32_t upper() const
 
 cdef extern from "vsc/IModelExprRange.h" namespace "vsc":
     cdef cppclass IModelExprRange(IModelExpr):
@@ -201,8 +220,16 @@ cdef extern from "vsc/IModelExprRange.h" namespace "vsc":
 cdef extern from "vsc/IModelExprRangelist.h" namespace "vsc":
     cdef cppclass IModelExprRangelist(IModelExpr):
         const cpp_vector[IModelExprRangeUP] &ranges() const
+        void addRange(IModelExprRange *)
+
+cdef extern from "vsc/IModelExprUnary.h" namespace "vsc":
+    cdef enum UnaryOp "vsc::UnaryOp":
+        Un_Not     "vsc::UnaryOp::Not"
         
-                
+    cdef cppclass IModelExprUnary(IModelExpr):
+        IModelExpr *expr() const
+        UnaryOp op() const
+
 cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
     cdef cppclass IModelExprVal(IModelExpr):
         int32_t width() const
@@ -212,28 +239,31 @@ cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
 #* IModelExprBin
 #********************************************************************
 cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
-    cdef enum BinOp:
-       Eq      "vsc::BinOp::Eq"
-       Ne      "vsc::BinOp::Ne"
-       Gt      "vsc::BinOp::Gt"
-       Ge      "vsc::BinOp::Ge"
-       Lt      "vsc::BinOp::Lt"
-       Le      "vsc::BinOp::Le"
-       Add     "vsc::BinOp::Add"
-       Sub     "vsc::BinOp::Sub"
-       Div     "vsc::BinOp::Div"
-       Mul     "vsc::BinOp::Mul"
-       Mod     "vsc::BinOp::Mod"
-       BinAnd  "vsc::BinOp::BinAnd"
-       BinOr   "vsc::BinOp::BinOr" 
-       LogAnd  "vsc::BinOp::LogAnd"
-       LogOr   "vsc::BinOp::LogOr"
-       Sll     "vsc::BinOp::Sll"
-       Srl     "vsc::BinOp::Srl"
-       Xor     "vsc::BinOp::Xor"
-       Not     "vsc::BinOp::Not"
+    cdef enum BinOp "vsc::BinOp":
+        Eq      "vsc::BinOp::Eq"
+        Ne      "vsc::BinOp::Ne"
+        Gt      "vsc::BinOp::Gt"
+        Ge      "vsc::BinOp::Ge"
+        Lt      "vsc::BinOp::Lt"
+        Le      "vsc::BinOp::Le"
+        Add     "vsc::BinOp::Add"
+        Sub     "vsc::BinOp::Sub"
+        Div     "vsc::BinOp::Div"
+        Mul     "vsc::BinOp::Mul"
+        Mod     "vsc::BinOp::Mod"
+        BinAnd  "vsc::BinOp::BinAnd"
+        BinOr   "vsc::BinOp::BinOr" 
+        LogAnd  "vsc::BinOp::LogAnd"
+        LogOr   "vsc::BinOp::LogOr"
+        Sll     "vsc::BinOp::Sll"
+        Srl     "vsc::BinOp::Srl"
+        Xor     "vsc::BinOp::Xor"
+        Not     "vsc::BinOp::Not"
         
     cdef cppclass IModelExprBin(IModelExpr):
+        pass
+    
+    cdef cppclass IModelExprIn(IModelExpr):
         pass
 
 #********************************************************************
@@ -275,6 +305,26 @@ cdef extern from "vsc/IModelFieldRef.h" namespace "vsc":
         
         void setRef(IModelField *)
         IModelField *getRef() const
+        
+cdef extern from "vsc/IModelFieldFactory.h" namespace "vsc":
+    cdef cppclass IModelFieldFactory:
+        IModelField *create(const cpp_string &, IModelField *)
+        
+cdef extern from "vsc/IModelFieldVec.h" namespace "vsc":
+    cdef cppclass IModelFieldVec(IModelField):
+        IModelField *getSizeRef() const
+        uint32_t getSize() const
+        void push_back(IModelField *)
+        IModelField *at(uint32_t idx)
+        void pop_back()
+        IModelFieldFactory *getFieldFactory()
+        void setFieldFactory(IModelFieldFactory *)
+        
+cdef extern from "vsc/IModelFieldVecRoot.h" namespace "vsc":
+
+    cdef cppclass IModelFieldVecRoot(IModelFieldVec):
+        void setName(const cpp_string &)
+        pass
 
 cdef extern from "vsc/IModelFieldData.h" namespace "vsc":
     cdef cppclass IModelFieldData:

@@ -5,15 +5,16 @@
  *      Author: mballance
  */
 
+#include "vsc/IContext.h"
 #include "ModelFieldVecRoot.h"
 
 namespace vsc {
 
 ModelFieldVecRoot::ModelFieldVecRoot(
+		IContext			*ctxt,
 		IDataType			*type,
-		const std::string	&name,
-		IModelField			*size) :
-				ModelFieldVec(size), m_type(type), m_name(name) {
+		const std::string	&name) :
+				ModelFieldVec(ctxt), m_type(type), m_name(name) {
 
 }
 

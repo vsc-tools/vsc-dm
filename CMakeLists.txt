@@ -5,6 +5,9 @@ project(libvsc)
 
 include (ExternalProject)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 #set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -17,9 +20,9 @@ if (NOT PACKAGES_DIR)
 
 
   # Testing is only enabled when libvsc is the top-level project
-  enable_testing()
+#  enable_testing()
 
-  add_subdirectory(test)
+#  add_subdirectory(test)
 endif()
 
 set (GMP_DIR "${PACKAGES_DIR}/gmp")
@@ -36,8 +39,13 @@ ExternalProject_Add(GMP
   #  ${gmp_DOWNLOAD}
   #  PATCH_COMMAND cmake -DPATCH_DIR=${CMAKE_CURRENT_SOURCE_DIR}/patches -P ${CMAKE_CURRENT_SOURCE_DIR}/patches/btor2tools/btor2tools.cmake
   CMAKE_CACHE_ARGS
-    CONFIGURE_COMMAND sh -c "CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --disable-shared"
+if(APPLE)
+    CONFIGURE_COMMAND sh -c "${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --enable-cxx"
+else()
+    CONFIGURE_COMMAND sh -c "CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} ${PACKAGES_DIR}/gmp/configure --prefix=<INSTALL_DIR> --enable-cxx"
+endif()
     BUILD_COMMAND sh -c "make -j`nproc`"
+#    INSTALL_COMMAND sh -c "mkdir <INSTALL_DIR>/shlib" COMMAND sh -c "make install" COMMAND sh -c "mv <INSTALL_DIR>/lib/*.so* <INSTALL_DIR>/shlib"
     INSTALL_COMMAND sh -c "make install"
     -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
     -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -60,6 +68,8 @@ ExternalProject_Add(Cadical
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
     -DCMAKE_BUILD_TYPE:STRING=Release
+    -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
+    -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=${CMAKE_CXX_STANDARD_REQUIRED}
   )
  
 ExternalProject_Add(Btor2tools
@@ -74,11 +84,17 @@ ExternalProject_Add(Btor2tools
     -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
     -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_BINARY_DIR}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+    -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
+    -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=${CMAKE_CXX_STANDARD_REQUIRED}
   )
 
 if(WIN32)
         set(LIB_BTOR2TOOLS ${CMAKE_CURRENT_BINARY_DIR}/lib/btor2parser.lib)
         set(LIB_CADICAL ${CMAKE_CURRENT_BINARY_DIR}/lib/cadical.lib)
+elseif(APPLE)
+        set(LIB_BTOR2TOOLS ${CMAKE_CURRENT_BINARY_DIR}/lib/libbtor2parser.a)
+        set(LIB_CADICAL ${CMAKE_CURRENT_BINARY_DIR}/lib/libcadical.a)
+        set(LIB_GMP ${CMAKE_CURRENT_BINARY_DIR}/gmp/lib/libgmp.a)
 else()
         set(LIB_BTOR2TOOLS ${CMAKE_CURRENT_BINARY_DIR}/lib64/libbtor2parser.a)
         set(LIB_CADICAL ${CMAKE_CURRENT_BINARY_DIR}/lib/libcadical.a)
@@ -110,6 +126,8 @@ ExternalProject_Add(Bitwuzla
     -DCMAKE_BUILD_TYPE:STRING=Production
     #    -DGTest_FOUND:BOOL=True
     -DTESTING:BOOL=OFF
+    -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
+    -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=${CMAKE_CXX_STANDARD_REQUIRED}
   )
 
 ExternalProject_Add(Boolector
@@ -134,6 +152,8 @@ ExternalProject_Add(Boolector
     -DCMAKE_BUILD_TYPE:STRING=Production
     -DTESTING:BOOL=OFF
     -DGTest_FOUND:BOOL=True
+    -DCMAKE_CXX_STANDARD:STRING=${CMAKE_CXX_STANDARD}
+    -DCMAKE_CXX_STANDARD_REQUIRED:BOOL=${CMAKE_CXX_STANDARD_REQUIRED}
   )
 
 add_dependencies(Bitwuzla Cadical Btor2tools GMP)
@@ -144,8 +164,6 @@ if(NOT WIN32)
   add_compile_options(-fPIC)
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 
@@ -155,14 +173,4 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 
 add_subdirectory(src)
 
-
-#add_subdirectory(src)
-#add_subdirectory(deps)
-
-
-#    test
-#    deps)
-#    "${PROJECT_SOURCE_DIR}/test")
-
-#add_subdirectory(src)
 

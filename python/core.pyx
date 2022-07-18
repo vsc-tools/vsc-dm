@@ -111,9 +111,22 @@ cdef class Context(object):
                 <decl.BinOp>(op_i),
                 rhs._hndl))
         
+    cpdef mkModelExprIn(self, ModelExpr lhs, ModelExprRangelist rhs):
+        lhs._owned = False
+        rhs._owned = False
+        
+        return ModelExprIn.mk(
+            self._hndl.mkModelExprIn(
+                lhs.asExpr(),
+                rhs.asRangelist()))
+        
     cpdef mkModelExprFieldRef(self, ModelField field):
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
+        
+    cpdef mkModelExprPartSelect(self, ModelExpr lhs, int32_t lower, int32_t upper):
+        return ModelExprPartSelect.mk(
+            self._hndl.mkModelExprPartSelect(lhs.asExpr(), lower, upper), True)
         
     cpdef mkModelExprRange(self, bool is_single, ModelExpr lower, ModelExpr upper):
         cdef decl.IModelExpr *l = NULL
@@ -150,6 +163,16 @@ cdef class Context(object):
             type_h, 
             name.encode()),
             True)
+        
+    cpdef mkModelFieldVecRoot(self, DataType type, name):
+        cdef decl.IDataType *type_h = NULL
+        
+        if type is not None:
+            type_h = type._hndl
+        
+        return ModelFieldVecRoot.mk(self._hndl.mkModelFieldVecRoot(
+            type_h,
+            name.encode()))
         
     cpdef mkModelVal(self):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
@@ -490,7 +513,9 @@ cdef class ModelExpr(object):
     
     cpdef accept(self, VisitorBase v):
         self._hndl.accept(v._proxy)
-        pass
+    
+    cdef decl.IModelExpr *asExpr(self):
+        return self._hndl
 
     @staticmethod
     cdef mk(decl.IModelExpr *e, bool owned=True):
@@ -532,6 +557,18 @@ cdef class ModelExprBin(ModelExpr):
     cdef decl.IModelExprBin *asExprBin(self):
         return <decl.IModelExprBin *>(self._hndl)
     
+cdef class ModelExprIn(ModelExpr):
+
+    @staticmethod
+    cdef mk(decl.IModelExprIn *hndl, bool owned=True):
+        ret = ModelExprIn()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+    cdef decl.IModelExprIn *asExprIn(self):
+        return dynamic_cast[decl.IModelExprInP](self._hndl)
+    
 cdef class ModelExprFieldRef(ModelExpr):
 
     cpdef field(self):
@@ -543,6 +580,27 @@ cdef class ModelExprFieldRef(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprFieldRef *hndl, bool owned=True):
         ret = ModelExprFieldRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class ModelExprPartSelect(ModelExpr):
+
+    cpdef lhs(self):
+        return ModelExpr.mk(self.asPartSelect().lhs(), False)
+    
+    cpdef int32_t lower(self):
+        return self.asPartSelect().lower()
+    
+    cpdef int32_t upper(self):
+        return self.asPartSelect().upper()
+    
+    cdef decl.IModelExprPartSelect *asPartSelect(self):
+        return dynamic_cast[decl.IModelExprPartSelectP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprPartSelect *hndl, bool owned=True):
+        ret = ModelExprPartSelect()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -573,6 +631,7 @@ cdef class ModelExprRange(ModelExpr):
         ret = ModelExprRange()
         ret._hndl = hndl
         ret._owned = owned
+        return ret
         
 cdef class ModelExprRangelist(ModelExpr):
 
@@ -583,6 +642,9 @@ cdef class ModelExprRangelist(ModelExpr):
                 self.asRangelist().ranges().at(i).get(), False))
         return ret
     
+    cpdef addRange(self, ModelExprRange r):
+        self.asRangelist().addRange(r.asRange())
+    
     cdef decl.IModelExprRangelist *asRangelist(self):
         return dynamic_cast[decl.IModelExprRangelistP](self._hndl)
     
@@ -591,8 +653,30 @@ cdef class ModelExprRangelist(ModelExpr):
         ret = ModelExprRangelist()
         ret._hndl = hndl
         ret._owned = owned
+        return ret
+    
+class UnaryOp(IntEnum):
+    Not = decl.UnaryOp.Un_Not
     
     
+cdef class ModelExprUnary(ModelExpr):
+
+    cpdef ModelExpr expr(self):
+        return ModelExpr.mk(self.asUnary().expr(), False)
+        
+    cpdef op(self):
+        op_i = int(self.asUnary().op())
+        return UnaryOp(op_i)
+    
+    cdef decl.IModelExprUnary *asUnary(self):
+        return dynamic_cast[decl.IModelExprUnaryP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprUnary *hndl, bool owned=True): 
+        ret = ModelExprUnary()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
 cdef class ModelExprVal(ModelExpr):
     
@@ -736,6 +820,39 @@ cdef class ModelFieldType(ModelField):
         ret._owned = owned
         return ret
     
+cdef class ModelFieldVec(ModelField):
+
+    cpdef getSizeRef(self):
+        return ModelField.mk(self.asVec().getSizeRef(), False)
+    
+    cpdef getSize(self):
+        return self.asVec().getSize()
+
+    cdef decl.IModelFieldVec *asVec(self):
+        return dynamic_cast[decl.IModelFieldVecP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVec *hndl, bool owned=True):
+        ret = ModelFieldVec()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
+cdef class ModelFieldVecRoot(ModelFieldVec):
+
+    cpdef void setName(self, name):
+        self.asVecRoot().setName(name.encode())
+
+    cdef decl.IModelFieldVecRoot *asVecRoot(self):
+        return dynamic_cast[decl.IModelFieldVecRootP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldVecRoot *hndl, bool owned=True):
+        ret = ModelFieldVecRoot()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 cdef class ModelFieldDataClosure(object):
 
     cpdef getData(self):

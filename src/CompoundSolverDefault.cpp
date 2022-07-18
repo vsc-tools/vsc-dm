@@ -102,8 +102,6 @@ bool CompoundSolverDefault::solve(
 		}
 
 		if (ret) {
-			/*
-			 */
 			if ((flags & SolveFlags::Randomize) != SolveFlags::NoFlags) {
 				// Swizzle fields
 				SolveSetSwizzlerPartsel(randstate).swizzle(
@@ -114,7 +112,9 @@ bool CompoundSolverDefault::solve(
 					fprintf(stdout, "unsat post-swizzle\n");
 				}
 			}
-
+			/*
+			solver->isSAT();
+			 */
 
 			for (auto f_it=(*sset)->rand_fields().begin();
 					f_it!=(*sset)->rand_fields().end(); f_it++) {

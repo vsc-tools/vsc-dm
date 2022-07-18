@@ -91,6 +91,13 @@ public:
 		return m_ctxt->mkModelExprIn(lhs, rhs);
 	}
 
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) override {
+		return m_ctxt->mkModelExprPartSelect(lhs, lower, upper);
+	}
+
 	virtual IModelExprVal *mkModelExprVal(IModelVal *v) override {
 		return m_ctxt->mkModelExprVal(v);
 	}

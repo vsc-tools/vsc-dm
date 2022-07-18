@@ -10,10 +10,12 @@
 
 namespace vsc {
 
-class IModelFieldVecRoot : public IModelFieldVec {
+class IModelFieldVecRoot : public virtual IModelFieldVec {
 public:
 
 	virtual ~IModelFieldVecRoot() { }
+
+	virtual void setName(const std::string &name) = 0;
 
 };
 

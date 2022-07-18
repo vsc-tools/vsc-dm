@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include "vsc/IContext.h"
 #include "DataTypeInt.h"
+#include "DataTypeVec.h"
 #include "DataTypeStruct.h"
 
 namespace vsc {
@@ -52,6 +53,12 @@ public:
 	virtual bool addDataTypeStruct(
 			IDataTypeStruct *t) override;
 
+	virtual IDataTypeVec *findDataTypeVec(IDataType *t) override;
+
+	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) override;
+
+	virtual bool *addDataTypeVec(IDataTypeVec *t) override;
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override;
 
@@ -65,6 +72,11 @@ public:
 
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
+
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) override;
 
 	virtual IModelExprRange *mkModelExprRange(
 			bool			is_single,
@@ -89,6 +101,10 @@ public:
 	virtual IModelFieldType *mkModelFieldType(
 			ITypeField			*type
 			) override;
+
+	virtual IModelFieldVec *mkModelFieldVecRoot(
+			IDataType			*type,
+			const std::string	&name) override;
 
 	virtual IModelVal *mkModelVal() override;
 
@@ -138,10 +154,20 @@ public:
 			IDataType				*dtype,
 			TypeFieldAttr			attr) override;
 
+	virtual ITypeFieldVec *mkTypeFieldVec(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init_sz) override;
+
 
 private:
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;
+
+	std::unordered_map<IDataType *, IDataTypeVec *>			m_vec_type_m;
+	std::vector<IDataTypeVecUP>								m_vec_type_l;
 
 	std::unordered_map<std::string,IDataTypeStruct *>		m_struct_type_m;
 	std::vector<IDataTypeStructUP>							m_struct_type_l;

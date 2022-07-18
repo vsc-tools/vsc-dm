@@ -9,12 +9,15 @@
 #include "vsc/ICompoundSolver.h"
 #include "vsc/IDataTypeEnum.h"
 #include "vsc/IDataTypeInt.h"
+#include "vsc/IDataTypeStruct.h"
+#include "vsc/IDataTypeVec.h"
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprIn.h"
+#include "vsc/IModelExprPartSelect.h"
 #include "vsc/IModelExprRange.h"
 #include "vsc/IModelExprRangelist.h"
 #include "vsc/IModelExprVal.h"
@@ -35,6 +38,7 @@
 #include "vsc/ITypeExprVal.h"
 #include "vsc/ITypeFieldPhy.h"
 #include "vsc/ITypeFieldRef.h"
+#include "vsc/ITypeFieldVec.h"
 
 namespace vsc {
 
@@ -81,6 +85,12 @@ public:
 
 	virtual bool addDataTypeStruct(IDataTypeStruct *t) = 0;
 
+	virtual IDataTypeVec *findDataTypeVec(IDataType *t) = 0;
+
+	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) = 0;
+
+	virtual bool *addDataTypeVec(IDataTypeVec *t) = 0;
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) = 0;
 
@@ -98,6 +108,11 @@ public:
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) = 0;
+
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) = 0;
 
 	virtual IModelExprRange *mkModelExprRange(
 			bool			is_single,
@@ -121,6 +136,10 @@ public:
 
 	virtual IModelFieldType *mkModelFieldType(
 			ITypeField			*type) = 0;
+
+	virtual IModelFieldVec *mkModelFieldVecRoot(
+			IDataType			*type,
+			const std::string	&name) = 0;
 
 	virtual IModelVal *mkModelVal() = 0;
 
@@ -165,6 +184,13 @@ public:
 			const std::string		&name,
 			IDataType				*dtype,
 			TypeFieldAttr			attr) = 0;
+
+	virtual ITypeFieldVec *mkTypeFieldVec(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init_sz) = 0;
 
 };
 

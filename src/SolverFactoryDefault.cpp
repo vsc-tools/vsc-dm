@@ -35,8 +35,8 @@ SolverFactoryDefault::~SolverFactoryDefault() {
 }
 
 ISolver *SolverFactoryDefault::createSolverInst(SolveSet *sset) {
-	return new SolverBitwuzla();
-//	return new SolverBoolector();
+//	return new SolverBitwuzla();
+	return new SolverBoolector();
 }
 
 ISolverFactory *SolverFactoryDefault::inst() {

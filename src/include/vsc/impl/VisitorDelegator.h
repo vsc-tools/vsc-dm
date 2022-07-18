@@ -193,6 +193,10 @@ public:
 		m_delegate->visitTypeFieldRef(f);
 	}
 
+	virtual void visitTypeFieldVec(ITypeFieldVec *f) override {
+		m_delegate->visitTypeFieldVec(f);
+	}
+
 protected:
 	IVisitor *delegate() const { return m_delegate; }
 

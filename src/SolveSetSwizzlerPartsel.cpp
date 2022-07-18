@@ -120,7 +120,7 @@ void SolveSetSwizzlerPartsel::create_rand_domain_constraint(
 	m_randstate->randbits(&val);
 	DEBUG("randbits: 0x%08llx", val.val_u());
 
-	uint32_t max_intervals = 6;
+	uint32_t max_intervals = 4;
 
 	std::vector<IModelConstraintUP> swizzle_c;
 	if (width > max_intervals) {

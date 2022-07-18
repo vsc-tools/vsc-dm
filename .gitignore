@@ -3,6 +3,7 @@ python/libvsc.cpp
 python/core.cpp
 python/core.h
 python/libvsc/*.so
+python/libvsc/*.dylib
 *.egg-info
 
 build/

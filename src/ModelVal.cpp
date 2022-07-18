@@ -301,8 +301,6 @@ void ModelVal::val_u(uint64_t v, int32_t width) {
 void ModelVal::set_val_u(
 		uint64_t v,
 		int32_t width) {
-	fprintf(stdout, "set_val_u: v=0x%8llx width=%d\n",
-			v, width);
 	if (width == -1) {
 		width = m_bits;
 	}
@@ -322,8 +320,6 @@ void ModelVal::set_val_u(
 void ModelVal::set_val_i(
 		int64_t v,
 		int32_t width) {
-	fprintf(stdout, "set_val_i: v=0x%8llx width=%d\n",
-			v, width);
 	if (width == -1) {
 		width = m_bits;
 	}

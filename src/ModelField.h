@@ -20,7 +20,7 @@ namespace vsc {
 
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;
-class ModelField : public IModelField {
+class ModelField : public virtual IModelField {
 public:
 	ModelField(IDataType *type);
 

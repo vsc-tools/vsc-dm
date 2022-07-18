@@ -11,7 +11,8 @@ namespace vsc {
 
 enum class TypeFieldAttr {
 	NoAttr = 0,
-	Rand = (1 << 0)
+	Rand = (1 << 0),
+	VecSize  = (1 << 1)
 };
 
 static inline TypeFieldAttr operator | (const TypeFieldAttr lhs, const TypeFieldAttr rhs) {

@@ -9,7 +9,6 @@ add_library(vsc SHARED ${libvsc_SRC})
 target_include_directories(vsc PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/include
-    ${PROJECT_SOURCE_DIR}/src/facade
     ${CMAKE_BINARY_DIR}/include
     ${Boolector_INCLUDE_DIR}
     )
@@ -17,6 +16,7 @@ target_include_directories(vsc PUBLIC
 target_link_directories(vsc PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
+    ${CMAKE_BINARY_DIR}/gmp/lib
     )
   
 target_link_libraries(vsc 
@@ -43,8 +43,6 @@ target_link_directories(vsc_static PRIVATE
     )
 
 add_dependencies(vsc_static Boolector Bitwuzla)
-
-add_subdirectory(facade)
 
 install(TARGETS vsc_static
     DESTINATION lib
