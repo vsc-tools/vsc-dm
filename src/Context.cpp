@@ -25,6 +25,8 @@
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
 #include "ModelConstraintIfElse.h"
+#include "ModelConstraintImplies.h"
+#include "ModelConstraintScope.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
@@ -121,6 +123,16 @@ IModelConstraintIfElse *Context::mkModelConstraintIfElse(
 			IModelConstraint	*true_c,
 			IModelConstraint	*false_c) {
 	return new ModelConstraintIfElse(cond, true_c, false_c);
+}
+
+IModelConstraintImplies *Context::mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) {
+	return new ModelConstraintImplies(cond, body);
+}
+
+IModelConstraintScope *Context::mkModelConstraintScope() {
+	return new ModelConstraintScope();
 }
 
 IDataTypeInt *Context::findDataTypeInt(

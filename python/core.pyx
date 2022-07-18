@@ -105,6 +105,18 @@ cdef class Context(object):
                 true_c.asConstraint(),
                 false_p
             ), True)
+
+    cpdef mkModelConstraintImplies(self,
+        ModelExpr           cond,
+        ModelConstraint     body):
+        cond._owned = False
+        body._owned = False
+        return ModelConstraintImplies.mk(self._hndl.mkModelConstraintImplies(
+            cond._hndl,
+            body._hndl), True)
+
+    cpdef mkModelConstraintScope(self):
+        return ModelConstraintScope.mk(self._hndl.mkModelConstraintScope(), True)
     
     cpdef mkModelExprBin(self, 
             ModelExpr           lhs,
@@ -488,17 +500,12 @@ cdef class ModelConstraint(object):
             
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=True):
-        ret = ModelConstraint()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-
-    pass
+        return WrapperBuilder().mkModelConstraint(hndl, owned)
 
 cdef class ModelConstraintScope(ModelConstraint):
     
     cpdef constraints(self):
-        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *cl = &self.asModelConstraintScope().constraints()
+        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *cl = &self.asScope().constraints()
         ret = []
         
         for i in range(cl.size()):
@@ -508,12 +515,18 @@ cdef class ModelConstraintScope(ModelConstraint):
     
     cpdef addConstraint(self, ModelConstraint c):
         c._owned = False
-        self.asModelConstraintScope().add_constraint(c._hndl)
+        self.asScope().addConstraint(c._hndl)
     
-    cdef decl.IModelConstraintScope *asModelConstraintScope(self):
+    cdef decl.IModelConstraintScope *asScope(self):
         return <decl.IModelConstraintScope *>(self._hndl)
-    
 
+    @staticmethod
+    cdef mk(decl.IModelConstraintScope *hndl, bool owned=True):
+        ret = ModelConstraintScope()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+    
 cdef class ModelConstraintBlock(ModelConstraintScope):
 
     cpdef name(self):
@@ -576,6 +589,23 @@ cdef class ModelConstraintIfElse(ModelConstraint):
         ret._owned = owned
         return ret
     
+
+cdef class ModelConstraintImplies(ModelConstraint):
+    cpdef getCond(self):
+        return ModelExpr.mk(self.asImplies().getCond(), False)
+
+    cpdef getBody(self):
+        return ModelConstraint.mk(self.asImplies().getBody(), False)
+
+    cdef decl.IModelConstraintImplies *asImplies(self):
+        return dynamic_cast[decl.IModelConstraintImpliesP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintImplies *hndl, bool owned=True):
+        ret = ModelConstraintImplies()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
 
 cdef class ModelExpr(object):
     
@@ -1412,6 +1442,18 @@ cdef class VisitorBase(object):
     
     cpdef visitDataTypeStruct(self, DataTypeStruct t):
         pass
+
+    cpdef visitModelConstraintBlock(self, ModelConstraintBlock c):
+        pass
+
+    cpdef visitModelConstraintExpr(self, ModelConstraintExpr c):
+        pass
+
+    cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c):
+        pass
+
+    cpdef visitModelConstraintImplies(self, ModelConstraintImplies c):
+        pass
         
     cpdef visitModelExprBin(self, ModelExprBin e):
         self._proxy.visitModelExprBinBase(e.asExprBin())
@@ -1439,6 +1481,21 @@ cdef public void VisitorProxy_visitDataTypeInt(obj, decl.IDataTypeInt *t) with g
 
 cdef public void VisitorProxy_visitDataTypeStruct(obj, decl.IDataTypeStruct *t) with gil:
     obj.visitDataTypeStruct(DataTypeStruct.mk(t, False))
+
+cdef public void VisitorProxy_visitModelConstraintBlock(obj, decl.IModelConstraintBlock *c) with gil:
+    obj.visitModelConstraintBlock(ModelConstraintBlock.mk(c, False))
+
+cdef public void VisitorProxy_visitModelConstraintExpr(obj, decl.IModelConstraintExpr *c) with gil:
+    obj.visitModelConstraintExpr(ModelConstraintExpr.mk(c, False))
+
+cdef public void VisitorProxy_visitModelConstraintIfElse(obj, decl.IModelConstraintIfElse *c) with gil:
+    obj.visitModelConstraintIfElse(ModelConstraintIfElse.mk(c, False))
+
+cdef public void VisitorProxy_visitModelConstraintImplies(obj, decl.IModelConstraintImplies *c) with gil:
+    obj.visitModelConstraintImplies(ModelConstraintImplies.mk(c, False))
+
+cdef public void VisitorProxy_visitModelConstraintScope(obj, decl.IModelConstraintScope *c) with gil:
+    obj.visitModelConstraintScope(ModelConstraintScope.mk(c, False))
         
 cdef public void VisitorProxy_visitModelExprBin(obj, decl.IModelExprBin *e) with gil:
     obj.visitModelExprBin(ModelExprBin.mk(e, False))
@@ -1569,6 +1626,18 @@ cdef class WrapperBuilder(VisitorBase):
     
     cpdef visitDataTypeStruct(self, DataTypeStruct t):
         self._data_Type = t
+
+    cpdef visitModelConstraintBlock(self, ModelConstraintBlock c):
+        self._model_constraint = c
+
+    cpdef visitModelConstraintExpr(self, ModelConstraintExpr c):
+        self._model_constraint = c
+
+    cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c):
+        self._model_constraint = c
+
+    cpdef visitModelConstraintImplies(self, ModelConstraintImplies c):
+        self._model_constraint = c
         
     cpdef void visitModelFieldRef(self, ModelFieldRef f):
         self._model_field = f
@@ -1590,6 +1659,11 @@ cdef class WrapperBuilder(VisitorBase):
         obj.accept(self._proxy)
         self._data_type._owned = owned
         return self._data_type
+
+    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned):
+        obj.accept(self._proxy)
+        self._model_constraint._owned = owned
+        return self._model_constraint
     
     cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned):
         print("mkModelField")

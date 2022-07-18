@@ -17,6 +17,26 @@ VisitorProxy::~VisitorProxy() {
 	Py_DECREF(m_obj);
 }
 
+void VisitorProxy::visitModelConstraintBlock(vsc::IModelConstraintBlock *c) {
+	VisitorProxy_visitModelConstraintBlock(m_obj, c);
+}
+
+void VisitorProxy::visitModelConstraintExpr(vsc::IModelConstraintExpr *c) {
+	VisitorProxy_visitModelConstraintExpr(m_obj, c);
+}
+
+void VisitorProxy::visitModelConstraintIfElse(vsc::IModelConstraintIfElse *c) {
+	VisitorProxy_visitModelConstraintIfElse(m_obj, c);
+}
+
+void VisitorProxy::visitModelConstraintImplies(vsc::IModelConstraintImplies *c) {
+	VisitorProxy_visitModelConstraintImplies(m_obj, c);
+}
+
+void VisitorProxy::visitModelConstraintScope(vsc::IModelConstraintScope *c) {
+	VisitorProxy_visitModelConstraintScope(m_obj, c);
+}
+
 void VisitorProxy::visitModelExprBin(vsc::IModelExprBin *e) {
 	VisitorProxy_visitModelExprBin(m_obj, e);
 }

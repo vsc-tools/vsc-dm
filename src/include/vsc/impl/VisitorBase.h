@@ -48,6 +48,7 @@
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
 #include "vsc/ITypeConstraintIfElse.h"
+#include "vsc/ITypeConstraintImplies.h"
 #include "vsc/ITypeConstraintScope.h"
 
 #include "vsc/ITypeField.h"
@@ -98,7 +99,10 @@ public:
 		}
 	}
 
-	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { }
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { 
+		c->getCond()->accept(m_this);
+		c->getBody()->accept(m_this);
+	}
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
 		for (std::vector<IModelConstraintUP>::const_iterator
@@ -212,6 +216,11 @@ public:
 		if (c->getFalse()) {
 			c->getFalse()->accept(m_this);
 		}
+	}
+
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
+		c->getCond()->accept(m_this);
+		c->getBody()->accept(m_this);
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {

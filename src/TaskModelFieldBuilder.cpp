@@ -112,7 +112,7 @@ void TaskModelFieldBuilder::visitTypeConstraintExpr(ITypeConstraintExpr *c) {
 
 	IModelConstraintExpr *cm = m_ctxt->mkModelConstraintExpr(expr);
 
-	m_constraint_s.back()->add_constraint(cm);
+	m_constraint_s.back()->addConstraint(cm);
 
 	DEBUG_LEAVE("visitTypeConstraintExpr");
 }

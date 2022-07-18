@@ -22,16 +22,19 @@ public:
 	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) { }
 
 	virtual void visitModelConstraint(vsc::IModelConstraint *c) { }
+#endif
 
-	virtual void visitModelConstraintBlock(vsc::IModelConstraintBlock *c) { }
+	virtual void visitModelConstraintBlock(vsc::IModelConstraintBlock *c) override;
 
-	virtual void visitModelConstraintExpr(vsc::IModelConstraintExpr *c) { }
+	virtual void visitModelConstraintExpr(vsc::IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(vsc::IModelConstraintIf *c) { }
+	virtual void visitModelConstraintIfElse(vsc::IModelConstraintIfElse *c) override;
 
-	virtual void visitModelConstraintImplies(vsc::IModelConstraintImplies *c) { }
+	virtual void visitModelConstraintImplies(vsc::IModelConstraintImplies *c) override;
 
-	virtual void visitModelConstraintScope(vsc::IModelConstraintScope *c) { }
+	virtual void visitModelConstraintScope(vsc::IModelConstraintScope *c) override;
+
+#ifdef UNDEFINED
 
 	virtual void visitModelConstraintSoft(vsc::IModelConstraintSoft *c) { }
 

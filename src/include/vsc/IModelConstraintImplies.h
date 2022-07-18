@@ -18,9 +18,9 @@ public:
 
 	virtual ~IModelConstraintImplies() { }
 
-	virtual IModelExpr *cond() const = 0;
+	virtual IModelExpr *getCond() const = 0;
 
-	virtual IModelConstraint *body() const = 0;
+	virtual IModelConstraint *getBody() const = 0;
 
 };
 

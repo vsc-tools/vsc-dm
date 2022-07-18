@@ -22,6 +22,8 @@ ctypedef IDataTypeVec *IDataTypeVecP
 ctypedef IModelConstraint *IModelConstraintP
 ctypedef IModelConstraintExpr *IModelConstraintExprP
 ctypedef IModelConstraintIfElse *IModelConstraintIfElseP
+ctypedef IModelConstraintImplies *IModelConstraintImpliesP
+ctypedef IModelConstraintScope *IModelConstraintScopeP
 ctypedef IModelExpr *IModelExprP
 ctypedef IModelExprIn *IModelExprInP
 ctypedef IModelExprPartSelect *IModelExprPartSelectP
@@ -70,6 +72,10 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             IModelExpr *cond,
             IModelConstraint *true_c,
             IModelConstraint *false_c)
+        IModelConstraintImplies *mkModelConstraintImplies(
+            IModelExpr *cond,
+            IModelConstraint *body)
+        IModelConstraintScope *mkModelConstraintScope()
         IDataTypeInt *findDataTypeInt(bool is_signed, int32_t width)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
         bool addDataTypeInt(IDataTypeInt *)
@@ -188,13 +194,13 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
 #********************************************************************
 #ctypedef IModelConstraint *IModelConstraintP
 cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
-    cdef cppclass IModelConstraint:
+    cdef cppclass IModelConstraint(IAccept):
         pass
     
 cdef extern from "vsc/IModelConstraintScope.h" namespace "vsc":
     cdef cppclass IModelConstraintScope(IModelConstraint):
         const cpp_vector[unique_ptr[IModelConstraint]] &constraints() const
-        void add_constraint(IModelConstraint *)
+        void addConstraint(IModelConstraint *)
     
 cdef extern from "vsc/IModelConstraintBlock.h" namespace "vsc":
     cdef cppclass IModelConstraintBlock(IModelConstraintScope):
@@ -210,6 +216,11 @@ cdef extern from "vsc/IModelConstraintIfElse.h" namespace "vsc":
         IModelConstraint *getTrue() const
         IModelConstraint *getFalse() const
         void setFalse(IModelConstraint *)
+
+cdef extern from "vsc/IModelConstraintImplies.h" namespace "vsc":
+    cdef cppclass IModelConstraintImplies(IModelConstraint):
+        IModelExpr *getCond() const
+        IModelConstraint *getBody() const
 
 #********************************************************************
 #* IModelExpr
@@ -424,7 +435,7 @@ cdef extern from "vsc/ITask.h" namespace "vsc":
 #* ITypeConstraint
 #********************************************************************
 cdef extern from "vsc/ITypeConstraint.h" namespace "vsc":
-    cdef cppclass ITypeConstraint:
+    cdef cppclass ITypeConstraint(IAccept):
         pass
     
 cdef extern from "vsc/ITypeConstraintExpr.h" namespace "vsc":

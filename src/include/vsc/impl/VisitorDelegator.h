@@ -155,6 +155,10 @@ public:
 		m_delegate->visitTypeConstraintIfElse(c);
 	}
 
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
+		m_delegate->visitTypeConstraintImplies(c);
+	}
+
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		m_delegate->visitTypeConstraintScope(c);
 	}

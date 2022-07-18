@@ -67,6 +67,7 @@ class ITypeConstraint;
 class ITypeConstraintBlock;
 class ITypeConstraintExpr;
 class ITypeConstraintIfElse;
+class ITypeConstraintImplies;
 class ITypeConstraintScope;
 class ITypeExpr;
 class ITypeExprBin;
@@ -153,6 +154,8 @@ public:
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
 
 	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) = 0;
+
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) = 0;
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
 

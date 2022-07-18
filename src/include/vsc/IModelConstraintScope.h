@@ -19,7 +19,7 @@ public:
 
 	virtual const std::vector<IModelConstraintUP> &constraints() const = 0;
 
-	virtual void add_constraint(IModelConstraint *c) = 0;
+	virtual void addConstraint(IModelConstraint *c) = 0;
 };
 
 }

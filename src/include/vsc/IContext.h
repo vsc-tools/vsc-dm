@@ -14,6 +14,8 @@
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
 #include "vsc/IModelConstraintIfElse.h"
+#include "vsc/IModelConstraintImplies.h"
+#include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
@@ -103,6 +105,12 @@ public:
 			IModelExpr			*cond,
 			IModelConstraint	*true_c,
 			IModelConstraint	*false_c) = 0;
+
+	virtual IModelConstraintImplies *mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) = 0;
+
+	virtual IModelConstraintScope *mkModelConstraintScope() = 0;
 
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,

@@ -26,7 +26,7 @@ public:
 		return m_constraints;
 	}
 
-	virtual void add_constraint(IModelConstraint *c) override;
+	virtual void addConstraint(IModelConstraint *c) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintBlock(this); }
 

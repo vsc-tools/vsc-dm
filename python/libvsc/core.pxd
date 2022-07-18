@@ -32,6 +32,10 @@ cdef class Context(object):
         ModelExpr           cond,
         ModelConstraint     true_c,
         ModelConstraint     false_c)
+    cpdef mkModelConstraintImplies(self, 
+        ModelExpr           cond,
+        ModelConstraint     body)
+    cpdef mkModelConstraintScope(self)
     cpdef bool addDataTypeInt(self, DataTypeInt)
     cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width)
     cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width)
@@ -139,7 +143,10 @@ cdef class ModelConstraintScope(ModelConstraint):
     cpdef constraints(self)
     cpdef addConstraint(self, ModelConstraint)
     
-    cdef decl.IModelConstraintScope *asModelConstraintScope(self)
+    cdef decl.IModelConstraintScope *asScope(self)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintScope *hndl, bool owned=*)
     
 cdef class ModelConstraintBlock(ModelConstraintScope):
     cpdef name(self)
@@ -167,7 +174,15 @@ cdef class ModelConstraintIfElse(ModelConstraint):
     cdef decl.IModelConstraintIfElse *asIfElse(self)
     @staticmethod
     cdef mk(decl.IModelConstraintIfElse *, bool owned=*)
-    
+
+cdef class ModelConstraintImplies(ModelConstraint):
+    cpdef getCond(self)
+    cpdef getBody(self)
+
+    cdef decl.IModelConstraintImplies *asImplies(self)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintImplies *hndl, bool owned=*)
     
 cdef class ModelExpr(object):
     cdef decl.IModelExpr         *_hndl
@@ -530,6 +545,14 @@ cdef class VisitorBase(object):
     cpdef visitDataTypeInt(self, DataTypeInt t)
     
     cpdef visitDataTypeStruct(self, DataTypeStruct t)
+
+    cpdef visitModelConstraintBlock(self, ModelConstraintBlock c)
+
+    cpdef visitModelConstraintExpr(self, ModelConstraintExpr c)
+
+    cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c)
+
+    cpdef visitModelConstraintImplies(self, ModelConstraintImplies c)
     
     cpdef visitModelExprBin(self, ModelExprBin e)
     
@@ -546,10 +569,21 @@ cdef class VisitorBase(object):
 cdef class WrapperBuilder(VisitorBase):
     cdef DataType _data_type
     cdef ModelField _model_field
+    cdef ModelConstraint _model_constraint
     
     cdef DataType mkDataType(self, decl.IDataType *obj, bool owned)
     
     cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned)
+
+    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned)
+
+    cpdef visitModelConstraintBlock(self, ModelConstraintBlock c)
+
+    cpdef visitModelConstraintExpr(self, ModelConstraintExpr c)
+
+    cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c)
+
+    cpdef visitModelConstraintImplies(self, ModelConstraintImplies c)
     
     
 #********************************************************************    

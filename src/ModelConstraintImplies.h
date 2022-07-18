@@ -18,9 +18,9 @@ public:
 
 	virtual ~ModelConstraintImplies();
 
-	virtual IModelExpr *cond() const override { return m_cond.get(); }
+	virtual IModelExpr *getCond() const override { return m_cond.get(); }
 
-	virtual IModelConstraint *body() const override { return m_body.get(); }
+	virtual IModelConstraint *getBody() const override { return m_body.get(); }
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintImplies(this); }
 

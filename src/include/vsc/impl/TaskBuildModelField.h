@@ -121,7 +121,7 @@ public:
 
 		IModelConstraintExpr *cm = m_ctxt->ctxt()->mkModelConstraintExpr(expr);
 
-		m_constraint_s.back()->add_constraint(cm);
+		m_constraint_s.back()->addConstraint(cm);
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {

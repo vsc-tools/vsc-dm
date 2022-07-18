@@ -70,6 +70,12 @@ public:
 			IModelConstraint	*true_c,
 			IModelConstraint	*false_c) override;
 
+	virtual IModelConstraintImplies *mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) override;
+
+	virtual IModelConstraintScope *mkModelConstraintScope() override;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
