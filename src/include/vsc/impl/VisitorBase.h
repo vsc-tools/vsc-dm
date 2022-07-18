@@ -14,7 +14,7 @@
 
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
-#include "vsc/IModelConstraintIf.h"
+#include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
@@ -47,6 +47,7 @@
 
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
+#include "vsc/ITypeConstraintIfElse.h"
 #include "vsc/ITypeConstraintScope.h"
 
 #include "vsc/ITypeField.h"
@@ -88,7 +89,13 @@ public:
 		c->expr()->accept(m_this);
 	}
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override { }
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 
+		c->getCond()->accept(m_this);
+		c->getTrue()->accept(m_this);
+		if (c->getFalse()) {
+			c->getFalse()->accept(m_this);
+		}
+	}
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { }
 
@@ -193,9 +200,17 @@ public:
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override {
 		visitTypeConstraintScope(c);
 	}
-
+	
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
 		c->expr()->accept(m_this);
+	}
+
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
+		c->getCond()->accept(m_this);
+		c->getTrue()->accept(m_this);
+		if (c->getFalse()) {
+			c->getFalse()->accept(m_this);
+		}
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {

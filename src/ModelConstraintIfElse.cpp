@@ -1,15 +1,15 @@
 /*
- * ModelConstraintIf.cpp
+ * ModelConstraintIfElse.cpp
  *
  *  Created on: Oct 31, 2021
  *      Author: mballance
  */
 
-#include "ModelConstraintIf.h"
+#include "ModelConstraintIfElse.h"
 
 namespace vsc {
 
-ModelConstraintIf::ModelConstraintIf(
+ModelConstraintIfElse::ModelConstraintIfElse(
 		IModelExpr			*cond,
 		IModelConstraint	*true_c,
 		IModelConstraint	*false_c) :
@@ -17,7 +17,7 @@ ModelConstraintIf::ModelConstraintIf(
 
 }
 
-ModelConstraintIf::~ModelConstraintIf() {
+ModelConstraintIfElse::~ModelConstraintIfElse() {
 	// TODO Auto-generated destructor stub
 }
 

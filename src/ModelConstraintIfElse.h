@@ -1,26 +1,26 @@
 /*
- * ModelConstraintIf.h
+ * ModelConstraintIfElse.h
  *
  *  Created on: Oct 31, 2021
  *      Author: mballance
  */
 
 #pragma once
-#include "vsc/IModelConstraintIf.h"
+#include "vsc/IModelConstraintIfElse.h"
 #include "ModelExpr.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
 
-class ModelConstraintIf : public IModelConstraintIf {
+class ModelConstraintIfElse : public IModelConstraintIfElse {
 public:
 	ModelConstraintIf(
 			IModelExpr				*cond,
 			IModelConstraint		*true_c,
 			IModelConstraint		*false_c);
 
-	virtual ~ModelConstraintIf();
+	virtual ~ModelConstraintIfElse();
 
 	virtual IModelExpr *cond() const override {
 		return m_cond.get();
@@ -42,7 +42,7 @@ public:
 		m_false_c = IModelConstraintUP(c);
 	}
 
-	virtual void accept(IVisitor *v) override { v->visitModelConstraintIf(this); }
+	virtual void accept(IVisitor *v) override { v->visitModelConstraintIfElse(this); }
 
 private:
 	IModelExprUP					m_cond;

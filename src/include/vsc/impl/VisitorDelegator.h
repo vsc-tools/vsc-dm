@@ -39,8 +39,8 @@ public:
 		m_delegate->visitModelConstraintExpr(c);
 	}
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override {
-		m_delegate->visitModelConstraintIf(c);
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override {
+		m_delegate->visitModelConstraintIfElse(c);
 	}
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override {
@@ -149,6 +149,10 @@ public:
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
 		m_delegate->visitTypeConstraintExpr(c);
+	}
+
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
+		m_delegate->visitTypeConstraintIfElse(c);
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {

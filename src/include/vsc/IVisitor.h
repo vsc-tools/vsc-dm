@@ -35,7 +35,7 @@ class IDataTypeStruct;
 class IModelConstraint;
 class IModelConstraintBlock;
 class IModelConstraintExpr;
-class IModelConstraintIf;
+class IModelConstraintIfElse;
 class IModelConstraintImplies;
 class IModelConstraintScope;
 class IModelConstraintSoft;
@@ -66,6 +66,7 @@ class IModelFieldVecRoot;
 class ITypeConstraint;
 class ITypeConstraintBlock;
 class ITypeConstraintExpr;
+class ITypeConstraintIfElse;
 class ITypeConstraintScope;
 class ITypeExpr;
 class ITypeExprBin;
@@ -94,7 +95,7 @@ public:
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) = 0;
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) = 0;
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) = 0;
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) = 0;
 
@@ -149,6 +150,8 @@ public:
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) = 0;
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
+
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) = 0;
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
 
