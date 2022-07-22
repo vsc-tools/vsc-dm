@@ -60,6 +60,9 @@ cdef class Context(object):
         TypeExpr        cond,
         TypeConstraint  true_c,
         TypeConstraint  false_c)
+    cpdef TypeConstraintImplies mkTypeConstraintImplies(self, 
+        TypeExpr        cond,
+        TypeConstraint  body)
     cpdef TypeConstraintScope mkTypeConstraintScope(self)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
@@ -200,8 +203,20 @@ cdef class ModelExpr(object):
 cdef class ModelExprBin(ModelExpr):
 
     @staticmethod
-    cdef mkWrapper(decl.IModelExprBin *e)
+    cdef mk(decl.IModelExprBin *hndl, bool owned=*)
+
     cdef decl.IModelExprBin *asExprBin(self)
+
+cdef class ModelExprCond(ModelExpr):
+
+    cpdef getCond(self)
+    cpdef getTrue(self)
+    cpdef getFalse(self)
+
+    cdef decl.IModelExprCond *asCond(self)
+
+    @staticmethod
+    cdef mk(decl.IModelExprCond *hndl, bool owned=*)
     
 cdef class ModelExprIn(ModelExpr):
 
@@ -255,6 +270,14 @@ cdef class ModelExprRangelist(ModelExpr):
     
     @staticmethod 
     cdef mk(decl.IModelExprRangelist *, bool owned=*)
+
+cdef class ModelExprRef(ModelExpr): 
+    cpdef expr(self)
+
+    cdef decl.IModelExprRef *asRef(self)
+
+    @staticmethod
+    cdef mk(decl.IModelExprRef *hndl, bool owned=*)
     
 cdef class ModelExprUnary(ModelExpr):
 
@@ -276,6 +299,16 @@ cdef class ModelExprVal(ModelExpr):
     
     @staticmethod
     cdef mk(decl.IModelExprVal *, bool owned=*)
+
+cdef class ModelExprVecSubscript(ModelExpr):
+
+    cpdef expr(self)
+    cpdef subscript(self)
+    
+    cdef decl.IModelExprVecSubscript *asVecSubscript(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprVecSubscript *, bool owned=*)
 
 cdef class ModelField(object):
     cdef decl.IModelField       *_hndl
@@ -415,6 +448,15 @@ cdef class TypeConstraintIfElse(TypeConstraint):
 
     @staticmethod
     cdef TypeConstraintIfElse mk(decl.ITypeConstraintIfElse *hndl, bool owned=*)
+
+cdef class TypeConstraintImplies(TypeConstraint):
+    cpdef getCond(self)
+    cpdef getBody(self)
+
+    cdef decl.ITypeConstraintImplies *asImplies(self)
+
+    @staticmethod
+    cdef TypeConstraintImplies mk(decl.ITypeConstraintImplies *hndl, bool owned=*)
    
 cdef class TypeConstraintScope(TypeConstraint):
     
@@ -555,6 +597,26 @@ cdef class VisitorBase(object):
     cpdef visitModelConstraintImplies(self, ModelConstraintImplies c)
     
     cpdef visitModelExprBin(self, ModelExprBin e)
+
+    cpdef visitModelExprCond(self, ModelExprCond e)
+
+    cpdef visitModelExprFieldRef(self, ModelExprFieldRef e)
+
+    cpdef visitModelExprIn(self, ModelExprIn e)
+
+    cpdef visitModelExprPartSelect(self, ModelExprPartSelect e)
+
+    cpdef visitModelExprRange(self, ModelExprRange e)
+
+    cpdef visitModelExprRangelist(self, ModelExprRangelist e)
+
+    cpdef visitModelExprRef(self, ModelExprRef e)
+
+    cpdef visitModelExprUnary(self, ModelExprUnary e)
+
+    cpdef visitModelExprVal(self, ModelExprVal e)
+
+    cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e)
     
     cpdef void visitModelFieldRef(self, ModelFieldRef f)
 
@@ -565,17 +627,46 @@ cdef class VisitorBase(object):
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f)
 
     cpdef void visitModelFieldType(self, ModelFieldType f)
+
+    cpdef void visitTypeConstraintBlock(self, TypeConstraintBlock c)
+
+    cpdef void visitTypeConstraintExpr(self, TypeConstraintExpr c)
+
+    cpdef void visitTypeConstraintIfElse(self, TypeConstraintIfElse c)
+
+    cpdef void visitTypeConstraintImplies(self, TypeConstraintImplies c)
+
+    cpdef void visitTypeConstraintScope(self, TypeConstraintScope c)
+
+    cpdef void visitTypeExprBin(self, TypeExprBin e)
+
+    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
+
+    cpdef void visitTypeExprRange(self, TypeExprRange e)
+
+    cpdef void visitTypeExprRangelist(self, TypeExprRangelist e)
+
+    cpdef void visitTypeExprVal(self, TypeExprVal e)
     
 cdef class WrapperBuilder(VisitorBase):
     cdef DataType _data_type
+    cdef ModelExpr _model_expr
     cdef ModelField _model_field
     cdef ModelConstraint _model_constraint
+    cdef TypeConstraint _type_constraint
+    cdef TypeExpr _type_expr
     
     cdef DataType mkDataType(self, decl.IDataType *obj, bool owned)
+
+    cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned)
     
     cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned)
 
     cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned)
+
+    cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned)
+
+    cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned)
 
     cpdef visitModelConstraintBlock(self, ModelConstraintBlock c)
 
@@ -584,6 +675,48 @@ cdef class WrapperBuilder(VisitorBase):
     cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c)
 
     cpdef visitModelConstraintImplies(self, ModelConstraintImplies c)
+
+    cpdef visitModelExprBin(self, ModelExprBin e)
+
+    cpdef visitModelExprCond(self, ModelExprCond e)
+
+    cpdef visitModelExprFieldRef(self, ModelExprFieldRef e)
+
+    cpdef visitModelExprIn(self, ModelExprIn e)
+
+    cpdef visitModelExprPartSelect(self, ModelExprPartSelect e)
+
+    cpdef visitModelExprRange(self, ModelExprRange e)
+
+    cpdef visitModelExprRangelist(self, ModelExprRangelist e)
+
+    cpdef visitModelExprRef(self, ModelExprRef e)
+
+    cpdef visitModelExprUnary(self, ModelExprUnary e)
+
+    cpdef visitModelExprVal(self, ModelExprVal e)
+
+    cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e)
+
+    cpdef void visitTypeConstraintBlock(self, TypeConstraintBlock c)
+
+    cpdef void visitTypeConstraintExpr(self, TypeConstraintExpr c)
+
+    cpdef void visitTypeConstraintIfElse(self, TypeConstraintIfElse c)
+
+    cpdef void visitTypeConstraintImplies(self, TypeConstraintImplies c)
+
+    cpdef void visitTypeConstraintScope(self, TypeConstraintScope c)
+
+    cpdef void visitTypeExprBin(self, TypeExprBin e)
+
+    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
+
+    cpdef void visitTypeExprRange(self, TypeExprRange e)
+ 
+    cpdef void visitTypeExprRangelist(self, TypeExprRangelist e)
+
+    cpdef void visitTypeExprVal(self, TypeExprVal e)
     
     
 #********************************************************************    

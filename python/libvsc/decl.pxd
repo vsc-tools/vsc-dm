@@ -25,12 +25,16 @@ ctypedef IModelConstraintIfElse *IModelConstraintIfElseP
 ctypedef IModelConstraintImplies *IModelConstraintImpliesP
 ctypedef IModelConstraintScope *IModelConstraintScopeP
 ctypedef IModelExpr *IModelExprP
+ctypedef IModelExprCond *IModelExprCondP
 ctypedef IModelExprIn *IModelExprInP
 ctypedef IModelExprPartSelect *IModelExprPartSelectP
 ctypedef IModelExprRange *IModelExprRangeP
 ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
 ctypedef IModelExprRangelist *IModelExprRangelistP
+ctypedef IModelExprRef *IModelExprRefP
 ctypedef IModelExprUnary *IModelExprUnaryP
+ctypedef IModelExprVal *IModelExprValP
+ctypedef IModelExprVecSubscript *IModelExprVecSubscriptP
 ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
 ctypedef IModelFieldRoot *IModelFieldRootP
@@ -44,6 +48,7 @@ ctypedef ITypeConstraint *ITypeConstraintP
 ctypedef ITypeConstraintBlock *ITypeConstraintBlockP
 ctypedef ITypeConstraintExpr *ITypeConstraintExprP
 ctypedef ITypeConstraintIfElse *ITypeConstraintIfElseP
+ctypedef ITypeConstraintImplies *ITypeConstraintImpliesP
 ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
@@ -101,6 +106,9 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             ITypeExpr       *cond,
             ITypeConstraint *true_c,
             ITypeConstraint *false_c)
+        ITypeConstraintImplies *mkTypeConstraintImplies(
+            ITypeExpr       *cond,
+            ITypeConstraint *body)
         ITypeConstraintScope *mkTypeConstraintScope()
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
@@ -229,6 +237,11 @@ cdef extern from "vsc/IModelExpr.h" namespace "vsc":
     cdef cppclass IModelExpr(IAccept):
         pass
     
+cdef extern from "vsc/IModelExprCond.h" namespace "vsc":
+    cdef cppclass IModelExprCond(IModelExpr):
+        IModelExpr *getCond() const
+        IModelExpr *getTrue() const
+        IModelExpr *getFalse() const
     
 cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
     cdef cppclass IModelExprFieldRef(IModelExpr):
@@ -251,6 +264,10 @@ cdef extern from "vsc/IModelExprRangelist.h" namespace "vsc":
         const cpp_vector[IModelExprRangeUP] &ranges() const
         void addRange(IModelExprRange *)
 
+cdef extern from "vsc/IModelExprRef.h" namespace "vsc":
+    cdef cppclass IModelExprRef(IModelExpr):
+        IModelExpr *expr() const
+
 cdef extern from "vsc/IModelExprUnary.h" namespace "vsc":
     cdef enum UnaryOp "vsc::UnaryOp":
         Un_Not     "vsc::UnaryOp::Not"
@@ -263,6 +280,11 @@ cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
     cdef cppclass IModelExprVal(IModelExpr):
         int32_t width() const
         IModelVal *val()
+
+cdef extern from "vsc/IModelExprVecSubscript.h" namespace "vsc":
+    cdef cppclass IModelExprVecSubscript(IModelExpr):
+        IModelExpr *expr() const
+        IModelExpr *subscript() const
         
 #********************************************************************
 #* IModelExprBin
@@ -448,6 +470,11 @@ cdef extern from "vsc/ITypeConstraintIfElse.h" namespace "vsc":
         ITypeConstraint *getTrue() const
         ITypeConstraint *getFalse() const
         void setFalse(ITypeConstraint *)
+
+cdef extern from "vsc/ITypeConstraintImplies.h" namespace "vsc":
+    cdef cppclass ITypeConstraintImplies(ITypeConstraint):
+        ITypeExpr *getCond() const
+        ITypeConstraint *getBody() const
         
 cdef extern from "vsc/ITypeConstraintScope.h" namespace "vsc":
     cdef cppclass ITypeConstraintScope(ITypeConstraint):
@@ -463,7 +490,7 @@ cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
 #********************************************************************
 
 cdef extern from "vsc/ITypeExpr.h" namespace "vsc":
-    cdef cppclass ITypeExpr:
+    cdef cppclass ITypeExpr(IAccept):
         pass
     
 cdef extern from "vsc/ITypeExprBin.h" namespace "vsc":

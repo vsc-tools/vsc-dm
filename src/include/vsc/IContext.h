@@ -34,6 +34,7 @@
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
 #include "vsc/ITypeConstraintIfElse.h"
+#include "vsc/ITypeConstraintImplies.h"
 #include "vsc/ITypeConstraintScope.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
@@ -179,6 +180,10 @@ public:
 			ITypeExpr 		*cond,
 			ITypeConstraint	*true_c,
 			ITypeConstraint	*false_c) = 0;
+
+	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
+			ITypeExpr		*cond,
+			ITypeConstraint	*body) = 0;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 

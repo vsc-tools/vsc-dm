@@ -47,6 +47,7 @@
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintIfElse.h"
+#include "TypeConstraintImplies.h"
 #include "TypeConstraintScope.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
@@ -336,6 +337,12 @@ ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
 			ITypeConstraint	*true_c,
 			ITypeConstraint	*false_c) {
 	return new TypeConstraintIfElse(cond, true_c, false_c);
+}
+
+ITypeConstraintImplies *Context::mkTypeConstraintImplies(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*body) {
+	return new TypeConstraintImplies(cond, body);
 }
 
 ITypeConstraintScope *Context::mkTypeConstraintScope() {

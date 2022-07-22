@@ -136,6 +136,10 @@ public:
 			ITypeConstraint	*true_c,
 			ITypeConstraint	*false_c) override;
 
+	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*body) override;
+
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
 
 	virtual ITypeExprBin *mkTypeExprBin(

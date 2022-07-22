@@ -2,6 +2,7 @@
 #* libvsc.core
 #****************************************************************************
 import os
+import sys
 from enum import IntFlag, IntEnum
 from ctypes import CDLL
 from libvsc cimport decl
@@ -246,6 +247,15 @@ cdef class Context(object):
             cond.asExpr(),
             true_c.asConstraint(),
             false_cp), True)
+
+    cpdef TypeConstraintImplies mkTypeConstraintImplies(self, 
+        TypeExpr        cond,
+        TypeConstraint  body):
+        cond._owed = False
+        body._owned = False
+        return TypeConstraintImplies.mk(self._hndl.mkTypeConstraintImplies(
+            cond._hndl,
+            body._hndl), True)
         
     cpdef TypeConstraintScope mkTypeConstraintScope(self):
         return TypeConstraintScope.mk(self._hndl.mkTypeConstraintScope())
@@ -619,11 +629,11 @@ cdef class ModelExpr(object):
         return self._hndl
 
     @staticmethod
-    cdef mk(decl.IModelExpr *e, bool owned=True):
-        ret = ModelExpr()
-        ret._owned = owned
-        ret._hndl = e
-        return ret
+    cdef mk(decl.IModelExpr *hndl, bool owned=True):
+        if hndl == NULL:
+            return None
+        else:
+            return WrapperBuilder().mkModelExpr(hndl, owned)
     
 class BinOp(IntEnum):
     Eq      = decl.BinOp.Eq
@@ -649,14 +659,35 @@ class BinOp(IntEnum):
 cdef class ModelExprBin(ModelExpr):
     
     @staticmethod
-    cdef mkWrapper(decl.IModelExprBin *e):
+    cdef mk(decl.IModelExprBin *hndl, bool owned=True):
         ret = ModelExprBin()
-        ret._owned = False
-        ret._hndl = e
+        ret._owned = owned
+        ret._hndl = hndl
         return ret
     
     cdef decl.IModelExprBin *asExprBin(self):
         return <decl.IModelExprBin *>(self._hndl)
+
+cdef class ModelExprCond(ModelExpr):
+
+    cpdef getCond(self):
+        return ModelExpr.mk(self.asCond().getCond(), False)
+
+    cpdef getTrue(self):
+        return ModelExpr.mk(self.asCond().getTrue(), False)
+
+    cpdef getFalse(self):
+        return ModelExpr.mk(self.asCond().getFalse(), False)
+
+    cdef decl.IModelExprCond *asCond(self):
+        return dynamic_cast[decl.IModelExprCondP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelExprCond *hndl, bool owned=True):
+        ret = ModelExprCond()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
 cdef class ModelExprIn(ModelExpr):
 
@@ -711,18 +742,10 @@ cdef class ModelExprRange(ModelExpr):
         return self.asRange().isSingle()
     
     cpdef ModelExpr lower(self):
-        cdef decl.IModelExpr *t = self.asRange().lower()
-        if t != NULL:
-            return ModelExpr.mk(t, False)
-        else:
-            return None
+        return ModelExpr.mk(self.asRange().lower(), False)
     
     cpdef ModelExpr upper(self):
-        cdef decl.IModelExpr *t = self.asRange().upper()
-        if t != NULL:
-            return ModelExpr.mk(t, False)
-        else:
-            return None
+        return ModelExpr.mk(self.asRange().upper(), False)
     
     cdef decl.IModelExprRange *asRange(self):
         return dynamic_cast[decl.IModelExprRangeP](self._hndl)
@@ -752,6 +775,21 @@ cdef class ModelExprRangelist(ModelExpr):
     @staticmethod 
     cdef mk(decl.IModelExprRangelist *hndl, bool owned=True):
         ret = ModelExprRangelist()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class ModelExprRef(ModelExpr): 
+
+    cpdef expr(self):
+        return ModelExpr.mk(self.asRef().expr(), False)
+
+    cdef decl.IModelExprRef *asRef(self):
+        return dynamic_cast[decl.IModelExprRefP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelExprRef *hndl, bool owned=True):
+        ret = ModelExprRef()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -793,6 +831,24 @@ cdef class ModelExprVal(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprVal *hndl, bool owned=True):
         ret = ModelExprVal()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class ModelExprVecSubscript(ModelExpr):
+
+    cpdef expr(self):
+        return ModelExpr.mk(self.asVecSubscript().expr(), False)
+
+    cpdef subscript(self):
+        return ModelExpr.mk(self.asVecSubscript().subscript(), False)
+    
+    cdef decl.IModelExprVecSubscript *asVecSubscript(self):
+        return dynamic_cast[decl.IModelExprVecSubscriptP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelExprVecSubscript *hndl, bool owned=True):
+        ret = ModelExprVecSubscript()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -1070,12 +1126,7 @@ cdef class TypeConstraint(object):
 
     @staticmethod
     cdef TypeConstraint mk(decl.ITypeConstraint *hndl, bool owned=True):
-        ret = TypeConstraint()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-        
-    pass
+        return WrapperBuilder().mkTypeConstraint(hndl, owned)
 
 cdef class TypeConstraintExpr(TypeConstraint):
 
@@ -1120,6 +1171,23 @@ cdef class TypeConstraintIfElse(TypeConstraint):
     @staticmethod
     cdef TypeConstraintIfElse mk(decl.ITypeConstraintIfElse *hndl, bool owned=True):
         ret = TypeConstraintIfElse()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeConstraintImplies(TypeConstraint):
+    cpdef getCond(self):
+        return TypeExpr.mk(self.asImplies().getCond(), False)
+
+    cpdef getBody(self):
+        return TypeConstraint.mk(self.asImplies().getBody(), False)
+
+    cdef decl.ITypeConstraintImplies *asImplies(self):
+        return dynamic_cast[decl.ITypeConstraintImpliesP](self._hndl)
+
+    @staticmethod
+    cdef TypeConstraintImplies mk(decl.ITypeConstraintImplies *hndl, bool owned=True):
+        ret = TypeConstraintImplies()
         ret._hndl = hndl
         ret._owned = owned
         return ret
@@ -1170,10 +1238,7 @@ cdef class TypeExpr(object):
             
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=True):
-        ret = TypeExpr()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
+        return WrapperBuilder().mkTypeExpr(hndl, owned)
     
 cdef class TypeExprRange(TypeExpr):
 
@@ -1456,7 +1521,37 @@ cdef class VisitorBase(object):
         pass
         
     cpdef visitModelExprBin(self, ModelExprBin e):
-        self._proxy.visitModelExprBinBase(e.asExprBin())
+        pass
+
+    cpdef visitModelExprCond(self, ModelExprCond e):
+        pass
+
+    cpdef visitModelExprFieldRef(self, ModelExprFieldRef e):
+        pass
+
+    cpdef visitModelExprIn(self, ModelExprIn e):
+        pass
+
+    cpdef visitModelExprPartSelect(self, ModelExprPartSelect e):
+        pass
+
+    cpdef visitModelExprRange(self, ModelExprRange e):
+        pass
+
+    cpdef visitModelExprRangelist(self, ModelExprRangelist e):
+        pass
+
+    cpdef visitModelExprRef(self, ModelExprRef e):
+        pass
+
+    cpdef visitModelExprUnary(self, ModelExprUnary e):
+        pass
+
+    cpdef visitModelExprVal(self, ModelExprVal e):
+        pass
+
+    cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e):
+        pass
         
     cpdef void visitModelFieldRef(self, ModelFieldRef f):
         pass
@@ -1472,6 +1567,37 @@ cdef class VisitorBase(object):
 
     cpdef void visitModelFieldType(self, ModelFieldType f):
         pass
+
+    cpdef void visitTypeConstraintBlock(self, TypeConstraintBlock c):
+        pass
+
+    cpdef void visitTypeConstraintExpr(self, TypeConstraintExpr c):
+        pass
+
+    cpdef void visitTypeConstraintIfElse(self, TypeConstraintIfElse c):
+        pass
+
+    cpdef void visitTypeConstraintImplies(self, TypeConstraintImplies c):
+        pass
+
+    cpdef void visitTypeConstraintScope(self, TypeConstraintScope c):
+        pass
+
+    cpdef void visitTypeExprBin(self, TypeExprBin e):
+        pass
+
+    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
+        pass
+
+    cpdef void visitTypeExprRange(self, TypeExprRange e):
+        pass
+
+    cpdef void visitTypeExprRangelist(self, TypeExprRangelist e):
+        pass
+
+    cpdef void visitTypeExprVal(self, TypeExprVal e):
+        pass
+
         
 cdef public void VisitorProxy_visitDataTypeEnum(obj, decl.IDataTypeEnum *t) with gil:
     obj.visitDataTypeEnum(DataTypeEnum.mk(t, False))
@@ -1499,6 +1625,36 @@ cdef public void VisitorProxy_visitModelConstraintScope(obj, decl.IModelConstrai
         
 cdef public void VisitorProxy_visitModelExprBin(obj, decl.IModelExprBin *e) with gil:
     obj.visitModelExprBin(ModelExprBin.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprCond(obj, decl.IModelExprCond *e) with gil:
+    obj.visitModelExprCond(ModelExprCond.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprFieldRef(obj, decl.IModelExprFieldRef *e) with gil:
+    obj.visitModelExprFieldRef(ModelExprFieldRef.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprIn(obj, decl.IModelExprIn *e) with gil:
+    obj.visitModelExprIn(ModelExprIn.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprPartSelect(obj, decl.IModelExprPartSelect *e) with gil:
+    obj.visitModelExprPartSelect(ModelExprPartSelect.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprRange(obj, decl.IModelExprRange *e) with gil:
+    obj.visitModelExprRange(ModelExprRange.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprRangelist(obj, decl.IModelExprRangelist *e) with gil:
+    obj.visitModelExprRangelist(ModelExprRangelist.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprRef(obj, decl.IModelExprRef *e) with gil:
+    obj.visitModelExprRef(ModelExprRef.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprUnary(obj, decl.IModelExprUnary *e) with gil:
+    obj.visitModelExprUnary(ModelExprUnary.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprVal(obj, decl.IModelExprVal *e) with gil:
+    obj.visitModelExprVal(ModelExprVal.mk(e, False))
+
+cdef public void VisitorProxy_visitModelExprVecSubscript(obj, decl.IModelExprVecSubscript *e) with gil:
+    obj.visitModelExprVecSubscript(ModelExprVecSubscript.mk(e, False))
     
 cdef public void VisitorProxy_visitModelFieldRef(obj, decl.IModelFieldRef *f) with gil:
 #    obj.visitModelFieldRef(ModelFieldRef.mk(f, False))
@@ -1517,6 +1673,36 @@ cdef public void VisitorProxy_visitModelFieldRoot(obj, decl.IModelFieldRoot *f) 
 
 cdef public void VisitorProxy_visitModelFieldType(obj, decl.IModelFieldType *f) with gil:
     obj.visitModelFieldType(ModelFieldType.mk(f, False))
+    
+cdef public void VisitorProxy_visitTypeConstraintBlock(obj, decl.ITypeConstraintBlock *c) with gil:
+    obj.visitTypeConstraintBlock(TypeConstraintBlock.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeConstraintExpr(obj, decl.ITypeConstraintExpr *c) with gil:
+    obj.visitTypeConstraintExpr(TypeConstraintExpr.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeConstraintIfElse(obj, decl.ITypeConstraintIfElse *c) with gil:
+    obj.visitTypeConstraintIfElse(TypeConstraintIfElse.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeConstraintImplies(obj, decl.ITypeConstraintImplies *c) with gil:
+    obj.visitTypeConstraintImplies(TypeConstraintImplies.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeConstraintScope(obj, decl.ITypeConstraintScope *c) with gil:
+    obj.visitTypeConstraintScope(TypeConstraintScope.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprBin(obj, decl.ITypeExprBin *c) with gil:
+    obj.visitTypeExprBin(TypeExprBin.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprFieldRef(obj, decl.ITypeExprFieldRef *c) with gil:
+    obj.visitTypeExprFieldRef(TypeExprFieldRef.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprRange(obj, decl.ITypeExprRange *c) with gil:
+    obj.visitTypeExprRange(TypeExprRange.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprRangelist(obj, decl.ITypeExprRangelist *c) with gil:
+    obj.visitTypeExprRangelist(TypeExprRangelist.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprVal(obj, decl.ITypeExprVal *c) with gil:
+    obj.visitTypeExprVal(TypeExprVal.mk(c, False))
         
 #********************************************************************
 #* Vsc
@@ -1617,6 +1803,36 @@ cdef class WrapperBuilder(VisitorBase):
     
     def __init__(self):
         super().__init__()
+
+    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned):
+        obj.accept(self._proxy)
+        self._data_type._owned = owned
+        return self._data_type
+
+    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned):
+        obj.accept(self._proxy)
+        self._model_constraint._owned = owned
+        return self._model_constraint
+
+    cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned):
+        obj.accept(self._proxy)
+        self._model_expr._owned = owned
+        return self._model_expr
+    
+    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned):
+        obj.accept(self._proxy)
+        self._model_field._owned = owned
+        return self._model_field
+
+    cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned):
+        obj.accept(self._proxy)
+        self._type_constraint._owned = owned
+        return self._type_constraint
+
+    cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned):
+        obj.accept(self._proxy)
+        self._type_expr._owned = owned
+        return self._type_expr
         
     cpdef visitDataTypeEnum(self, DataTypeEnum t):
         self._data_Type = t
@@ -1638,6 +1854,39 @@ cdef class WrapperBuilder(VisitorBase):
 
     cpdef visitModelConstraintImplies(self, ModelConstraintImplies c):
         self._model_constraint = c
+
+    cpdef visitModelExprBin(self, ModelExprBin e):
+        self._model_expr = e
+
+    cpdef visitModelExprCond(self, ModelExprCond e):
+        self._model_expr = e
+
+    cpdef visitModelExprFieldRef(self, ModelExprFieldRef e):
+        self._model_expr = e
+
+    cpdef visitModelExprIn(self, ModelExprIn e):
+        self._model_expr = e
+
+    cpdef visitModelExprPartSelect(self, ModelExprPartSelect e):
+        self._model_expr = e
+
+    cpdef visitModelExprRange(self, ModelExprRange e):
+        self._model_expr = e
+
+    cpdef visitModelExprRangelist(self, ModelExprRangelist e):
+        self._model_expr = e
+
+    cpdef visitModelExprRef(self, ModelExprRef e):
+        self._model_expr = e
+
+    cpdef visitModelExprUnary(self, ModelExprUnary e):
+        self._model_expr = e
+
+    cpdef visitModelExprVal(self, ModelExprVal e):
+        self._model_expr = e
+
+    cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e):
+        self._model_expr = e
         
     cpdef void visitModelFieldRef(self, ModelFieldRef f):
         self._model_field = f
@@ -1649,28 +1898,44 @@ cdef class WrapperBuilder(VisitorBase):
         self._model_field = f
 
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f):
-        print("visitModelFieldRoot")
         self._model_field = f
 
     cpdef void visitModelFieldType(self, ModelFieldType f):
         self._model_field = f
-    
-    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned):
-        obj.accept(self._proxy)
-        self._data_type._owned = owned
-        return self._data_type
 
-    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned):
-        obj.accept(self._proxy)
-        self._model_constraint._owned = owned
-        return self._model_constraint
+    cpdef void visitTypeConstraintBlock(self, TypeConstraintBlock c):
+        self._type_constraint = c
+
+    cpdef void visitTypeConstraintExpr(self, TypeConstraintExpr c):
+        self._type_constraint = c
+
+    cpdef void visitTypeConstraintIfElse(self, TypeConstraintIfElse c):
+        self._type_constraint = c
+
+    cpdef void visitTypeConstraintImplies(self, TypeConstraintImplies c):
+        self._type_constraint = c
+
+    cpdef void visitTypeConstraintScope(self, TypeConstraintScope c):
+        self._type_constraint = c
+
+    cpdef void visitTypeExprBin(self, TypeExprBin e):
+        self._type_expr = e
+
+    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
+        self._type_expr = e
+
+    cpdef void visitTypeExprRange(self, TypeExprRange e):
+        self._type_expr = e
+
+    cpdef void visitTypeExprRangelist(self, TypeExprRangelist e):
+        self._type_expr = e
+
+    cpdef void visitTypeExprVal(self, TypeExprVal e):
+        self._type_expr = e
     
-    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned):
-        print("mkModelField")
-        obj.accept(self._proxy)
-        print("WrapperBuilder.mkModelField: %s" % str(self._model_field))
-        self._model_field._owned = owned
-        return self._model_field
+
+
+
     
 cdef _WrapperBuilderInst = None
 
