@@ -323,7 +323,7 @@ IRandomizer *Context::mkRandomizer(
 	return new Randomizer(solver_factory, randstate);
 }
 
-IRandState *Context::mkRandState(uint32_t seed) {
+IRandState *Context::mkRandState(const std::string &seed) {
 	return new RandState(seed);
 }
 

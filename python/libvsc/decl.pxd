@@ -109,7 +109,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IModelFieldVec *mkModelFieldVecRoot(IDataType *, const cpp_string &)
         IModelVal *mkModelVal()
-        IRandState *mkRandState(uint32_t)
+        IRandState *mkRandState(const cpp_string &)
         IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
         ITypeConstraintBlock *mkTypeConstraintBlock(const cpp_string &)
         ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *)
@@ -459,8 +459,13 @@ cdef extern from "vsc/IRandomizer.h" namespace "vsc":
 #********************************************************************
 cdef extern from "vsc/IRandState.h" namespace "vsc":
     cdef cppclass IRandState:
+        const cpp_string &seed() const
         int32_t randint32(int32_t, int32_t)
+        uint64_t rand_ui64()
+        int64_t rand_i64()
         void randbits(IModelVal *)
+        void setState(IRandState *)
+        IRandState *clone()
         
 #********************************************************************
 #* ISolverFactory

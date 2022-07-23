@@ -54,7 +54,7 @@ cdef class Context(object):
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkModelFieldVecRoot(self, DataType type, name)
     cpdef mkModelVal(self)
-    cpdef mkRandState(self, uint32_t seed)
+    cpdef mkRandState(self, str seed)
     cpdef mkRandomizer(self, SolverFactory, RandState)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
@@ -426,9 +426,14 @@ cdef class Randomizer(object):
     
 cdef class RandState(object):
     cdef decl.IRandState       *_hndl
+
+    cpdef str seed(self)
     
     cpdef randint32(self, int32_t, int32_t)
     cpdef randbits(self, ModelVal)
+
+    cpdef void setState(self, RandState other)
+    cpdef RandState clone(self)
     
     @staticmethod
     cdef mk(decl.IRandState *)

@@ -129,7 +129,7 @@ public:
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) override;
 
-	virtual IRandState *mkRandState(uint32_t seed) override;
+	virtual IRandState *mkRandState(const std::string &seed) override;
 
 	virtual ITask *mkTask(TaskE id) override;
 

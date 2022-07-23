@@ -173,7 +173,7 @@ public:
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) = 0;
 
-	virtual IRandState *mkRandState(uint32_t seed) = 0;
+	virtual IRandState *mkRandState(const std::string &seed) = 0;
 
 	virtual ITask *mkTask(TaskE id) = 0;
 

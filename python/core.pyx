@@ -227,7 +227,7 @@ cdef class Context(object):
     cpdef mkModelVal(self):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
         
-    cpdef mkRandState(self, uint32_t seed):
+    cpdef mkRandState(self, str seed):
         return RandState.mk(self._hndl.mkRandState(seed))
     
     cpdef mkRandomizer(self, SolverFactory sf, RandState rs):
@@ -1166,12 +1166,23 @@ cdef class RandState(object):
 
     def __dealloc__(self):
         del self._hndl
+
+    cpdef str seed(self):
+        return self._hndl.seed().decode()
         
     cpdef randint32(self, int32_t low, int32_t high):
         return self._hndl.randint32(low, high)
     
     cpdef randbits(self, ModelVal v):
         return self._hndl.randbits(v._hndl)
+
+    cpdef void setState(self, RandState other):
+        self._hndl.setState(other._hndl)
+
+    cpdef RandState clone(self):
+        ret = RandState()
+        ret._hndl = self._hndl.clone()
+        return ret
     
     @staticmethod
     cdef mk(decl.IRandState *hndl):
