@@ -36,6 +36,8 @@ cdef class Context(object):
         ModelExpr           cond,
         ModelConstraint     body)
     cpdef mkModelConstraintScope(self)
+    cpdef ModelConstraintSoft mkModelConstraintSoft(self, ModelConstraintExpr c)
+    cpdef ModelConstraintUnique mkModelConstraintUnique(self, exprs)
     cpdef bool addDataTypeInt(self, DataTypeInt)
     cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width)
     cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width)
@@ -64,6 +66,8 @@ cdef class Context(object):
         TypeExpr        cond,
         TypeConstraint  body)
     cpdef TypeConstraintScope mkTypeConstraintScope(self)
+    cpdef TypeConstraintSoft mkTypeConstraintSoft(self, TypeConstraintExpr c)
+    cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
@@ -150,6 +154,23 @@ cdef class ModelConstraintScope(ModelConstraint):
 
     @staticmethod
     cdef mk(decl.IModelConstraintScope *hndl, bool owned=*)
+
+cdef class ModelConstraintSoft(ModelConstraint):
+    cpdef ModelConstraintExpr constraint(self)
+    
+    cdef decl.IModelConstraintSoft *asSoft(self)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintSoft *hndl, bool owned=*)
+
+cdef class ModelConstraintUnique(ModelConstraint):
+    cpdef getExprs(self)
+    
+    cdef decl.IModelConstraintUnique *asUnique(self)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintUnique *hndl, bool owned=*)
+    
     
 cdef class ModelConstraintBlock(ModelConstraintScope):
     cpdef name(self)
@@ -164,7 +185,7 @@ cdef class ModelConstraintExpr(ModelConstraint):
 
     cpdef expr(self)
 
-    cdef decl.IModelConstraintExpr *asModelConstraintExpr(self)
+    cdef decl.IModelConstraintExpr *asExpr(self)
     @staticmethod
     cdef mk(decl.IModelConstraintExpr *, bool owned=*)
 
@@ -466,6 +487,25 @@ cdef class TypeConstraintScope(TypeConstraint):
     
     @staticmethod
     cdef TypeConstraintScope mk(decl.ITypeConstraintScope *, bool owned=*)
+
+cdef class TypeConstraintSoft(TypeConstraint):
+    
+    cpdef TypeConstraintExpr constraint(self)
+    
+    cdef decl.ITypeConstraintSoft *asSoft(self)
+    
+    @staticmethod
+    cdef TypeConstraintSoft mk(decl.ITypeConstraintSoft *, bool owned=*)
+
+cdef class TypeConstraintUnique(TypeConstraint):
+    
+    cpdef getExprs(self)
+    
+    cdef decl.ITypeConstraintUnique *asUnique(self)
+    
+    @staticmethod
+    cdef TypeConstraintUnique mk(decl.ITypeConstraintUnique *, bool owned=*)
+    
     
 cdef class TypeConstraintBlock(TypeConstraintScope):
     

@@ -18,6 +18,7 @@
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelConstraintUnique.h"
 
 
 #include "vsc/IModelExprBin.h"
@@ -50,6 +51,8 @@
 #include "vsc/ITypeConstraintIfElse.h"
 #include "vsc/ITypeConstraintImplies.h"
 #include "vsc/ITypeConstraintScope.h"
+#include "vsc/ITypeConstraintSoft.h"
+#include "vsc/ITypeConstraintUnique.h"
 
 #include "vsc/ITypeField.h"
 #include "vsc/ITypeFieldPhy.h"
@@ -113,6 +116,14 @@ public:
 	}
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { }
+
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override { 
+		for (std::vector<IModelExprUP>::const_iterator
+			it=c->getExprs().begin();
+			it!=c->getExprs().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
 
 	virtual void visitModelCoverCross(ModelCoverCross *c) override { }
 
@@ -225,6 +236,18 @@ public:
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
+		c->constraint()->accept(m_this);
+	}
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
+		for (std::vector<ITypeExprUP>::const_iterator
+			it=c->getExprs().begin();
+			it!=c->getExprs().end(); it++) {
 			(*it)->accept(m_this);
 		}
 	}

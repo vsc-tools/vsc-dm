@@ -23,9 +23,8 @@
 
 namespace vsc {
 
-ModelConstraintSoft::ModelConstraintSoft(ModelConstraintExpr *c) :
+ModelConstraintSoft::ModelConstraintSoft(IModelConstraintExpr *c) :
 	m_constraint(c) {
-	// TODO Auto-generated constructor stub
 
 }
 

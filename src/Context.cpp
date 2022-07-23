@@ -27,6 +27,8 @@
 #include "ModelConstraintIfElse.h"
 #include "ModelConstraintImplies.h"
 #include "ModelConstraintScope.h"
+#include "ModelConstraintSoft.h"
+#include "ModelConstraintUnique.h"
 #include "ModelExprBin.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
@@ -49,6 +51,8 @@
 #include "TypeConstraintIfElse.h"
 #include "TypeConstraintImplies.h"
 #include "TypeConstraintScope.h"
+#include "TypeConstraintSoft.h"
+#include "TypeConstraintUnique.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
 #include "TypeExprRange.h"
@@ -134,6 +138,16 @@ IModelConstraintImplies *Context::mkModelConstraintImplies(
 
 IModelConstraintScope *Context::mkModelConstraintScope() {
 	return new ModelConstraintScope();
+}
+
+IModelConstraintSoft *Context::mkModelConstraintSoft(
+			IModelConstraintExpr	*c) {
+	return new ModelConstraintSoft(c);
+}
+
+IModelConstraintUnique *Context::mkModelConstraintUnique(
+			const std::vector<IModelExpr *>		&exprs) {
+	return new ModelConstraintUnique(exprs);
 }
 
 IDataTypeInt *Context::findDataTypeInt(
@@ -347,6 +361,16 @@ ITypeConstraintImplies *Context::mkTypeConstraintImplies(
 
 ITypeConstraintScope *Context::mkTypeConstraintScope() {
 	return new TypeConstraintScope();
+}
+
+ITypeConstraintSoft *Context::mkTypeConstraintSoft(
+			ITypeConstraintExpr		*c) {
+	return new TypeConstraintSoft(c);
+}
+
+ITypeConstraintUnique *Context::mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) {
+	return new TypeConstraintUnique(exprs);
 }
 
 ITypeExprBin *Context::mkTypeExprBin(

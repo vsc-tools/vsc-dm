@@ -55,6 +55,10 @@ public:
 		m_delegate->visitModelConstraintSoft(c);
 	}
 
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override {
+		m_delegate->visitModelConstraintUnique(c);
+	}
+
 	virtual void visitModelCoverCross(ModelCoverCross *c) override {
 		m_delegate->visitModelCoverCross(c);
 	}
@@ -161,6 +165,14 @@ public:
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		m_delegate->visitTypeConstraintScope(c);
+	}
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
+		m_delegate->visitTypeConstraintSoft(c);
+	}
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
+		m_delegate->visitTypeConstraintUnique(c);
 	}
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {

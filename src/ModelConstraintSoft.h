@@ -14,7 +14,7 @@ namespace vsc {
 
 class ModelConstraintSoft : public IModelConstraintSoft {
 public:
-	ModelConstraintSoft(ModelConstraintExpr *constraint);
+	ModelConstraintSoft(IModelConstraintExpr *constraint);
 
 	virtual ~ModelConstraintSoft();
 

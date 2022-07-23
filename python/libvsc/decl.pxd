@@ -24,7 +24,10 @@ ctypedef IModelConstraintExpr *IModelConstraintExprP
 ctypedef IModelConstraintIfElse *IModelConstraintIfElseP
 ctypedef IModelConstraintImplies *IModelConstraintImpliesP
 ctypedef IModelConstraintScope *IModelConstraintScopeP
+ctypedef IModelConstraintSoft *IModelConstraintSoftP
+ctypedef IModelConstraintUnique *IModelConstraintUniqueP
 ctypedef IModelExpr *IModelExprP
+ctypedef unique_ptr[IModelExpr] IModelExprUP
 ctypedef IModelExprCond *IModelExprCondP
 ctypedef IModelExprIn *IModelExprInP
 ctypedef IModelExprPartSelect *IModelExprPartSelectP
@@ -50,6 +53,10 @@ ctypedef ITypeConstraintExpr *ITypeConstraintExprP
 ctypedef ITypeConstraintIfElse *ITypeConstraintIfElseP
 ctypedef ITypeConstraintImplies *ITypeConstraintImpliesP
 ctypedef ITypeConstraintScope *ITypeConstraintScopeP
+ctypedef ITypeConstraintSoft *ITypeConstraintSoftP
+ctypedef ITypeConstraintUnique *ITypeConstraintUniqueP
+ctypedef ITypeExpr *ITypeExprP
+ctypedef unique_ptr[ITypeExpr] ITypeExprUP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeExprRange *ITypeExprRangeP
@@ -81,6 +88,10 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             IModelExpr *cond,
             IModelConstraint *body)
         IModelConstraintScope *mkModelConstraintScope()
+        IModelConstraintSoft *mkModelConstraintSoft(
+            IModelConstraintExpr    *c)
+        IModelConstraintUnique *mkModelConstraintUnique(
+            const cpp_vector[IModelExprP]   &exprs)
         IDataTypeInt *findDataTypeInt(bool is_signed, int32_t width)
         IDataTypeInt *mkDataTypeInt(bool is_signed, int32_t width)
         bool addDataTypeInt(IDataTypeInt *)
@@ -110,6 +121,10 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             ITypeExpr       *cond,
             ITypeConstraint *body)
         ITypeConstraintScope *mkTypeConstraintScope()
+        ITypeConstraintSoft *mkTypeConstraintSoft(
+            ITypeConstraintExpr     *c)
+        ITypeConstraintUnique *mkTypeConstraintUnique(
+            const cpp_vector[ITypeExprP]    &exprs)
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprFieldRef *mkTypeExprFieldRef()
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
@@ -209,6 +224,14 @@ cdef extern from "vsc/IModelConstraintScope.h" namespace "vsc":
     cdef cppclass IModelConstraintScope(IModelConstraint):
         const cpp_vector[unique_ptr[IModelConstraint]] &constraints() const
         void addConstraint(IModelConstraint *)
+
+cdef extern from "vsc/IModelConstraintSoft.h" namespace "vsc":
+    cdef cppclass IModelConstraintSoft(IModelConstraint):
+        IModelConstraintExpr *constraint() const
+
+cdef extern from "vsc/IModelConstraintUnique.h" namespace "vsc":
+    cdef cppclass IModelConstraintUnique(IModelConstraint):
+        const cpp_vector[IModelExprUP] &getExprs() const
     
 cdef extern from "vsc/IModelConstraintBlock.h" namespace "vsc":
     cdef cppclass IModelConstraintBlock(IModelConstraintScope):
@@ -480,7 +503,15 @@ cdef extern from "vsc/ITypeConstraintScope.h" namespace "vsc":
     cdef cppclass ITypeConstraintScope(ITypeConstraint):
         void addConstraint(ITypeConstraint *)
         const cpp_vector[unique_ptr[ITypeConstraint]] &constraints() const
-        
+
+cdef extern from "vsc/ITypeConstraintSoft.h" namespace "vsc":
+    cdef cppclass ITypeConstraintSoft(ITypeConstraint):
+        ITypeConstraintExpr *constraint() const
+
+cdef extern from "vsc/ITypeConstraintUnique.h" namespace "vsc":
+    cdef cppclass ITypeConstraintUnique(ITypeConstraint):
+        const cpp_vector[ITypeExprUP] &getExprs() const
+
 cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
     cdef cppclass ITypeConstraintBlock(ITypeConstraintScope):
         const cpp_string &name() const

@@ -16,6 +16,8 @@
 #include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
+#include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelConstraintUnique.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprFieldRef.h"
@@ -36,6 +38,8 @@
 #include "vsc/ITypeConstraintIfElse.h"
 #include "vsc/ITypeConstraintImplies.h"
 #include "vsc/ITypeConstraintScope.h"
+#include "vsc/ITypeConstraintSoft.h"
+#include "vsc/ITypeConstraintUnique.h"
 #include "vsc/ITypeExprBin.h"
 #include "vsc/ITypeExprFieldRef.h"
 #include "vsc/ITypeExprRange.h"
@@ -113,6 +117,12 @@ public:
 
 	virtual IModelConstraintScope *mkModelConstraintScope() = 0;
 
+	virtual IModelConstraintSoft *mkModelConstraintSoft(
+		IModelConstraintExpr	*c) = 0;
+
+	virtual IModelConstraintUnique *mkModelConstraintUnique(
+		const std::vector<IModelExpr *>		&exprs) = 0;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
@@ -186,6 +196,12 @@ public:
 			ITypeConstraint	*body) = 0;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
+
+	virtual ITypeConstraintSoft *mkTypeConstraintSoft(
+			ITypeConstraintExpr	*c) = 0;
+
+	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) = 0;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
 

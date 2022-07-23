@@ -76,6 +76,12 @@ public:
 
 	virtual IModelConstraintScope *mkModelConstraintScope() override;
 
+	virtual IModelConstraintSoft *mkModelConstraintSoft(
+			IModelConstraintExpr	*c) override;
+
+	virtual IModelConstraintUnique *mkModelConstraintUnique(
+			const std::vector<IModelExpr *>		&exprs) override;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
@@ -141,6 +147,12 @@ public:
 			ITypeConstraint	*body) override;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
+
+	virtual ITypeConstraintSoft *mkTypeConstraintSoft(
+			ITypeConstraintExpr		*c) override;
+
+	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) override;
 
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,

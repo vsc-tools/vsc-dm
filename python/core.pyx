@@ -118,7 +118,24 @@ cdef class Context(object):
 
     cpdef mkModelConstraintScope(self):
         return ModelConstraintScope.mk(self._hndl.mkModelConstraintScope(), True)
-    
+
+    cpdef ModelConstraintSoft mkModelConstraintSoft(self, ModelConstraintExpr c):
+        c._owned = False
+        return ModelConstraintSoft.mk(
+            self._hndl.mkModelConstraintSoft(c.asExpr()), True)
+
+    cpdef ModelConstraintUnique mkModelConstraintUnique(self, exprs):
+        cdef cpp_vector[decl.IModelExprP] expr_l
+        cdef ModelExpr expr
+
+        for e in exprs:
+            expr = <ModelExpr>(e)
+            expr._owned = False
+            print("expr._hndl=%x" % <intptr_t>(expr._hndl))
+            expr_l.push_back(expr._hndl)
+
+        return ModelConstraintUnique.mk(self._hndl.mkModelConstraintUnique(expr_l), True)
+
     cpdef mkModelExprBin(self, 
             ModelExpr           lhs,
             op,
@@ -153,6 +170,7 @@ cdef class Context(object):
                 rhs.asRangelist()))
         
     cpdef mkModelExprFieldRef(self, ModelField field):
+        print("mkModelExprFieldRef: %x" % <intptr_t>(field._hndl))
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field._hndl))
         
@@ -259,6 +277,22 @@ cdef class Context(object):
         
     cpdef TypeConstraintScope mkTypeConstraintScope(self):
         return TypeConstraintScope.mk(self._hndl.mkTypeConstraintScope())
+
+    cpdef TypeConstraintSoft mkTypeConstraintSoft(self, TypeConstraintExpr c):
+        c._owned = False
+        return TypeConstraintSoft.mk(
+            self._hndl.mkTypeConstraintSoft(c.asExpr()), True)
+
+    cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs):
+        cdef cpp_vector[decl.ITypeExprP] expr_l
+        cdef TypeExpr expr
+
+        for e in exprs:
+            expr = <TypeExpr>e
+            expr._owned = False
+            expr_l.push_back(expr._hndl)
+
+        return TypeConstraintUnique.mk(self._hndl.mkTypeConstraintUnique(expr_l), False)
 
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr lhs, op, TypeExpr rhs):
         cdef int op_i = int(op)
@@ -536,7 +570,41 @@ cdef class ModelConstraintScope(ModelConstraint):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+
+cdef class ModelConstraintSoft(ModelConstraint):
+
+    cpdef ModelConstraintExpr constraint(self):
+        return ModelConstraintExpr.mk(self.asSoft().constraint(), False)
+
+    cdef decl.IModelConstraintSoft *asSoft(self):
+        return dynamic_cast[decl.IModelConstraintSoftP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintSoft *hndl, bool owned=True):
+        ret = ModelConstraintSoft()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class ModelConstraintUnique(ModelConstraint):
+    cpdef getExprs(self):
+        ret = []
+        for i in range(self.asUnique().getExprs().size()):
+            ret.append(ModelExpr.mk(
+                self.asUnique().getExprs().at(i).get(),
+                False))
+        return ret
     
+    cdef decl.IModelConstraintUnique *asUnique(self):
+        return dynamic_cast[decl.IModelConstraintUniqueP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelConstraintUnique *hndl, bool owned=True):
+        ret = ModelConstraintUnique()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
 cdef class ModelConstraintBlock(ModelConstraintScope):
 
     cpdef name(self):
@@ -556,7 +624,7 @@ cdef class ModelConstraintBlock(ModelConstraintScope):
 cdef class ModelConstraintExpr(ModelConstraint):
 
     cpdef expr(self):
-        return ModelExpr.mk(self.asModelConstraintExpr().expr(), False)
+        return ModelExpr.mk(self.asExpr().expr(), False)
     
     @staticmethod
     cdef mk(decl.IModelConstraintExpr *hndl, bool owned=True):
@@ -565,7 +633,7 @@ cdef class ModelConstraintExpr(ModelConstraint):
         ret._owned = owned
         return ret
     
-    cdef decl.IModelConstraintExpr *asModelConstraintExpr(self):
+    cdef decl.IModelConstraintExpr *asExpr(self):
         return <decl.IModelConstraintExpr *>(self._hndl)
 
 cdef class ModelConstraintIfElse(ModelConstraint):
@@ -1204,6 +1272,41 @@ cdef class TypeConstraintScope(TypeConstraint):
     @staticmethod
     cdef TypeConstraintScope mk(decl.ITypeConstraintScope *hndl, bool owned=True):
         ret = TypeConstraintScope()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeConstraintSoft(TypeConstraint):
+    
+    cpdef TypeConstraintExpr constraint(self):
+        return TypeConstraintExpr.mk(self.asSoft().constraint(), False)
+    
+    cdef decl.ITypeConstraintSoft *asSoft(self):
+        return dynamic_cast[decl.ITypeConstraintSoftP](self._hndl)
+    
+    @staticmethod
+    cdef TypeConstraintSoft mk(decl.ITypeConstraintSoft *hndl, bool owned=True):
+        ret = TypeConstraintSoft()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeConstraintUnique(TypeConstraint):
+    
+    cpdef getExprs(self):
+        ret = []
+        for i in range(self.asUnique().getExprs().size()):
+            ret.append(TypeExpr.mk(
+                self.asUnique().getExprs().at(i).get(),
+                False))
+        return ret
+    
+    cdef decl.ITypeConstraintUnique *asUnique(self):
+        return dynamic_cast[decl.ITypeConstraintUniqueP](self._hndl)
+    
+    @staticmethod
+    cdef TypeConstraintUnique mk(decl.ITypeConstraintUnique *hndl, bool owned=True):
+        ret = TypeConstraintUnique()
         ret._hndl = hndl
         ret._owned = owned
         return ret

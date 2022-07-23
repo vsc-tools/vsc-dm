@@ -39,6 +39,7 @@ class IModelConstraintIfElse;
 class IModelConstraintImplies;
 class IModelConstraintScope;
 class IModelConstraintSoft;
+class IModelConstraintUnique;
 
 class ModelCoverCross;
 class ModelCovergroup;
@@ -69,6 +70,8 @@ class ITypeConstraintExpr;
 class ITypeConstraintIfElse;
 class ITypeConstraintImplies;
 class ITypeConstraintScope;
+class ITypeConstraintSoft;
+class ITypeConstraintUnique;
 class ITypeExpr;
 class ITypeExprBin;
 class ITypeExprFieldRef;
@@ -104,6 +107,8 @@ public:
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) = 0;
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) = 0;
+
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) = 0;
 
 	virtual void visitModelCoverCross(ModelCoverCross *c) = 0;
 
@@ -158,6 +163,10 @@ public:
 	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) = 0;
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) = 0;
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) = 0;
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
 
