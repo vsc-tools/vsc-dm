@@ -1,5 +1,4 @@
 
-#pragma once
 #include "ModelConstraintUnique.h"
 
 namespace vsc {

@@ -55,6 +55,10 @@ public:
 		m_delegate->visitModelConstraintSoft(c);
 	}
 
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) override {
+		m_delegate->visitModelConstraintSubst(c);
+	}
+
 	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override {
 		m_delegate->visitModelConstraintUnique(c);
 	}

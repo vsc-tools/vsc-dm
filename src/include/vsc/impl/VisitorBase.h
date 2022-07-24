@@ -18,6 +18,7 @@
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelConstraintSubst.h"
 #include "vsc/IModelConstraintUnique.h"
 
 
@@ -115,7 +116,14 @@ public:
 		}
 	}
 
-	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { }
+	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { 
+		c->constraint()->accept(m_this);
+	}
+
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) override {
+		c->getOriginal()->accept(m_this);
+		visitModelConstraintScope(c);
+	}
 
 	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override { 
 		for (std::vector<IModelExprUP>::const_iterator

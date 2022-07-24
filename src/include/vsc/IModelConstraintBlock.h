@@ -12,7 +12,7 @@ namespace vsc {
 
 class IModelConstraintBlock;
 using IModelConstraintBlockUP=std::unique_ptr<IModelConstraintBlock>;
-class IModelConstraintBlock : public IModelConstraintScope {
+class IModelConstraintBlock : public virtual IModelConstraintScope {
 public:
 
 	virtual ~IModelConstraintBlock() { }

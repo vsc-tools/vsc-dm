@@ -39,6 +39,7 @@ class IModelConstraintIfElse;
 class IModelConstraintImplies;
 class IModelConstraintScope;
 class IModelConstraintSoft;
+class IModelConstraintSubst;
 class IModelConstraintUnique;
 
 class ModelCoverCross;
@@ -107,6 +108,8 @@ public:
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) = 0;
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) = 0;
+
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) = 0;
 
 	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) = 0;
 

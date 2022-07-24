@@ -18,8 +18,4 @@ ModelConstraintBlock::~ModelConstraintBlock() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelConstraintBlock::addConstraint(IModelConstraint *c) {
-	m_constraints.push_back(IModelConstraintUP(c));
-}
-
 } /* namespace vsc */

@@ -228,7 +228,7 @@ cdef class Context(object):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
         
     cpdef mkRandState(self, str seed):
-        return RandState.mk(self._hndl.mkRandState(seed))
+        return RandState.mk(self._hndl.mkRandState(seed.encode()))
     
     cpdef mkRandomizer(self, SolverFactory sf, RandState rs):
         cdef decl.ISolverFactory *sf_h = NULL
@@ -562,7 +562,7 @@ cdef class ModelConstraintScope(ModelConstraint):
         self.asScope().addConstraint(c._hndl)
     
     cdef decl.IModelConstraintScope *asScope(self):
-        return <decl.IModelConstraintScope *>(self._hndl)
+        return dynamic_cast[decl.IModelConstraintScopeP](self._hndl)
 
     @staticmethod
     cdef mk(decl.IModelConstraintScope *hndl, bool owned=True):
@@ -611,7 +611,7 @@ cdef class ModelConstraintBlock(ModelConstraintScope):
         return self.asModelConstraintBlock().name().decode()
 
     cdef decl.IModelConstraintBlock *asModelConstraintBlock(self):
-        return <decl.IModelConstraintBlock *>(self._hndl)
+        return dynamic_cast[decl.IModelConstraintBlockP](self._hndl)
     
     @staticmethod
     cdef mk(decl.IModelConstraintBlock *hndl, bool owned=True):

@@ -20,6 +20,7 @@ ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IDataTypeVec *IDataTypeVecP
 ctypedef IModelConstraint *IModelConstraintP
+ctypedef IModelConstraintBlock *IModelConstraintBlockP
 ctypedef IModelConstraintExpr *IModelConstraintExprP
 ctypedef IModelConstraintIfElse *IModelConstraintIfElseP
 ctypedef IModelConstraintImplies *IModelConstraintImpliesP

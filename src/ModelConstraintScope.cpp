@@ -36,4 +36,12 @@ void ModelConstraintScope::addConstraint(IModelConstraint *c) {
 	m_constraints.push_back(IModelConstraintUP(c));
 }
 
+IModelConstraint *ModelConstraintScope::swapConstraint(
+		uint32_t			idx,
+		IModelConstraint	*c) {
+	IModelConstraint *ret = m_constraints.at(idx).release();
+	m_constraints.at(idx) = IModelConstraintUP(c);
+	return ret;
+}
+
 } /* namespace vsc */

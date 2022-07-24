@@ -16,4 +16,7 @@ IModelField *Task_BuildModelField(
 		IDataType				*type,
 		const std::string		&name);
 
+void Task_RollbackConstraintSubst(
+		IModelConstraint		*scope);
+
 }
