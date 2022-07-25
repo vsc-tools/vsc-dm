@@ -7,10 +7,13 @@
 
 #pragma once
 #include "vsc/IModelConstraintImplies.h"
+#include "ModelConstraint.h"
 
 namespace vsc {
 
-class ModelConstraintImplies : public IModelConstraintImplies {
+class ModelConstraintImplies : 
+	public virtual IModelConstraintImplies,
+	public virtual ModelConstraint {
 public:
 	ModelConstraintImplies(
 			IModelExpr			*cond,

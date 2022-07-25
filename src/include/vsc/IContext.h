@@ -20,11 +20,15 @@
 #include "vsc/IModelConstraintUnique.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
+#include "vsc/IModelExprCond.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprIn.h"
+#include "vsc/IModelExprIndexedFieldRef.h"
 #include "vsc/IModelExprPartSelect.h"
 #include "vsc/IModelExprRange.h"
 #include "vsc/IModelExprRangelist.h"
+#include "vsc/IModelExprRef.h"
+#include "vsc/IModelExprUnary.h"
 #include "vsc/IModelExprVal.h"
 #include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
@@ -127,6 +131,11 @@ public:
 			IModelExpr		*lhs,
 			BinOp			op,
 			IModelExpr		*rhs) = 0;
+			
+	virtual IModelExprCond *mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) = 0;
 
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) = 0;
@@ -134,6 +143,8 @@ public:
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) = 0;
+
+	virtual IModelExprIndexedFieldRef *mkModelExprIndexedFieldRef() = 0;
 
 	virtual IModelExprPartSelect *mkModelExprPartSelect(
 			IModelExpr				*lhs,
@@ -146,6 +157,12 @@ public:
 			IModelExpr		*upper) = 0;
 
 	virtual IModelExprRangelist *mkModelExprRangelist() = 0;
+
+	virtual IModelExprRef *mkModelExprRef(IModelExpr *target) = 0;
+
+	virtual IModelExprUnary *mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) = 0;
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) = 0;
 

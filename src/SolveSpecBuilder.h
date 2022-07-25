@@ -26,6 +26,11 @@ public:
 			const std::vector<IModelConstraint *>	&constraints
 			);
 
+	SolveSpec *build(
+			const std::vector<IModelField *>		&fields,
+			const std::vector<IModelConstraintUP>	&constraints
+			);
+
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;

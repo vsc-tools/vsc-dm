@@ -87,6 +87,11 @@ public:
 			BinOp			op,
 			IModelExpr		*rhs) override;
 
+	virtual IModelExprCond *mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) override;
+
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
 
@@ -101,6 +106,12 @@ public:
 			IModelExpr		*upper) override;
 
 	virtual IModelExprRangelist *mkModelExprRangelist() override;
+
+	virtual IModelExprRef *mkModelExprRef(IModelExpr *target) override;
+
+	virtual IModelExprUnary *mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) override;
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
@@ -164,6 +175,8 @@ public:
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) override;
+
+	virtual IModelExprIndexedFieldRef *mkModelExprIndexedFieldRef() override;
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

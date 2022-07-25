@@ -10,9 +10,9 @@
 namespace vsc {
 
 ModelExprUnary::ModelExprUnary(
-		IModelExpr		*expr,
-		UnaryOp			op) : m_expr(expr), m_op(op) {
-	// TODO Auto-generated constructor stub
+		UnaryOp			op,
+		IModelExpr		*expr) : m_expr(expr), m_op(op) {
+	m_width = expr->width();
 
 }
 

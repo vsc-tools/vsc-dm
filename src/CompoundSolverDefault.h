@@ -6,13 +6,14 @@
  */
 
 #pragma once
+#include "vsc/IContext.h"
 #include "vsc/ICompoundSolver.h"
 
 namespace vsc {
 
 class CompoundSolverDefault : public ICompoundSolver {
 public:
-	CompoundSolverDefault();
+	CompoundSolverDefault(IContext *ctxt);
 
 	virtual ~CompoundSolverDefault();
 
@@ -21,6 +22,9 @@ public:
 			const std::vector<IModelField *>		&fields,
 			const std::vector<IModelConstraint *>	&constraints,
 			SolveFlags								flags) override;
+
+private:
+	IContext							*m_ctxt;
 };
 
 } /* namespace vsc */

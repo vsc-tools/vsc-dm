@@ -26,6 +26,7 @@
 #include "vsc/IModelExprCond.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprIn.h"
+#include "vsc/IModelExprIndexedFieldRef.h"
 #include "vsc/IModelExprPartSelect.h"
 #include "vsc/IModelExprRange.h"
 #include "vsc/IModelExprRangelist.h"
@@ -156,6 +157,8 @@ public:
 		e->lhs()->accept(m_this);
 		e->rangelist()->accept(m_this);
 	}
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { }
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override { }
 

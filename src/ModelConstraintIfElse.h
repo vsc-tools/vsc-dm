@@ -13,7 +13,9 @@
 
 namespace vsc {
 
-class ModelConstraintIfElse : public IModelConstraintIfElse {
+class ModelConstraintIfElse : 
+	public virtual IModelConstraintIfElse,
+	public virtual ModelConstraint {
 public:
 	ModelConstraintIfElse(
 			IModelExpr				*cond,

@@ -23,8 +23,8 @@
 
 namespace vsc {
 
-ModelConstraintSoft::ModelConstraintSoft(IModelConstraintExpr *c) :
-	m_constraint(c) {
+ModelConstraintSoft::ModelConstraintSoft(IModelConstraintExpr *c, int32_t priority) :
+	m_constraint(c), m_priority(priority) {
 
 }
 

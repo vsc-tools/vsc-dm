@@ -14,8 +14,7 @@ ModelExprCond::ModelExprCond(
 		IModelExpr		*true_e,
 		IModelExpr		*false_e) :
 			m_cond(cond), m_true_e(true_e), m_false_e(false_e) {
-	// TODO Auto-generated constructor stub
-
+	m_width = (true_e->width()>false_e->width())?true_e->width():false_e->width();
 }
 
 ModelExprCond::~ModelExprCond() {

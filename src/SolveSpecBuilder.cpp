@@ -80,16 +80,77 @@ SolveSpec *SolveSpecBuilder::build(
 	}
 
 	std::vector<IModelField *> unconstrained;
+	std::vector<IModelFieldVec *> unconstrained_sz_vec;
 
 	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
 		if (*it) {
-			unconstrained.push_back(*it);
+			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
+				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
+			} else {
+				unconstrained.push_back(*it);
+			}
 		}
 	}
 
 	SolveSpec *spec = new SolveSpec(
 			solvesets,
-			unconstrained);
+			unconstrained,
+			unconstrained_sz_vec);
+
+	DEBUG_LEAVE("build");
+	return spec;
+}
+
+SolveSpec *SolveSpecBuilder::build(
+			const std::vector<IModelField *>		&fields,
+			const std::vector<IModelConstraintUP>	&constraints
+			) {
+	DEBUG_ENTER("build %d fields %d constraints", fields.size(), constraints.size());
+
+	m_pass = 0;
+	for (std::vector<IModelField *>::const_iterator
+			it=fields.begin();
+			it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	m_pass = 1;
+	for (auto it=fields.begin(); it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	for (std::vector<IModelConstraintUP>::const_iterator
+		it=constraints.begin(); 
+		it!=constraints.end(); it++) {
+		DEBUG_ENTER("Visiting constraint");
+		it->get()->accept(this);
+		DEBUG_LEAVE("Visiting constraint");
+	}
+
+	std::vector<SolveSet *> solvesets;
+	for (auto it=m_solveset_l.begin(); it!=m_solveset_l.end(); it++) {
+		if (it->get()) {
+			solvesets.push_back(it->release());
+		}
+	}
+
+	std::vector<IModelField *> unconstrained;
+	std::vector<IModelFieldVec *> unconstrained_sz_vec;
+
+	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
+		if (*it) {
+			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
+				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
+			} else {
+				unconstrained.push_back(*it);
+			}
+		}
+	}
+
+	SolveSpec *spec = new SolveSpec(
+			solvesets,
+			unconstrained,
+			unconstrained_sz_vec);
 
 	DEBUG_LEAVE("build");
 	return spec;

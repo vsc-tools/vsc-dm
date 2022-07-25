@@ -14,7 +14,9 @@ namespace vsc {
 
 class ModelConstraintScope;
 using ModelConstraintScopeUP=std::unique_ptr<ModelConstraintScope>;
-class ModelConstraintScope : public virtual IModelConstraintScope {
+class ModelConstraintScope : 
+	public virtual IModelConstraintScope, 
+	public virtual ModelConstraint {
 public:
 	ModelConstraintScope();
 

@@ -91,6 +91,10 @@ public:
 		m_delegate->visitModelExprIn(e);
 	}
 
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { 
+		m_delegate->visitModelExprIndexedFieldRef(e);
+	}
+
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override {
 		m_delegate->visitModelExprPartSelect(e);
 	}

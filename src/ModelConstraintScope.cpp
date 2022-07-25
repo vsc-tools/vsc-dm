@@ -33,6 +33,7 @@ ModelConstraintScope::~ModelConstraintScope() {
 }
 
 void ModelConstraintScope::addConstraint(IModelConstraint *c) {
+	c->setParent(this);
 	m_constraints.push_back(IModelConstraintUP(c));
 }
 

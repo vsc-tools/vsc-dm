@@ -11,7 +11,7 @@
 
 namespace vsc {
 
-class ModelExprCond : public IModelExprCond {
+class ModelExprCond : public virtual IModelExprCond, public virtual ModelExpr {
 public:
 	ModelExprCond(
 			IModelExpr		*cond,
@@ -19,6 +19,10 @@ public:
 			IModelExpr		*false_e);
 
 	virtual ~ModelExprCond();
+
+	virtual int32_t width() const override { return m_width; }
+
+	virtual void eval(IModelVal *dst) override { }
 
 	virtual IModelExpr *getCond() const override {
 		return m_cond.get();
@@ -35,6 +39,7 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelExprCond(this); }
 
 private:
+	int32_t						m_width;
 	IModelExprUP				m_cond;
 	IModelExprUP				m_true_e;
 	IModelExprUP				m_false_e;

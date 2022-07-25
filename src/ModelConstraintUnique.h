@@ -1,10 +1,13 @@
 
 #pragma once
 #include "vsc/IModelConstraintUnique.h"
+#include "ModelConstraint.h"
 
 namespace vsc {
 
-class ModelConstraintUnique : public virtual IModelConstraintUnique {
+class ModelConstraintUnique : 
+    public virtual IModelConstraintUnique,
+    public virtual ModelConstraint {
 public:
 
     ModelConstraintUnique(const std::vector<IModelExpr *> &exprs);

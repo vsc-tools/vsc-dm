@@ -56,6 +56,10 @@ public:
 
 	virtual IModelField *getParent() const = 0;
 
+	template <class T> T *getParentT() const {
+		return dynamic_cast<T *>(getParent());
+	}
+
 	virtual void setParent(IModelField *p) = 0;
 
 	virtual const std::vector<IModelConstraintUP> &constraints() const = 0;

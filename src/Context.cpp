@@ -30,11 +30,15 @@
 #include "ModelConstraintSoft.h"
 #include "ModelConstraintUnique.h"
 #include "ModelExprBin.h"
+#include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
+#include "ModelExprIndexedFieldRef.h"
 #include "ModelExprPartSelect.h"
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
+#include "ModelExprRef.h"
+#include "ModelExprUnary.h"
 #include "ModelExprVal.h"
 #include "ModelFieldRefRoot.h"
 #include "ModelFieldRefType.h"
@@ -80,7 +84,7 @@ IModelField *Context::buildModelField(
 }
 
 ICompoundSolver *Context::mkCompoundSolver() {
-	return new CompoundSolverDefault();
+	return new CompoundSolverDefault(this);
 }
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
@@ -243,6 +247,13 @@ IModelExprBin *Context::mkModelExprBin(
 	return new ModelExprBin(lhs, op, rhs);
 }
 
+IModelExprCond *Context::mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) {
+	return new ModelExprCond(cond, true_e, false_e);
+}
+
 IModelExprFieldRef *Context::mkModelExprFieldRef(
 			IModelField		*field) {
 	return new ModelExprFieldRef(field);
@@ -252,6 +263,10 @@ IModelExprIn *Context::mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) {
 	return new ModelExprIn(lhs, rnglist);
+}
+
+IModelExprIndexedFieldRef *Context::mkModelExprIndexedFieldRef() {
+	return new ModelExprIndexedFieldRef();
 }
 
 IModelExprPartSelect *Context::mkModelExprPartSelect(
@@ -273,6 +288,16 @@ IModelExprRange *Context::mkModelExprRange(
 
 IModelExprRangelist *Context::mkModelExprRangelist() {
 	return new ModelExprRangelist();
+}
+
+IModelExprRef *Context::mkModelExprRef(IModelExpr *target) {
+	return new ModelExprRef(target);
+}
+
+IModelExprUnary *Context::mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) {
+	return new ModelExprUnary(op, e);
 }
 
 IModelExprVal *Context::mkModelExprVal(IModelVal *v) {

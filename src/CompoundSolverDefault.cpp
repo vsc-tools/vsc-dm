@@ -5,6 +5,8 @@
  *      Author: mballance
  */
 
+#include "vsc/impl/TaskUnrollModelIterativeConstraints.h"
+#include "vsc/impl/TaskRollbackConstraintSubst.h"
 #include "CommitFieldValueVisitor.h"
 #include "CompoundSolverDefault.h"
 #include "Debug.h"
@@ -13,6 +15,7 @@
 #include "SolveSetSwizzlerPartsel.h"
 #include "SolveSpecBuilder.h"
 #include "TaskSetUsedRand.h"
+#include "TaskResizeConstrainedModelVec.h"
 
 #define EN_DEBUG_COMPOUND_SOLVER_DEFAULT
 
@@ -29,7 +32,7 @@ DEBUG_SCOPE(CompoundSolverDefault);
 
 namespace vsc {
 
-CompoundSolverDefault::CompoundSolverDefault() {
+CompoundSolverDefault::CompoundSolverDefault(IContext *ctxt) : m_ctxt(ctxt) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -58,6 +61,7 @@ bool CompoundSolverDefault::solve(
 					((flags & SolveFlags::RandomizeDeclRand) != SolveFlags::NoFlags)?-1:0);
 		}
 	}
+
 	SolveSpecUP spec(SolveSpecBuilder().build(
 			fields,
 			constraints
@@ -67,11 +71,32 @@ bool CompoundSolverDefault::solve(
 			spec->solvesets().size(),
 			spec->unconstrained().size());
 
+	// Start by fixing the size of the unconstrained-size vectors
+	// to the current size
+	for (std::vector<IModelFieldVec *>::const_iterator
+		it=spec->unconstrained_sz_vec().begin();
+		it!=spec->unconstrained_sz_vec().end(); it++) {
+		(*it)->getSizeRef()->val()->set_val_u((*it)->getSize(), 32);
+		(*it)->getSizeRef()->setFlag(ModelFieldFlag::Resolved);
+	}
+
 	for (auto sset=spec->solvesets().begin();
 			sset!=spec->solvesets().end(); sset++) {
 		DEBUG("Solve Set: %d fields ; %d constraints",
 				(*sset)->all_fields().size(),
 				(*sset)->constraints().size());
+
+		// See if we need to re-evaluate due to vector constraints
+		// TODO: Apply vector-sizing task
+		if (TaskResizeConstrainedModelVec(m_ctxt, solver_f).resize(sset->get())) {
+			// TODO: If vector-sizing applied to fields, apply unrolling algorithm
+			// TODO: After unrolling, we likely have a different set of solve
+			//       sets to work with
+
+		} else {
+			// If vector-sizing has no effect, then proceed
+		}
+
 		ISolverUP solver(solver_f->createSolverInst(sset->get()));
 
 		// Build solve data for this solve set

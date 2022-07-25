@@ -13,7 +13,7 @@ namespace vsc {
 
 class IModelConstraintExpr;
 using IModelConstraintExprUP=std::unique_ptr<IModelConstraintExpr>;
-class IModelConstraintExpr : public IModelConstraint {
+class IModelConstraintExpr : public virtual IModelConstraint {
 public:
 
 	virtual ~IModelConstraintExpr() { }

@@ -50,6 +50,7 @@ class IModelExprBin;
 class IModelExprCond;
 class IModelExprFieldRef;
 class IModelExprIn;
+class IModelExprIndexedFieldRef;
 class IModelExprPartSelect;
 class IModelExprRange;
 class IModelExprRangelist;
@@ -126,6 +127,8 @@ public:
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) = 0;
 
 	virtual void visitModelExprIn(IModelExprIn *e) = 0;
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) = 0;
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) = 0;
 
