@@ -16,6 +16,13 @@ public:
 
     bool eval(
         IModelVal       *result,
+        IModelExpr      *expr,
+        int32_t         width=-1) {
+        m_result = result;
+    }
+
+    bool eval(
+        IModelVal       *result,
         IModelExpr      *expr) {
         m_resolved = true;
         IModelVal *result_t = m_result;
@@ -141,7 +148,7 @@ public:
     }
 
 	virtual void visitModelExprVal(IModelExprVal *e) override {
-
+        m_result->set(e->val());
     }
 
 protected:
