@@ -26,6 +26,10 @@ TEST_F(TestModelFieldRef, smoke) {
 	Context ctx;
 
 	IDataTypeInt *vsc_uint32_t = ctx.findDataTypeInt(false, 32);
+	if (!vsc_uint32_t) {
+		vsc_uint32_t = ctx.mkDataTypeInt(false, 32);
+		ctx.addDataTypeInt(vsc_uint32_t);
+	}
 	IModelField *top = ctx.mkModelFieldRoot(vsc_uint32_t, "top");
 	IModelField *a = ctx.mkModelFieldRoot(vsc_uint32_t, "a");
 	a->setFlag(ModelFieldFlag::DeclRand);
@@ -46,7 +50,7 @@ TEST_F(TestModelFieldRef, smoke) {
 					ctx.mkModelExprFieldRef(ref))));
 
 	ICompoundSolverUP solver(ctx.mkCompoundSolver());
-	IRandStateUP randstate(ctx.mkRandState(0));
+	IRandStateUP randstate(ctx.mkRandState("0"));
 
 	ref->setRef(f1);
 

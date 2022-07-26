@@ -19,37 +19,39 @@ public:
         IModelExpr      *expr,
         int32_t         width=-1) {
         m_result = result;
+        m_width = width;
+
+        expr->accept(m_this);
+
+        return m_signed;
     }
 
-    bool eval(
-        IModelVal       *result,
-        IModelExpr      *expr) {
-        m_resolved = true;
-        IModelVal *result_t = m_result;
-        m_result = result;
-        expr->accept(m_this);
-        m_result = result_t;
-        return m_resolved;
-    }
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
         IModelValOp *op = m_ctxt->getModelValOp();
         IModelVal *lhs_v = alloc_v(e->width());
-        if (!eval(lhs_v, e->lhs())) {
-            m_resolved = false;
-            return;
-        }
+        bool lhs_signed = _eval(lhs_v, e->lhs());
         IModelVal *rhs_v = alloc_v(e->width());
-        if (!eval(rhs_v, e->rhs())) {
-            m_resolved = false;
-            return;
+        bool rhs_signed = _eval(rhs_v, e->rhs());
+
+        if (lhs_v->bits() > m_width) {
+            m_width = lhs_v->bits();
         }
 
+        if (rhs_v->bits() > m_width) {
+            m_width = rhs_v->bits();
+        }
+
+        m_signed = (lhs_signed || rhs_signed);
         m_result->setBits(m_width);
 
    		switch (e->op()) {
    		case BinOp::Add: op->add(m_result, lhs_v, rhs_v); break;
-   		case BinOp::Eq: op->eq(m_result, lhs_v, rhs_v); break;
+   		case BinOp::Eq: {
+            op->eq(m_result, lhs_v, rhs_v); 
+            fprintf(stdout, "lhs=%lld rhs=%lld result=%lld\n",
+                lhs_v->val_u(), rhs_v->val_u(), m_result->val_u());
+        } break;
    		case BinOp::Ne: op->ne(m_result, lhs_v, rhs_v); break;
    		case BinOp::Ge: 
 		    // Expression must be signed or unsigned
@@ -89,16 +91,22 @@ public:
    		case BinOp::Srl: op->srl(m_result, lhs_v, rhs_v); break;
    		case BinOp::Sub: 
 		    if (m_signed) {
+                /*
    				dst->val_u(lhs.val_i() - rhs.val_i(), m_width);
    				dst->bits(m_width);
+                 */
    			} else {
+                /*
 		    	dst->val_u(lhs.val_u() - rhs.val_u(), m_width);
    				dst->bits(m_width);
+                 */
    			}
 		    break;
+            /*
    		case BinOp::Xor: op->xor(m_result, lhs_v, rhs_v); break;
    		case BinOp::BinAnd: op->bin_and(m_result, lhs_v, rhs_v); break;
    		case BinOp::BinOr: op->bin_or(m_result, lhs_v, rhs_v); break;
+         */
 	    }
         free_v(lhs_v);
         free_v(rhs_v);
@@ -106,17 +114,21 @@ public:
 
 	virtual void visitModelExprCond(IModelExprCond *e) override {
         IModelVal *cond_v = alloc_v(1);
-        eval(cond_v, e->getCond());
-        m_result->setBits(e->width());
+        _eval(cond_v, e->getCond());
+        if (e->width() > m_width) {
+            m_width = e->width();
+        }
+        m_result->setBits(m_width);
         if (cond_v->val_u()) {
-            eval(m_result, e->getTrue());
+            m_signed = _eval(m_result, e->getTrue());
         } else {
-            eval(m_result, e->getFalse());
+            m_signed = _eval(m_result, e->getFalse());
         }
     }
 
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override {
         m_result->set(e->field()->val());
+        fprintf(stdout, "Field: %lld %lld\n", e->field()->val()->val_u(), m_result->val_u());
     }
 
 	virtual void visitModelExprIn(IModelExprIn *e) override {
@@ -140,7 +152,7 @@ public:
     }
 
 	virtual void visitModelExprRef(IModelExprRef *e) override {
-
+        e->accept(m_this);
     }
 
 	virtual void visitModelExprUnary(IModelExprUnary *e) override {
@@ -168,11 +180,24 @@ protected:
         m_val_s.push_back(IModelValUP(v));
     }
 
+    bool _eval(
+        IModelVal       *result,
+        IModelExpr      *expr) {
+        m_resolved = true;
+        IModelVal *result_t = m_result;
+        m_result = result;
+        expr->accept(m_this);
+        m_result = result_t;
+        return m_signed;
+    }
+
 protected:
     IContext                    *m_ctxt;
     IModelVal                   *m_result;
     std::vector<IModelValUP>    m_val_s;
     bool                        m_resolved;
+    int32_t                     m_width;
+    bool                        m_signed;
 
 };
 

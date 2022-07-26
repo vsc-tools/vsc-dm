@@ -6,11 +6,8 @@
  */
 
 #include "VscTestBase.h"
-#include "ctor.h"
 
 namespace vsc {
-
-using namespace facade;
 
 VscTestBase::VscTestBase() {
 	// TODO Auto-generated constructor stub
@@ -22,13 +19,9 @@ VscTestBase::~VscTestBase() {
 }
 
 void VscTestBase::SetUp() {
-	ctor::reset();
 }
 
 void VscTestBase::TearDown() {
-	ASSERT_EQ(ctor::inst()->scope_depth(), 0);
-	ASSERT_EQ(ctor::inst()->expr_depth(), 0);
-	ctor::reset();
 }
 
 } /* namespace vsc */

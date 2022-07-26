@@ -42,8 +42,6 @@ set_target_properties(libgmock PROPERTIES
 include_directories(
 	"${source_dir}/googletest/include"
 	"${source_dir}/googlemock/include"
-	"${source_dir}/src/facade"
-	${PACKAGES_DIR}/magic_enum/include
 	)
 
 file(GLOB test_libvsc_SRC
@@ -54,8 +52,6 @@ file(GLOB test_libvsc_SRC
 add_executable(test_libvsc ${test_libvsc_SRC})
 target_include_directories(test_libvsc PUBLIC
     "${source_dir}/googletest/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/facade"
-	${PACKAGES_DIR}/magic_enum/include
     )
    
 target_link_directories(test_libvsc PRIVATE
@@ -72,7 +68,6 @@ endif()
 
 target_link_libraries(test_libvsc 
 	vsc 
-	vsc_facade
 	libgtest 
 	libgmock
 	)

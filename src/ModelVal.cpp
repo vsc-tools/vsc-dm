@@ -303,6 +303,8 @@ void ModelVal::set_val_u(
 		int32_t width) {
 	if (width == -1) {
 		width = m_bits;
+	} else {
+		m_bits = width;
 	}
 	if (m_bits > 64) {
 		m_val.vp[0] = v;
@@ -322,6 +324,8 @@ void ModelVal::set_val_i(
 		int32_t width) {
 	if (width == -1) {
 		width = m_bits;
+	} else {
+		m_bits = width;
 	}
 	if (m_bits > 64) {
 		m_val.vp[0] = v;

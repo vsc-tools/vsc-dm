@@ -25,6 +25,10 @@ TEST_F(TestModelSmoke, smoke) {
 	Context ctx;
 
 	IDataTypeInt *vsc_uint32_t = ctx.findDataTypeInt(false, 32);
+	if (!vsc_uint32_t) {
+		vsc_uint32_t = ctx.mkDataTypeInt(false, 32);
+		ctx.addDataTypeInt(vsc_uint32_t);
+	}
 	IModelFieldRoot *a = new ModelFieldRoot(vsc_uint32_t, "a");
 	SolverBoolector *solver = new SolverBoolector();
 
