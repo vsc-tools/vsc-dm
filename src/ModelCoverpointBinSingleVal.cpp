@@ -35,12 +35,7 @@ std::string ModelCoverpointBinSingleVal::bin_name(int32_t bin_idx) {
 }
 
 void ModelCoverpointBinSingleVal::sample() {
-	ModelVal is_eq(1);
-	ModelValOp::eq(
-			&is_eq,
-			&m_val,
-			m_cp->val());
-	if (is_eq.val_u()) {
+	if (ModelValOp::eq_s(&m_val, m_cp->val())) {
 		// Notify the coverpoint...
 		m_cp->coverage_ev(m_bin_idx_base, m_type);
 	}

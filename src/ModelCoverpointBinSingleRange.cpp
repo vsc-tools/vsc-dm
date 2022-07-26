@@ -41,12 +41,12 @@ void ModelCoverpointBinSingleRange::sample() {
 	ModelVal ge(1), le(1);
 
 	// TODO: need to know if this is signed/unsigned
-	ModelValOp::uge(
+	ModelValOp::uge_s(
 			&ge,
 			m_cp->val(),
 			&m_lower);
 
-	ModelValOp::ule(
+	ModelValOp::ule_s(
 			&le,
 			m_cp->val(),
 			&m_upper);

@@ -11,6 +11,7 @@
 #include "DataTypeInt.h"
 #include "DataTypeVec.h"
 #include "DataTypeStruct.h"
+#include "ModelValOp.h"
 
 namespace vsc {
 
@@ -23,6 +24,8 @@ public:
 	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) override;
+
+	virtual IModelValOp *getModelValOp() override { return &m_model_val_op; }
 
 	virtual ICompoundSolver *mkCompoundSolver() override;
 
@@ -208,6 +211,7 @@ public:
 
 
 private:
+	ModelValOp												m_model_val_op;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;
 

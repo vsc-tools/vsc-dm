@@ -33,6 +33,8 @@
 #include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
 #include "vsc/IModelFieldType.h"
+#include "vsc/IModelVal.h"
+#include "vsc/IModelValOp.h"
 #include "vsc/IRandomizer.h"
 #include "vsc/IRandState.h"
 #include "vsc/ISolverFactory.h"
@@ -67,6 +69,8 @@ public:
 	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) = 0;
+
+	virtual IModelValOp *getModelValOp() = 0;
 
 	virtual ICompoundSolver *mkCompoundSolver() = 0;
 
