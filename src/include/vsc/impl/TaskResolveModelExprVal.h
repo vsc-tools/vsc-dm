@@ -89,24 +89,10 @@ public:
    		case BinOp::LogOr: op->log_or(m_result, lhs_v, rhs_v); break;
    		case BinOp::Sll: op->sll(m_result, lhs_v, rhs_v); break;
    		case BinOp::Srl: op->srl(m_result, lhs_v, rhs_v); break;
-   		case BinOp::Sub: 
-		    if (m_signed) {
-                /*
-   				dst->val_u(lhs.val_i() - rhs.val_i(), m_width);
-   				dst->bits(m_width);
-                 */
-   			} else {
-                /*
-		    	dst->val_u(lhs.val_u() - rhs.val_u(), m_width);
-   				dst->bits(m_width);
-                 */
-   			}
-		    break;
-            /*
-   		case BinOp::Xor: op->xor(m_result, lhs_v, rhs_v); break;
+   		case BinOp::Sub: op->sub(m_result, lhs_v, rhs_v); break; 
+   		case BinOp::Xor: op->bin_xor(m_result, lhs_v, rhs_v); break;
    		case BinOp::BinAnd: op->bin_and(m_result, lhs_v, rhs_v); break;
    		case BinOp::BinOr: op->bin_or(m_result, lhs_v, rhs_v); break;
-         */
 	    }
         free_v(lhs_v);
         free_v(rhs_v);

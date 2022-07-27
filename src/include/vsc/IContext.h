@@ -13,6 +13,7 @@
 #include "vsc/IDataTypeVec.h"
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
+#include "vsc/IModelConstraintForeach.h"
 #include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
@@ -32,6 +33,7 @@
 #include "vsc/IModelExprVal.h"
 #include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
+#include "vsc/IModelFieldVecRoot.h"
 #include "vsc/IModelFieldType.h"
 #include "vsc/IModelVal.h"
 #include "vsc/IModelValOp.h"
@@ -113,6 +115,10 @@ public:
 
 	virtual IModelConstraintExpr *mkModelConstraintExpr(
 			IModelExpr		*expr) = 0;
+
+	virtual IModelConstraintForeach *mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) = 0;
 
 	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
 			IModelExpr			*cond,

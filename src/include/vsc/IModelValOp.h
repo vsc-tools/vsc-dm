@@ -12,6 +12,21 @@ public:
 			const IModelVal	*op1,
 			const IModelVal *op2) = 0;
 
+	virtual void bin_and(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) = 0;
+
+	virtual void bin_or(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) = 0;
+
+	virtual void bin_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) = 0;
+
 	virtual void eq(
 			IModelVal		*dst,
 			const IModelVal	*op1,
@@ -103,8 +118,25 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2) = 0;
 
+	virtual bool log_and(
+			const IModelVal	*op1,
+			const IModelVal	*op2) = 0;
+
 	virtual void log_or(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) = 0;
+
+	virtual bool log_or(
+			const IModelVal	*op1,
+			const IModelVal	*op2) = 0;
+
+	virtual void log_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) = 0;
+
+	virtual bool log_xor(
 			const IModelVal	*op1,
 			const IModelVal	*op2) = 0;
 
@@ -119,6 +151,11 @@ public:
 			const IModelVal	*op2) = 0;
 
 	virtual void srl(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) = 0;
+
+	virtual void sub(
 			IModelVal		*dst,
 			const IModelVal	*op1,
 			const IModelVal	*op2) = 0;

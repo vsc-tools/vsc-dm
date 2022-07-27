@@ -24,6 +24,7 @@
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
+#include "ModelConstraintForeach.h"
 #include "ModelConstraintIfElse.h"
 #include "ModelConstraintImplies.h"
 #include "ModelConstraintScope.h"
@@ -125,6 +126,12 @@ IModelConstraintBlock *Context::mkModelConstraintBlock(
 IModelConstraintExpr *Context::mkModelConstraintExpr(
 			IModelExpr		*expr) {
 	return new ModelConstraintExpr(expr);
+}
+
+IModelConstraintForeach *Context::mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) {
+	return new ModelConstraintForeach(this, target, index_it_name);
 }
 
 IModelConstraintIfElse *Context::mkModelConstraintIfElse(

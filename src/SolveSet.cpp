@@ -24,7 +24,7 @@
 
 namespace vsc {
 
-SolveSet::SolveSet() {
+SolveSet::SolveSet() : m_flags(SolveSetFlag::NoFlags) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -75,6 +75,7 @@ void SolveSet::merge(SolveSet *src) {
 			it!=src->m_soft_constraints.end(); it++) {
 		add_soft_constraint(*it);
 	}
+	m_flags |= src->m_flags;
 }
 
 } /* namespace vsc */

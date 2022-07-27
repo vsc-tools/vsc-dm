@@ -39,7 +39,10 @@ DEBUG_SCOPE(SolveSpecBuilder);
 
 namespace vsc {
 
-SolveSpecBuilder::SolveSpecBuilder() : m_pass(0), m_active_solveset(0) {
+SolveSpecBuilder::SolveSpecBuilder() : 
+	m_pass(0), 
+	m_flags(SolveSetFlag::NoFlags),
+	m_active_solveset(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -85,6 +88,7 @@ SolveSpec *SolveSpecBuilder::build(
 	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
 		if (*it) {
 			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
+				fprintf(stdout, "sz parent=%p FieldVec=%p\n", (*it)->getParent(), (*it)->getParentT<IModelFieldVec>());
 				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
 			} else {
 				unconstrained.push_back(*it);
@@ -200,6 +204,18 @@ void SolveSpecBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr pass=%d", m_pass);
 }
 
+void SolveSpecBuilder::visitModelConstraintForeach(IModelConstraintForeach *c) {
+	DEBUG_ENTER("visitModelConstraintForeach");
+	constraint_enter(c);
+
+	m_flags |= SolveSetFlag::HaveForeach;
+
+	VisitorBase::visitModelConstraintForeach(c);
+
+	constraint_leave(c);
+	DEBUG_LEAVE("visitModelConstraintForeach");
+}
+
 void SolveSpecBuilder::visitModelConstraintIfElse(IModelConstraintIfElse *c) {
 	DEBUG_ENTER("visitModelConstraintIf");
 	constraint_enter(c);
@@ -240,17 +256,24 @@ void SolveSpecBuilder::visitModelField(IModelField *f) {
 }
 
 void SolveSpecBuilder::constraint_enter(IModelConstraint *c) {
+	DEBUG_ENTER("constraint_enter %d", m_constraint_s.size());
 	m_constraint_s.push_back(c);
+	DEBUG_LEAVE("constraint_enter %d", m_constraint_s.size());
 }
 
 void SolveSpecBuilder::constraint_leave(IModelConstraint *c) {
+	DEBUG_ENTER("constraint_leave pass=%d %d", m_pass, m_constraint_s.size());
 	m_constraint_s.pop_back();
 
 	if (m_pass == 1 && m_constraint_s.size() == 0) {
 		if (m_active_solveset) {
 			m_active_solveset->add_constraint(c);
+			fprintf(stdout, "Add flags %lld\n", m_flags);
+			m_active_solveset->setFlags(m_flags);
 		}
+		m_flags = SolveSetFlag::NoFlags;
 	}
+	DEBUG_LEAVE("constraint_leave pass=%d %d", m_pass, m_constraint_s.size());
 }
 
 void SolveSpecBuilder::process_fieldref(IModelField *f) {

@@ -16,6 +16,31 @@
 
 namespace vsc {
 
+enum class SolveSetFlag {
+	NoFlags = 0,
+	HaveForeach = (1 << 0)
+};
+
+static inline SolveSetFlag operator | (const SolveSetFlag lhs, const SolveSetFlag rhs) {
+	return static_cast<SolveSetFlag>(
+			static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+}
+
+static inline SolveSetFlag operator |= (SolveSetFlag &lhs, const SolveSetFlag rhs) {
+	lhs = static_cast<SolveSetFlag>(
+			static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
+	return lhs;
+}
+
+static inline SolveSetFlag operator & (const SolveSetFlag lhs, const SolveSetFlag rhs) {
+	return static_cast<SolveSetFlag>(
+			static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
+}
+
+static inline SolveSetFlag operator ~ (const SolveSetFlag lhs) {
+	return static_cast<SolveSetFlag>(~static_cast<uint32_t>(lhs));
+}
+
 class SolveSet;
 using SolveSetUP = std::unique_ptr<SolveSet>;
 
@@ -47,6 +72,12 @@ public:
 		return m_soft_constraints;
 	}
 
+	SolveSetFlag getFlags() const { return m_flags; }
+
+	void setFlags(SolveSetFlag flags) { m_flags |= flags; }
+
+	bool hasFlags(SolveSetFlag flags) { return (m_flags & flags) == flags; }
+
 	/**
 	 * Merge data from the `src` set into this one
 	 */
@@ -62,6 +93,7 @@ private:
 
 	std::unordered_set<IModelConstraintSoft *>	m_soft_constraint_s;
 	std::vector<IModelConstraintSoft *>			m_soft_constraints;
+	SolveSetFlag								m_flags;
 
 };
 

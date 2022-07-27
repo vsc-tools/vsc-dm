@@ -39,6 +39,10 @@ public:
 		m_delegate->visitModelConstraintExpr(c);
 	}
 
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
+		m_delegate->visitModelConstraintForeach(c);
+	}
+
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override {
 		m_delegate->visitModelConstraintIfElse(c);
 	}

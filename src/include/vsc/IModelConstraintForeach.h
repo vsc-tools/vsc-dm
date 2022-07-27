@@ -20,6 +20,13 @@ public:
 
 	virtual IModelExpr *getTarget() const = 0;
 
+	/**
+	 * @brief Returns the index-iteration variable
+	 * 
+	 * @return IModelField* 
+	 */
+	virtual IModelField *getIndexIt() const = 0;
+
 };
 
 }

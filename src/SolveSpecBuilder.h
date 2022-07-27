@@ -37,6 +37,8 @@ public:
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override;
+
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override;
 
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
@@ -53,6 +55,7 @@ private:
 
 private:
 	uint32_t									m_pass;
+	SolveSetFlag								m_flags;
 	std::vector<SolveSetUP>						m_solveset_l;
 	std::unordered_map<SolveSet *, int32_t>		m_solveset_m;
 	SolveSet									*m_active_solveset;

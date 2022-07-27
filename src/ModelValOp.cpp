@@ -58,6 +58,60 @@ void ModelValOp::add_s(
 	}
 }
 
+void ModelValOp::bin_and(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+	bin_and_s(dst, op1, op2);
+}
+
+void ModelValOp::bin_and_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+	if (op1->bits() <= 64 && op2->bits() <= 64) {
+		dst->set_val_u(op1->val_u() & op2->val_u());
+	} else {
+		// TODO:
+	}
+}
+
+void ModelValOp::bin_or(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+    bin_or_s(dst, op1, op2);
+}
+
+void ModelValOp::bin_or_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+	if (op1->bits() <= 64 && op2->bits() <= 64) {
+		dst->set_val_u(op1->val_u() | op2->val_u());
+	} else {
+		// TODO:
+	}
+}
+
+void ModelValOp::bin_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+    bin_xor_s(dst, op1, op2);			
+}
+
+void ModelValOp::bin_xor_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) {
+	if (op1->bits() <= 64 && op2->bits() <= 64) {
+		dst->set_val_u(op1->val_u() ^ op2->val_u());
+	} else {
+		// TODO:
+	}
+}
+
 void ModelValOp::eq(
 			IModelVal		*dst,
 			const IModelVal	*op1,
@@ -420,6 +474,22 @@ void ModelValOp::log_and_s(
 	}
 }
 
+bool ModelValOp::log_and(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    return log_and_s(op1, op2);
+}
+
+bool ModelValOp::log_and_s(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    if (op1->bits() <= 64 && op2->bits() <= 64) {
+		return (op1->val_u() && op2->val_u());
+    } else {
+        // TODO:
+    }
+}
+
 void ModelValOp::log_or(
 			IModelVal		*dst,
 			const IModelVal	*op1,
@@ -436,6 +506,54 @@ void ModelValOp::log_or_s(
 		dst->val_u(op1->val_u() != 0 ||  op2->val_u() != 0);
 	} else {
 		// TODO:
+	}
+}
+
+bool ModelValOp::log_or(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    return log_or_s(op1, op2);
+}
+
+bool ModelValOp::log_or_s(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    if (op1->bits() <= 64 && op2->bits() <= 64) {
+		return (op1->val_u() || op2->val_u());
+	} else {
+		// TODO:
+	}
+}
+
+void ModelValOp::log_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    log_xor_s(dst, op1, op2);
+}
+
+void ModelValOp::log_xor_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    if (op1->bits() <= 64 && op2->bits() <= 64) {
+		dst->set_val_u(op1->val_u() != 0 ^ op2->val_u() != 0);
+	} else {
+		// TODO:
+	}
+}
+
+bool ModelValOp::log_xor(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+	return log_xor_s(op1, op2);
+}
+
+bool ModelValOp::log_xor_s(
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    if (op1->bits() <= 64 && op2->bits() <= 64) {
+		return (op1->val_u() != 0 ^ op2->val_u() != 0);
 	}
 }
 
@@ -491,6 +609,24 @@ void ModelValOp::srl_s(
 	dst->setBits(op1->bits());
 	if (op1->bits() <= 64 && op2->bits() <= 64) {
 		dst->val_u(op1->val_u() >>  op2->val_u());
+	} else {
+		// TODO:
+	}
+}
+
+void ModelValOp::sub(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    sub_s(dst, op1, op2);
+}
+
+void ModelValOp::sub_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) {
+    if (op1->bits() <= 64 && op2->bits() <= 64) {
+		dst->set_val_u(op1->val_u() - op2->val_u());
 	} else {
 		// TODO:
 	}

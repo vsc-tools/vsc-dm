@@ -18,7 +18,9 @@ public:
 
 	virtual void eval(IModelVal *dst) override { }
 
-    virtual void addActiveScopeRef(IModelExpr *off_e) override;
+    virtual void addFieldRef(IModelExprFieldRef *ref) override;
+
+    virtual void addFieldIndexRef(IModelExpr *off_e) override;
 
     virtual void addVecIndexRef(IModelExpr *idx_e) override;
 

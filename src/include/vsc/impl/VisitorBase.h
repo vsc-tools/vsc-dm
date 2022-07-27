@@ -14,6 +14,7 @@
 
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
+#include "vsc/IModelConstraintForeach.h"
 #include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
@@ -94,6 +95,11 @@ public:
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override {
 		visitModelConstraint(c);
 		c->expr()->accept(m_this);
+	}
+
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
+		c->getTarget()->accept(m_this);
+		visitModelConstraintScope(c);
 	}
 
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 

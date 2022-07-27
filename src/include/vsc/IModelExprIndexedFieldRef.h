@@ -2,11 +2,12 @@
 #pragma once
 #include <vector>
 #include "vsc/IModelExpr.h"
+#include "vsc/IModelExprFieldRef.h"
 
 namespace vsc {
 
 enum class ModelExprIndexedFieldRefKind {
-    ActiveScope,
+    Field,
     FieldIndex,
     VecIndex
 };
@@ -23,7 +24,9 @@ public:
 
     virtual ~IModelExprIndexedFieldRef() { }
 
-    virtual void addActiveScopeRef(IModelExpr *off_e) = 0;
+    virtual void addFieldRef(IModelExprFieldRef *ref) = 0;
+
+    virtual void addFieldIndexRef(IModelExpr *off_e) = 0;
 
     virtual void addVecIndexRef(IModelExpr *idx_e) = 0;
 

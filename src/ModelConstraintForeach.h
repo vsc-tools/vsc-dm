@@ -7,15 +7,32 @@
 
 #pragma once
 #include "vsc/IModelConstraintForeach.h"
+#include "vsc/IContext.h"
+#include "ModelConstraintScope.h"
 
 namespace vsc {
 
-class ModelConstraintForeach : public IModelConstraintForeach {
+class ModelConstraintForeach : 
+	public virtual IModelConstraintForeach,
+	public virtual ModelConstraintScope {
 public:
-	ModelConstraintForeach();
-//			IModelExpr			*);
+	ModelConstraintForeach(
+		IContext 			*ctxt,
+		IModelExpr			*target,
+		const std::string	&index_name = "");
 
 	virtual ~ModelConstraintForeach();
+
+	virtual IModelExpr *getTarget() const override { return m_target.get(); }
+
+	virtual IModelField *getIndexIt() const override { return m_index_it.get(); }
+
+	virtual void accept(IVisitor *v) override { v->visitModelConstraintForeach(this); }
+
+private:
+	IModelExprUP					m_target;
+	IModelFieldUP					m_index_it;
+
 };
 
 } /* namespace vsc */

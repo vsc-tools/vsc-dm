@@ -104,9 +104,11 @@ public:
             it=ref->getPath().begin();
             it!=ref->getPath().end(); it++) {
             switch (it->kind) {
-            case ModelExprIndexedFieldRefKind::ActiveScope:
-                ref->addActiveScopeRef(expr(it->idx_e.get()));
+            case ModelExprIndexedFieldRefKind::Field:
+                ref->addFieldRef(exprT<IModelExprFieldRef>(it->idx_e.get()));
                 break;
+            case ModelExprIndexedFieldRefKind::FieldIndex:
+                ref->addFieldIndexRef(expr(it->idx_e.get()));
             case ModelExprIndexedFieldRefKind::VecIndex:
                 ref->addVecIndexRef(expr(it->idx_e.get()));
                 break;

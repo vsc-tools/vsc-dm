@@ -11,9 +11,16 @@ ModelExprIndexedFieldRef::~ModelExprIndexedFieldRef() {
 
 }
 
-void ModelExprIndexedFieldRef::addActiveScopeRef(IModelExpr *off_e) {
+void ModelExprIndexedFieldRef::addFieldRef(IModelExprFieldRef *off_e) {
     m_path.push_back(ModelExprIndexedFieldRefElem{
-        ModelExprIndexedFieldRefKind::ActiveScope,
+        ModelExprIndexedFieldRefKind::Field,
+        IModelExprUP(off_e)
+    });
+}
+
+void ModelExprIndexedFieldRef::addFieldIndexRef(IModelExpr *off_e) {
+    m_path.push_back(ModelExprIndexedFieldRefElem{
+        ModelExprIndexedFieldRefKind::FieldIndex,
         IModelExprUP(off_e)
     });
 }

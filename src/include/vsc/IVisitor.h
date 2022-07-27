@@ -35,6 +35,7 @@ class IDataTypeStruct;
 class IModelConstraint;
 class IModelConstraintBlock;
 class IModelConstraintExpr;
+class IModelConstraintForeach;
 class IModelConstraintIfElse;
 class IModelConstraintImplies;
 class IModelConstraintScope;
@@ -101,6 +102,8 @@ public:
 	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) = 0;
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) = 0;
+
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) = 0;
 
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) = 0;
 

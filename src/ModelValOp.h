@@ -32,6 +32,36 @@ public:
 			int64_t			op2,
 			uint32_t		bits);
 
+	virtual void bin_and(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) override;
+
+	static void bin_and_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2);
+
+	virtual void bin_or(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) override;
+
+	static void bin_or_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2);
+
+	virtual void bin_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2) override;
+
+	static void bin_xor_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal *op2);
+
 	virtual void eq(
 			IModelVal		*dst,
 			const IModelVal	*op1,
@@ -214,13 +244,46 @@ public:
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
+	virtual bool log_and(
+			const IModelVal	*op1,
+			const IModelVal	*op2) override;
+
+	static bool log_and_s(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
 	virtual void log_or(
 			IModelVal		*dst,
 			const IModelVal	*op1,
 			const IModelVal	*op2) override;
-
 	static void log_or_s(
 			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	virtual bool log_or(
+			const IModelVal	*op1,
+			const IModelVal	*op2) override;
+
+	static bool log_or_s(
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	virtual void log_xor(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) override;
+
+	static void log_xor_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	virtual bool log_xor(
+			const IModelVal	*op1,
+			const IModelVal	*op2) override;
+
+	static bool log_xor_s(
 			const IModelVal	*op1,
 			const IModelVal	*op2);
 
@@ -250,6 +313,16 @@ public:
 			const IModelVal	*op2) override;
 
 	static void sra_s(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2);
+
+	virtual void sub(
+			IModelVal		*dst,
+			const IModelVal	*op1,
+			const IModelVal	*op2) override;
+
+	static void sub_s(
 			IModelVal		*dst,
 			const IModelVal	*op1,
 			const IModelVal	*op2);

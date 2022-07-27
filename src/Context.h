@@ -151,6 +151,10 @@ public:
 
 	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) override;
 
+	virtual IModelConstraintForeach *mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) override;
+
 	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
 			ITypeConstraint	*true_c,
