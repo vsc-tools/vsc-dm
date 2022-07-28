@@ -1,6 +1,9 @@
 
 #pragma once
+#include "vsc/IContext.h"
+#include "vsc/IModelField.h"
 #include "vsc/impl/VisitorBase.h"
+#include "vsc/impl/TaskResolveModelExprVal.h"
 
 namespace vsc {
 
@@ -11,7 +14,7 @@ namespace vsc {
 class TaskResolveModelExprFieldRef : public virtual VisitorBase {
 public:
 
-    TaskResolveModelExprFieldRef() { }
+    TaskResolveModelExprFieldRef(IContext *ctx) : m_ctx(ctx) { }
 
     virtual ~TaskResolveModelExprFieldRef() { }
 
@@ -19,6 +22,10 @@ public:
         m_field = base;
         e->accept(m_this);
         return m_field;
+    }
+
+    template <class T> T *resolveT(IModelField *base, IModelExpr *e) {
+        return dynamic_cast<T *>(resolve(base, e));
     }
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
@@ -38,17 +45,46 @@ public:
     }
 
 	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override {
+        fprintf(stdout, "ResolveFieldRef::visitModelExprIndexedFieldRef\n");
+        fflush(stdout);
         IModelField *field = m_field;
-
-        if (!field) {
-            return;
-        }
 
         for (std::vector<ModelExprIndexedFieldRefElem>::const_iterator
             it=e->getPath().begin();
             it!=e->getPath().end(); it++) {
+            fprintf(stdout, "IT: %d\n", it->kind);
+            fflush(stdout);
+            switch (it->kind) {
+            case ModelExprIndexedFieldRefKind::Field:
+                field = resolve(0, it->idx_e.get());
+                fprintf(stdout, "field=%p\n", field);
+                fflush(stdout);
+                break;
+            case ModelExprIndexedFieldRefKind::VecIndex: {
+                IModelFieldVec *vec = dynamic_cast<IModelFieldVec *>(field);
+                if (!m_val) {
+                    m_val = IModelValUP(m_ctx->mkModelVal());
+                    m_val->setBits(32);
+                }
+                fprintf(stdout, "vec=%p\n", vec);
+                if (!vec) {
+                    field = 0;
+                    break;
+                }
 
+                TaskResolveModelExprVal(m_ctx).eval(
+                    m_val.get(),
+                    it->idx_e.get());
+
+                fprintf(stdout, "Index: %lld\n", m_val->val_u());
+
+                field = vec->getField(m_val->val_u());
+            } break;
+
+            }
         }
+
+        m_field = field;
     }
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override {
@@ -71,13 +107,15 @@ public:
         m_field = 0;
     }
 
-	virtual void visitModelExprVal(IModelExprVal *e) override [
+	virtual void visitModelExprVal(IModelExprVal *e) override {
         m_field = 0;
-    ]
+    }
 
 
 private:
+    IContext                        *m_ctx;
     IModelField                     *m_field;
+    IModelValUP                     m_val;
 
 };
 

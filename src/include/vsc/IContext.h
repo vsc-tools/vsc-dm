@@ -18,6 +18,7 @@
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelConstraintSubst.h"
 #include "vsc/IModelConstraintUnique.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
@@ -129,10 +130,16 @@ public:
 			IModelExpr			*cond,
 			IModelConstraint	*body) = 0;
 
+	virtual IModelConstraintRef *mkModelConstraintRef(
+			IModelConstraint	*target) = 0;
+
 	virtual IModelConstraintScope *mkModelConstraintScope() = 0;
 
 	virtual IModelConstraintSoft *mkModelConstraintSoft(
 		IModelConstraintExpr	*c) = 0;
+
+	virtual IModelConstraintSubst *mkModelConstraintSubst(
+		IModelConstraint		*c) = 0;
 
 	virtual IModelConstraintUnique *mkModelConstraintUnique(
 		const std::vector<IModelExpr *>		&exprs) = 0;

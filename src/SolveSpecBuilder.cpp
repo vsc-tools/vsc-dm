@@ -20,6 +20,7 @@
  */
 #include "Debug.h"
 #include "SolveSpecBuilder.h"
+#include "vsc/impl/TaskResolveModelExprFieldRef.h"
 
 #define EN_DEBUG_SOLVE_SPEC_BUILDER
 
@@ -39,7 +40,8 @@ DEBUG_SCOPE(SolveSpecBuilder);
 
 namespace vsc {
 
-SolveSpecBuilder::SolveSpecBuilder() : 
+SolveSpecBuilder::SolveSpecBuilder(IContext *ctx) : 
+	m_ctx(ctx),
 	m_pass(0), 
 	m_flags(SolveSetFlag::NoFlags),
 	m_active_solveset(0) {
@@ -224,6 +226,14 @@ void SolveSpecBuilder::visitModelConstraintIfElse(IModelConstraintIfElse *c) {
 	DEBUG_LEAVE("visitModelConstraintIf");
 }
 
+void SolveSpecBuilder::visitModelConstraintImplies(IModelConstraintImplies *c) {
+	DEBUG_ENTER("visitModelConstraintImplies");
+	constraint_enter(c);
+	VisitorBase::visitModelConstraintImplies(c);
+	constraint_leave(c);
+	DEBUG_LEAVE("visitModelConstraintImplies");
+}
+
 void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 	DEBUG_ENTER("visitModelExprFieldRef");
 	if (m_pass == 0) {
@@ -234,6 +244,19 @@ void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 		process_fieldref(e->field());
 	}
 	DEBUG_LEAVE("visitModelExprFieldRef");
+}
+
+void SolveSpecBuilder::visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) {
+	DEBUG_ENTER("visitModelExprIndexedFieldRef");
+	IModelField *field = TaskResolveModelExprFieldRef(m_ctx).resolve(0, e);
+	if (m_pass == 0) {
+		// In pass 0, we're collecting fields
+		field->accept(this);
+	} else {
+		// In pass 1, we're evaluating dependencies
+		process_fieldref(field);
+	}
+	DEBUG_LEAVE("visitModelExprIndexedFieldRef");
 }
 
 void SolveSpecBuilder::visitModelField(IModelField *f) {

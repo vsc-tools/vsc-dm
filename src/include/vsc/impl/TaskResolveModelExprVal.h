@@ -28,11 +28,19 @@ public:
 
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
+        bool resolved = true;
         IModelValOp *op = m_ctxt->getModelValOp();
         IModelVal *lhs_v = alloc_v(e->width());
+        resolved &= m_resolved;
         bool lhs_signed = _eval(lhs_v, e->lhs());
         IModelVal *rhs_v = alloc_v(e->width());
         bool rhs_signed = _eval(rhs_v, e->rhs());
+        resolved &= m_resolved;
+
+        if (!resolved) {
+            m_resolved = false;
+            return;
+        }
 
         if (lhs_v->bits() > m_width) {
             m_width = lhs_v->bits();

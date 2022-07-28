@@ -27,8 +27,10 @@
 #include "ModelConstraintForeach.h"
 #include "ModelConstraintIfElse.h"
 #include "ModelConstraintImplies.h"
+#include "ModelConstraintRef.h"
 #include "ModelConstraintScope.h"
 #include "ModelConstraintSoft.h"
+#include "ModelConstraintSubst.h"
 #include "ModelConstraintUnique.h"
 #include "ModelExprBin.h"
 #include "ModelExprCond.h"
@@ -147,6 +149,11 @@ IModelConstraintImplies *Context::mkModelConstraintImplies(
 	return new ModelConstraintImplies(cond, body);
 }
 
+IModelConstraintRef *Context::mkModelConstraintRef(
+			IModelConstraint	*target) {
+	return new ModelConstraintRef(target);
+}
+
 IModelConstraintScope *Context::mkModelConstraintScope() {
 	return new ModelConstraintScope();
 }
@@ -154,6 +161,11 @@ IModelConstraintScope *Context::mkModelConstraintScope() {
 IModelConstraintSoft *Context::mkModelConstraintSoft(
 			IModelConstraintExpr	*c) {
 	return new ModelConstraintSoft(c);
+}
+
+IModelConstraintSubst *Context::mkModelConstraintSubst(
+			IModelConstraint	*c) {
+	return new ModelConstraintSubst(c);
 }
 
 IModelConstraintUnique *Context::mkModelConstraintUnique(

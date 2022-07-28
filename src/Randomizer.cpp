@@ -65,7 +65,7 @@ bool Randomizer::randomize(
 	DEBUG_ENTER("randomize n_fields=%d n_constraints=%d",
 			fields.size(),
 			constraints.size());
-	SolveSpecUP spec(SolveSpecBuilder().build(
+	SolveSpecUP spec(SolveSpecBuilder(0).build(
 			fields,
 			constraints
 			));

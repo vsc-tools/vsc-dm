@@ -63,7 +63,7 @@ bool CompoundSolverDefault::solve(
 		}
 	}
 
-	SolveSpecUP spec(SolveSpecBuilder().build(
+	SolveSpecUP spec(SolveSpecBuilder(m_ctxt).build(
 			fields,
 			constraints
 			));
@@ -80,6 +80,12 @@ bool CompoundSolverDefault::solve(
 		it!=spec->unconstrained_sz_vec().end(); it++) {
 		(*it)->getSizeRef()->val()->set_val_u((*it)->getSize(), 32);
 		(*it)->getSizeRef()->setFlag(ModelFieldFlag::Resolved);
+	}
+
+	for (auto uc_it=spec->unconstrained().begin();
+			uc_it!=spec->unconstrained().end(); uc_it++) {
+		DEBUG("Randomize unconstrained field %s", (*uc_it)->name().c_str());
+		randstate->randbits((*uc_it)->val());
 	}
 
 	for (auto sset=spec->solvesets().begin();
@@ -101,69 +107,53 @@ bool CompoundSolverDefault::solve(
 			// This solve-set has foreach constraints. Need to expand
 			// the constraints, etc
 			fprintf(stdout, "TODO: expand foreach constraints\n");
+			TaskUnrollModelIterativeConstraints unroller(m_ctxt);
+			IModelConstraintScopeUP unroll_s(m_ctxt->mkModelConstraintScope());
+			for (std::vector<IModelConstraint *>::const_iterator
+				it=(*sset)->constraints().begin();
+				it!=(*sset)->constraints().end(); it++) {
+				if (dynamic_cast<IModelConstraintScope *>(*it)) {
+					unroller.unroll(unroll_s.get(), *it);
+				}
+			}
+
+			DEBUG("unroll_s: %d constraints", unroll_s->constraints().size());
+
+			// Now, partition up the new expanded set
+			SolveSpecUP spec_it(SolveSpecBuilder(m_ctxt).build(
+				{}, {unroll_s.get()}));
+
+			DEBUG("spec_it: %d solve-sets ; %d unconstrained ; %d unconstrained_sz_vec",
+					spec_it->solvesets().size(),
+					spec_it->unconstrained().size(),
+					spec_it->unconstrained_sz_vec().size());
+
+			for (std::vector<SolveSetUP>::const_iterator 
+					sset_it=spec_it->solvesets().begin();
+					sset_it!=spec_it->solvesets().end(); sset_it++) {
+				DEBUG("Solve Set It: %d fields ; %d constraints",
+						(*sset_it)->all_fields().size(),
+						(*sset_it)->constraints().size());
+				solve_sset(sset_it->get(), solver_f, randstate, flags);
+			}
+
+			// TODO: roll-back the variables in the solve-set to 
+			// reverse the  result of unrolling
+			for (std::vector<IModelConstraint *>::const_iterator
+				it=(*sset)->constraints().begin();
+				it!=(*sset)->constraints().end(); it++) {
+				TaskRollbackConstraintSubst().rollback(*it);
+			}
+
 		} else {
 			// If vector-sizing has no effect on this solve set, then proceed
-
-			ISolverUP solver(solver_f->createSolverInst(sset->get()));
-			// Build solve data for this solve set
-			SolveSetSolveModelBuilder(solver.get()).build(sset->get());
-
-			// First, ensure all constraints solve
-			for (auto c_it=(*sset)->constraints().begin();
-					c_it!=(*sset)->constraints().end(); c_it++) {
-				solver->addAssume(*c_it);
-			}
-			for (auto c_it=(*sset)->soft_constraints().begin();
-					c_it!=(*sset)->soft_constraints().end(); c_it++) {
-				solver->addAssume(*c_it);
-			}
-
-			if (solver->isSAT()) {
-				DEBUG("PASS: Initial try-solve for solveset");
-				for (auto c_it=(*sset)->constraints().begin();
-					c_it!=(*sset)->constraints().end(); c_it++) {
-					solver->addAssert(*c_it);
-				}
-			} else {
-				DEBUG("FAIL: Initial try-solve for solveset");
-
-				ret = false;
-
-				// TODO: Try backing off soft constraints
-			}
-
-			if (ret) {
-				if ((flags & SolveFlags::Randomize) != SolveFlags::NoFlags) {
-					// Swizzle fields
-					SolveSetSwizzlerPartsel(randstate).swizzle(
-							solver.get(),
-							sset->get());
-					// Ensure we're SAT
-					if (!solver->isSAT()) {
-						fprintf(stdout, "unsat post-swizzle\n");
-					}
-				}
-				/*
-				solver->isSAT();
-				 */
-
-				for (auto f_it=(*sset)->rand_fields().begin();
-						f_it!=(*sset)->rand_fields().end(); f_it++) {
-					DEBUG("Commit %s", (*f_it)->name().c_str());
-					CommitFieldValueVisitor(solver.get()).commit(*f_it);
-				}
-			} else {
+			// to solve and randomize the existing solveset
+			if (!(ret=solve_sset(sset->get(), solver_f, randstate, flags))) {
 				break;
 			}
 		}
-
 	}
 
-	for (auto uc_it=spec->unconstrained().begin();
-			uc_it!=spec->unconstrained().end(); uc_it++) {
-		DEBUG("Randomize unconstrained field %s", (*uc_it)->name().c_str());
-		randstate->randbits((*uc_it)->val());
-	}
 
 	DEBUG_LEAVE("randomize n_fields=%d n_constraints=%d ret=%d",
 			fields.size(),
@@ -171,5 +161,64 @@ bool CompoundSolverDefault::solve(
 			ret);
 	return ret;
 }
+
+bool CompoundSolverDefault::solve_sset(
+	SolveSet			*sset,
+	ISolverFactory		*solver_f,
+	IRandState			*randstate,
+	SolveFlags			flags) {
+	bool ret = true;
+
+	ISolverUP solver(solver_f->createSolverInst(sset));
+	// Build solve data for this solve set
+	SolveSetSolveModelBuilder(solver.get()).build(sset);
+
+	// First, ensure all constraints solve
+	for (auto c_it=sset->constraints().begin();
+			c_it!=sset->constraints().end(); c_it++) {
+		solver->addAssume(*c_it);
+	}
+	for (auto c_it=sset->soft_constraints().begin();
+			c_it!=sset->soft_constraints().end(); c_it++) {
+		solver->addAssume(*c_it);
+	}
+
+	if (solver->isSAT()) {
+		DEBUG("PASS: Initial try-solve for solveset");
+		for (auto c_it=sset->constraints().begin();
+			c_it!=sset->constraints().end(); c_it++) {
+			solver->addAssert(*c_it);
+		}
+	} else {
+		DEBUG("FAIL: Initial try-solve for solveset");
+
+		ret = false;
+
+		// TODO: Try backing off soft constraints
+	}
+
+	if (ret) {
+		if ((flags & SolveFlags::Randomize) != SolveFlags::NoFlags) {
+			// Swizzle fields
+			SolveSetSwizzlerPartsel(randstate).swizzle(
+					solver.get(),
+					sset);
+		}
+
+		// Ensure we're SAT
+		if (!solver->isSAT()) {
+			fprintf(stdout, "unsat post-swizzle\n");
+		}
+
+		for (auto f_it=sset->rand_fields().begin();
+				f_it!=sset->rand_fields().end(); f_it++) {
+			DEBUG("Commit %s", (*f_it)->name().c_str());
+			CommitFieldValueVisitor(solver.get()).commit(*f_it);
+		}
+	}
+
+	return ret;
+}
+
 
 } /* namespace vsc */

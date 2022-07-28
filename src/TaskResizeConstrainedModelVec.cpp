@@ -26,7 +26,7 @@ bool TaskResizeConstrainedModelVec::resize(SolveSet *solve_s) {
 
     // Build a new solve-set
     if (m_sizeref_vec_l.size() > 0) {
-        SolveSpecUP solve_s(SolveSpecBuilder().build(m_sizeref_vec_l, m_fixed_size_c));
+        SolveSpecUP solve_s(SolveSpecBuilder(m_ctxt).build(m_sizeref_vec_l, m_fixed_size_c));
 
 //        for ()
     }

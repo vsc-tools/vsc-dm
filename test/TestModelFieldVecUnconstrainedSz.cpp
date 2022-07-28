@@ -48,9 +48,11 @@ TEST_F(TestModelFieldVecUnconstrainedSz, fixed_foreach) {
 
     IModelFieldVec *vec = ctx.mkModelFieldVecRoot(vsc_uint32_t, "vec");
     vec->setFlag(ModelFieldFlag::DeclRand|ModelFieldFlag::UsedRand);
-    IModelConstraintForeachUP constraint(ctx.mkModelConstraintForeach(
+    IModelConstraintBlockUP constraint_b(ctx.mkModelConstraintBlock("ab_c"));
+    IModelConstraintForeach *constraint = ctx.mkModelConstraintForeach(
         ctx.mkModelExprFieldRef(vec),
-        "i"));
+        "i");
+    constraint_b->addConstraint(constraint);
     IModelExprIndexedFieldRef *vec_i = ctx.mkModelExprIndexedFieldRef();
     vec_i->addFieldRef(ctx.mkModelExprFieldRef(vec));
     vec_i->addVecIndexRef(ctx.mkModelExprFieldRef(constraint->getIndexIt()));
@@ -76,7 +78,7 @@ TEST_F(TestModelFieldVecUnconstrainedSz, fixed_foreach) {
         solver->solve(
             rs.get(),
             {vec},
-            {constraint.get()},
+            {constraint_b.get()},
             SolveFlags::RandomizeTopFields);
 
         ASSERT_EQ(vec->getSize(), 4+i);

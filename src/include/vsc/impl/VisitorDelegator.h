@@ -51,6 +51,10 @@ public:
 		m_delegate->visitModelConstraintImplies(c);
 	}
 
+	virtual void visitModelConstraintRef(IModelConstraintRef *c) override {
+		m_delegate->visitModelConstraintRef(c);
+	}
+
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
 		m_delegate->visitModelConstraintScope(c);
 	}

@@ -86,6 +86,8 @@ public:
 
 	virtual void setFlag(ModelFieldFlag flags) = 0;
 
+	virtual void setFlags(ModelFieldFlag flags) = 0;
+
 	virtual bool isFlagSet(ModelFieldFlag flags) const = 0;
 
 	virtual void setFieldData(IModelFieldData *data) = 0;

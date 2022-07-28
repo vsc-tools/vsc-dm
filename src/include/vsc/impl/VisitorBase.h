@@ -17,6 +17,7 @@
 #include "vsc/IModelConstraintForeach.h"
 #include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
+#include "vsc/IModelConstraintRef.h"
 #include "vsc/IModelConstraintScope.h"
 #include "vsc/IModelConstraintSoft.h"
 #include "vsc/IModelConstraintSubst.h"
@@ -121,6 +122,10 @@ public:
 				it!=c->constraints().end(); it++) {
 			it->get()->accept(m_this);
 		}
+	}
+
+	virtual void visitModelConstraintRef(IModelConstraintRef *c) override { 
+		c->getTarget()->accept(m_this);
 	}
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { 

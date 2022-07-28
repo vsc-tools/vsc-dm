@@ -101,8 +101,8 @@ public:
 	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { 
         IModelExprIndexedFieldRef *ref = m_ctxt->mkModelExprIndexedFieldRef();
         for (std::vector<ModelExprIndexedFieldRefElem>::const_iterator
-            it=ref->getPath().begin();
-            it!=ref->getPath().end(); it++) {
+            it=e->getPath().begin();
+            it!=e->getPath().end(); it++) {
             switch (it->kind) {
             case ModelExprIndexedFieldRefKind::Field:
                 ref->addFieldRef(exprT<IModelExprFieldRef>(it->idx_e.get()));
@@ -114,6 +114,10 @@ public:
                 break;
             }
         }
+
+        fprintf(stdout, "Copy::visitModelExprIndexedFieldRef: sz1=%d sz2=%d\n",
+            e->getPath().size(), ref->getPath().size());
+        fflush(stdout);
 
         m_expr = ref;
     }

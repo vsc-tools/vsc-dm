@@ -82,6 +82,9 @@ public:
 	virtual IModelConstraintSoft *mkModelConstraintSoft(
 			IModelConstraintExpr	*c) override;
 
+	virtual IModelConstraintSubst *mkModelConstraintSubst(
+			IModelConstraint		*c) override;
+
 	virtual IModelConstraintUnique *mkModelConstraintUnique(
 			const std::vector<IModelExpr *>		&exprs) override;
 
@@ -163,6 +166,9 @@ public:
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
 			ITypeExpr 		*cond,
 			ITypeConstraint	*body) override;
+			
+	virtual IModelConstraintRef *mkModelConstraintRef(
+			IModelConstraint	*target) override;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
 

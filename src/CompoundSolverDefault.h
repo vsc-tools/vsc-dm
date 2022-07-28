@@ -23,6 +23,13 @@ public:
 			const std::vector<IModelConstraint *>	&constraints,
 			SolveFlags								flags) override;
 
+protected:
+	bool solve_sset(
+		SolveSet						*sset,
+		ISolverFactory					*solver_f,
+		IRandState						*randstate,
+		SolveFlags						flags);
+
 private:
 	IContext							*m_ctxt;
 };

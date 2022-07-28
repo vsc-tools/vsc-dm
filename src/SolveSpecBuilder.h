@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <vector>
 #include <unordered_map>
+#include "vsc/IContext.h"
 #include "vsc/impl/VisitorBase.h"
 #include "SolveSet.h"
 #include "SolveSpec.h"
@@ -17,7 +18,7 @@ namespace vsc {
 
 class SolveSpecBuilder : public VisitorBase {
 public:
-	SolveSpecBuilder();
+	SolveSpecBuilder(IContext *ctx);
 
 	virtual ~SolveSpecBuilder();
 
@@ -41,7 +42,15 @@ public:
 
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override;
 
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override;
+
+//	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override;
+
+//	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override;
+
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override;
 
 	virtual void visitModelField(IModelField *f) override;
 
@@ -54,6 +63,7 @@ private:
 	void process_fieldref(IModelField *f);
 
 private:
+	IContext									*m_ctx;
 	uint32_t									m_pass;
 	SolveSetFlag								m_flags;
 	std::vector<SolveSetUP>						m_solveset_l;
