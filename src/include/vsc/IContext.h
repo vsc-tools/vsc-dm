@@ -20,6 +20,11 @@
 #include "vsc/IModelConstraintSoft.h"
 #include "vsc/IModelConstraintSubst.h"
 #include "vsc/IModelConstraintUnique.h"
+#include "vsc/IModelCoverBin.h"
+#include "vsc/IModelCoverBinCollection.h"
+#include "vsc/IModelCoverCross.h"
+#include "vsc/IModelCovergroup.h"
+#include "vsc/IModelCoverpoint.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprCond.h"
@@ -143,6 +148,33 @@ public:
 
 	virtual IModelConstraintUnique *mkModelConstraintUnique(
 		const std::vector<IModelExpr *>		&exprs) = 0;
+
+	virtual IModelCoverBinCollection *mkModelCoverBinCollection(
+		ModelCoverBinType			type) = 0;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) = 0;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) = 0;
+
+	virtual IModelCoverCross *mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) = 0;
+
+	virtual IModelCovergroup *mkModelCovergroup(
+		const std::string			&name) = 0;
+
+	virtual IModelCoverpoint *mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) = 0;
 
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,

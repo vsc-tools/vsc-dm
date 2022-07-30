@@ -11,16 +11,12 @@
 namespace vsc {
 
 ModelCoverpoint::ModelCoverpoint(
-		IModelExpr			*target,
-		const std::string	&name,
-		IModelExpr			*iff) : m_target(target), m_name(name), m_iff(iff) {
-	m_hit_idx = -1;
-	m_n_bins = -1;
-	m_bins_val = 0;
-	m_n_ignore_bins = -1;
-	m_ignore_bins_val = 0;
-	m_n_illegal_bins = -1;
-	m_illegal_bins_val = 0;
+		const std::string		&name,
+		IModelCoverpointTarget	*target,
+		IModelCoverpointIff		*iff) : 
+		ModelCoverItem(name), m_target(target), m_iff(iff),
+		m_n_bins(-1), m_n_ignore_bins(-1), m_n_illegal_bins(-1),
+		m_bins_val(0), m_ignore_bins_val(0), m_illegal_bins_val(0) {
 	m_coverage_valid = false;
 	m_coverage = 0.0;
 }
@@ -37,16 +33,17 @@ ModelCoverpoint::~ModelCoverpoint() {
 	}
 }
 
-void ModelCoverpoint::add_bins(IModelCoverpointBins *bins) {
-	switch (bins->bin_type()) {
-	case BinsType::Bins:
-		m_bins.push_back(IModelCoverpointBinsUP(bins));
+void ModelCoverpoint::addBin(IModelCoverBin *bin) {
+	bin->setCoverpoint(this);
+	switch (bin->getType()) {
+	case ModelCoverBinType::Bins:
+		m_bins.push_back(IModelCoverBinUP(bin));
 		break;
-	case BinsType::IgnoreBins:
-		m_ignore_bins.push_back(IModelCoverpointBinsUP(bins));
+	case ModelCoverBinType::IgnoreBins:
+		m_ignore_bins.push_back(IModelCoverBinUP(bin));
 		break;
-	case BinsType::IllegalBins:
-		m_illegal_bins.push_back(IModelCoverpointBinsUP(bins));
+	case ModelCoverBinType::IllegalBins:
+		m_illegal_bins.push_back(IModelCoverBinUP(bin));
 		break;
 	}
 }
@@ -56,7 +53,7 @@ void ModelCoverpoint::finalize() {
 
 	n_bins = 0;
 	for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
-		n_bins += (*it)->finalize(this, n_bins);
+		n_bins += (*it)->finalize(n_bins);
 	}
 	m_n_bins = n_bins;
 
@@ -69,7 +66,7 @@ void ModelCoverpoint::finalize() {
 
 	n_bins = 0;
 	for (auto it=m_ignore_bins.begin(); it!=m_ignore_bins.end(); it++) {
-		n_bins += (*it)->finalize(this, n_bins);
+		n_bins += (*it)->finalize(n_bins);
 	}
 	m_n_ignore_bins = n_bins;
 
@@ -82,7 +79,7 @@ void ModelCoverpoint::finalize() {
 
 	n_bins = 0;
 	for (auto it=m_illegal_bins.begin(); it!=m_illegal_bins.end(); it++) {
-		n_bins += (*it)->finalize(this, n_bins);
+		n_bins += (*it)->finalize(n_bins);
 	}
 	m_n_illegal_bins = n_bins;
 
@@ -95,72 +92,87 @@ void ModelCoverpoint::finalize() {
 }
 
 void ModelCoverpoint::sample() {
-	m_hit_idx = -1;
+	m_bins_hit_idx.clear();
+	m_ignore_hit_idx.clear();
+	m_illegal_hit_idx.clear();
 
-	m_target->eval(&m_val);
-
-	// TODO: evaluate expression
-
-	for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
-		(*it)->sample();
+	// In the case of a type coverage, we trust that
+	// someone will provide a value
+	if (m_target) {
+		m_target->getValue(&m_val);
 	}
-}
 
-std::string ModelCoverpoint::bin_name(int32_t bin_idx) {
-	IModelCoverpointBins *b = 0;
-	for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
-		if (bin_idx < (*it)->n_bins()) {
-			b = it->get();
-			break;
+	bool iff = true;
+	
+	if (m_iff) {
+		iff = m_iff->getIff();
+	}
+
+	if (iff) {
+		for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
+			(*it)->sample();
 		}
 	}
-	return b->bin_name(bin_idx);
 }
 
-std::string ModelCoverpoint::ignore_bin_name(int32_t bin_idx) {
-	IModelCoverpointBins *b = 0;
-	for (auto it=m_ignore_bins.begin(); it!=m_ignore_bins.end(); it++) {
-		if (bin_idx < (*it)->n_bins()) {
-			b = it->get();
-			break;
-		}
+const std::vector<int32_t> &ModelCoverpoint::getHitIdx(ModelCoverBinType type) {
+	switch (type) {
+		case ModelCoverBinType::Bins: return m_bins_hit_idx;
+		case ModelCoverBinType::IgnoreBins: return m_ignore_hit_idx;
+		case ModelCoverBinType::IllegalBins: return m_illegal_hit_idx;
 	}
-	return b->bin_name(bin_idx);
+	return m_bins_hit_idx;
 }
 
-std::string ModelCoverpoint::illegal_bin_name(int32_t bin_idx) {
-	IModelCoverpointBins *b = 0;
-	for (auto it=m_illegal_bins.begin(); it!=m_illegal_bins.end(); it++) {
-		if (bin_idx < (*it)->n_bins()) {
-			b = it->get();
-			break;
+std::string ModelCoverpoint::getBinName(ModelCoverBinType type, int32_t bin_idx) {
+	IModelCoverBin *b = 0;
+
+	switch (type) {
+	case ModelCoverBinType::Bins: {
+		for (std::vector<IModelCoverBinUP>::const_iterator 
+			it=m_bins.begin(); it!=m_bins.end(); it++) {
+			if (bin_idx < (*it)->getNumBins()) {
+				b = it->get();
+				break;
+			}
 		}
+	} break;
 	}
-	return b->bin_name(bin_idx);
+
+	if (b) {
+		return b->getBinName(bin_idx);
+	} else {
+		return "<unknown>";
+	}
 }
 
-void ModelCoverpoint::val(const IModelVal *v) {
+const IModelVal *ModelCoverpoint::getVal() {
+	return &m_val;
+}
+
+void ModelCoverpoint::setVal(const IModelVal *v) {
 	m_val.set(v);
 }
 
-void ModelCoverpoint::coverage_ev(int32_t bin, BinsType type) {
-	m_hit_idx = bin;
+void ModelCoverpoint::coverageEvent(ModelCoverBinType type, int32_t index) {
 	switch (type) {
-	case BinsType::Bins:
+	case ModelCoverBinType::Bins:
+		m_bins_hit_idx.push_back(index);
 		m_coverage_valid = false;
-		m_bins_val[bin]++;
-		m_hit_idx = bin;
+		m_bins_val[index]++;
 		break;
-	case BinsType::IgnoreBins:
-		m_ignore_bins_val[bin]++;
+	case ModelCoverBinType::IgnoreBins:
+		m_ignore_hit_idx.push_back(index);
+		m_ignore_bins_val[index]++;
 		break;
-	case BinsType::IllegalBins:
-		m_illegal_bins_val[bin]++;
+	case ModelCoverBinType::IllegalBins:
+		m_illegal_hit_idx.push_back(index);
+		m_illegal_bins_val[index]++;
 		break;
 	}
 }
 
-double ModelCoverpoint::coverage() {
+double ModelCoverpoint::getCoverage() {
 	if (!m_coverage_valid) {
 		m_coverage = 0.0;
 		uint32_t at_least = 1;

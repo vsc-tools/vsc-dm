@@ -96,11 +96,10 @@ bool CompoundSolverDefault::solve(
 
 		// See if we need to re-evaluate due to vector constraints
 		// TODO: Apply vector-sizing task
-		if (TaskResizeConstrainedModelVec(m_ctxt, solver_f).resize(sset->get())) {
-			// TODO: If vector-sizing applied to fields, apply unrolling algorithm
-			// TODO: After unrolling, we likely have a different set of solve
-			//       sets to work with
+		if ((*sset)->constrained_sz_vec().size() > 0) {
+			fprintf(stdout, "TODO: apply sizing to vectors\n");
 
+			TaskResizeConstrainedModelVec(m_ctxt, solver_f).resize(sset->get());
 		} 
 
 		if ((*sset)->hasFlags(SolveSetFlag::HaveForeach)) {

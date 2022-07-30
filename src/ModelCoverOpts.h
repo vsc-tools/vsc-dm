@@ -8,10 +8,11 @@
 #pragma once
 #include <stdint.h>
 #include <string>
+#include "vsc/IModelCoverOpts.h"
 
 namespace vsc {
 
-class ModelCoverOpts {
+class ModelCoverOpts : public virtual IModelCoverOpts {
 public:
 	ModelCoverOpts();
 
@@ -20,27 +21,27 @@ public:
 	/**
 	 * Propagates relevant options from the parent scope
 	 */
-	void propagate(const ModelCoverOpts &opts);
+	virtual void init(const IModelCoverOpts *opts) override;
 
-	uint32_t weight() const { return m_weight; }
+	virtual uint32_t getWeight() const override { return m_weight; }
 
-	void weight(uint32_t w) { m_weight = w; }
+	virtual void setWeight(uint32_t w) override { m_weight = w; }
 
-	uint32_t goal() const { return m_goal; }
+	virtual uint32_t getGoal() const override { return m_goal; }
 
-	void goal(uint32_t g) { m_goal = g; }
+	virtual void setGoal(uint32_t g) override { m_goal = g; }
 
-	const std::string &comment() const { return m_comment; }
+	virtual const std::string &getComment() const override { return m_comment; }
 
-	void comment(const std::string &c) { m_comment = c; }
+	virtual void setComment(const std::string &c) override { m_comment = c; }
 
-	uint32_t at_least() const { return m_at_least; }
+	virtual uint32_t getAtLeast() const override { return m_at_least; }
 
-	void at_least(uint32_t a) { m_at_least = a; }
+	virtual void setAtLeast(uint32_t a) override { m_at_least = a; }
 
-	uint32_t auto_bin_max() const { return m_auto_bin_max; }
+	virtual uint32_t getAutoBinMax() const override { return m_auto_bin_max; }
 
-	void auto_bin_max(uint32_t m) { m_auto_bin_max = m; }
+	virtual void setAutoBinMax(uint32_t m) override { m_auto_bin_max = m; }
 
 private:
 	uint32_t			m_weight;

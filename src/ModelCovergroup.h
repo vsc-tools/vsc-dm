@@ -8,6 +8,8 @@
 #pragma once
 #include <vector>
 #include "vsc/IAccept.h"
+#include "vsc/IModelCovergroup.h"
+#include "ModelCoverItem.h"
 #include "ModelCoverOpts.h"
 #include "ModelCoverpoint.h"
 #include "ModelCoverCross.h"
@@ -17,42 +19,41 @@ namespace vsc {
 class ModelCovergroup;
 using ModelCovergroupUP=std::unique_ptr<ModelCovergroup>;
 
-class ModelCovergroup : public IAccept {
+class ModelCovergroup : 
+	public virtual IModelCovergroup, 
+	public virtual ModelCoverItem {
 public:
-	ModelCovergroup();
+	ModelCovergroup(const std::string &name);
 
 	virtual ~ModelCovergroup();
 
-	void add_coverpoint(ModelCoverpoint *cp) {
-		m_coverpoints.push_back(ModelCoverpointUP(cp));
+	virtual void addCoverpoint(IModelCoverpoint *cp) override {
+		m_coverpoints.push_back(IModelCoverpointUP(cp));
 	}
 
-	const std::vector<ModelCoverpointUP> &coverpoints() const {
+	virtual const std::vector<IModelCoverpointUP> &coverpoints() const override {
 		return m_coverpoints;
 	}
 
-	void add_cross(ModelCoverCross *cross) {
-		m_crosses.push_back(ModelCoverCrossUP(cross));
+	void addCross(IModelCoverCross *cross) {
+		m_crosses.push_back(IModelCoverCrossUP(cross));
 	}
 
-	const std::vector<ModelCoverCrossUP> &crosses() const {
+	virtual const std::vector<IModelCoverCrossUP> &crosses() const override {
 		return m_crosses;
 	}
 
-	const ModelCoverOpts &options() const { return m_options; }
+	virtual void finalize() override;
 
-	ModelCoverOpts &options() { return m_options; }
+	virtual void sample() override;
 
-	void options(const ModelCoverOpts &o) { m_options = o; }
-
-	void sample();
+	virtual double getCoverage() override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelCovergroup(this); }
 
 private:
-	ModelCoverOpts							m_options;
-	std::vector<ModelCoverpointUP>			m_coverpoints;
-	std::vector<ModelCoverCrossUP>			m_crosses;
+	std::vector<IModelCoverpointUP>			m_coverpoints;
+	std::vector<IModelCoverCrossUP>			m_crosses;
 };
 
 } /* namespace vsc */

@@ -64,6 +64,10 @@ public:
 		return m_rand_fields;
 	}
 
+	const std::vector<IModelFieldVec *> &constrained_sz_vec() const {
+		return m_constrained_sz_vec;
+	}
+
 	const std::vector<IModelConstraint *> &constraints() const {
 		return m_constraints;
 	}

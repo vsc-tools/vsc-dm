@@ -8,7 +8,8 @@
 #pragma once
 #include <vector>
 #include "vsc/IModelCoverpoint.h"
-#include "IModelCoverpointBins.h"
+#include "vsc/IModelCoverBin.h"
+#include "ModelCoverItem.h"
 #include "ModelCoverOpts.h"
 #include "ModelExpr.h"
 #include "ModelVal.h"
@@ -17,78 +18,64 @@ namespace vsc {
 
 class ModelCoverpoint;
 using ModelCoverpointUP=std::unique_ptr<ModelCoverpoint>;
-class ModelCoverpoint : public IModelCoverpoint {
+class ModelCoverpoint : 
+	public virtual IModelCoverpoint, 
+	public virtual ModelCoverItem {
 public:
 	ModelCoverpoint(
-			IModelExpr			*target,
-			const std::string	&name,
-			IModelExpr			*iff);
+			const std::string		&name,
+			IModelCoverpointTarget	*target,
+			IModelCoverpointIff		*iff);
 
 	virtual ~ModelCoverpoint();
 
-	virtual IModelExpr *target() const override { return m_target.get(); }
+	virtual IModelCoverpointTarget *getTarget() const override { return m_target.get(); }
 
-	virtual const std::string &name() const override { return m_name; }
+	virtual IModelCoverpointIff *getIff() const override { return m_iff.get(); }
 
-	virtual IModelExpr *iff() const override { return m_iff.get(); }
-
-	void add_bins(IModelCoverpointBins *bins);
+	void addBin(IModelCoverBin *bin) override;
 
 	virtual void finalize();
 
 	virtual void sample();
 
-	int32_t hit_idx() const { return m_hit_idx; }
+	virtual const std::vector<int32_t> &getHitIdx(ModelCoverBinType type) override;
 
-	int32_t n_bins() const { return m_n_bins; }
+	virtual uint32_t getNumBins(ModelCoverBinType type) const override { return m_n_bins; }
 
-	std::string bin_name(int32_t bin_idx);
+	virtual std::string getBinName(ModelCoverBinType type, int32_t bin_idx) override;
 
-	int32_t n_ignore_bins() const { return m_n_ignore_bins; }
+	virtual void coverageEvent(ModelCoverBinType type, int32_t index) override;
 
-	std::string ignore_bin_name(int32_t bin_idx);
+	const IModelVal *getVal();
 
-	int32_t n_illegal_bins() const { return m_n_illegal_bins; }
+	void setVal(const IModelVal *v);
 
-	std::string illegal_bin_name(int32_t bin_idx);
-
-	virtual void coverage_ev(int32_t bin, BinsType type);
-
-	const IModelVal *val() const { return &m_val; }
-
-	void val(const IModelVal *v);
-
-	double coverage();
-
-	const ModelCoverOpts &options() const { return m_options; }
-
-	ModelCoverOpts &options() { return m_options; }
-
-	void options(const ModelCoverOpts &o) { m_options = o; }
+	double getCoverage();
 
 	virtual void accept(IVisitor *v) override { v->visitModelCoverpoint(this); }
 
 private:
-	IModelExprUP							m_target;
-	std::string								m_name;
-	IModelExprUP							m_iff;
+	IModelCoverpointTargetUP				m_target;
+	IModelCoverpointIffUP					m_iff;
 
-	int32_t									m_hit_idx;
+	std::vector<int32_t>					m_bins_hit_idx;
+	std::vector<int32_t>					m_ignore_hit_idx;
+	std::vector<int32_t>					m_illegal_hit_idx;
 
 	ModelVal								m_val;
 
-	std::vector<IModelCoverpointBinsUP>		m_bins;
+	std::vector<IModelCoverBinUP>			m_bins;
 	int32_t									m_n_bins;
-	std::vector<IModelCoverpointBinsUP>		m_ignore_bins;
+	std::vector<IModelCoverBinUP>			m_ignore_bins;
 	int32_t									m_n_ignore_bins;
-	std::vector<IModelCoverpointBinsUP>		m_illegal_bins;
+	std::vector<IModelCoverBinUP>			m_illegal_bins;
 	int32_t									m_n_illegal_bins;
 	uint32_t								*m_bins_val;
 	uint32_t								*m_ignore_bins_val;
 	uint32_t								*m_illegal_bins_val;
 	bool									m_coverage_valid;
 	double									m_coverage;
-	ModelCoverOpts							m_options;
 
 };
 

@@ -178,6 +178,33 @@ public:
 	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
 			const std::vector<ITypeExpr *>		&exprs) override;
 
+	virtual IModelCoverBinCollection *mkModelCoverBinCollection(
+		ModelCoverBinType			type) override;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) override;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) override;
+
+	virtual IModelCoverCross *mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) override;
+
+	virtual IModelCovergroup *mkModelCovergroup(
+		const std::string			&name) override;
+
+	virtual IModelCoverpoint *mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) override;
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,

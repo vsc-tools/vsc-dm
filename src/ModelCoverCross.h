@@ -8,40 +8,46 @@
 #pragma once
 #include <vector>
 #include "vsc/IAccept.h"
-#include "ModelCoverpoint.h"
+#include "vsc/IModelCoverCross.h"
+#include "ModelCoverItem.h"
 
 namespace vsc {
 
 class ModelCoverCross;
 using ModelCoverCrossUP=std::unique_ptr<ModelCoverCross>;
-class ModelCoverCross : public IAccept {
+class ModelCoverCross : 
+	public virtual IModelCoverCross, 
+	public virtual ModelCoverItem {
 public:
-	ModelCoverCross();
+	ModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff);
 
 	virtual ~ModelCoverCross();
 
-	const std::vector<ModelCoverpoint *> &coverpoints() const {
+	virtual const std::vector<IModelCoverpoint *> &coverpoints() const override {
 		return m_coverpoints;
 	}
 
-	void add_coverpoint(ModelCoverpoint *cp) {
+	virtual void addCoverpoint(IModelCoverpoint *cp) override {
 		m_coverpoints.push_back(cp);
 	}
 
-	void finalize();
+	virtual void finalize() override;
 
-	void sample();
+	virtual void sample() override;
 
-	uint32_t n_bins() const { return m_n_bins; }
+	virtual uint32_t getNumBins() const override { return m_n_bins; }
 
-	std::string bin_name(int32_t bin_idx);
+	virtual std::string getBinName(int32_t bin_idx) override;
 
-	double coverage();
+	virtual double getCoverage() override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelCoverCross(this); }
 
 private:
-	std::vector<ModelCoverpoint *>			m_coverpoints;
+	IModelCoverpointIffUP					m_iff;
+	std::vector<IModelCoverpoint *>			m_coverpoints;
 	uint32_t								*m_bins_val;
 	int32_t									m_n_bins;
 	bool									m_coverage_valid;

@@ -71,15 +71,19 @@ public:
 		m_delegate->visitModelConstraintUnique(c);
 	}
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) override {
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override {
+		m_delegate->visitModelCoverBinCollection(c);
+	}
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) override {
 		m_delegate->visitModelCoverCross(c);
 	}
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) override {
+	virtual void visitModelCovergroup(IModelCovergroup *c) override {
 		m_delegate->visitModelCovergroup(c);
 	}
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) override {
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) override {
 		m_delegate->visitModelCoverpoint(c);
 	}
 

@@ -23,6 +23,13 @@
 #include "vsc/IModelConstraintSubst.h"
 #include "vsc/IModelConstraintUnique.h"
 
+#include "vsc/IModelCoverBinCollection.h"
+#include "vsc/IModelCoverBinSingleRange.h"
+#include "vsc/IModelCoverBinSingleVal.h"
+#include "vsc/IModelCoverCross.h"
+#include "vsc/IModelCovergroup.h"
+#include "vsc/IModelCoverpoint.h"
+
 
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprCond.h"
@@ -145,11 +152,17 @@ public:
 		}
 	}
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) override { }
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override { }
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) override { }
+	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) override { }
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) override { }
+	virtual void visitModelCoverBinSingleVal(IModelCoverBinSingleVal *c) override { }
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) override { }
+
+	virtual void visitModelCovergroup(IModelCovergroup *c) override { }
+
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) override { }
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
 		e->lhs()->accept(m_this);

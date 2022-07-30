@@ -12,6 +12,7 @@
     "python.testing.unittestEnabled": true,
 
     "search.useIgnoreFiles": true,
-    "search.useGlobalIgnoreFiles": true
+    "search.useGlobalIgnoreFiles": true,
+    "cmake.configureOnOpen": false
 }
 

@@ -32,6 +32,12 @@
 #include "ModelConstraintSoft.h"
 #include "ModelConstraintSubst.h"
 #include "ModelConstraintUnique.h"
+#include "ModelCoverBinCollection.h"
+#include "ModelCoverBinSingleRange.h"
+#include "ModelCoverBinSingleVal.h"
+#include "ModelCoverCross.h"
+#include "ModelCovergroup.h"
+#include "ModelCoverpoint.h"
 #include "ModelExprBin.h"
 #include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
@@ -171,6 +177,45 @@ IModelConstraintSubst *Context::mkModelConstraintSubst(
 IModelConstraintUnique *Context::mkModelConstraintUnique(
 			const std::vector<IModelExpr *>		&exprs) {
 	return new ModelConstraintUnique(exprs);
+}
+
+IModelCoverBinCollection *Context::mkModelCoverBinCollection(
+		ModelCoverBinType			type) {
+	return new ModelCoverBinCollection(type);
+}
+
+IModelCoverBin *Context::mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) {
+	return new ModelCoverBinSingleRange(name, type, is_signed, lower, upper);
+}
+
+IModelCoverBin *Context::mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) {
+	return new ModelCoverBinSingleVal(name, type, value);
+}
+
+IModelCoverCross *Context::mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) {
+	return new ModelCoverCross(name, iff);
+}
+
+IModelCovergroup *Context::mkModelCovergroup(
+		const std::string			&name) {
+	return new ModelCovergroup(name);
+}
+
+IModelCoverpoint *Context::mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) {
+	return new ModelCoverpoint(name, target, iff);
 }
 
 IDataTypeInt *Context::findDataTypeInt(
@@ -416,6 +461,8 @@ ITypeConstraintUnique *Context::mkTypeConstraintUnique(
 			const std::vector<ITypeExpr *>		&exprs) {
 	return new TypeConstraintUnique(exprs);
 }
+
+
 
 ITypeExprBin *Context::mkTypeExprBin(
 			ITypeExpr		*lhs,

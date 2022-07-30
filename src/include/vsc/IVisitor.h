@@ -44,9 +44,12 @@ class IModelConstraintSoft;
 class IModelConstraintSubst;
 class IModelConstraintUnique;
 
-class ModelCoverCross;
-class ModelCovergroup;
-class ModelCoverpoint;
+class IModelCoverBinCollection;
+class IModelCoverBinSingleRange;
+class IModelCoverBinSingleVal;
+class IModelCoverCross;
+class IModelCovergroup;
+class IModelCoverpoint;
 
 class IModelExprBin;
 class IModelExprCond;
@@ -120,11 +123,17 @@ public:
 
 	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) = 0;
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) = 0;
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) = 0;
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) = 0;
+	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) = 0;
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) = 0;
+	virtual void visitModelCoverBinSingleVal(IModelCoverBinSingleVal *c) = 0;
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) = 0;
+
+	virtual void visitModelCovergroup(IModelCovergroup *c) = 0;
+
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) = 0;
 
 	virtual void visitModelExprBin(IModelExprBin *e) = 0;
 
