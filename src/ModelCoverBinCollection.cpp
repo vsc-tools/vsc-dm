@@ -47,6 +47,22 @@ std::string ModelCoverBinCollection::getBinName(int32_t bin_idx) {
 	return b->getBinName(bin_idx);
 }
 
+int32_t ModelCoverBinCollection::getBinHits(int32_t bin_idx) {
+	IModelCoverBin *b = 0;
+
+	for (std::vector<IModelCoverBinUP>::const_iterator
+			it=m_bins.begin(); it!=m_bins.end(); it++) {
+		if ((*it)->getNumBins() > bin_idx) {
+			b = it->get();
+			break;
+		} else {
+			bin_idx -= (*it)->getNumBins();
+		}
+	}
+
+	return b->getBinHits(bin_idx);
+}
+
 void ModelCoverBinCollection::sample() {
 	for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
 		(*it)->sample();

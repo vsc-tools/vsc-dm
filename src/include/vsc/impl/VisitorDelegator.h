@@ -71,6 +71,10 @@ public:
 		m_delegate->visitModelConstraintUnique(c);
 	}
 
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) override {
+		m_delegate->visitModelCoverBinMask(c);
+	}
+
 	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override {
 		m_delegate->visitModelCoverBinCollection(c);
 	}

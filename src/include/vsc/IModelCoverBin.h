@@ -42,6 +42,8 @@ public:
 
 	virtual std::string getBinName(int32_t bin_idx) = 0;
 
+    virtual int32_t getBinHits(int32_t bin_idx) = 0;
+
 };
 
 }

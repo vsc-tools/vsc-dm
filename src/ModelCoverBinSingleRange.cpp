@@ -19,7 +19,7 @@ ModelCoverBinSingleRange::ModelCoverBinSingleRange(
 		const IModelVal				*upper) : 
 			ModelCoverBin(name, type, is_signed),
 			m_lower(lower), m_upper(upper) {
-
+	m_count = 0;
 }
 
 ModelCoverBinSingleRange::~ModelCoverBinSingleRange() {
@@ -41,11 +41,13 @@ void ModelCoverBinSingleRange::sample() {
 	if (m_is_signed) {
 		if (ModelValOp::sge_s(m_cp->getVal(), &m_lower) && 
 				ModelValOp::sle_s(m_cp->getVal(), &m_upper)) {
+			m_count++;
 			m_cp->coverageEvent(m_type, m_bin_idx_base);
 		}
 	} else {
 		if (ModelValOp::uge_s(m_cp->getVal(), &m_lower) && 
 				ModelValOp::ule_s(m_cp->getVal(), &m_upper)) {
+			m_count++;
 			m_cp->coverageEvent(m_type, m_bin_idx_base);
 		}
 	}

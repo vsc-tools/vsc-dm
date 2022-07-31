@@ -16,6 +16,8 @@
 
 namespace vsc {
 
+class IModelCovergroup;
+
 class ModelCoverpoint;
 using ModelCoverpointUP=std::unique_ptr<ModelCoverpoint>;
 class ModelCoverpoint : 
@@ -28,6 +30,10 @@ public:
 			IModelCoverpointIff		*iff);
 
 	virtual ~ModelCoverpoint();
+
+	virtual void setCovergroup(IModelCovergroup *cg) { m_cg = cg; }
+
+	virtual IModelCovergroup *getCovergroup() const { return m_cg; }
 
 	virtual IModelCoverpointTarget *getTarget() const override { return m_target.get(); }
 
@@ -45,6 +51,8 @@ public:
 
 	virtual std::string getBinName(ModelCoverBinType type, int32_t bin_idx) override;
 
+	virtual int32_t getBinHits(ModelCoverBinType type, int32_t bin_idx) override;
+
 	virtual void coverageEvent(ModelCoverBinType type, int32_t index) override;
 
 	const IModelVal *getVal();
@@ -56,6 +64,7 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelCoverpoint(this); }
 
 private:
+	IModelCovergroup						*m_cg;
 	IModelCoverpointTargetUP				m_target;
 	IModelCoverpointIffUP					m_iff;
 

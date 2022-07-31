@@ -27,17 +27,13 @@ public:
 
 	virtual ~ModelCovergroup();
 
-	virtual void addCoverpoint(IModelCoverpoint *cp) override {
-		m_coverpoints.push_back(IModelCoverpointUP(cp));
-	}
+	virtual void addCoverpoint(IModelCoverpoint *cp) override;
 
 	virtual const std::vector<IModelCoverpointUP> &coverpoints() const override {
 		return m_coverpoints;
 	}
 
-	void addCross(IModelCoverCross *cross) {
-		m_crosses.push_back(IModelCoverCrossUP(cross));
-	}
+	virtual void addCross(IModelCoverCross *cross) override;
 
 	virtual const std::vector<IModelCoverCrossUP> &crosses() const override {
 		return m_crosses;
@@ -49,9 +45,13 @@ public:
 
 	virtual double getCoverage() override;
 
+	virtual void coverageEvent() override;
+
 	virtual void accept(IVisitor *v) override { v->visitModelCovergroup(this); }
 
 private:
+	double									m_coverage;
+	bool									m_coverage_valid;
 	std::vector<IModelCoverpointUP>			m_coverpoints;
 	std::vector<IModelCoverCrossUP>			m_crosses;
 };

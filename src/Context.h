@@ -205,6 +205,10 @@ public:
 		IModelCoverpointTarget		*target,
 		IModelCoverpointIff			*iff) override;
 
+	virtual IModelCoverpointTarget *mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) override;
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,

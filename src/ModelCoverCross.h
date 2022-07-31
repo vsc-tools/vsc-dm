@@ -25,6 +25,10 @@ public:
 
 	virtual ~ModelCoverCross();
 
+	virtual void setCovergroup(IModelCovergroup *cg) override { m_cg = cg; }
+
+	virtual IModelCovergroup *getCovergroup() const { return m_cg; }
+
 	virtual const std::vector<IModelCoverpoint *> &coverpoints() const override {
 		return m_coverpoints;
 	}
@@ -41,11 +45,14 @@ public:
 
 	virtual std::string getBinName(int32_t bin_idx) override;
 
+	virtual int32_t getBinHits(int32_t bin_idx) override;
+
 	virtual double getCoverage() override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelCoverCross(this); }
 
 private:
+	IModelCovergroup						*m_cg;
 	IModelCoverpointIffUP					m_iff;
 	std::vector<IModelCoverpoint *>			m_coverpoints;
 	uint32_t								*m_bins_val;

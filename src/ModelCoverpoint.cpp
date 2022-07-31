@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include "vsc/IModelCovergroup.h"
 #include "ModelCoverpoint.h"
 #include <string.h>
 
@@ -19,6 +20,7 @@ ModelCoverpoint::ModelCoverpoint(
 		m_bins_val(0), m_ignore_bins_val(0), m_illegal_bins_val(0) {
 	m_coverage_valid = false;
 	m_coverage = 0.0;
+	m_val.setBits(32); // TODO: needs to be passed in
 }
 
 ModelCoverpoint::~ModelCoverpoint() {
@@ -49,7 +51,7 @@ void ModelCoverpoint::addBin(IModelCoverBin *bin) {
 }
 
 void ModelCoverpoint::finalize() {
-	uint32_t n_bins;
+	uint32_t n_bins = 0;
 
 	n_bins = 0;
 	for (auto it=m_bins.begin(); it!=m_bins.end(); it++) {
@@ -146,6 +148,28 @@ std::string ModelCoverpoint::getBinName(ModelCoverBinType type, int32_t bin_idx)
 	}
 }
 
+int32_t ModelCoverpoint::getBinHits(ModelCoverBinType type, int32_t bin_idx) {
+	IModelCoverBin *b = 0;
+
+	switch (type) {
+	case ModelCoverBinType::Bins: {
+		for (std::vector<IModelCoverBinUP>::const_iterator 
+			it=m_bins.begin(); it!=m_bins.end(); it++) {
+			if (bin_idx < (*it)->getNumBins()) {
+				b = it->get();
+				break;
+			}
+		}
+	} break;
+	}
+
+	if (b) {
+		return b->getBinHits(bin_idx);
+	} else {
+		return -1;
+	}
+}
+
 const IModelVal *ModelCoverpoint::getVal() {
 	return &m_val;
 }
@@ -155,12 +179,20 @@ void ModelCoverpoint::setVal(const IModelVal *v) {
 }
 
 void ModelCoverpoint::coverageEvent(ModelCoverBinType type, int32_t index) {
+	uint32_t at_least = 1;
+
 	switch (type) {
-	case ModelCoverBinType::Bins:
+	case ModelCoverBinType::Bins: {
+		uint32_t old_hit_val = m_bins_val[index];
+		uint32_t new_hit_val;
 		m_bins_hit_idx.push_back(index);
 		m_coverage_valid = false;
-		m_bins_val[index]++;
-		break;
+		new_hit_val = (++m_bins_val[index]);
+
+		if (old_hit_val < at_least && new_hit_val > at_least) {
+			m_cg->coverageEvent();
+		}
+	} break;
 	case ModelCoverBinType::IgnoreBins:
 		m_ignore_hit_idx.push_back(index);
 		m_ignore_bins_val[index]++;

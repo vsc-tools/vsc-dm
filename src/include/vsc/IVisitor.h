@@ -45,6 +45,7 @@ class IModelConstraintSubst;
 class IModelConstraintUnique;
 
 class IModelCoverBinCollection;
+class IModelCoverBinMask;
 class IModelCoverBinSingleRange;
 class IModelCoverBinSingleVal;
 class IModelCoverCross;
@@ -124,6 +125,8 @@ public:
 	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) = 0;
 
 	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) = 0;
+
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) = 0;
 
 	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) = 0;
 

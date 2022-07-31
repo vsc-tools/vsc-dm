@@ -25,6 +25,7 @@
 #include "vsc/IModelCoverCross.h"
 #include "vsc/IModelCovergroup.h"
 #include "vsc/IModelCoverpoint.h"
+#include "vsc/IModelCoverpointTarget.h"
 #include "vsc/IModelExpr.h"
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprCond.h"
@@ -175,6 +176,10 @@ public:
 		const std::string			&name,
 		IModelCoverpointTarget		*target,
 		IModelCoverpointIff			*iff) = 0;
+
+	virtual IModelCoverpointTarget *mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) = 0;
 
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,

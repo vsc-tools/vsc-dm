@@ -24,6 +24,7 @@
 #include "vsc/IModelConstraintUnique.h"
 
 #include "vsc/IModelCoverBinCollection.h"
+#include "vsc/IModelCoverBinMask.h"
 #include "vsc/IModelCoverBinSingleRange.h"
 #include "vsc/IModelCoverBinSingleVal.h"
 #include "vsc/IModelCoverCross.h"
@@ -151,6 +152,8 @@ public:
 			(*it)->accept(m_this);
 		}
 	}
+
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) override { }
 
 	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override { }
 

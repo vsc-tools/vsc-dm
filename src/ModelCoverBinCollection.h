@@ -24,6 +24,8 @@ public:
 
 	virtual std::string getBinName(int32_t bin_idx) override;
 
+	virtual int32_t getBinHits(int32_t bin_idx) override;
+
 	virtual void sample() override;
 
 	virtual void addBin(IModelCoverBin *b) override {

@@ -8,12 +8,18 @@
 
 namespace vsc {
 
+class IModelCovergroup;
+
 class IModelCoverCross;
 using IModelCoverCrossUP=std::unique_ptr<IModelCoverCross>;
 class IModelCoverCross : public virtual IModelCoverItem {
 public:
 
     virtual ~IModelCoverCross() { }
+
+	virtual void setCovergroup(IModelCovergroup *cg) = 0;
+
+	virtual IModelCovergroup *getCovergroup() const = 0;
 
 	virtual const std::vector<IModelCoverpoint *> &coverpoints() const = 0;
 
@@ -22,6 +28,8 @@ public:
 	virtual uint32_t getNumBins() const = 0;
 
 	virtual std::string getBinName(int32_t bin_idx) = 0;
+
+	virtual int32_t getBinHits(int32_t bin_idx) = 0;
 
 };
 

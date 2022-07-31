@@ -72,6 +72,10 @@ std::string ModelCoverCross::getBinName(int32_t bin_idx) {
 	return ret;
 }
 
+int32_t ModelCoverCross::getBinHits(int32_t bin_idx) {
+	return 0; // TODO:
+}
+
 double ModelCoverCross::getCoverage() {
 	uint32_t at_least = 1;
 	if (!m_coverage_valid) {

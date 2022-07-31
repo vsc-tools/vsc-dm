@@ -29,12 +29,17 @@ public:
 
 	virtual std::string getBinName(int32_t bin_idx) override;
 
+	virtual int32_t getBinHits(int32_t bin_idx) override {
+		return m_count;
+	}
+
 	virtual void sample() override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelCoverBinSingleRange(this); }
 
 private:
 	std::string						m_name;
+	int32_t							m_count;
 	ModelVal						m_lower;
 	ModelVal						m_upper;
 };

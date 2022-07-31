@@ -38,6 +38,7 @@
 #include "ModelCoverCross.h"
 #include "ModelCovergroup.h"
 #include "ModelCoverpoint.h"
+#include "ModelCoverpointTargetExpr.h"
 #include "ModelExprBin.h"
 #include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
@@ -216,6 +217,12 @@ IModelCoverpoint *Context::mkModelCoverpoint(
 		IModelCoverpointTarget		*target,
 		IModelCoverpointIff			*iff) {
 	return new ModelCoverpoint(name, target, iff);
+}
+
+IModelCoverpointTarget *Context::mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) {
+	return new ModelCoverpointTargetExpr(this, expr, width);
 }
 
 IDataTypeInt *Context::findDataTypeInt(
