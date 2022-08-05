@@ -216,6 +216,9 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
 
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path);
+
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) override;

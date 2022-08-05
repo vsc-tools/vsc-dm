@@ -482,6 +482,19 @@ ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
 	return new TypeExprFieldRef();
 }
 
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path) {
+	ITypeExprFieldRef *ret = new TypeExprFieldRef();
+
+	for (std::initializer_list<TypeExprFieldRefElem>::iterator
+		it=path.begin();
+		it!=path.end(); it++) {
+		ret->addRef(*it);
+	}
+
+	return ret;
+}
+
 ITypeExprRange *Context::mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,

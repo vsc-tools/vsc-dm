@@ -19,6 +19,7 @@
 #include "vsc/IModelConstraintImplies.h"
 #include "vsc/IModelConstraintRef.h"
 #include "vsc/IModelConstraintScope.h"
+#include "vsc/IModelConstraintSelect.h"
 #include "vsc/IModelConstraintSoft.h"
 #include "vsc/IModelConstraintSubst.h"
 #include "vsc/IModelConstraintUnique.h"
@@ -129,6 +130,16 @@ public:
 				it=c->constraints().begin();
 				it!=c->constraints().end(); it++) {
 			it->get()->accept(m_this);
+		}
+	}
+
+	virtual void visitModelConstraintSelect(IModelConstraintSelect *c) override {
+		c->getLhs()->accept(this);
+
+		for (std::vector<IModelField *>::const_iterator
+			it=c->getRhs().begin();
+			it!=c->getRhs().end(); it++) {
+			(*it)->accept(m_this);
 		}
 	}
 

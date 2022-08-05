@@ -40,6 +40,7 @@ class IModelConstraintIfElse;
 class IModelConstraintImplies;
 class IModelConstraintRef;
 class IModelConstraintScope;
+class IModelConstraintSelect;
 class IModelConstraintSoft;
 class IModelConstraintSubst;
 class IModelConstraintUnique;
@@ -117,6 +118,8 @@ public:
 	virtual void visitModelConstraintRef(IModelConstraintRef *c) = 0;
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) = 0;
+
+	virtual void visitModelConstraintSelect(IModelConstraintSelect *c) = 0;
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) = 0;
 
