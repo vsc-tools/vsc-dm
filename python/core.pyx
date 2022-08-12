@@ -634,7 +634,7 @@ cdef class ModelConstraintExpr(ModelConstraint):
         return ret
     
     cdef decl.IModelConstraintExpr *asExpr(self):
-        return <decl.IModelConstraintExpr *>(self._hndl)
+        return dynamic_cast[decl.IModelConstraintExprP](self._hndl)
 
 cdef class ModelConstraintIfElse(ModelConstraint):
     cpdef getCond(self):
