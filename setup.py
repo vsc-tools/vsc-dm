@@ -2,8 +2,9 @@
 #* setup.py for libvsc
 #****************************************************************************
 import os
-import subprocess
 import shutil
+import subprocess
+import sys
 import sysconfig
 from setuptools import setup
 from distutils.extension import Extension
@@ -44,6 +45,15 @@ if _DEBUG:
 else:
     BUILD_TYPE = "-DCMAKE_BUILD_TYPE=Release"
 
+env = os.environ.copy()
+python_bindir = os.path.dirname(sys.executable)
+print("python_bindir: %s" % str(python_bindir))
+
+if "PATH" in env.keys():
+    env["PATH"] = python_bindir + os.pathsep + env["PATH"]
+else:
+    env["PATH"] = python_bindir
+
 # Run configure...
 result = subprocess.run(
     ["cmake", 
@@ -53,7 +63,8 @@ result = subprocess.run(
      BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
      ],
-    cwd=os.path.join(cwd, "build"))
+    cwd=os.path.join(cwd, "build"),
+    env=env)
 
 if result.returncode != 0:
     raise Exception("cmake configure failed")
@@ -63,7 +74,8 @@ result = subprocess.run(
      "-j",
      "%d" % os.cpu_count()
      ],
-    cwd=os.path.join(cwd, "build"))
+    cwd=os.path.join(cwd, "build"),
+    env=env)
 if result.returncode != 0:
     raise Exception("build failed")
 
@@ -163,6 +175,14 @@ class build_ext(_build_ext):
         copy_file(
             os.path.join(cwd, "build", "src", "libvsc.so"),
             os.path.join(package_dir, "libvsc.so"))
+
+        # Copy libgmp over as well
+        copy_file(
+            os.path.join(cwd, "build", "gmp", "lib", "libgmp.so"),
+            os.path.join(package_dir, "libgmp.so"))
+        copy_file(
+            os.path.join(cwd, "build", "gmp", "lib", "libgmpxx.so"),
+            os.path.join(package_dir, "libgmpxx.so"))
                 
         dest_filename = os.path.join(package_dir, filename)
         

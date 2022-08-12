@@ -23,7 +23,8 @@ package:
        url: https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
      - name: mkdv
        url: https://github.com/fvutils/mkdv.git
-       branch: schema-redo
+     - name: ninja
+       src: pypi
 
    deps:
      - name: cython
