@@ -52,6 +52,7 @@ ModelExprBin::~ModelExprBin() {
 }
 
 void ModelExprBin::eval(IModelVal *dst) {
+#ifdef UNDEFINED
 	ModelVal lhs(m_width), rhs(m_width);
 	m_lhs->eval(&lhs);
 	m_rhs->eval(&rhs);
@@ -144,6 +145,7 @@ void ModelExprBin::eval(IModelVal *dst) {
 		// Slow path?
 
 	}
+#endif /* UNDEFINED */
 }
 
 void ModelExprBin::eq_op_64(

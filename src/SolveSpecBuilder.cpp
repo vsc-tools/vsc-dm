@@ -20,6 +20,7 @@
  */
 #include "Debug.h"
 #include "SolveSpecBuilder.h"
+#include "vsc/impl/TaskResolveModelExprFieldRef.h"
 
 #define EN_DEBUG_SOLVE_SPEC_BUILDER
 
@@ -39,7 +40,11 @@ DEBUG_SCOPE(SolveSpecBuilder);
 
 namespace vsc {
 
-SolveSpecBuilder::SolveSpecBuilder() : m_pass(0), m_active_solveset(0) {
+SolveSpecBuilder::SolveSpecBuilder(IContext *ctx) : 
+	m_ctx(ctx),
+	m_pass(0), 
+	m_flags(SolveSetFlag::NoFlags),
+	m_active_solveset(0) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -80,16 +85,78 @@ SolveSpec *SolveSpecBuilder::build(
 	}
 
 	std::vector<IModelField *> unconstrained;
+	std::vector<IModelFieldVec *> unconstrained_sz_vec;
 
 	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
 		if (*it) {
-			unconstrained.push_back(*it);
+			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
+				fprintf(stdout, "sz parent=%p FieldVec=%p\n", (*it)->getParent(), (*it)->getParentT<IModelFieldVec>());
+				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
+			} else {
+				unconstrained.push_back(*it);
+			}
 		}
 	}
 
 	SolveSpec *spec = new SolveSpec(
 			solvesets,
-			unconstrained);
+			unconstrained,
+			unconstrained_sz_vec);
+
+	DEBUG_LEAVE("build");
+	return spec;
+}
+
+SolveSpec *SolveSpecBuilder::build(
+			const std::vector<IModelField *>		&fields,
+			const std::vector<IModelConstraintUP>	&constraints
+			) {
+	DEBUG_ENTER("build %d fields %d constraints", fields.size(), constraints.size());
+
+	m_pass = 0;
+	for (std::vector<IModelField *>::const_iterator
+			it=fields.begin();
+			it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	m_pass = 1;
+	for (auto it=fields.begin(); it!=fields.end(); it++) {
+		(*it)->accept(this);
+	}
+
+	for (std::vector<IModelConstraintUP>::const_iterator
+		it=constraints.begin(); 
+		it!=constraints.end(); it++) {
+		DEBUG_ENTER("Visiting constraint");
+		it->get()->accept(this);
+		DEBUG_LEAVE("Visiting constraint");
+	}
+
+	std::vector<SolveSet *> solvesets;
+	for (auto it=m_solveset_l.begin(); it!=m_solveset_l.end(); it++) {
+		if (it->get()) {
+			solvesets.push_back(it->release());
+		}
+	}
+
+	std::vector<IModelField *> unconstrained;
+	std::vector<IModelFieldVec *> unconstrained_sz_vec;
+
+	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
+		if (*it) {
+			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
+				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
+			} else {
+				unconstrained.push_back(*it);
+			}
+		}
+	}
+
+	SolveSpec *spec = new SolveSpec(
+			solvesets,
+			unconstrained,
+			unconstrained_sz_vec);
 
 	DEBUG_LEAVE("build");
 	return spec;
@@ -139,12 +206,32 @@ void SolveSpecBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_LEAVE("visitModelConstraintExpr pass=%d", m_pass);
 }
 
-void SolveSpecBuilder::visitModelConstraintIf(IModelConstraintIf *c) {
+void SolveSpecBuilder::visitModelConstraintForeach(IModelConstraintForeach *c) {
+	DEBUG_ENTER("visitModelConstraintForeach");
+	constraint_enter(c);
+
+	m_flags |= SolveSetFlag::HaveForeach;
+
+	VisitorBase::visitModelConstraintForeach(c);
+
+	constraint_leave(c);
+	DEBUG_LEAVE("visitModelConstraintForeach");
+}
+
+void SolveSpecBuilder::visitModelConstraintIfElse(IModelConstraintIfElse *c) {
 	DEBUG_ENTER("visitModelConstraintIf");
 	constraint_enter(c);
-	VisitorBase::visitModelConstraintIf(c);
+	VisitorBase::visitModelConstraintIfElse(c);
 	constraint_leave(c);
 	DEBUG_LEAVE("visitModelConstraintIf");
+}
+
+void SolveSpecBuilder::visitModelConstraintImplies(IModelConstraintImplies *c) {
+	DEBUG_ENTER("visitModelConstraintImplies");
+	constraint_enter(c);
+	VisitorBase::visitModelConstraintImplies(c);
+	constraint_leave(c);
+	DEBUG_LEAVE("visitModelConstraintImplies");
 }
 
 void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
@@ -157,6 +244,19 @@ void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 		process_fieldref(e->field());
 	}
 	DEBUG_LEAVE("visitModelExprFieldRef");
+}
+
+void SolveSpecBuilder::visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) {
+	DEBUG_ENTER("visitModelExprIndexedFieldRef");
+	IModelField *field = TaskResolveModelExprFieldRef(m_ctx).resolve(0, e);
+	if (m_pass == 0) {
+		// In pass 0, we're collecting fields
+		field->accept(this);
+	} else {
+		// In pass 1, we're evaluating dependencies
+		process_fieldref(field);
+	}
+	DEBUG_LEAVE("visitModelExprIndexedFieldRef");
 }
 
 void SolveSpecBuilder::visitModelField(IModelField *f) {
@@ -179,17 +279,24 @@ void SolveSpecBuilder::visitModelField(IModelField *f) {
 }
 
 void SolveSpecBuilder::constraint_enter(IModelConstraint *c) {
+	DEBUG_ENTER("constraint_enter %d", m_constraint_s.size());
 	m_constraint_s.push_back(c);
+	DEBUG_LEAVE("constraint_enter %d", m_constraint_s.size());
 }
 
 void SolveSpecBuilder::constraint_leave(IModelConstraint *c) {
+	DEBUG_ENTER("constraint_leave pass=%d %d", m_pass, m_constraint_s.size());
 	m_constraint_s.pop_back();
 
 	if (m_pass == 1 && m_constraint_s.size() == 0) {
 		if (m_active_solveset) {
 			m_active_solveset->add_constraint(c);
+			fprintf(stdout, "Add flags %lld\n", m_flags);
+			m_active_solveset->setFlags(m_flags);
 		}
+		m_flags = SolveSetFlag::NoFlags;
 	}
+	DEBUG_LEAVE("constraint_leave pass=%d %d", m_pass, m_constraint_s.size());
 }
 
 void SolveSpecBuilder::process_fieldref(IModelField *f) {

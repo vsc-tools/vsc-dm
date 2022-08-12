@@ -14,7 +14,9 @@ namespace vsc {
 
 class ModelConstraintScope;
 using ModelConstraintScopeUP=std::unique_ptr<ModelConstraintScope>;
-class ModelConstraintScope : public IModelConstraintScope {
+class ModelConstraintScope : 
+	public virtual IModelConstraintScope, 
+	public virtual ModelConstraint {
 public:
 	ModelConstraintScope();
 
@@ -24,7 +26,11 @@ public:
 		return m_constraints;
 	}
 
-	virtual void add_constraint(IModelConstraint *c) override;
+	virtual void addConstraint(IModelConstraint *c) override;
+
+	virtual IModelConstraint *swapConstraint(
+		uint32_t			idx,
+		IModelConstraint	*c);
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintScope(this); }
 

@@ -31,7 +31,7 @@ public:
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override;
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override;
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override;
 

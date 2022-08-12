@@ -13,11 +13,13 @@ namespace vsc {
 class ModelExprUnary : public IModelExprUnary {
 public:
 	ModelExprUnary(
-			IModelExpr		*expr,
-			UnaryOp			op
+			UnaryOp			op,
+			IModelExpr		*expr
 			);
 
 	virtual ~ModelExprUnary();
+
+	virtual int32_t width() const { return m_width; }
 
 	virtual IModelExpr *expr() const override { return m_expr.get(); }
 
@@ -28,6 +30,7 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelExprUnary(this); }
 
 private:
+	int32_t					m_width;
 	IModelExprUP			m_expr;
 	UnaryOp					m_op;
 

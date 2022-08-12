@@ -11,12 +11,14 @@
 
 namespace vsc {
 
-class IModelConstraintSoft : public IModelConstraint {
+class IModelConstraintSoft : public virtual IModelConstraint {
 public:
 
 	virtual ~IModelConstraintSoft() { }
 
 	virtual IModelConstraintExpr *constraint() const = 0;
+
+	virtual int32_t getPriority() const = 0;
 
 };
 

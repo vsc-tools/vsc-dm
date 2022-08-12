@@ -11,6 +11,7 @@
 #include "DataTypeInt.h"
 #include "DataTypeVec.h"
 #include "DataTypeStruct.h"
+#include "ModelValOp.h"
 
 namespace vsc {
 
@@ -23,6 +24,8 @@ public:
 	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) override;
+
+	virtual IModelValOp *getModelValOp() override { return &m_model_val_op; }
 
 	virtual ICompoundSolver *mkCompoundSolver() override;
 
@@ -65,10 +68,35 @@ public:
 	virtual IModelConstraintExpr *mkModelConstraintExpr(
 			IModelExpr		*expr) override;
 
+	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) override;
+
+	virtual IModelConstraintImplies *mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) override;
+
+	virtual IModelConstraintScope *mkModelConstraintScope() override;
+
+	virtual IModelConstraintSoft *mkModelConstraintSoft(
+			IModelConstraintExpr	*c) override;
+
+	virtual IModelConstraintSubst *mkModelConstraintSubst(
+			IModelConstraint		*c) override;
+
+	virtual IModelConstraintUnique *mkModelConstraintUnique(
+			const std::vector<IModelExpr *>		&exprs) override;
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
 			IModelExpr		*rhs) override;
+
+	virtual IModelExprCond *mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) override;
 
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
 			IModelField		*field) override;
@@ -84,6 +112,12 @@ public:
 			IModelExpr		*upper) override;
 
 	virtual IModelExprRangelist *mkModelExprRangelist() override;
+
+	virtual IModelExprRef *mkModelExprRef(IModelExpr *target) override;
+
+	virtual IModelExprUnary *mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) override;
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *) override;
 
@@ -112,7 +146,7 @@ public:
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) override;
 
-	virtual IRandState *mkRandState(uint32_t seed) override;
+	virtual IRandState *mkRandState(const std::string &seed) override;
 
 	virtual ITask *mkTask(TaskE id) override;
 
@@ -120,7 +154,60 @@ public:
 
 	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) override;
 
+	virtual IModelConstraintForeach *mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) override;
+
+	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) override;
+
+	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*body) override;
+			
+	virtual IModelConstraintRef *mkModelConstraintRef(
+			IModelConstraint	*target) override;
+
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override;
+
+	virtual ITypeConstraintSoft *mkTypeConstraintSoft(
+			ITypeConstraintExpr		*c) override;
+
+	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) override;
+
+	virtual IModelCoverBinCollection *mkModelCoverBinCollection(
+		ModelCoverBinType			type) override;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) override;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) override;
+
+	virtual IModelCoverCross *mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) override;
+
+	virtual IModelCovergroup *mkModelCovergroup(
+		const std::string			&name) override;
+
+	virtual IModelCoverpoint *mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) override;
+
+	virtual IModelCoverpointTarget *mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) override;
 
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
@@ -129,9 +216,14 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
 
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path);
+
 	virtual IModelExprIn *mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) override;
+
+	virtual IModelExprIndexedFieldRef *mkModelExprIndexedFieldRef() override;
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
@@ -163,6 +255,7 @@ public:
 
 
 private:
+	ModelValOp												m_model_val_op;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;
 

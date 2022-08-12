@@ -39,12 +39,20 @@ public:
 		m_delegate->visitModelConstraintExpr(c);
 	}
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override {
-		m_delegate->visitModelConstraintIf(c);
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
+		m_delegate->visitModelConstraintForeach(c);
+	}
+
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override {
+		m_delegate->visitModelConstraintIfElse(c);
 	}
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override {
 		m_delegate->visitModelConstraintImplies(c);
+	}
+
+	virtual void visitModelConstraintRef(IModelConstraintRef *c) override {
+		m_delegate->visitModelConstraintRef(c);
 	}
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
@@ -55,15 +63,31 @@ public:
 		m_delegate->visitModelConstraintSoft(c);
 	}
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) override {
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) override {
+		m_delegate->visitModelConstraintSubst(c);
+	}
+
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override {
+		m_delegate->visitModelConstraintUnique(c);
+	}
+
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) override {
+		m_delegate->visitModelCoverBinMask(c);
+	}
+
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override {
+		m_delegate->visitModelCoverBinCollection(c);
+	}
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) override {
 		m_delegate->visitModelCoverCross(c);
 	}
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) override {
+	virtual void visitModelCovergroup(IModelCovergroup *c) override {
 		m_delegate->visitModelCovergroup(c);
 	}
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) override {
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) override {
 		m_delegate->visitModelCoverpoint(c);
 	}
 
@@ -81,6 +105,10 @@ public:
 
 	virtual void visitModelExprIn(IModelExprIn *e) override {
 		m_delegate->visitModelExprIn(e);
+	}
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { 
+		m_delegate->visitModelExprIndexedFieldRef(e);
 	}
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override {
@@ -151,8 +179,24 @@ public:
 		m_delegate->visitTypeConstraintExpr(c);
 	}
 
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
+		m_delegate->visitTypeConstraintIfElse(c);
+	}
+
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
+		m_delegate->visitTypeConstraintImplies(c);
+	}
+
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		m_delegate->visitTypeConstraintScope(c);
+	}
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
+		m_delegate->visitTypeConstraintSoft(c);
+	}
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
+		m_delegate->visitTypeConstraintUnique(c);
 	}
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {

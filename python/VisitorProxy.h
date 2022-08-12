@@ -22,16 +22,19 @@ public:
 	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) { }
 
 	virtual void visitModelConstraint(vsc::IModelConstraint *c) { }
+#endif
 
-	virtual void visitModelConstraintBlock(vsc::IModelConstraintBlock *c) { }
+	virtual void visitModelConstraintBlock(vsc::IModelConstraintBlock *c) override;
 
-	virtual void visitModelConstraintExpr(vsc::IModelConstraintExpr *c) { }
+	virtual void visitModelConstraintExpr(vsc::IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(vsc::IModelConstraintIf *c) { }
+	virtual void visitModelConstraintIfElse(vsc::IModelConstraintIfElse *c) override;
 
-	virtual void visitModelConstraintImplies(vsc::IModelConstraintImplies *c) { }
+	virtual void visitModelConstraintImplies(vsc::IModelConstraintImplies *c) override;
 
-	virtual void visitModelConstraintScope(vsc::IModelConstraintScope *c) { }
+	virtual void visitModelConstraintScope(vsc::IModelConstraintScope *c) override;
+
+#ifdef UNDEFINED
 
 	virtual void visitModelConstraintSoft(vsc::IModelConstraintSoft *c) { }
 
@@ -44,28 +47,27 @@ public:
 
 	virtual void visitModelExprBin(vsc::IModelExprBin *e) override;
 
-    void visitModelExprBinBase(vsc::IModelExprBin *e);
-
 	virtual void visitModelExprCond(vsc::IModelExprCond *e) override;
 
+	virtual void visitModelExprFieldRef(vsc::IModelExprFieldRef *e) override;
+
+	virtual void visitModelExprIn(vsc::IModelExprIn *e) override;
+
+	virtual void visitModelExprPartSelect(vsc::IModelExprPartSelect *e) override;
+
+	virtual void visitModelExprRange(vsc::IModelExprRange *e) override;
+
+	virtual void visitModelExprRangelist(vsc::IModelExprRangelist *e) override;
+
+	virtual void visitModelExprRef(vsc::IModelExprRef *e) override;
+
+	virtual void visitModelExprUnary(vsc::IModelExprUnary *e) override;
+
+	virtual void visitModelExprVal(vsc::IModelExprVal *e) override;
+
+	virtual void visitModelExprVecSubscript(vsc::IModelExprVecSubscript *e) override;
+
 #ifdef UNDEFINED
-	virtual void visitModelExprFieldRef(vsc::IModelExprFieldRef *e) { }
-
-	virtual void visitModelExprIn(vsc::IModelExprIn *e) { }
-
-	virtual void visitModelExprPartSelect(vsc::IModelExprPartSelect *e) { }
-
-	virtual void visitModelExprRange(vsc::IModelExprRange *e) { }
-
-	virtual void visitModelExprRangelist(vsc::IModelExprRangelist *e) { }
-
-	virtual void visitModelExprRef(vsc::IModelExprRef *e) { }
-
-	virtual void visitModelExprUnary(vsc::IModelExprUnary *e) { }
-
-	virtual void visitModelExprVal(vsc::IModelExprVal *e) { }
-
-	virtual void visitModelExprVecSubscript(vsc::IModelExprVecSubscript *e) { }
 
 	virtual void visitModelField(vsc::IModelField *f) { }
 #endif
@@ -84,20 +86,29 @@ public:
 	virtual void visitModelFieldVec(vsc::IModelFieldVec *f) { }
 
 	virtual void visitModelFieldVecRoot(vsc::IModelFieldVecRoot *f) { }
+#endif
 
-	virtual void visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) override { }
+	virtual void visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) override;
 
-	virtual void visitTypeConstraintExpr(vsc::ITypeConstraintExpr *c) override { }
+	virtual void visitTypeConstraintExpr(vsc::ITypeConstraintExpr *c) override;
 
-	virtual void visitTypeConstraintScope(vsc::ITypeConstraintScope *c) override { }
+	virtual void visitTypeConstraintIfElse(vsc::ITypeConstraintIfElse *c) override;
 
+	virtual void visitTypeConstraintImplies(vsc::ITypeConstraintImplies *c) override;
 
-	virtual void visitTypeExprBin(vsc::ITypeExprBin *e) override { }
+	virtual void visitTypeConstraintScope(vsc::ITypeConstraintScope *c) override;
 
-	virtual void visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) override { }
+	virtual void visitTypeExprBin(vsc::ITypeExprBin *e) override;
 
-	virtual void visitTypeExprVal(vsc::ITypeExprVal *e) override { }
+	virtual void visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) override;
 
+	virtual void visitTypeExprRange(vsc::ITypeExprRange *e) override;
+
+	virtual void visitTypeExprRangelist(vsc::ITypeExprRangelist *e) override;
+
+	virtual void visitTypeExprVal(vsc::ITypeExprVal *e) override;
+
+#ifdef UNDEFINED
 	virtual void visitTypeField(vsc::ITypeField *f) { }
 #endif
 

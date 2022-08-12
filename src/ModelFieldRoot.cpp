@@ -26,44 +26,17 @@ namespace vsc {
 
 ModelFieldRoot::ModelFieldRoot(
 		IDataType			*type,
-		const std::string	&name) :
-				m_type(type), m_name(name), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
+		const std::string	&name) : m_type(type), m_name(name) {
 	if (type) {
 		std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(type);
 		if (width.second > 0) {
 			m_val.setBits(width.second);
 		}
 	}
-
 }
 
 ModelFieldRoot::~ModelFieldRoot() {
 	// TODO Auto-generated destructor stub
-}
-
-void ModelFieldRoot::addConstraint(IModelConstraint *c) {
-	m_constraints.push_back(IModelConstraintUP(c));
-}
-
-void ModelFieldRoot::addField(IModelField *field) {
-	field->setParent(this);
-	m_fields.push_back(IModelFieldUP(field));
-}
-
-IModelField *ModelFieldRoot::getField(int32_t idx) {
-	if (idx >= 0 && idx < m_fields.size()) {
-		return m_fields.at(idx).get();
-	} else {
-		return 0;
-	}
-}
-
-void ModelFieldRoot::setFieldData(IModelFieldData *data) {
-	m_field_data = IModelFieldDataUP(data);
-}
-
-IModelFieldData *ModelFieldRoot::getFieldData() {
-	return m_field_data.get();
 }
 
 } /* namespace vsc */

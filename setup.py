@@ -87,6 +87,9 @@ if _DEBUG:
 else:
     extra_compile_args += ["-DNDEBUG", "-O3"]
 
+if sys.platform == "darwin":
+    extra_compile_args += ["-std=c++11"]
+
 def find_source(bases):
     ret = []
     for base in bases:
@@ -172,9 +175,16 @@ class build_ext(_build_ext):
         package = ".".join(modpath[:-1])
         package_dir = build_py.get_package_dir(package)
 
+        if sys.platform == "darwin":
+            ext = ".dylib"
+        else:
+            ext = ".so"
+
+        pref = "lib"
+
         copy_file(
-            os.path.join(cwd, "build", "src", "libvsc.so"),
-            os.path.join(package_dir, "libvsc.so"))
+            os.path.join(cwd, "build", "src", "%svsc%s" % (pref, ext)),
+            os.path.join(package_dir, "%svsc%s" % (pref, ext)))
 
         # Copy libgmp over as well
         copy_file(

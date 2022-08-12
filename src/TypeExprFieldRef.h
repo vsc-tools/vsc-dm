@@ -22,6 +22,10 @@ public:
 
 	virtual void addRootRef() override;
 
+	virtual void addRef(const TypeExprFieldRefElem &ref) {
+		m_path.push_back(ref);
+	}
+
 	virtual uint32_t size() const override { return m_path.size(); }
 
 	virtual const TypeExprFieldRefElem &at(int32_t idx) const override {

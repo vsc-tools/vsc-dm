@@ -7,10 +7,13 @@
 
 #pragma once
 #include "vsc/IModelConstraintImplies.h"
+#include "ModelConstraint.h"
 
 namespace vsc {
 
-class ModelConstraintImplies : public IModelConstraintImplies {
+class ModelConstraintImplies : 
+	public virtual IModelConstraintImplies,
+	public virtual ModelConstraint {
 public:
 	ModelConstraintImplies(
 			IModelExpr			*cond,
@@ -18,9 +21,9 @@ public:
 
 	virtual ~ModelConstraintImplies();
 
-	virtual IModelExpr *cond() const override { return m_cond.get(); }
+	virtual IModelExpr *getCond() const override { return m_cond.get(); }
 
-	virtual IModelConstraint *body() const override { return m_body.get(); }
+	virtual IModelConstraint *getBody() const override { return m_body.get(); }
 
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintImplies(this); }
 

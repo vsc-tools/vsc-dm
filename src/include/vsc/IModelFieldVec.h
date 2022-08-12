@@ -6,11 +6,14 @@
  */
 
 #pragma once
+#include <memory>
 #include "vsc/IModelField.h"
 #include "vsc/IModelFieldFactory.h"
 
 namespace vsc {
 
+class IModelFieldVec;
+using IModelFieldVecUP=std::unique_ptr<IModelFieldVec>;
 class IModelFieldVec : public virtual IModelField {
 public:
 
@@ -21,7 +24,7 @@ public:
 	 */
 	virtual IModelField *getSizeRef() const = 0;
 
-	/**
+	/*
 	 * Returns the number of elements currently in the vector
 	 */
 	virtual uint32_t getSize() const = 0;

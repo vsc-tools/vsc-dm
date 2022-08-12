@@ -14,16 +14,30 @@
 
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
-#include "vsc/IModelConstraintIf.h"
+#include "vsc/IModelConstraintForeach.h"
+#include "vsc/IModelConstraintIfElse.h"
 #include "vsc/IModelConstraintImplies.h"
+#include "vsc/IModelConstraintRef.h"
 #include "vsc/IModelConstraintScope.h"
+#include "vsc/IModelConstraintSelect.h"
 #include "vsc/IModelConstraintSoft.h"
+#include "vsc/IModelConstraintSubst.h"
+#include "vsc/IModelConstraintUnique.h"
+
+#include "vsc/IModelCoverBinCollection.h"
+#include "vsc/IModelCoverBinMask.h"
+#include "vsc/IModelCoverBinSingleRange.h"
+#include "vsc/IModelCoverBinSingleVal.h"
+#include "vsc/IModelCoverCross.h"
+#include "vsc/IModelCovergroup.h"
+#include "vsc/IModelCoverpoint.h"
 
 
 #include "vsc/IModelExprBin.h"
 #include "vsc/IModelExprCond.h"
 #include "vsc/IModelExprFieldRef.h"
 #include "vsc/IModelExprIn.h"
+#include "vsc/IModelExprIndexedFieldRef.h"
 #include "vsc/IModelExprPartSelect.h"
 #include "vsc/IModelExprRange.h"
 #include "vsc/IModelExprRangelist.h"
@@ -47,7 +61,11 @@
 
 #include "vsc/ITypeConstraintBlock.h"
 #include "vsc/ITypeConstraintExpr.h"
+#include "vsc/ITypeConstraintIfElse.h"
+#include "vsc/ITypeConstraintImplies.h"
 #include "vsc/ITypeConstraintScope.h"
+#include "vsc/ITypeConstraintSoft.h"
+#include "vsc/ITypeConstraintUnique.h"
 
 #include "vsc/ITypeField.h"
 #include "vsc/ITypeFieldPhy.h"
@@ -89,9 +107,23 @@ public:
 		c->expr()->accept(m_this);
 	}
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override { }
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
+		c->getTarget()->accept(m_this);
+		visitModelConstraintScope(c);
+	}
 
-	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { }
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 
+		c->getCond()->accept(m_this);
+		c->getTrue()->accept(m_this);
+		if (c->getFalse()) {
+			c->getFalse()->accept(m_this);
+		}
+	}
+
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { 
+		c->getCond()->accept(m_this);
+		c->getBody()->accept(m_this);
+	}
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
 		for (std::vector<IModelConstraintUP>::const_iterator
@@ -101,13 +133,50 @@ public:
 		}
 	}
 
-	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { }
+	virtual void visitModelConstraintSelect(IModelConstraintSelect *c) override {
+		c->getLhs()->accept(this);
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) override { }
+		for (std::vector<IModelField *>::const_iterator
+			it=c->getRhs().begin();
+			it!=c->getRhs().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) override { }
+	virtual void visitModelConstraintRef(IModelConstraintRef *c) override { 
+		c->getTarget()->accept(m_this);
+	}
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) override { }
+	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override { 
+		c->constraint()->accept(m_this);
+	}
+
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) override {
+		c->getOriginal()->accept(m_this);
+		visitModelConstraintScope(c);
+	}
+
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override { 
+		for (std::vector<IModelExprUP>::const_iterator
+			it=c->getExprs().begin();
+			it!=c->getExprs().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
+
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) override { }
+
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override { }
+
+	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) override { }
+
+	virtual void visitModelCoverBinSingleVal(IModelCoverBinSingleVal *c) override { }
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) override { }
+
+	virtual void visitModelCovergroup(IModelCovergroup *c) override { }
+
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) override { }
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
 		e->lhs()->accept(m_this);
@@ -126,6 +195,8 @@ public:
 		e->lhs()->accept(m_this);
 		e->rangelist()->accept(m_this);
 	}
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { }
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override { }
 
@@ -194,13 +265,38 @@ public:
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override {
 		visitTypeConstraintScope(c);
 	}
-
+	
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
 		c->expr()->accept(m_this);
 	}
 
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
+		c->getCond()->accept(m_this);
+		c->getTrue()->accept(m_this);
+		if (c->getFalse()) {
+			c->getFalse()->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
+		c->getCond()->accept(m_this);
+		c->getBody()->accept(m_this);
+	}
+
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
 		for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+			(*it)->accept(m_this);
+		}
+	}
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
+		c->constraint()->accept(m_this);
+	}
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
+		for (std::vector<ITypeExprUP>::const_iterator
+			it=c->getExprs().begin();
+			it!=c->getExprs().end(); it++) {
 			(*it)->accept(m_this);
 		}
 	}

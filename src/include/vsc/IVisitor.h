@@ -35,19 +35,29 @@ class IDataTypeStruct;
 class IModelConstraint;
 class IModelConstraintBlock;
 class IModelConstraintExpr;
-class IModelConstraintIf;
+class IModelConstraintForeach;
+class IModelConstraintIfElse;
 class IModelConstraintImplies;
+class IModelConstraintRef;
 class IModelConstraintScope;
+class IModelConstraintSelect;
 class IModelConstraintSoft;
+class IModelConstraintSubst;
+class IModelConstraintUnique;
 
-class ModelCoverCross;
-class ModelCovergroup;
-class ModelCoverpoint;
+class IModelCoverBinCollection;
+class IModelCoverBinMask;
+class IModelCoverBinSingleRange;
+class IModelCoverBinSingleVal;
+class IModelCoverCross;
+class IModelCovergroup;
+class IModelCoverpoint;
 
 class IModelExprBin;
 class IModelExprCond;
 class IModelExprFieldRef;
 class IModelExprIn;
+class IModelExprIndexedFieldRef;
 class IModelExprPartSelect;
 class IModelExprRange;
 class IModelExprRangelist;
@@ -66,7 +76,11 @@ class IModelFieldVecRoot;
 class ITypeConstraint;
 class ITypeConstraintBlock;
 class ITypeConstraintExpr;
+class ITypeConstraintIfElse;
+class ITypeConstraintImplies;
 class ITypeConstraintScope;
+class ITypeConstraintSoft;
+class ITypeConstraintUnique;
 class ITypeExpr;
 class ITypeExprBin;
 class ITypeExprFieldRef;
@@ -95,19 +109,37 @@ public:
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) = 0;
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) = 0;
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) = 0;
+
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) = 0;
 
 	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) = 0;
 
+	virtual void visitModelConstraintRef(IModelConstraintRef *c) = 0;
+
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) = 0;
+
+	virtual void visitModelConstraintSelect(IModelConstraintSelect *c) = 0;
 
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) = 0;
 
-	virtual void visitModelCoverCross(ModelCoverCross *c) = 0;
+	virtual void visitModelConstraintSubst(IModelConstraintSubst *c) = 0;
 
-	virtual void visitModelCovergroup(ModelCovergroup *c) = 0;
+	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) = 0;
 
-	virtual void visitModelCoverpoint(ModelCoverpoint *c) = 0;
+	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) = 0;
+
+	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) = 0;
+
+	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) = 0;
+
+	virtual void visitModelCoverBinSingleVal(IModelCoverBinSingleVal *c) = 0;
+
+	virtual void visitModelCoverCross(IModelCoverCross *c) = 0;
+
+	virtual void visitModelCovergroup(IModelCovergroup *c) = 0;
+
+	virtual void visitModelCoverpoint(IModelCoverpoint *c) = 0;
 
 	virtual void visitModelExprBin(IModelExprBin *e) = 0;
 
@@ -116,6 +148,8 @@ public:
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) = 0;
 
 	virtual void visitModelExprIn(IModelExprIn *e) = 0;
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) = 0;
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) = 0;
 
@@ -151,7 +185,15 @@ public:
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
 
+	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) = 0;
+
+	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) = 0;
+
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) = 0;
+
+	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) = 0;
+
+	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) = 0;
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
 

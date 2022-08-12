@@ -17,23 +17,36 @@ class RandState;
 using RandStateUP=std::unique_ptr<RandState>;
 class RandState : public IRandState {
 public:
-	RandState(uint32_t seed);
+	RandState(const std::string &seed);
 
 	virtual ~RandState();
+
+	virtual const std::string &seed() const override {
+		return m_seed;
+	}
 
 	virtual int32_t randint32(
 			int32_t		min,
 			int32_t		max) override;
 
+	virtual uint64_t rand_ui64() override;
+
+	virtual int64_t rand_i64() override;
+
 	/**
 	 * Fills the value with a random bit pattern
 	 */
 	virtual void randbits(IModelVal *val) override;
+	
+	virtual void setState(IRandState *other) override;
+
+	virtual IRandState *clone() override;
 
 protected:
 	uint64_t next();
 
 private:
+	std::string			m_seed;
 	std::mt19937_64 	m_state;
 
 };

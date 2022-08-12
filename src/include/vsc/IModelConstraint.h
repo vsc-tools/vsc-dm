@@ -17,6 +17,10 @@ public:
 
 	virtual ~IModelConstraint() { }
 
+	virtual IModelConstraint *getParent() const = 0;
+
+	virtual void setParent(IModelConstraint *c) = 0;
+
 };
 
 }

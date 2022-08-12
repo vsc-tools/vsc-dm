@@ -58,13 +58,13 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 			std::sort(
 				values.begin(),
 				values.end(), [](const ModelVal *v1, const ModelVal *v2) {
-					return ModelValOp::slt(v1, v2);
+					return ModelValOp::slt_s(v1, v2);
 				});
 		} else {
 			std::sort(
 				values.begin(),
 				values.end(), [](const ModelVal *v1, const ModelVal *v2) {
-					return ModelValOp::ult(v1, v2);
+					return ModelValOp::ult_s(v1, v2);
 				});
 		}
 
@@ -93,7 +93,6 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 			it++;
 
 			if (it != values.end()) {
-				ModelVal eq;
 				ModelValOp::add_s(
 						&exp_n,
 						*prev,
@@ -101,8 +100,7 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 						32);
 
 				// Check if
-				ModelValOp::eq(&eq, &exp_n, *it);
-				if (!eq.val_u()) {
+				if (!ModelValOp::eq_s(&exp_n, *it)) {
 					// Create a range and move on
 					TypeExprRange *rng = 0;
 

@@ -23,7 +23,7 @@
 
 namespace vsc {
 
-ModelConstraint::ModelConstraint() {
+ModelConstraint::ModelConstraint() : m_parent(0) {
 	// TODO Auto-generated constructor stub
 
 }

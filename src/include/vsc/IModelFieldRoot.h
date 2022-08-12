@@ -16,7 +16,7 @@ namespace vsc {
  * and name. No type information (eg declaration location)
  * is available for the field itself.
  */
-class IModelFieldRoot : public IModelField {
+class IModelFieldRoot : public virtual IModelField {
 public:
 
 	virtual ~IModelFieldRoot() { }

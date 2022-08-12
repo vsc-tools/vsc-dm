@@ -56,6 +56,10 @@ public:
 
 	virtual IModelField *getParent() const = 0;
 
+	template <class T> T *getParentT() const {
+		return dynamic_cast<T *>(getParent());
+	}
+
 	virtual void setParent(IModelField *p) = 0;
 
 	virtual const std::vector<IModelConstraintUP> &constraints() const = 0;
@@ -81,6 +85,8 @@ public:
 	virtual void clearFlag(ModelFieldFlag flags) = 0;
 
 	virtual void setFlag(ModelFieldFlag flags) = 0;
+
+	virtual void setFlags(ModelFieldFlag flags) = 0;
 
 	virtual bool isFlagSet(ModelFieldFlag flags) const = 0;
 

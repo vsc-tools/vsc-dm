@@ -19,9 +19,9 @@ ModelCoverOpts::~ModelCoverOpts() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelCoverOpts::propagate(const ModelCoverOpts &opts) {
-	m_at_least = opts.at_least();
-	m_auto_bin_max = opts.auto_bin_max();
+void ModelCoverOpts::init(const IModelCoverOpts *opts) {
+	m_at_least = opts->getAtLeast();
+	m_auto_bin_max = opts->getAutoBinMax();
 }
 
 } /* namespace vsc */

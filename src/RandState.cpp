@@ -5,16 +5,14 @@
  *      Author: mballance
  */
 
+#include <random>
 #include "RandState.h"
 
 namespace vsc {
 
-RandState::RandState(uint32_t seed) : m_state(seed) {
-	/*
-	m_state = (0x330EULL << 32)
-			| ((uint64_t)(seed & 0xFFFF) << 16)
-			| (seed >> 16);
-			 */
+RandState::RandState(const std::string &seed) : m_seed(seed) {
+	std::seed_seq seq(seed.begin(), seed.end());
+	m_state = std::mt19937_64(seq);
 }
 
 RandState::~RandState() {
@@ -31,6 +29,14 @@ int32_t RandState::randint32(
 		next_v = (next_v % (max-min+1)) + min;
 		return next_v;
 	}
+}
+
+uint64_t RandState::rand_ui64() {
+	return next();
+}
+
+int64_t RandState::rand_i64() {
+	return static_cast<int64_t>(next());
 }
 
 void RandState::randbits(IModelVal *val) {
@@ -78,6 +84,16 @@ uint64_t RandState::next() {
      */
 
     return m_state();
+}
+
+void RandState::setState(IRandState *other) {
+	m_state = dynamic_cast<RandState *>(other)->m_state;
+}
+
+IRandState *RandState::clone() {
+	RandState *ret = new RandState(0);
+	ret->m_state = m_state;
+	return ret;
 }
 
 } /* namespace vsc */

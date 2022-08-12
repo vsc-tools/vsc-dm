@@ -35,6 +35,8 @@ public:
 
 	virtual void addRootRef() = 0;
 
+	virtual void addRef(const TypeExprFieldRefElem &ref) = 0;
+
 	virtual uint32_t size() const = 0;
 
 	virtual const TypeExprFieldRefElem &at(int32_t idx) const = 0;

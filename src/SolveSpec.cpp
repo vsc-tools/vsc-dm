@@ -24,9 +24,11 @@
 namespace vsc {
 
 SolveSpec::SolveSpec(
-		const std::vector<SolveSet *>		&solvesets,
-		const std::vector<IModelField *>		&unconstrained) :
-				m_unconstrained(unconstrained) {
+		const std::vector<SolveSet *>			&solvesets,
+		const std::vector<IModelField *>		&unconstrained,
+		const std::vector<IModelFieldVec *>		&unconstrained_sz_vec) :
+				m_unconstrained(unconstrained),
+				m_unconstrained_sz_vec(unconstrained_sz_vec) {
 
 	for (auto it=solvesets.begin(); it!=solvesets.end(); it++) {
 		m_solvesets.push_back(SolveSetUP(*it));

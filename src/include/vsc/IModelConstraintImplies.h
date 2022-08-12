@@ -13,14 +13,14 @@ namespace vsc {
 
 class IModelConstraintImplies;
 using IModelConstraintImpliesUP=std::unique_ptr<IModelConstraintImplies>;
-class IModelConstraintImplies : public IModelConstraint {
+class IModelConstraintImplies : public virtual IModelConstraint {
 public:
 
 	virtual ~IModelConstraintImplies() { }
 
-	virtual IModelExpr *cond() const = 0;
+	virtual IModelExpr *getCond() const = 0;
 
-	virtual IModelConstraint *body() const = 0;
+	virtual IModelConstraint *getBody() const = 0;
 
 };
 

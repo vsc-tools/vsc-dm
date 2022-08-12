@@ -10,7 +10,7 @@
 
 namespace vsc {
 
-class IModelExprRef : public IModelExpr {
+class IModelExprRef : public virtual IModelExpr {
 public:
 
 	virtual ~IModelExprRef() { }

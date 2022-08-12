@@ -6,11 +6,14 @@
  */
 
 #pragma once
+#include <memory>
 #include "vsc/ITypeConstraint.h"
 #include "vsc/ITypeExpr.h"
 
 namespace vsc {
 
+class ITypeConstraintExpr;
+using ITypeConstraintExprUP=std::unique_ptr<ITypeConstraintExpr>;
 class ITypeConstraintExpr : public ITypeConstraint {
 public:
 

@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <vector>
 #include <unordered_map>
+#include "vsc/IContext.h"
 #include "vsc/impl/VisitorBase.h"
 #include "SolveSet.h"
 #include "SolveSpec.h"
@@ -17,7 +18,7 @@ namespace vsc {
 
 class SolveSpecBuilder : public VisitorBase {
 public:
-	SolveSpecBuilder();
+	SolveSpecBuilder(IContext *ctx);
 
 	virtual ~SolveSpecBuilder();
 
@@ -26,15 +27,30 @@ public:
 			const std::vector<IModelConstraint *>	&constraints
 			);
 
+	SolveSpec *build(
+			const std::vector<IModelField *>		&fields,
+			const std::vector<IModelConstraintUP>	&constraints
+			);
+
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIf(IModelConstraintIf *c) override;
+	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override;
+
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override;
+
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override;
+
+//	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override;
+
+//	virtual void visitModelConstraintUnique(IModelConstraintUnique *c) override;
 
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override;
+
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override;
 
 	virtual void visitModelField(IModelField *f) override;
 
@@ -47,7 +63,9 @@ private:
 	void process_fieldref(IModelField *f);
 
 private:
+	IContext									*m_ctx;
 	uint32_t									m_pass;
+	SolveSetFlag								m_flags;
 	std::vector<SolveSetUP>						m_solveset_l;
 	std::unordered_map<SolveSet *, int32_t>		m_solveset_m;
 	SolveSet									*m_active_solveset;

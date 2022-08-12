@@ -24,12 +24,31 @@
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
+#include "ModelConstraintForeach.h"
+#include "ModelConstraintIfElse.h"
+#include "ModelConstraintImplies.h"
+#include "ModelConstraintRef.h"
+#include "ModelConstraintScope.h"
+#include "ModelConstraintSoft.h"
+#include "ModelConstraintSubst.h"
+#include "ModelConstraintUnique.h"
+#include "ModelCoverBinCollection.h"
+#include "ModelCoverBinSingleRange.h"
+#include "ModelCoverBinSingleVal.h"
+#include "ModelCoverCross.h"
+#include "ModelCovergroup.h"
+#include "ModelCoverpoint.h"
+#include "ModelCoverpointTargetExpr.h"
 #include "ModelExprBin.h"
+#include "ModelExprCond.h"
 #include "ModelExprFieldRef.h"
 #include "ModelExprIn.h"
+#include "ModelExprIndexedFieldRef.h"
 #include "ModelExprPartSelect.h"
 #include "ModelExprRange.h"
 #include "ModelExprRangelist.h"
+#include "ModelExprRef.h"
+#include "ModelExprUnary.h"
 #include "ModelExprVal.h"
 #include "ModelFieldRefRoot.h"
 #include "ModelFieldRefType.h"
@@ -43,7 +62,11 @@
 #include "TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
+#include "TypeConstraintIfElse.h"
+#include "TypeConstraintImplies.h"
 #include "TypeConstraintScope.h"
+#include "TypeConstraintSoft.h"
+#include "TypeConstraintUnique.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
 #include "TypeExprRange.h"
@@ -71,7 +94,7 @@ IModelField *Context::buildModelField(
 }
 
 ICompoundSolver *Context::mkCompoundSolver() {
-	return new CompoundSolverDefault();
+	return new CompoundSolverDefault(this);
 }
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
@@ -112,6 +135,94 @@ IModelConstraintBlock *Context::mkModelConstraintBlock(
 IModelConstraintExpr *Context::mkModelConstraintExpr(
 			IModelExpr		*expr) {
 	return new ModelConstraintExpr(expr);
+}
+
+IModelConstraintForeach *Context::mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) {
+	return new ModelConstraintForeach(this, target, index_it_name);
+}
+
+IModelConstraintIfElse *Context::mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) {
+	return new ModelConstraintIfElse(cond, true_c, false_c);
+}
+
+IModelConstraintImplies *Context::mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) {
+	return new ModelConstraintImplies(cond, body);
+}
+
+IModelConstraintRef *Context::mkModelConstraintRef(
+			IModelConstraint	*target) {
+	return new ModelConstraintRef(target);
+}
+
+IModelConstraintScope *Context::mkModelConstraintScope() {
+	return new ModelConstraintScope();
+}
+
+IModelConstraintSoft *Context::mkModelConstraintSoft(
+			IModelConstraintExpr	*c) {
+	return new ModelConstraintSoft(c);
+}
+
+IModelConstraintSubst *Context::mkModelConstraintSubst(
+			IModelConstraint	*c) {
+	return new ModelConstraintSubst(c);
+}
+
+IModelConstraintUnique *Context::mkModelConstraintUnique(
+			const std::vector<IModelExpr *>		&exprs) {
+	return new ModelConstraintUnique(exprs);
+}
+
+IModelCoverBinCollection *Context::mkModelCoverBinCollection(
+		ModelCoverBinType			type) {
+	return new ModelCoverBinCollection(type);
+}
+
+IModelCoverBin *Context::mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) {
+	return new ModelCoverBinSingleRange(name, type, is_signed, lower, upper);
+}
+
+IModelCoverBin *Context::mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) {
+	return new ModelCoverBinSingleVal(name, type, value);
+}
+
+IModelCoverCross *Context::mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) {
+	return new ModelCoverCross(name, iff);
+}
+
+IModelCovergroup *Context::mkModelCovergroup(
+		const std::string			&name) {
+	return new ModelCovergroup(name);
+}
+
+IModelCoverpoint *Context::mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) {
+	return new ModelCoverpoint(name, target, iff);
+}
+
+IModelCoverpointTarget *Context::mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) {
+	return new ModelCoverpointTargetExpr(this, expr, width);
 }
 
 IDataTypeInt *Context::findDataTypeInt(
@@ -207,6 +318,13 @@ IModelExprBin *Context::mkModelExprBin(
 	return new ModelExprBin(lhs, op, rhs);
 }
 
+IModelExprCond *Context::mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) {
+	return new ModelExprCond(cond, true_e, false_e);
+}
+
 IModelExprFieldRef *Context::mkModelExprFieldRef(
 			IModelField		*field) {
 	return new ModelExprFieldRef(field);
@@ -216,6 +334,10 @@ IModelExprIn *Context::mkModelExprIn(
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) {
 	return new ModelExprIn(lhs, rnglist);
+}
+
+IModelExprIndexedFieldRef *Context::mkModelExprIndexedFieldRef() {
+	return new ModelExprIndexedFieldRef();
 }
 
 IModelExprPartSelect *Context::mkModelExprPartSelect(
@@ -237,6 +359,16 @@ IModelExprRange *Context::mkModelExprRange(
 
 IModelExprRangelist *Context::mkModelExprRangelist() {
 	return new ModelExprRangelist();
+}
+
+IModelExprRef *Context::mkModelExprRef(IModelExpr *target) {
+	return new ModelExprRef(target);
+}
+
+IModelExprUnary *Context::mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) {
+	return new ModelExprUnary(op, e);
 }
 
 IModelExprVal *Context::mkModelExprVal(IModelVal *v) {
@@ -287,7 +419,7 @@ IRandomizer *Context::mkRandomizer(
 	return new Randomizer(solver_factory, randstate);
 }
 
-IRandState *Context::mkRandState(uint32_t seed) {
+IRandState *Context::mkRandState(const std::string &seed) {
 	return new RandState(seed);
 }
 
@@ -310,9 +442,34 @@ ITypeConstraintExpr *Context::mkTypeConstraintExpr(ITypeExpr *expr) {
 	return new TypeConstraintExpr(expr);
 }
 
+ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) {
+	return new TypeConstraintIfElse(cond, true_c, false_c);
+}
+
+ITypeConstraintImplies *Context::mkTypeConstraintImplies(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*body) {
+	return new TypeConstraintImplies(cond, body);
+}
+
 ITypeConstraintScope *Context::mkTypeConstraintScope() {
 	return new TypeConstraintScope();
 }
+
+ITypeConstraintSoft *Context::mkTypeConstraintSoft(
+			ITypeConstraintExpr		*c) {
+	return new TypeConstraintSoft(c);
+}
+
+ITypeConstraintUnique *Context::mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) {
+	return new TypeConstraintUnique(exprs);
+}
+
+
 
 ITypeExprBin *Context::mkTypeExprBin(
 			ITypeExpr		*lhs,
@@ -323,6 +480,19 @@ ITypeExprBin *Context::mkTypeExprBin(
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
 	return new TypeExprFieldRef();
+}
+
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path) {
+	ITypeExprFieldRef *ret = new TypeExprFieldRef();
+
+	for (std::initializer_list<TypeExprFieldRefElem>::iterator
+		it=path.begin();
+		it!=path.end(); it++) {
+		ret->addRef(*it);
+	}
+
+	return ret;
 }
 
 ITypeExprRange *Context::mkTypeExprRange(

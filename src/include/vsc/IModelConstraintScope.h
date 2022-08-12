@@ -13,13 +13,19 @@ namespace vsc {
 
 class IModelConstraintScope;
 using IModelConstraintScopeUP=std::unique_ptr<IModelConstraintScope>;
-class IModelConstraintScope : public IModelConstraint {
+class IModelConstraintScope : public virtual IModelConstraint {
 public:
 	virtual ~IModelConstraintScope() { }
 
 	virtual const std::vector<IModelConstraintUP> &constraints() const = 0;
 
-	virtual void add_constraint(IModelConstraint *c) = 0;
+	/**
+	 */
+	virtual IModelConstraint *swapConstraint(
+		uint32_t			idx,
+		IModelConstraint	*c) = 0;
+
+	virtual void addConstraint(IModelConstraint *c) = 0;
 };
 
 }
