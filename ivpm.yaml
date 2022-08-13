@@ -5,6 +5,7 @@ package:
 
    setup-deps:
      - cython
+     - ninja
    
    dev-deps:
      - name: cython

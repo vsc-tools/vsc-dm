@@ -26,3 +26,4 @@ void TypeExprRangelist::addRange(ITypeExprRange *rng) {
 }
 
 } /* namespace vsc */
+

@@ -291,7 +291,6 @@ void SolveSpecBuilder::constraint_leave(IModelConstraint *c) {
 	if (m_pass == 1 && m_constraint_s.size() == 0) {
 		if (m_active_solveset) {
 			m_active_solveset->add_constraint(c);
-			fprintf(stdout, "Add flags %lld\n", m_flags);
 			m_active_solveset->setFlags(m_flags);
 		}
 		m_flags = SolveSetFlag::NoFlags;
