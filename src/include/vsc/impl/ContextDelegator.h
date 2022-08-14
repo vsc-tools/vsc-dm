@@ -134,7 +134,7 @@ public:
 		return m_ctxt->mkRandomizer(solver_factory, randstate);
 	}
 
-	virtual IRandState *mkRandState(uint32_t seed) override {
+	virtual IRandState *mkRandState(const std::string &seed) override {
 		return m_ctxt->mkRandState(seed);
 	}
 
