@@ -57,7 +57,7 @@ target_include_directories(test_libvsc PUBLIC
 target_link_directories(test_libvsc PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
-    ${CMAKE_BINARY_DIR}/glog/lib64
+    ${CMAKE_BINARY_DIR}/gmp/lib
     )
   
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
