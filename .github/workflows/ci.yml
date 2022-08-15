@@ -11,8 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: |
-          /opt/python/cp37-cp37m/bin/python -m pip install ivpm
-          /opt/python/cp37-cp37m/bin/python -m ivpm update
+          export IVPM_PYTHON=/opt/python/cp37-cp37m/bin/python
+          ${IVPM_PYTHON} -m pip install ivpm
+          ${IVPM_PYTHON} -m ivpm update -a
       - run: |
           yum install -y glibc-static
           for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
