@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include <stdio.h>
 #include "ModelExprRangelist.h"
 
 namespace vsc {

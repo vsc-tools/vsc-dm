@@ -260,6 +260,7 @@ ext.cython_directives={'language_level' : '3'}
 
 setup(
   name = "libvsc",
+  version=version,
   packages=['libvsc'],
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",

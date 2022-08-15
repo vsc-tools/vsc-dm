@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include <stdio.h>
 #include "ModelExprIn.h"
 
 namespace vsc {

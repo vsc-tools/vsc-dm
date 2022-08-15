@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <string>
 #include "vsc/IModelCoverBin.h"
 
 namespace vsc {

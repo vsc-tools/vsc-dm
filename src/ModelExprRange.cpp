@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include <stdio.h>
 #include "ModelExprRange.h"
 
 namespace vsc {
