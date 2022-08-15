@@ -11,11 +11,15 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - run: |
+          /opt/python/cp37-cp37m/bin/python -m pip install ivpm
+          /opt/python/cp37-cp37m/bin/python -m ivpm update
+      - run: |
           yum install -y glibc-static
           for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
             /opt/python/${py}/bin/python -m pip install ninja wheel cython
           done
       - run: |
+          export BUILD_NUM=$GITHUB_RUN_ID
           for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
             /opt/python/${py}/bin/python setup.py bdist_wheel
           done

@@ -17,6 +17,11 @@ from distutils.file_util import copy_file
 _DEBUG = False
 _DEBUG_LEVEL = 0
 
+version="0.0.1"
+
+if "BUILD_NUM" in os.environ.keys():
+    version += ".%s" % os.environ["BUILD_NUM"]
+
 # First need to establish where things are
 libvsc_dir = os.path.dirname(os.path.abspath(__file__))
 
