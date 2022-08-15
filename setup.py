@@ -270,7 +270,10 @@ setup(
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
-  description = ("Provides the core TbLink-RPC library"),
+  description = ("Core Verification Stimulus and Coverage library"),
+  long_description="""
+  Provides a library for constrained randomization and coverage collection
+  """,
   license = "Apache 2.0",
   keywords = ["SystemVerilog", "Verilog", "RTL", "Python"],
   url = "https://github.com/fvutils/libvsc",
