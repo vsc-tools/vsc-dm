@@ -31,6 +31,24 @@ public:
 		return m_ctxt->mkCompoundSolver();
 	}
 
+	virtual IModelValOp *getModelValOp() override {
+		return m_ctxt->getModelValOp();
+	}
+
+	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override {
+		return m_ctxt->findDataTypeEnum(name);
+	}
+
+	virtual IDataTypeEnum *mkDataTypeEnum(
+			const std::string 	&name,
+			bool				is_signed) override {
+		return m_ctxt->mkDataTypeEnum(name, is_signed);
+	}
+
+	virtual bool addDataTypeEnum(IDataTypeEnum *e) override {
+		return m_ctxt->addDataTypeEnum(e);
+	}
+
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
 			int32_t			width) override {
@@ -63,6 +81,18 @@ public:
 		return m_ctxt->mkDataTypeStruct(name);
 	}
 
+	virtual IDataTypeVec *findDataTypeVec(IDataType *t) override {
+		return m_ctxt->findDataTypeVec(t);
+	}
+
+	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) override {
+		return m_ctxt->mkDataTypeVec(t);
+	}
+
+	virtual bool *addDataTypeVec(IDataTypeVec *t) override {
+		return m_ctxt->addDataTypeVec(t);
+	}
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override {
 		return m_ctxt->mkModelConstraintBlock(name);
@@ -73,11 +103,107 @@ public:
 		return m_ctxt->mkModelConstraintExpr(expr);
 	}
 
+	virtual IModelConstraintForeach *mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) override {
+		return m_ctxt->mkModelConstraintForeach(target, index_it_name);
+	}
+
+	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) override {
+		return m_ctxt->mkModelConstraintIfElse(cond, true_c, false_c);
+	}
+
+	virtual IModelConstraintImplies *mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) override {
+		return m_ctxt->mkModelConstraintImplies(cond, body);
+	}
+
+	virtual IModelConstraintRef *mkModelConstraintRef(
+			IModelConstraint	*target) override {
+		return m_ctxt->mkModelConstraintRef(target);
+	}
+
+	virtual IModelConstraintScope *mkModelConstraintScope() override {
+		return m_ctxt->mkModelConstraintScope();
+	}
+
+	virtual IModelConstraintSoft *mkModelConstraintSoft(
+		IModelConstraintExpr	*c) override {
+		return m_ctxt->mkModelConstraintSoft(c);
+	}
+
+	virtual IModelConstraintSubst *mkModelConstraintSubst(
+		IModelConstraint		*c) override {
+		return m_ctxt->mkModelConstraintSubst(c);
+	}
+
+	virtual IModelConstraintUnique *mkModelConstraintUnique(
+		const std::vector<IModelExpr *>		&exprs) override {
+		return m_ctxt->mkModelConstraintUnique(exprs);
+	}
+
+	virtual IModelCoverBinCollection *mkModelCoverBinCollection(
+		ModelCoverBinType			type) override {
+		return m_ctxt->mkModelCoverBinCollection(type);
+	}
+
+	virtual IModelCoverBin *mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) override {
+		return m_ctxt->mkModelCoverBinSingleRange(
+			name, type, is_signed, lower, upper);
+	}
+
+	virtual IModelCoverBin *mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) override {
+		return m_ctxt->mkModelCoverBinSingleVal(name, type, value);
+	}
+
+	virtual IModelCoverCross *mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) override {
+		return m_ctxt->mkModelCoverCross(name, iff);
+	}
+
+	virtual IModelCovergroup *mkModelCovergroup(
+		const std::string			&name) override {
+		return m_ctxt->mkModelCovergroup(name);
+	}
+
+	virtual IModelCoverpoint *mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) override {
+		return m_ctxt->mkModelCoverpoint(name, target, iff);
+	}
+
+	virtual IModelCoverpointTarget *mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) override {
+		return m_ctxt->mkModelCoverpointTargetExpr(expr, width);
+	}
+
 	virtual IModelExprBin *mkModelExprBin(
 			IModelExpr		*lhs,
 			BinOp			op,
 			IModelExpr		*rhs) override {
 		return m_ctxt->mkModelExprBin(lhs, op, rhs);
+	}
+
+	virtual IModelExprCond *mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) override {
+		return m_ctxt->mkModelExprCond(cond, true_e, false_e);
 	}
 
 	virtual IModelExprFieldRef *mkModelExprFieldRef(
@@ -91,11 +217,25 @@ public:
 		return m_ctxt->mkModelExprIn(lhs, rhs);
 	}
 
+	virtual IModelExprIndexedFieldRef *mkModelExprIndexedFieldRef() override {
+		return m_ctxt->mkModelExprIndexedFieldRef();
+	}
+
 	virtual IModelExprPartSelect *mkModelExprPartSelect(
 			IModelExpr				*lhs,
 			int32_t					lower,
 			int32_t					upper) override {
 		return m_ctxt->mkModelExprPartSelect(lhs, lower, upper);
+	}
+
+	virtual IModelExprRef *mkModelExprRef(IModelExpr *target) override {
+		return m_ctxt->mkModelExprRef(target);
+	}
+
+	virtual IModelExprUnary *mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) override {
+		return m_ctxt->mkModelExprUnary(op, e);
 	}
 
 	virtual IModelExprVal *mkModelExprVal(IModelVal *v) override {
@@ -122,6 +262,12 @@ public:
 	virtual IModelFieldType *mkModelFieldType(
 			ITypeField			*type) override {
 		return m_ctxt->mkModelFieldType(type);
+	}
+
+	virtual IModelFieldVec *mkModelFieldVecRoot(
+			IDataType			*type,
+			const std::string	&name) override {
+		return m_ctxt->mkModelFieldVecRoot(type, name);
 	}
 
 	virtual IModelVal *mkModelVal() override {
@@ -157,12 +303,46 @@ public:
 		return m_ctxt->mkTypeConstraintExpr(e);
 	}
 
+	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) override {
+		return m_ctxt->mkTypeConstraintIfElse(cond, true_c, false_c);
+	}
+
+	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
+			ITypeExpr		*cond,
+			ITypeConstraint	*body) override {
+		return m_ctxt->mkTypeConstraintImplies(cond, body);
+	}
+
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override {
 		return m_ctxt->mkTypeConstraintScope();
 	}
 
+	virtual ITypeConstraintSoft *mkTypeConstraintSoft(
+			ITypeConstraintExpr	*c) override {
+		return m_ctxt->mkTypeConstraintSoft(c);
+	}
+
+	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) override {
+		return m_ctxt->mkTypeConstraintUnique(exprs);
+	}
+
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override {
 		return m_ctxt->mkTypeExprFieldRef();
+	}
+
+	virtual ITypeExprRange *mkTypeExprRange(
+			bool				is_single,
+			ITypeExpr			*lower,
+			ITypeExpr			*upper) override {
+		return m_ctxt->mkTypeExprRange(is_single, lower, upper);
+	}
+
+	virtual ITypeExprRangelist *mkTypeExprRangelist() override {
+		return m_ctxt->mkTypeExprRangelist();
 	}
 
 	virtual IModelExprRange *mkModelExprRange(
@@ -194,6 +374,16 @@ public:
 			IDataType				*dtype,
 			TypeFieldAttr			attr) override {
 		return m_ctxt->mkTypeFieldRef(name, dtype, attr);
+	}
+
+	virtual ITypeFieldVec *mkTypeFieldVec(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init_sz) override {
+		return m_ctxt->mkTypeFieldVec(name, dtype,
+			own_dtype, attr, init_sz);
 	}
 
 protected:
