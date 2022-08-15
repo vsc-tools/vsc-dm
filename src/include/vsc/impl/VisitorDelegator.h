@@ -59,6 +59,10 @@ public:
 		m_delegate->visitModelConstraintScope(c);
 	}
 
+	virtual void visitModelConstraintSelect(IModelConstraintSelect *c) override {
+		m_delegate->visitModelConstraintSelect(c);
+	}
+
 	virtual void visitModelConstraintSoft(IModelConstraintSoft *c) override {
 		m_delegate->visitModelConstraintSoft(c);
 	}
@@ -73,6 +77,14 @@ public:
 
 	virtual void visitModelCoverBinMask(IModelCoverBinMask *c) override {
 		m_delegate->visitModelCoverBinMask(c);
+	}
+
+	virtual void visitModelCoverBinSingleRange(IModelCoverBinSingleRange *c) override {
+		m_delegate->visitModelCoverBinSingleRange(c);
+	}
+
+	virtual void visitModelCoverBinSingleVal(IModelCoverBinSingleVal *c) override {
+		m_delegate->visitModelCoverBinSingleVal(c);
 	}
 
 	virtual void visitModelCoverBinCollection(IModelCoverBinCollection *c) override {
