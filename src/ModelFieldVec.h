@@ -28,17 +28,17 @@ public:
 
 	virtual void pop_back() override;
 
-	virtual IModelFieldFactory *getFieldFactory() override {
+	virtual IModelFieldVecElemFactory *getElemFactory() override {
 		return m_factory.get();
 	}
 
-	virtual void setFieldFactory(IModelFieldFactory *f) override {
-		m_factory = IModelFieldFactoryUP(f);
+	virtual void setElemFactory(IModelFieldVecElemFactory *f) override {
+		m_factory = IModelFieldVecElemFactoryUP(f);
 	}
 
 protected:
 	IModelFieldUP					m_size;
-	IModelFieldFactoryUP			m_factory;
+	IModelFieldVecElemFactoryUP		m_factory;
 
 };
 

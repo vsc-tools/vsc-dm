@@ -525,6 +525,50 @@ cdef class DataTypeStruct(DataType):
     
     cdef decl.IDataTypeStruct *asTypeStruct(self):
         return dynamic_cast[decl.IDataTypeStructP](self._hndl)
+
+#********************************************************************
+#* Debug
+#********************************************************************
+
+cdef class Debug(object):
+
+    def __dealloc__(self):
+        if self._owned:
+            del self._hndl
+
+    @staticmethod
+    cdef mk(decl.IDebug *hndl, bool owned=True):
+        ret = Debug()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+    pass
+
+cdef class DebugMgr(object):
+
+    def __dealloc__(self):
+        if self._owned:
+            del self._hndl
+
+    cpdef enable(self, bool en):
+        self._hndl.enable(en)
+
+    cpdef addDebug(self, Debug dbg):
+        dbg._owned = False
+        self._hndl.addDebug(dbg._hndl)
+
+    cpdef Debug findDebug(self, name):
+        return Debug.mk(self._hndl.findDebug(name.encode()), False)
+
+    @staticmethod
+    cdef mk(decl.IDebugMgr *hndl, bool owned=True):
+        ret = DebugMgr()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+
     
 cdef public void model_struct_create_hook_closure_invoke(
     hook_f,
@@ -1898,6 +1942,9 @@ cdef class Vsc(object):
         
         if self._hndl == NULL:
             raise Exception("Failed to load libvsc core library")
+
+    cpdef DebugMgr getDebugMgr(self):
+        return DebugMgr.mk(self._hndl.getDebugMgr(), False)
         
     cpdef Context mkContext(self):
         return Context.mk(self._hndl.mkContext(), True)
@@ -2063,4 +2110,8 @@ cpdef ModelField Task_ModelBuildField(Context ctxt, DataType dt, name):
         dt._hndl,
         name.encode()),
         True)
+
+cpdef enableDebug(bool en):
+    vsc = Vsc.inst()
+    vsc.getDebugMgr().enable(en)
 

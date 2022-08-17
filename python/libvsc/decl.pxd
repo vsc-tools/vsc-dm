@@ -19,6 +19,8 @@ ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IDataTypeVec *IDataTypeVecP
+ctypedef IDebug *IDebugP
+ctypedef IDebugMgr *IDebugMgrP
 ctypedef IModelConstraint *IModelConstraintP
 ctypedef IModelConstraintBlock *IModelConstraintBlockP
 ctypedef IModelConstraintExpr *IModelConstraintExprP
@@ -205,12 +207,26 @@ cdef extern from "vsc/IDataTypeVec.h" namespace "vsc":
         IDataType *getElemType() const
 
 #********************************************************************
+#* Debug
+#********************************************************************
+
+cdef extern from "vsc/IDebug.h" namespace "vsc":
+    cdef cppclass IDebug:
+        pass
+
+cdef extern from "vsc/IDebugMgr.h" namespace "vsc":
+    cdef cppclass IDebugMgr:
+        void enable(bool en)
+        void addDebug(IDebug *)
+        IDebug *findDebug(const cpp_string &)
+
+#********************************************************************
 #* IVsc
 #********************************************************************
 cdef extern from "vsc/IVsc.h" namespace "vsc":
     cdef cppclass IVsc:
         IContext *mkContext()
-        pass
+        IDebugMgr *getDebugMgr()
     
         
 #********************************************************************

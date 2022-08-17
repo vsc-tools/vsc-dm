@@ -11,17 +11,41 @@
 namespace vsc {
 
 DebugMgr::DebugMgr() {
-	// TODO Auto-generated constructor stub
-
+	m_en = false;
 }
 
 DebugMgr::~DebugMgr() {
 	// TODO Auto-generated destructor stub
 }
 
-void DebugMgr::addDebug(Debug *dbg) {
+void DebugMgr::enable(bool en) {
+	m_en = en;
+
+	for (std::unordered_map<std::string,IDebug*>::const_iterator
+		it=m_debug_ep_m.begin();
+		it!=m_debug_ep_m.end(); it++) {
+		fprintf(stdout, "Enable %s\n", it->second->name().c_str());
+		it->second->set_en(m_en);
+	}
+}
+
+void DebugMgr::addDebug(IDebug *dbg) {
 	m_debug_ep_m.insert({dbg->name(), dbg});
-//	dbg->set_en(true);
+	dbg->set_en(m_en);
+}
+
+IDebug *DebugMgr::findDebug(const std::string &name) {
+	std::unordered_map<std::string,IDebug*>::const_iterator it;
+
+	it = m_debug_ep_m.find(name);
+
+	if (it != m_debug_ep_m.end()) {
+		return it->second;
+	} else {
+		Debug *dbg = new Debug(name);
+		m_debug_ep_m.insert({name, dbg});
+		return dbg;
+	}
 }
 
 void DebugMgr::setFlags(
@@ -29,19 +53,19 @@ void DebugMgr::setFlags(
 
 }
 
-void DebugMgr::enter(Debug *dbg, const char *fmt, va_list ap) {
+void DebugMgr::enter(IDebug *dbg, const char *fmt, va_list ap) {
 	fprintf(stdout, "--> %s::", dbg->name().c_str());
 	vfprintf(stdout, fmt, ap);
 	fputs("\n", stdout);
 }
 
-void DebugMgr::leave(Debug *dbg, const char *fmt, va_list ap) {
+void DebugMgr::leave(IDebug *dbg, const char *fmt, va_list ap) {
 	fprintf(stdout, "<-- %s::", dbg->name().c_str());
 	vfprintf(stdout, fmt, ap);
 	fputs("\n", stdout);
 }
 
-void DebugMgr::debug(Debug *dbg, const char *fmt, va_list ap) {
+void DebugMgr::debug(IDebug *dbg, const char *fmt, va_list ap) {
 	fprintf(stdout, "%s: ", dbg->name().c_str());
 	vfprintf(stdout, fmt, ap);
 	fputs("\n", stdout);

@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include "vsc/IDataType.h"
+#include "vsc/IModelFieldFactory.h"
 #include "vsc/IModelStructCreateHook.h"
 #include "vsc/ITypeConstraint.h"
 #include "vsc/ITypeField.h"
@@ -37,6 +38,10 @@ public:
 	virtual IModelStructCreateHook *getCreateHook() const = 0;
 
 	virtual void setCreateHook(IModelStructCreateHook *hook) = 0;
+
+	virtual void setFactory(IModelFieldFactory *) = 0;
+
+	virtual IModelFieldFactory *getFactory() = 0;
 
 };
 

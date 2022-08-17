@@ -10,14 +10,18 @@
 #include <vector>
 #include "vsc/IContext.h"
 #include "vsc/IModelBuildContext.h"
+#include "vsc/IModelFieldFactory.h"
 #include "vsc/impl/TaskBuildModelExpr.h"
 #include "vsc/impl/TaskEvalTypeExpr.h"
 #include "vsc/impl/VisitorBase.h"
 #include "TaskBuildModelExpr.h"
 
 namespace vsc {
-class TaskBuildModelField : public VisitorBase {
+class TaskBuildModelField : public virtual IModelFieldFactory, public virtual VisitorBase {
 public:
+
+	TaskBuildModelField(IVisitor *this_p=0) : 
+		VisitorBase(this_p), m_ctxt(0), m_type_field(0) { };
 
 	TaskBuildModelField(IModelBuildContext *ctxt, IVisitor *this_p=0) :
 		VisitorBase(this_p), m_ctxt(ctxt), m_type_field(0) { 
@@ -27,6 +31,14 @@ public:
 	virtual ~TaskBuildModelField() { }
 
 	const std::string &name() const { return m_name; }
+
+    virtual IModelField *create(
+        IModelBuildContext  *ctxt,
+        IDataType           *type,
+        const std::string   &name) override {
+		m_ctxt = ctxt;
+		return build(type, name);
+	}
 
 	virtual IModelField *build(IDataType *type, const std::string &name) {
 		m_constraint_s.clear();
@@ -114,16 +126,11 @@ public:
 				(*it)->accept(m_this);
 			}
 		} else if (m_pass == 1) {
+			// Pass 1 builds out constraints, since fields are completely built
 			for (std::vector<ITypeConstraintUP>::const_iterator
 				it=t->getConstraints().begin();
 				it!=t->getConstraints().end(); it++) {
 				(*it)->accept(m_this);
-			}
-			for (uint32_t i=0; i<t->getFields().size(); i++) {
-				IModelField *field = m_ctxt->getField(-1)->getField(i);
-				m_ctxt->pushField(field);
-				t->getFields().at(i)->accept(m_this);
-				m_ctxt->popField();
 			}
 		}
 	}
@@ -169,6 +176,7 @@ public:
 
 protected:
 	void addField(IModelField *f) {
+		fprintf(stdout, "addField: %s %d\n", f->name().c_str(), m_ctxt->fieldStackSize());
 		if (m_ctxt->fieldStackSize() == 0) {
 			m_ctxt->pushField(f);
 		} else {

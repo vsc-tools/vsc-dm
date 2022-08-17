@@ -45,7 +45,7 @@ void TaskResizeConstrainedModelVec::visitModelExprFieldRef(IModelExprFieldRef *f
             // If this vector has no factory, then the size
             // is restricted to being less-equal to the 
             // current size
-            if (!vec->getFieldFactory()) {
+            if (!vec->getElemFactory()) {
                 IModelVal *size_v = m_ctxt->mkModelVal();
                 size_v->set_val_u(vec->getSize(), 32);
                 m_fixed_size_c.push_back(IModelConstraintUP(

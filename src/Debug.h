@@ -7,6 +7,7 @@
 
 #pragma once
 #include <string>
+#include "vsc/IDebug.h"
 
 #define DEBUG_SCOPE(scope) static vsc::Debug __dbg(#scope)
 #define DEBUG_ENTER_BASE(scope, fmt, ...) if (__dbg.en()) __dbg.enter(fmt, ##__VA_ARGS__)
@@ -23,9 +24,9 @@
 namespace vsc {
 
 class DebugMgr;
-class Debug {
+class Debug : public virtual IDebug {
 public:
-	Debug(const char *name);
+	Debug(const std::string &name);
 
 	virtual ~Debug();
 

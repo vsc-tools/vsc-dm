@@ -14,7 +14,12 @@ from distutils.spawn import find_executable
 from setuptools.command.build_ext import build_ext as _build_ext
 from distutils.file_util import copy_file
 
-_DEBUG = False
+if "-DDEBUG" in sys.argv:
+    _DEBUG = True
+    sys.argv.remove("-DDEBUG")
+else:
+    _DEBUG = False
+
 _DEBUG_LEVEL = 0
 
 version="0.0.1"

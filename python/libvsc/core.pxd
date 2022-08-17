@@ -14,6 +14,7 @@ cdef class Vsc(object):
     cdef decl.IVsc              *_hndl
     
     cpdef Context mkContext(self)
+    cpdef DebugMgr getDebugMgr(self)
    
 cdef class Context(object):
     cdef decl.IContext               *_hndl
@@ -136,7 +137,27 @@ cdef class DataTypeStruct(DataType):
     cdef mk(decl.IDataTypeStruct *, bool owned=*)
 
     cdef decl.IDataTypeStruct *asTypeStruct(self)
-    
+
+cdef class Debug(object):
+    cdef decl.IDebug            *_hndl
+    cdef bool                   _owned
+
+    @staticmethod
+    cdef mk(decl.IDebug *hndl, bool owned=*)
+
+cdef class DebugMgr(object):
+    cdef decl.IDebugMgr         *_hndl
+    cdef bool                   _owned
+
+    cpdef enable(self, bool en)
+
+    cpdef addDebug(self, Debug dbg)
+
+    cpdef Debug findDebug(self, name)
+
+    @staticmethod
+    cdef mk(decl.IDebugMgr *hndl, bool owned=*)
+
 cdef class ModelConstraint(object):
     cdef decl.IModelConstraint   *_hndl
     cdef bool                    _owned

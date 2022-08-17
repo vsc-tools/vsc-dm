@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <stdio.h>
 #include <vector>
 #include "vsc/IModelBuildContext.h"
 
@@ -21,6 +22,7 @@ public:
 	virtual IContext *ctxt() const override { return m_ctxt; }
 
 	virtual void pushField(IModelField *f) override {
+		fprintf(stdout, "pushField: %s\n", f->name().c_str());
 		m_field_s.push_back(f);
 	}
 
