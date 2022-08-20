@@ -10,6 +10,8 @@
 
 namespace vsc {
 
+class IModelFieldFactory;
+
 class IDataType;
 using IDataTypeUP=std::unique_ptr<IDataType>;
 using IDataTypeSP=std::shared_ptr<IDataType>;
@@ -21,6 +23,10 @@ public:
 	// Notify datatype that no more information
 	// will be added.
 //	virtual void finalize() = 0;
+
+	virtual void setFactory(IModelFieldFactory *) = 0;
+
+	virtual IModelFieldFactory *getFactory() = 0;
 
 
 };

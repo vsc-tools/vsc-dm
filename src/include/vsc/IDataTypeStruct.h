@@ -39,10 +39,6 @@ public:
 
 	virtual void setCreateHook(IModelStructCreateHook *hook) = 0;
 
-	virtual void setFactory(IModelFieldFactory *) = 0;
-
-	virtual IModelFieldFactory *getFactory() = 0;
-
 };
 
 }

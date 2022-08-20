@@ -22,7 +22,7 @@
 
 namespace vsc {
 
-DataType::DataType() {
+DataType::DataType(IModelFieldFactory *f) : m_factory(f) {
 	// TODO Auto-generated constructor stub
 
 }

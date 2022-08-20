@@ -23,11 +23,12 @@
 #include "TypeField.h"
 #include "TypeConstraint.h"
 #include "vsc/impl/TaskBuildModelField.h"
+#include "vsc/impl/ModelFieldFactoryStruct.h"
 
 namespace vsc {
 
 DataTypeStruct::DataTypeStruct(const std::string &name) : 
-	m_name(name), m_factory(new TaskBuildModelField()) {
+	DataType(new ModelFieldFactoryStruct()), m_name(name) {
 	// TODO Auto-generated constructor stub
 
 }

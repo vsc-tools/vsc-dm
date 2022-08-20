@@ -10,14 +10,13 @@
 #include <vector>
 #include "vsc/IContext.h"
 #include "vsc/IModelBuildContext.h"
-#include "vsc/IModelFieldFactory.h"
 #include "vsc/impl/TaskBuildModelExpr.h"
 #include "vsc/impl/TaskEvalTypeExpr.h"
 #include "vsc/impl/VisitorBase.h"
 #include "TaskBuildModelExpr.h"
 
 namespace vsc {
-class TaskBuildModelField : public virtual IModelFieldFactory, public virtual VisitorBase {
+class TaskBuildModelField : public virtual VisitorBase {
 public:
 
 	TaskBuildModelField(IVisitor *this_p=0) : 
@@ -32,17 +31,26 @@ public:
 
 	const std::string &name() const { return m_name; }
 
-    virtual IModelField *create(
-        IModelBuildContext  *ctxt,
-        IDataType           *type,
-        const std::string   &name) override {
-		m_ctxt = ctxt;
-		return build(type, name);
-	}
-
 	virtual IModelField *build(IDataType *type, const std::string &name) {
 		m_constraint_s.clear();
 		m_name = name; // TODO:
+		m_type_field = 0;
+
+		m_pass = 0; // First, build out all fields
+		type->accept(m_this);
+
+		m_pass = 1; // Now, build out constraints
+		type->accept(m_this);
+
+		IModelField *ret = m_ctxt->getField(0);
+		m_ctxt->popField();
+
+		return ret;
+	}
+
+	virtual IModelField *build(ITypeField *type) {
+		m_constraint_s.clear();
+		m_name = type->name(); // TODO:
 		m_type_field = 0;
 
 		m_pass = 0; // First, build out all fields

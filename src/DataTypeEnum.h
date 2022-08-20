@@ -12,11 +12,12 @@
 #include <unordered_map>
 #include "vsc/IDataTypeEnum.h"
 #include "vsc/ITypeExprRangelist.h"
+#include "DataType.h"
 #include "ModelVal.h"
 
 namespace vsc {
 
-class DataTypeEnum : public IDataTypeEnum {
+class DataTypeEnum : public virtual IDataTypeEnum, public virtual DataType {
 public:
 	DataTypeEnum(
 			const std::string		&name,
