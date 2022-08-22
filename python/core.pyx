@@ -483,6 +483,8 @@ cdef class DataTypeStruct(DataType):
         return self.asTypeStruct().name().decode()
 
     cpdef addField(self, TypeField f):
+        if f is None:
+            raise Exception("Cannot add field==None")
         f._owned = False
         self.asTypeStruct().addField(f._hndl)
         
