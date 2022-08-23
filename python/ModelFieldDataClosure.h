@@ -17,7 +17,7 @@ public:
 
 	virtual ~ModelFieldDataClosure();
 
-	PyObject *getData() { return m_data; }
+	PyObject *getData();
 
 private:
 	PyObject				*m_data;

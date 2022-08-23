@@ -15,6 +15,7 @@ from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
 ctypedef IAccept *IAcceptP
+ctypedef IDataType *IDataTypeP
 ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
@@ -66,8 +67,10 @@ ctypedef ITypeExprRange *ITypeExprRangeP
 ctypedef unique_ptr[ITypeExprRange] ITypeExprRangeUP
 ctypedef ITypeExprRangelist *ITypeExprRangelistP
 ctypedef ITypeExprVal *ITypeExprValP
+ctypedef ITypeField *ITypeFieldP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
 ctypedef ITypeFieldRef *ITypeFieldRefP
+ctypedef IVisitor *IVisitorP
 
 #********************************************************************
 #* IContext
@@ -594,7 +597,7 @@ cdef extern from "vsc/ITypeField.h" namespace "vsc":
         NoAttr        "vsc::TypeFieldAttr::NoAttr"
         Rand          "vsc::TypeFieldAttr::Rand"
     
-    cdef cppclass ITypeField:
+    cdef cppclass ITypeField(IAccept):
         IDataTypeStruct *getParent()
         void setParent(IDataTypeStruct *)
         int32_t getIndex()

@@ -80,7 +80,7 @@ cdef class Context(object):
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
 
-    
+
 cdef class CompoundSolver(object):
     cdef decl.ICompoundSolver   *_hndl
     
@@ -91,13 +91,16 @@ cdef class CompoundSolver(object):
     
 cdef class Accept(object):
     cdef decl.IAccept *hndl(self)
-    
-cdef class DataType(object):
-    cdef decl.IDataType         *_hndl
+
+cdef class ObjBase(object):
+    cdef decl.IAccept           *_hndl
     cdef bool                   _owned
-    
-#    cdef decl.IAccept *hndl(self)
-    
+
+
+cdef class DataType(ObjBase):
+
+    cdef decl.IDataType *asType(self)
+
     @staticmethod
     cdef mk(decl.IDataType *, bool owned=*)
     
@@ -158,9 +161,7 @@ cdef class DebugMgr(object):
     @staticmethod
     cdef mk(decl.IDebugMgr *hndl, bool owned=*)
 
-cdef class ModelConstraint(object):
-    cdef decl.IModelConstraint   *_hndl
-    cdef bool                    _owned
+cdef class ModelConstraint(ObjBase):
 
     cdef decl.IModelConstraint *asConstraint(self)
     
@@ -229,17 +230,12 @@ cdef class ModelConstraintImplies(ModelConstraint):
     @staticmethod
     cdef mk(decl.IModelConstraintImplies *hndl, bool owned=*)
     
-cdef class ModelExpr(object):
-    cdef decl.IModelExpr         *_hndl
-    cdef bool                    _owned
-    
-    cpdef accept(self, VisitorBase v)
+cdef class ModelExpr(ObjBase):
     
     cdef decl.IModelExpr *asExpr(self)
     
     @staticmethod
     cdef mk(decl.IModelExpr *e, bool owned=*)
-    
 
 
 cdef class ModelExprBin(ModelExpr):
@@ -352,9 +348,7 @@ cdef class ModelExprVecSubscript(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprVecSubscript *, bool owned=*)
 
-cdef class ModelField(object):
-    cdef decl.IModelField       *_hndl
-    cdef bool                   _owned
+cdef class ModelField(ObjBase):
     
     cpdef name(self)
     cpdef getDataType(self)
@@ -372,6 +366,8 @@ cdef class ModelField(object):
     cpdef isFlagSet(self, flags)
     cpdef setFieldData(self, data)
     cpdef getFieldData(self)
+
+    cdef decl.IModelField *asField(self)
 
     @staticmethod
     cdef mk(decl.IModelField *, bool owned=*)
@@ -467,9 +463,7 @@ cdef class Task(object):
     
     cpdef apply(self, Accept it)
     
-cdef class TypeConstraint(object):
-    cdef decl.ITypeConstraint   *_hndl
-    cdef bool                   _owned
+cdef class TypeConstraint(ObjBase):
 
     cdef decl.ITypeConstraint *asConstraint(self)
     
@@ -542,9 +536,7 @@ cdef class TypeConstraintBlock(TypeConstraintScope):
     @staticmethod
     cdef TypeConstraintBlock mk(decl.ITypeConstraintBlock *, bool owned=*)
 
-cdef class TypeExpr(object):
-    cdef decl.ITypeExpr         *_hndl
-    cdef bool                   _owned
+cdef class TypeExpr(ObjBase):
 
     cdef decl.ITypeExpr *asExpr(self)
     
@@ -613,9 +605,7 @@ cdef class TypeExprVal(TypeExpr):
     @staticmethod
     cdef TypeExprVal mk(decl.ITypeExprVal *hndl, bool owned=*)
     
-cdef class TypeField(object):
-    cdef decl.ITypeField        *_hndl
-    cdef bool                   _owned
+cdef class TypeField(ObjBase):
     
     cpdef DataTypeStruct getParent(self)
     cpdef setParent(self, DataTypeStruct)
@@ -625,6 +615,8 @@ cdef class TypeField(object):
     cpdef DataType getDataType(self)
     cpdef TypeField getField(self, idx)
     cpdef getAttr(self)
+
+    cdef decl.ITypeField *asField(self)
 
     @staticmethod
     cdef mk(decl.ITypeField *, bool owned=*)
@@ -644,9 +636,16 @@ cdef class TypeFieldRef(TypeField):
     cdef mk(decl.ITypeFieldRef *, bool owned=*)    
     
 cdef class VisitorBase(object):
-    cdef decl.VisitorProxy      *_proxy
+    cdef cpp_vector[bool]               _visit_s
+    cdef cpp_vector[decl.IVisitorP]     proxy_l
     
-    cpdef visit(self, obj)
+    cpdef visit(self, ObjBase obj)
+
+    cdef visitAccept(self, decl.IAccept *obj)
+
+    cpdef enter(self)
+
+    cpdef leave(self)
     
     cpdef visitDataTypeEnum(self, DataTypeEnum t)
     
@@ -715,24 +714,25 @@ cdef class VisitorBase(object):
     cpdef void visitTypeExprVal(self, TypeExprVal e)
     
 cdef class WrapperBuilder(VisitorBase):
+    cdef list     _obj
     cdef DataType _data_type
     cdef ModelExpr _model_expr
     cdef ModelField _model_field
     cdef ModelConstraint _model_constraint
     cdef TypeConstraint _type_constraint
     cdef TypeExpr _type_expr
-    
-    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned)
 
+    cdef ObjBase mkObj(self, decl.IAccept *obj, bool owned)
+    
     cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned)
     
-    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned)
-
     cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned)
 
     cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned)
 
     cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned)
+
+    cdef _set_obj(self, ObjBase obj)
 
     cpdef visitModelConstraintBlock(self, ModelConstraintBlock c)
 
@@ -783,7 +783,8 @@ cdef class WrapperBuilder(VisitorBase):
     cpdef void visitTypeExprRangelist(self, TypeExprRangelist e)
 
     cpdef void visitTypeExprVal(self, TypeExprVal e)
-    
+
+cpdef addWrapperBuilder(WrapperBuilder builder)
     
 #********************************************************************    
 #* VscTasks

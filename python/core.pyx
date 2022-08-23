@@ -86,7 +86,9 @@ cdef class Context(object):
     
     cpdef mkModelConstraintExpr(self, ModelExpr expr):
         expr._owned = False
-        return ModelConstraintExpr.mk(self._hndl.mkModelConstraintExpr(expr._hndl))
+        return ModelConstraintExpr.mk(
+            self._hndl.mkModelConstraintExpr(expr.asExpr()),
+            True)
 
     cpdef mkModelConstraintIfElse(self, 
         ModelExpr           cond,
@@ -113,8 +115,8 @@ cdef class Context(object):
         cond._owned = False
         body._owned = False
         return ModelConstraintImplies.mk(self._hndl.mkModelConstraintImplies(
-            cond._hndl,
-            body._hndl), True)
+            cond.asExpr(),
+            body.asConstraint()), True)
 
     cpdef mkModelConstraintScope(self):
         return ModelConstraintScope.mk(self._hndl.mkModelConstraintScope(), True)
@@ -132,7 +134,7 @@ cdef class Context(object):
             expr = <ModelExpr>(e)
             expr._owned = False
             print("expr._hndl=%x" % <intptr_t>(expr._hndl))
-            expr_l.push_back(expr._hndl)
+            expr_l.push_back(expr.asExpr())
 
         return ModelConstraintUnique.mk(self._hndl.mkModelConstraintUnique(expr_l), True)
 
@@ -156,9 +158,9 @@ cdef class Context(object):
         
         return ModelExprBin.mk(
             self._hndl.mkModelExprBin(
-                lhs._hndl,
+                lhs.asExpr(),
                 <decl.BinOp>(op_i),
-                rhs._hndl))
+                rhs.asExpr()))
         
     cpdef mkModelExprIn(self, ModelExpr lhs, ModelExprRangelist rhs):
         lhs._owned = False
@@ -172,7 +174,7 @@ cdef class Context(object):
     cpdef mkModelExprFieldRef(self, ModelField field):
         print("mkModelExprFieldRef: %x" % <intptr_t>(field._hndl))
         return ModelExprFieldRef.mk(
-            self._hndl.mkModelExprFieldRef(field._hndl))
+            self._hndl.mkModelExprFieldRef(field.asField()))
         
     cpdef mkModelExprPartSelect(self, ModelExpr lhs, int32_t lower, int32_t upper):
         return ModelExprPartSelect.mk(
@@ -183,11 +185,11 @@ cdef class Context(object):
         cdef decl.IModelExpr *u = NULL
         
         if lower is not None:
-            l = lower._hndl
+            l = lower.asExpr()
             lower._owned = False
             
         if upper is not None:
-            u = upper._hndl
+            u = upper.asExpr()
             upper._owned = False
             
         return ModelExprRange.mk(
@@ -207,7 +209,7 @@ cdef class Context(object):
         cdef decl.IDataType *type_h = NULL
         
         if type is not None:
-            type_h = type._hndl
+            type_h = type.asType()
             
         return ModelFieldRoot.mk(self._hndl.mkModelFieldRoot(
             type_h, 
@@ -218,7 +220,7 @@ cdef class Context(object):
         cdef decl.IDataType *type_h = NULL
         
         if type is not None:
-            type_h = type._hndl
+            type_h = type.asType()
         
         return ModelFieldVecRoot.mk(self._hndl.mkModelFieldVecRoot(
             type_h,
@@ -247,7 +249,7 @@ cdef class Context(object):
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr e):
         e._owned = False
         return TypeConstraintExpr.mk(self._hndl.mkTypeConstraintExpr(
-            e._hndl))
+            e.asExpr()))
 
     cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
         TypeExpr        cond,
@@ -272,8 +274,8 @@ cdef class Context(object):
         cond._owed = False
         body._owned = False
         return TypeConstraintImplies.mk(self._hndl.mkTypeConstraintImplies(
-            cond._hndl,
-            body._hndl), True)
+            cond.asExpr(),
+            body.asConstraint()), True)
         
     cpdef TypeConstraintScope mkTypeConstraintScope(self):
         return TypeConstraintScope.mk(self._hndl.mkTypeConstraintScope())
@@ -290,7 +292,7 @@ cdef class Context(object):
         for e in exprs:
             expr = <TypeExpr>e
             expr._owned = False
-            expr_l.push_back(expr._hndl)
+            expr_l.push_back(expr.asExpr())
 
         return TypeConstraintUnique.mk(self._hndl.mkTypeConstraintUnique(expr_l), False)
 
@@ -299,9 +301,9 @@ cdef class Context(object):
         lhs._owned = False
         rhs._owned = False
         return TypeExprBin.mk(self._hndl.mkTypeExprBin(
-            lhs._hndl,
+            lhs.asExpr(),
             <decl.BinOp>(op_i),
-            rhs._hndl))
+            rhs.asExpr()))
         
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self):
         return TypeExprFieldRef.mk(self._hndl.mkTypeExprFieldRef(), True)
@@ -313,9 +315,9 @@ cdef class Context(object):
         cdef decl.ITypeExpr *l = NULL
         cdef decl.ITypeExpr *u = NULL
         if lower is not None:
-            l = lower._hndl
+            l = lower.asExpr()
         if upper is not None:
-            u = upper._hndl
+            u = upper.asExpr()
             
         return TypeExprRange.mk(self._hndl.mkTypeExprRange(
             is_single,
@@ -348,7 +350,7 @@ cdef class Context(object):
             
         return TypeFieldPhy.mk(self._hndl.mkTypeFieldPhy(
             name.encode(), 
-            dtype._hndl, 
+            dtype.asType(), 
             own_dtype,
             <decl.TypeFieldAttr>(attr_i),
             init_h))
@@ -362,7 +364,7 @@ cdef class Context(object):
         
         return TypeFieldRef.mk(self._hndl.mkTypeFieldRef(
             name.encode(), 
-            dtype._hndl, 
+            dtype.asType(), 
             <decl.TypeFieldAttr>(attr_i)))
 
     @staticmethod
@@ -400,11 +402,11 @@ cdef class CompoundSolver(object):
         
         for f in fields:
             field_t = <ModelField>(f)
-            fields_v.push_back(field_t._hndl)
+            fields_v.push_back(field_t.asField())
             
         for c in constraints:
             constraint_t = <ModelConstraint>(c)
-            constraints_v.push_back(constraint_t._hndl)
+            constraints_v.push_back(constraint_t.asConstraint())
         
         return self._hndl.solve(
             rs._hndl,
@@ -422,20 +424,22 @@ cdef class Accept(object):
 
     cdef decl.IAccept *hndl(self):
         return NULL
-            
-    
-cdef class DataType(object):
 
-#    cdef decl.IAccept *hndl(self):
-#        return self._hndl
+cdef class ObjBase(object):
 
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+            
+    
+cdef class DataType(ObjBase):
+
+    cdef decl.IDataType *asType(self):
+        return dynamic_cast[decl.IDataTypeP](self._hndl)
 
     @staticmethod
     cdef mk(decl.IDataType *hndl, bool owned=True):
-        return WrapperBuilder().mkDataType(hndl, owned)
+        return WrapperBuilder().mkObj(hndl, owned)
     
 cdef class DataTypeEnum(DataType):
     cpdef name(self):
@@ -486,7 +490,7 @@ cdef class DataTypeStruct(DataType):
         if f is None:
             raise Exception("Cannot add field==None")
         f._owned = False
-        self.asTypeStruct().addField(f._hndl)
+        self.asTypeStruct().addField(f.asField())
         
     cpdef getFields(self):
         ret = []
@@ -504,7 +508,7 @@ cdef class DataTypeStruct(DataType):
             return None
     
     cpdef addConstraint(self, TypeConstraint c):
-        self.asTypeStruct().addConstraint(c._hndl)
+        self.asTypeStruct().addConstraint(c.asConstraint())
         pass
     
     cpdef getConstraints(self):
@@ -576,17 +580,13 @@ cdef public void model_struct_create_hook_closure_invoke(
     hook_f,
     decl.IModelField  *field_h) with gil:
     cdef ModelField field = ModelField.mk(field_h, False)
+    print("Field: %s" % str(field))
     hook_f(field)
     
-cdef class ModelConstraint(object):
-
-    def __dealloc__(self):
-        if self._owned and self._hndl != NULL:
-            del self._hndl
-            self._hndl = NULL
+cdef class ModelConstraint(ObjBase):
 
     cdef decl.IModelConstraint *asConstraint(self):
-        return self._hndl
+        return dynamic_cast[decl.IModelConstraintP](self._hndl)
             
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=True):
@@ -605,7 +605,7 @@ cdef class ModelConstraintScope(ModelConstraint):
     
     cpdef addConstraint(self, ModelConstraint c):
         c._owned = False
-        self.asScope().addConstraint(c._hndl)
+        self.asScope().addConstraint(c.asConstraint())
     
     cdef decl.IModelConstraintScope *asScope(self):
         return dynamic_cast[decl.IModelConstraintScopeP](self._hndl)
@@ -731,16 +731,10 @@ cdef class ModelConstraintImplies(ModelConstraint):
         ret._owned = owned
         return ret
 
-cdef class ModelExpr(object):
-    
-    def __init__(self):
-        pass
-    
-    cpdef accept(self, VisitorBase v):
-        self._hndl.accept(v._proxy)
+cdef class ModelExpr(ObjBase):
     
     cdef decl.IModelExpr *asExpr(self):
-        return self._hndl
+        return dynamic_cast[decl.IModelExprP](self._hndl)
 
     @staticmethod
     cdef mk(decl.IModelExpr *hndl, bool owned=True):
@@ -974,27 +968,22 @@ class ModelFieldFlag(IntFlag):
     Resolved = decl.ModelFieldFlag.Resolved
     VecSize  = decl.ModelFieldFlag.VecSize
     
-cdef class ModelField(object):
-
-    def __dealloc__(self):
-        if self._owned:
-            print("Delete field %s" % self.name())
-            del self._hndl
+cdef class ModelField(ObjBase):
 
     cpdef name(self):
-        return self._hndl.name().decode()
+        return self.asField().name().decode()
     
     cpdef getDataType(self):
-        return DataType.mk(self._hndl.getDataType(), False)
+        return DataType.mk(self.asField().getDataType(), False)
     
     cpdef getParent(self):
-        return ModelField.mk(self._hndl.getParent(), False)
+        return ModelField.mk(self.asField().getParent(), False)
     
     cpdef setParent(self, ModelField parent):
-        self._hndl.setParent(parent._hndl)
+        self.asField().setParent(parent.asField())
         
     cpdef constraints(self):
-        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *constraints_l = &self._hndl.constraints()
+        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *constraints_l = &self.asField().constraints()
         ret = []
         
         for i in range(constraints_l.size()):
@@ -1004,10 +993,10 @@ cdef class ModelField(object):
         
     cpdef addConstraint(self, ModelConstraint c):
         c._owned = False
-        self._hndl.addConstraint(c._hndl)
+        self.asField().addConstraint(c.asConstraint())
 
     cpdef fields(self):
-        cdef const cpp_vector[decl.IModelFieldUP] *fields_l = &self._hndl.fields()
+        cdef const cpp_vector[decl.IModelFieldUP] *fields_l = &self.asField().fields()
         ret = []
         for i in range(fields_l.size()):
             ret.append(ModelField.mk(fields_l.at(i).get()))
@@ -1019,10 +1008,10 @@ cdef class ModelField(object):
         
         # We're taking ownership of the field
         f._owned = False
-        self._hndl.addField(f._hndl)
+        self.asField().addField(f.asField())
         
     cpdef ModelField getField(self, int32_t idx):
-        cdef decl.IModelField *field = self._hndl.getField(idx)
+        cdef decl.IModelField *field = self.asField().getField(idx)
         
         if field != NULL:
             return ModelField.mk(field, False)
@@ -1030,36 +1019,40 @@ cdef class ModelField(object):
             return None
         
     cpdef val(self):
-        return ModelVal.mk(self._hndl.val(), False)
+        return ModelVal.mk(self.asField().val(), False)
     
     cpdef clearFlag(self, flags):
         cdef int flags_i = flags
-        self._hndl.clearFlag(<decl.ModelFieldFlag>(flags_i))
+        self.asField().clearFlag(<decl.ModelFieldFlag>(flags_i))
     
     cpdef setFlag(self, flags):
         cdef int flags_i = flags
-        self._hndl.setFlag(<decl.ModelFieldFlag>(flags_i))
+        self.asField().setFlag(<decl.ModelFieldFlag>(flags_i))
     
     cpdef isFlagSet(self, flags):
         cdef int flags_i = flags
-        return self._hndl.isFlagSet(<decl.ModelFieldFlag>(flags_i))
+        return self.asField().isFlagSet(<decl.ModelFieldFlag>(flags_i))
     
     cpdef setFieldData(self, data):
         cdef decl.ModelFieldDataClosure *c = new decl.ModelFieldDataClosure(<cpy_ref.PyObject *>(data))
-        self._hndl.setFieldData(c)
+        self.asField().setFieldData(c)
         
     cpdef getFieldData(self):
-        cdef decl.IModelFieldData *d = self._hndl.getFieldData()
+        cdef decl.IModelFieldData *d = self.asField().getFieldData()
+        cdef decl.ModelFieldDataClosure *c
         
         if d != NULL:
-            c = ModelFieldDataClosure.mk(d)
+            c = dynamic_cast[decl.ModelFieldDataClosureP](d)
             return c.getData()
         else:
             return None
+
+    cdef decl.IModelField *asField(self):
+        return dynamic_cast[decl.IModelFieldP](self._hndl)
     
     @staticmethod
     cdef mk(decl.IModelField *hndl, bool owned=True):
-        return WrapperBuilder().mkModelField(hndl, owned)
+        return WrapperBuilder().mkObj(hndl, owned)
     
 cdef class ModelFieldRef(ModelField):
     pass
@@ -1189,11 +1182,11 @@ cdef class Randomizer(object):
         
         for f in fields:
             fcd = <ModelField>(f)
-            fields_v.push_back(fcd._hndl)
+            fields_v.push_back(fcd.asField())
             
         for c in constraints:
             ccd = <ModelConstraint>(c)
-            constraints_v.push_back(ccd._hndl)
+            constraints_v.push_back(ccd.asConstraint())
             
         self._hndl.randomize(
             fields_v,
@@ -1244,10 +1237,10 @@ cdef class SolverFactory(object):
     def __dealloc__(self):
         del self._hndl
         
-cdef class TypeConstraint(object):
+cdef class TypeConstraint(ObjBase):
 
     cdef decl.ITypeConstraint *asConstraint(self):
-        return self._hndl
+        return dynamic_cast[decl.ITypeConstraintP](self._hndl)
 
     @staticmethod
     cdef TypeConstraint mk(decl.ITypeConstraint *hndl, bool owned=True):
@@ -1321,7 +1314,7 @@ cdef class TypeConstraintScope(TypeConstraint):
     
     cpdef addConstraint(self, TypeConstraint c):
         c._owned = False
-        self.asScope().addConstraint(c._hndl)
+        self.asScope().addConstraint(c.asConstraint())
     
     cdef decl.ITypeConstraintScope *asScope(self):
         return dynamic_cast[decl.ITypeConstraintScopeP](self._hndl)
@@ -1387,14 +1380,10 @@ cdef class TypeConstraintBlock(TypeConstraintScope):
 #* TypeExpr
 #********************************************************************
 
-cdef class TypeExpr(object):
+cdef class TypeExpr(ObjBase):
     
-    def __dealloc__(self):
-        if self._owned:
-            del self._hndl
-
     cdef decl.ITypeExpr *asExpr(self):
-        return self._hndl
+        return dynamic_cast[decl.ITypeExprP](self._hndl)
             
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=True):
@@ -1553,43 +1542,42 @@ class TypeFieldAttr(IntFlag):
     NoAttr = decl.TypeFieldAttr.NoAttr
     Rand = decl.TypeFieldAttr.Rand
     
-cdef class TypeField(object):
+cdef class TypeField(ObjBase):
 
-    def __dealloc__(self):
-        if self._owned:
-            del self._hndl
-            
     cpdef DataTypeStruct getParent(self):
-        cdef decl.IDataTypeStruct *p = self._hndl.getParent()
+        cdef decl.IDataTypeStruct *p = self.asField().getParent()
         if p != NULL:
             return DataTypeStruct.mk(p, False)
         else:
             return None
 
     cpdef setParent(self, DataTypeStruct p):
-        self._hndl.setParent(p.asTypeStruct())
+        self.asField().setParent(p.asTypeStruct())
         
     cpdef getIndex(self):
-        return self._hndl.getIndex()
+        return self.asField().getIndex()
     
     cpdef setIndex(self, idx):
-        self._hndl.setIndex(idx)
+        self.asField().setIndex(idx)
         
     cpdef name(self):
-        return self._hndl.name().decode()
+        return self.asField().name().decode()
     
     cpdef DataType getDataType(self):
-        cdef decl.IDataType *t = self._hndl.getDataType()
+        cdef decl.IDataType *t = self.asField().getDataType()
         if t != NULL:
             return DataType.mk(t, False)
         else:
             return None
         
     cpdef TypeField getField(self, idx):
-        return TypeField.mk(self._hndl.getField(idx), False)
+        return TypeField.mk(self.asField().getField(idx), False)
         
     cpdef getAttr(self):
         return 0
+
+    cdef decl.ITypeField *asField(self):
+        return dynamic_cast[decl.ITypeFieldP](self._hndl)
     
     @staticmethod
     cdef mk(decl.ITypeField *hndl, bool owned=True):
@@ -1641,23 +1629,36 @@ cdef class Task(object):
 cdef class VisitorBase(object):
 
     def __init__(self):
-        self._proxy = new decl.VisitorProxy(<cpy_ref.PyObject *>(self))
+        self.proxy_l.push_back(new decl.VisitorProxy(<cpy_ref.PyObject *>(self)))
         
     def __dealloc__(self):
-        del self._proxy
+        cdef decl.IVisitorP v
+        for i in range(self.proxy_l.size()):
+            v = self.proxy_l.at(i)
+            del v
         
-    cpdef visit(self, obj):
-        cdef decl.IAccept *acceptor = NULL
-        cdef DataType dt
-        if isinstance(obj, DataType):
-            dt = <DataType>(obj)
-            acceptor = dt._hndl
-            
-        if acceptor != NULL:
-            acceptor.accept(self._proxy)
-            
-        print("obj._hndl: %s" % str(obj._hndl))
-#        acceptor = dynamic_cast[decl.IAcceptP](obj._hndl)
+    cpdef visit(self, ObjBase obj):
+        self._visit_s.push_back(False)
+        for i in range(self.proxy_l.size()):
+            obj._hndl.accept(self.proxy_l.at(i))
+            if self._visit_s.back():
+                break
+        self._visit_s.pop_back()
+
+    cdef visitAccept(self, decl.IAccept *obj):
+        self._visit_s.push_back(False)
+        for i in range(self.proxy_l.size()):
+            obj.accept(self.proxy_l.at(i))
+            if self._visit_s.back():
+                break
+        self._visit_s.pop_back()
+
+    cpdef enter(self):
+        self._visit_s[self._visit_s.size()-1] = True
+        self._visit_s.push_back(False)
+
+    cpdef leave(self):
+        self._visit_s.pop_back()
         
     cpdef visitDataTypeEnum(self, DataTypeEnum t):
         pass
@@ -1760,7 +1761,9 @@ cdef class VisitorBase(object):
 
         
 cdef public void VisitorProxy_visitDataTypeEnum(obj, decl.IDataTypeEnum *t) with gil:
+    obj.enter()
     obj.visitDataTypeEnum(DataTypeEnum.mk(t, False))
+    obj.leave()
 
 cdef public void VisitorProxy_visitDataTypeInt(obj, decl.IDataTypeInt *t) with gil:
     obj.visitDataTypeInt(DataTypeInt.mk(t, False))
@@ -1966,34 +1969,54 @@ cdef class WrapperBuilder(VisitorBase):
     
     def __init__(self):
         super().__init__()
+        self._obj = []
 
-    cdef DataType mkDataType(self, decl.IDataType *obj, bool owned):
-        obj.accept(self._proxy)
-        self._data_type._owned = owned
-        return self._data_type
+    cdef ObjBase mkObj(self, decl.IAccept *obj, bool owned):
+        global _WrapperBuilderList
+        cdef ObjBase ret = None
+        cdef WrapperBuilder builder
+
+        print("WrapperBuilder.mkObj: WrapperBuilderList=%d" % len(_WrapperBuilderList))
+
+        self._obj.append(None)
+        self.visitAccept(obj)
+        ret = self._obj.pop()
+
+        if ret is None:
+            for b in _WrapperBuilderList:
+                builder = <WrapperBuilder>b
+                ret = builder.mkObj(obj, owned)
+                if ret is not None:
+                    break
+        else:
+            ret._owned = owned
+
+        return ret
+
+    cdef _set_obj(self, ObjBase obj):
+        self._obj[-1] = obj
 
     cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned):
-        obj.accept(self._proxy)
+        for i in range(self.proxy_l.size()):
+            obj.accept(self.proxy_l.at(i))
         self._model_constraint._owned = owned
         return self._model_constraint
 
     cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned):
-        obj.accept(self._proxy)
+        for i in range(self.proxy_l.size()):
+            obj.accept(self.proxy_l.at(i))
         self._model_expr._owned = owned
         return self._model_expr
     
-    cdef ModelField mkModelField(self, decl.IModelField *obj, bool owned):
-        obj.accept(self._proxy)
-        self._model_field._owned = owned
-        return self._model_field
-
     cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned):
-        obj.accept(self._proxy)
+        for i in range(self.proxy_l.size()):
+            obj.accept(self.proxy_l.at(i))
         self._type_constraint._owned = owned
         return self._type_constraint
 
     cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned):
-        obj.accept(self._proxy)
+        for i in range(self.proxy_l.size()):
+            obj.accept(self.proxy_l.at(i))
         self._type_expr._owned = owned
         return self._type_expr
         
@@ -2095,12 +2118,14 @@ cdef class WrapperBuilder(VisitorBase):
 
     cpdef void visitTypeExprVal(self, TypeExprVal e):
         self._type_expr = e
-    
 
-
-
-    
+cdef list _WrapperBuilderList = []
 cdef _WrapperBuilderInst = None
+
+cpdef addWrapperBuilder(WrapperBuilder builder):
+    global _WrapperBuilderList
+    print("addWrapperBuilder")
+    _WrapperBuilderList.append(builder)
 
         
 #********************************************************************    
@@ -2109,7 +2134,7 @@ cdef _WrapperBuilderInst = None
 cpdef ModelField Task_ModelBuildField(Context ctxt, DataType dt, name):
     return ModelField.mk(decl.Task_BuildModelField(
         ctxt._hndl,
-        dt._hndl,
+        dt.asType(),
         name.encode()),
         True)
 
