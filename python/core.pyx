@@ -434,6 +434,26 @@ cdef class ObjBase(object):
     
 cdef class DataType(ObjBase):
 
+    cpdef ModelField mkRootField(
+        self,
+        ModelBuildContext   ctxt,
+        str                 name,
+        bool                is_ref):
+        cdef decl.IModelField *ret = self.asType().mkRootField(
+            ctxt._hndl,
+            name.encode(),
+            is_ref)
+        return ModelField.mk(ret, True)
+
+    cpdef ModelField mkTypeField(
+        self,
+        ModelBuildContext    ctxt,
+        TypeField            type):
+        cdef decl.IModelField *ret = self.asType().mkTypeField(
+            ctxt._hndl,
+            type.asField())
+        return ModelField.mk(ret, True)
+
     cdef decl.IDataType *asType(self):
         return dynamic_cast[decl.IDataTypeP](self._hndl)
 

@@ -80,6 +80,10 @@ cdef class Context(object):
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
 
+cdef class ModelBuildContext(object):
+    cdef decl.IModelBuildContext    *_hndl
+    cdef bool                       _owned
+    pass
 
 cdef class CompoundSolver(object):
     cdef decl.ICompoundSolver   *_hndl
@@ -98,6 +102,17 @@ cdef class ObjBase(object):
 
 
 cdef class DataType(ObjBase):
+
+    cpdef ModelField mkRootField(
+        self,
+        ModelBuildContext   ctxt,
+        str                 name,
+        bool                is_ref)
+
+    cpdef ModelField mkTypeField(
+        self,
+        ModelBuildContext   ctxt,
+        TypeField           type)
 
     cdef decl.IDataType *asType(self)
 

@@ -6,6 +6,8 @@
  */
 
 #include <algorithm>
+#include "vsc/IContext.h"
+#include "vsc/impl/TaskIsTypeFieldRef.h"
 #include "DataTypeEnum.h"
 #include "ModelValOp.h"
 #include "TypeExprRange.h"
@@ -170,6 +172,35 @@ int32_t DataTypeEnum::getWidth() {
 		getDomain();
 	}
 	return m_width;
+}
+
+IModelField *DataTypeEnum::mkRootField(
+	IModelBuildContext	*ctxt,
+	const std::string	&name,
+	bool				is_ref) {
+	IModelField *ret;
+	
+	if (is_ref) {
+		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+	}
+
+	return ret;
+}
+
+IModelField *DataTypeEnum::mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) {
+	IModelField *ret;
+
+	if (TaskIsTypeFieldRef().eval(type)) {
+		ret = ctxt->ctxt()->mkModelFieldRefType(type);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldType(type);
+	}
+
+	return ret;
 }
 
 } /* namespace vsc */

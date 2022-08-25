@@ -48,13 +48,14 @@ public:
 		m_create_hook = IModelStructCreateHookUP(hook);
 	}
 
-	virtual void setFactory(IModelFieldFactory *f) override {
-		m_factory = IModelFieldFactoryUP(f);
-	}
+	virtual IModelField *mkRootField(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) override;
 
-	virtual IModelFieldFactory *getFactory() override {
-		return m_factory.get();
-	}
+	virtual IModelField *mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) override;
 
 	virtual void accept(IVisitor *v) override { v->visitDataTypeStruct(this); }
 
@@ -63,7 +64,6 @@ private:
 	std::vector<ITypeFieldUP>			m_fields;
 	std::vector<ITypeConstraintUP>		m_constraints;
 	IModelStructCreateHookUP			m_create_hook;
-	IModelFieldFactoryUP				m_factory;
 
 };
 

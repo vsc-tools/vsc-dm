@@ -18,6 +18,7 @@
  *      Author: mballance
  */
 
+#include "vsc/impl/TaskIsTypeFieldRef.h"
 #include "DataTypeInt.h"
 #include "TypeExprRangelist.h"
 
@@ -44,6 +45,35 @@ ITypeExprRangelist *DataTypeInt::getDomain() {
 		}
 	}
 	return m_domain.get();
+}
+
+IModelField *DataTypeInt::mkRootField(
+	IModelBuildContext	*ctxt,
+	const std::string	&name,
+	bool				is_ref) {
+	IModelField *ret;
+	
+	if (is_ref) {
+		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+	}
+
+	return ret;
+}
+
+IModelField *DataTypeInt::mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) {
+	IModelField *ret;
+
+	if (TaskIsTypeFieldRef().eval(type)) {
+		ret = ctxt->ctxt()->mkModelFieldRefType(type);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldType(type);
+	}
+
+	return ret;
 }
 
 } /* namespace vsc */

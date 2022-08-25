@@ -18,6 +18,7 @@
  *      Author: mballance
  */
 
+#include "vsc/impl/ModelBuildContext.h"
 #include "Context.h"
 #include "CompoundSolverDefault.h"
 #include "DataTypeEnum.h"
@@ -90,7 +91,8 @@ Context::~Context() {
 IModelField *Context::buildModelField(
 		IDataTypeStruct			*dt,
 		const std::string		&name) {
-	return TaskModelFieldBuilder(this).build(dt, name);
+	ModelBuildContext ctxt(this);
+	return dt->mkRootField(&ctxt, name, false);
 }
 
 ICompoundSolver *Context::mkCompoundSolver() {

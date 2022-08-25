@@ -7,8 +7,9 @@
 
 #pragma once
 #include <memory>
+#include "vsc/IContext.h"
 #include "vsc/IDataType.h"
-#include "vsc/IModelFieldFactory.h"
+#include "vsc/IModelBuildContext.h"
 #include "ModelVal.h"
 
 namespace vsc {
@@ -17,20 +18,11 @@ class DataType;
 typedef std::unique_ptr<DataType> DataTypeUP;
 class DataType : public virtual IDataType {
 public:
-	DataType(IModelFieldFactory *f=0);
+	DataType();
 
 	virtual ~DataType();
 
-	virtual void setFactory(IModelFieldFactory *f) {
-		m_factory = IModelFieldFactoryUP(f);
-	}
-
-	virtual IModelFieldFactory *getFactory() {
-		return m_factory.get();
-	}
-
 protected:
-	IModelFieldFactoryUP				m_factory;
 
 };
 

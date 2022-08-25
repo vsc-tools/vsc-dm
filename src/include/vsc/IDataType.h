@@ -10,7 +10,7 @@
 
 namespace vsc {
 
-class IModelFieldFactory;
+class IModelBuildContext;
 
 class IDataType;
 using IDataTypeUP=std::unique_ptr<IDataType>;
@@ -24,10 +24,27 @@ public:
 	// will be added.
 //	virtual void finalize() = 0;
 
-	virtual void setFactory(IModelFieldFactory *) = 0;
+	virtual IModelField *mkRootField(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) = 0;
 
-	virtual IModelFieldFactory *getFactory() = 0;
+	virtual IModelField *mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) = 0;
 
+	template <class T> T *mkRootFieldT(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) {
+		return dynamic_cast<T *>(mkRootField(ctxt, name, is_ref));
+	}
+
+	template <class T> T *mkTypeFieldT(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) {
+		return dynamic_cast<T *>(mkTypeField(ctxt, type));
+	}
 
 };
 

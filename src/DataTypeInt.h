@@ -32,6 +32,15 @@ public:
 
 	virtual ITypeExprRangelist *getDomain() override;
 
+	virtual IModelField *mkRootField(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) override;
+
+	virtual IModelField *mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type) override;
+
 	virtual void accept(IVisitor *v) { v->visitDataTypeInt(this); }
 
 protected:

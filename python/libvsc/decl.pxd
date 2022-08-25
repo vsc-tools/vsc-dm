@@ -146,6 +146,10 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             const cpp_string &,
             IDataType *,
             TypeFieldAttr)
+
+cdef extern from "vsc/IModelBuildContext.h" namespace "vsc":
+    cdef cppclass IModelBuildContext:
+        pass
         
 #********************************************************************
 #* ICompoundSolver
@@ -180,7 +184,13 @@ cdef extern from "vsc/IAccept.h" namespace "vsc":
 
 cdef extern from "vsc/IDataType.h" namespace "vsc":
     cdef cppclass IDataType(IAccept):
-        pass
+        IModelField *mkRootField(
+            IModelBuildContext     *ctxt,
+            const cpp_string       &name,
+            bool                   is_ref)
+        IModelField *mkTypeField(
+            IModelBuildContext     *ctxt,
+            ITypeField             *type)
     
 cdef extern from "vsc/IDataTypeEnum.h" namespace "vsc":
     cdef cppclass IDataTypeEnum(IDataType):

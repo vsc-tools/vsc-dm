@@ -19,16 +19,14 @@
  *      Author: mballance
  */
 
+#include "vsc/impl/TaskIsTypeFieldRef.h"
 #include "DataTypeStruct.h"
 #include "TypeField.h"
 #include "TypeConstraint.h"
-#include "vsc/impl/TaskBuildModelField.h"
-#include "vsc/impl/ModelFieldFactoryStruct.h"
 
 namespace vsc {
 
-DataTypeStruct::DataTypeStruct(const std::string &name) : 
-	DataType(new ModelFieldFactoryStruct()), m_name(name) {
+DataTypeStruct::DataTypeStruct(const std::string &name) : m_name(name) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -61,6 +59,45 @@ void DataTypeStruct::addConstraint(ITypeConstraint *c) {
 
 const std::vector<ITypeConstraintUP> &DataTypeStruct::getConstraints() const {
 	return m_constraints;
+}
+
+IModelField *DataTypeStruct::mkRootField(
+	IModelBuildContext	*ctxt,
+	const std::string	&name,
+	bool				is_ref) {
+	IModelField *ret;
+
+	if (is_ref) {
+		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+
+		// Need to build sub-fields and constraints
+	}
+
+	if (getCreateHook()) {
+		getCreateHook()->create(ret);
+	}
+
+	return ret;
+}
+
+IModelField *DataTypeStruct::mkTypeField(
+	IModelBuildContext	*ctxt,
+	ITypeField			*type) {
+	IModelField *ret;
+
+	if (TaskIsTypeFieldRef().eval(type)) {
+		ret = ctxt->ctxt()->mkModelFieldRefType(type);
+	} else {
+		ret = ctxt->ctxt()->mkModelFieldType(type);
+	}
+
+	if (getCreateHook()) {
+		getCreateHook()->create(ret);
+	}
+
+	return ret;
 }
 
 } /* namespace vsc */
