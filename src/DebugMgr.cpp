@@ -24,7 +24,9 @@ void DebugMgr::enable(bool en) {
 	for (std::unordered_map<std::string,IDebug*>::const_iterator
 		it=m_debug_ep_m.begin();
 		it!=m_debug_ep_m.end(); it++) {
-		fprintf(stdout, "Enable %s\n", it->second->name().c_str());
+		if (en != it->second->en()) {
+			fprintf(stdout, "DebugMgr: %s %s\n", (en)?"Enable":"Disable", it->second->name().c_str());
+		}
 		it->second->set_en(m_en);
 	}
 }

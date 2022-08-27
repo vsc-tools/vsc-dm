@@ -381,12 +381,30 @@ cdef class Context(object):
             vsc = Vsc.inst()
             _Context_inst = vsc.mkContext()
         return _Context_inst
+
+cdef class ModelBuildContext(object):
+
+    def __init__(self, Context ctxt):
+        self._hndl = decl.mkModelBuildContext(ctxt._hndl)
+
+    cpdef Context ctxt(self):
+        return Context.mk(self._hndl.ctxt(), False)
+
+    def __dealloc__(self):
+        del self._hndl
+
+#    @staticmethod
+#    cpdef ModelBuildContext mk(Context ctxt):
+#        ret = ModelBuildContext()
+#        ret._hndl = decl.mkModelBuildContext(ctxt._hndl)
+#        return ret
     
 class SolveFlags(IntFlag):
     Randomize            = decl.SolveFlags.Randomize
     RandomizeDeclRand    = decl.SolveFlags.RandomizeDeclRand
     RandomizeTopFields   = decl.SolveFlags.RandomizeTopFields
     DiagnoseFailures     = decl.SolveFlags.DiagnoseFailures
+
     
 cdef class CompoundSolver(object):
 
@@ -1034,8 +1052,12 @@ cdef class ModelField(ObjBase):
         cdef decl.IModelField *field = self.asField().getField(idx)
         
         if field != NULL:
+            print("Field @ %d is not null" % idx)
+            sys.stdout.flush()
             return ModelField.mk(field, False)
         else:
+            print("Field @ %d is null" % idx)
+            sys.stdout.flush()
             return None
         
     cpdef val(self):
@@ -1996,14 +2018,12 @@ cdef class WrapperBuilder(VisitorBase):
         cdef ObjBase ret = None
         cdef WrapperBuilder builder
 
-        print("WrapperBuilder.mkObj: WrapperBuilderList=%d" % len(_WrapperBuilderList))
-
         self._obj.append(None)
         self.visitAccept(obj)
         ret = self._obj.pop()
 
         if ret is None:
-            for b in _WrapperBuilderList:
+            for i,b in enumerate(_WrapperBuilderList):
                 builder = <WrapperBuilder>b
                 ret = builder.mkObj(obj, owned)
                 if ret is not None:
@@ -2095,19 +2115,19 @@ cdef class WrapperBuilder(VisitorBase):
         self._model_expr = e
         
     cpdef void visitModelFieldRef(self, ModelFieldRef f):
-        self._model_field = f
+        self._set_obj(f)
 
     cpdef void visitModelFieldRefRoot(self, ModelFieldRef f):
-        self._model_field = f
+        self._set_obj(f)
 
     cpdef void visitModelFieldRefType(self, ModelFieldRef f):
-        self._model_field = f
+        self._set_obj(f)
 
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f):
-        self._model_field = f
+        self._set_obj(f)
 
     cpdef void visitModelFieldType(self, ModelFieldType f):
-        self._model_field = f
+        self._set_obj(f)
 
     cpdef void visitTypeConstraintBlock(self, TypeConstraintBlock c):
         self._type_constraint = c

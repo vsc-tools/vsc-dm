@@ -149,6 +149,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
 
 cdef extern from "vsc/IModelBuildContext.h" namespace "vsc":
     cdef cppclass IModelBuildContext:
+        IContext *ctxt()
         pass
         
 #********************************************************************
@@ -655,6 +656,8 @@ cdef extern from "vsc/IVsc.h" namespace "vsc":
 #********************************************************************
 cdef extern IVsc *py_get_vsc(const char *path)
 #cdef extern from "py_get_vsc.h":
+
+cdef extern IModelBuildContext *mkModelBuildContext(IContext *ctxt)
     
 #********************************************************************
 #* VscTasks

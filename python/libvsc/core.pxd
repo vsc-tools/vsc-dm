@@ -82,8 +82,12 @@ cdef class Context(object):
 
 cdef class ModelBuildContext(object):
     cdef decl.IModelBuildContext    *_hndl
-    cdef bool                       _owned
-    pass
+
+    cpdef Context ctxt(self)
+
+
+#    @staticmethod
+#    cpdef ModelBuildContext mk(Context ctxt)
 
 cdef class CompoundSolver(object):
     cdef decl.ICompoundSolver   *_hndl
