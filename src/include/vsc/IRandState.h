@@ -34,7 +34,9 @@ public:
 
 	virtual void setState(IRandState *other) = 0;
 
-	virtual IRandState *clone() = 0;
+	virtual IRandState *clone() const = 0;
+
+	virtual IRandState *next() = 0;
 
 };
 

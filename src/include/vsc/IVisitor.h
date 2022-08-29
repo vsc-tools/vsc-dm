@@ -97,6 +97,8 @@ public:
 
 	virtual ~IVisitor() { }
 
+	virtual bool cascade() const = 0;
+
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) = 0;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;

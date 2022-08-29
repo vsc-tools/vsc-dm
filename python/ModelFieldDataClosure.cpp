@@ -15,7 +15,13 @@ ModelFieldDataClosure::ModelFieldDataClosure(PyObject *data) : m_data(data) {
 }
 
 ModelFieldDataClosure::~ModelFieldDataClosure() {
-	Py_DECREF(m_data);
+	// Decrementing the reference can cause a crash on exit
+	/*
+	if (m_data) {
+		Py_DECREF(m_data);
+		m_data = 0;
+	}
+	 */
 }
 
 PyObject *ModelFieldDataClosure::getData() {

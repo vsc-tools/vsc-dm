@@ -36,6 +36,8 @@ public:
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override;
 
+	virtual void visitDataTypeStruct(IDataTypeStruct *t) override;
+
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override;
 
 	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override;

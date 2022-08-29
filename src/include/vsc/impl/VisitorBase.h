@@ -78,9 +78,12 @@ namespace vsc {
 class VisitorBase : public virtual IVisitor {
 public:
 
-	VisitorBase(IVisitor *this_p=0) : m_this((this_p)?this_p:this) { }
+	VisitorBase(bool cascade=true, IVisitor *this_p=0) : 
+		m_cascade(cascade), m_this((this_p)?this_p:this) { }
 
 	virtual ~VisitorBase() { }
+
+	virtual bool cascade() const { return m_cascade; }
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override { }
 
@@ -350,6 +353,7 @@ public:
 	}
 
 protected:
+	bool						m_cascade;
 	IVisitor					*m_this;
 };
 

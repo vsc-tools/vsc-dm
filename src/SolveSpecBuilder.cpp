@@ -198,6 +198,10 @@ void SolveSpecBuilder::visitDataTypeInt(IDataTypeInt *t) {
 	DEBUG_LEAVE("visitDataTypeInt");
 }
 
+void SolveSpecBuilder::visitDataTypeStruct(IDataTypeStruct *t) {
+	// Don't recurse to look 
+}
+
 void SolveSpecBuilder::visitModelConstraintExpr(IModelConstraintExpr *c) {
 	DEBUG_ENTER("visitModelConstraintExpr pass=%d", m_pass);
 	constraint_enter(c);

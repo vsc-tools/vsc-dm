@@ -13,7 +13,10 @@ namespace vsc {
 class VisitorDelegator : public virtual IVisitor {
 public:
 
-	VisitorDelegator(IVisitor *delegate) : m_delegate(delegate) { }
+	VisitorDelegator(IVisitor *delegate, bool cascade=true) : 
+		m_delegate(delegate), m_cascade(cascade) { }
+
+	virtual bool cascade() const override { return m_cascade; }
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override {
 		m_delegate->visitDataTypeEnum(t);
@@ -253,7 +256,7 @@ protected:
 	IVisitor *delegate() const { return m_delegate; }
 
 protected:
-
+	bool					m_cascade;
 	IVisitor				*m_delegate;
 
 };

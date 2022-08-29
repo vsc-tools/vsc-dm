@@ -19,6 +19,8 @@ class RandState : public IRandState {
 public:
 	RandState(const std::string &seed);
 
+	RandState(const std::mt19937_64 &state);
+
 	virtual ~RandState();
 
 	virtual const std::string &seed() const override {
@@ -40,10 +42,12 @@ public:
 	
 	virtual void setState(IRandState *other) override;
 
-	virtual IRandState *clone() override;
+	virtual IRandState *clone() const override;
+
+	virtual IRandState *next() override;
 
 protected:
-	uint64_t next();
+	uint64_t next_ui64();
 
 private:
 	std::string			m_seed;

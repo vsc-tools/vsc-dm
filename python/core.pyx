@@ -546,6 +546,7 @@ cdef class DataTypeStruct(DataType):
             return None
     
     cpdef addConstraint(self, TypeConstraint c):
+        c._owned = False
         self.asTypeStruct().addConstraint(c.asConstraint())
         pass
     

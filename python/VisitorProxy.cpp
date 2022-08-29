@@ -8,7 +8,7 @@
 #include "VisitorProxy.h"
 #include "core.h"
 
-VisitorProxy::VisitorProxy(PyObject *obj) : m_obj(obj) {
+VisitorProxy::VisitorProxy(PyObject *obj) : VisitorBase(false), m_obj(obj) {
 	Py_INCREF(m_obj);
 
 }
