@@ -17,6 +17,18 @@ VisitorProxy::~VisitorProxy() {
 	Py_DECREF(m_obj);
 }
 
+void VisitorProxy::visitDataTypeEnum(vsc::IDataTypeEnum *t) {
+	VisitorProxy_visitDataTypeEnum(m_obj, t);
+}
+
+void VisitorProxy::visitDataTypeInt(vsc::IDataTypeInt *t) {
+	VisitorProxy_visitDataTypeInt(m_obj, t);
+}
+
+void VisitorProxy::visitDataTypeStruct(vsc::IDataTypeStruct *t) {
+	VisitorProxy_visitDataTypeStruct(m_obj, t);
+}
+
 void VisitorProxy::visitModelConstraintBlock(vsc::IModelConstraintBlock *c) {
 	VisitorProxy_visitModelConstraintBlock(m_obj, c);
 }

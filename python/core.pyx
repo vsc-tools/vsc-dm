@@ -629,7 +629,7 @@ cdef class ModelConstraint(ObjBase):
             
     @staticmethod
     cdef mk(decl.IModelConstraint *hndl, bool owned=True):
-        return WrapperBuilder().mkModelConstraint(hndl, owned)
+        return WrapperBuilder().mkObj(hndl, owned)
 
 cdef class ModelConstraintScope(ModelConstraint):
     
@@ -780,7 +780,7 @@ cdef class ModelExpr(ObjBase):
         if hndl == NULL:
             return None
         else:
-            return WrapperBuilder().mkModelExpr(hndl, owned)
+            return WrapperBuilder().mkObj(hndl, owned)
     
 class BinOp(IntEnum):
     Eq      = decl.BinOp.Eq
@@ -1287,7 +1287,7 @@ cdef class TypeConstraint(ObjBase):
 
     @staticmethod
     cdef TypeConstraint mk(decl.ITypeConstraint *hndl, bool owned=True):
-        return WrapperBuilder().mkTypeConstraint(hndl, owned)
+        return WrapperBuilder().mkObj(hndl, owned)
 
 cdef class TypeConstraintExpr(TypeConstraint):
 
@@ -1430,7 +1430,7 @@ cdef class TypeExpr(ObjBase):
             
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=True):
-        return WrapperBuilder().mkTypeExpr(hndl, owned)
+        return WrapperBuilder().mkObj(hndl, owned)
     
 cdef class TypeExprRange(TypeExpr):
 
@@ -1609,8 +1609,10 @@ cdef class TypeField(ObjBase):
     cpdef DataType getDataType(self):
         cdef decl.IDataType *t = self.asField().getDataType()
         if t != NULL:
+            print("TypeField: t is not NULL")
             return DataType.mk(t, False)
         else:
+            print("TypeField: t IS NULL")
             return None
         
     cpdef TypeField getField(self, idx):
@@ -2023,10 +2025,13 @@ cdef class WrapperBuilder(VisitorBase):
         self.visitAccept(obj)
         ret = self._obj.pop()
 
+        print("WrapperBuilder.mkObj: ret=%s" % str(ret))
+
         if ret is None:
             for i,b in enumerate(_WrapperBuilderList):
                 builder = <WrapperBuilder>b
                 ret = builder.mkObj(obj, owned)
+                print("[%d] WrapperBuilder.mkObj: ret=%s" % (i, str(ret)))
                 if ret is not None:
                     break
         else:
@@ -2037,83 +2042,59 @@ cdef class WrapperBuilder(VisitorBase):
     cdef _set_obj(self, ObjBase obj):
         self._obj[-1] = obj
 
-    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned):
-        for i in range(self.proxy_l.size()):
-            obj.accept(self.proxy_l.at(i))
-        self._model_constraint._owned = owned
-        return self._model_constraint
-
-    cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned):
-        for i in range(self.proxy_l.size()):
-            obj.accept(self.proxy_l.at(i))
-        self._model_expr._owned = owned
-        return self._model_expr
-    
-    cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned):
-        for i in range(self.proxy_l.size()):
-            obj.accept(self.proxy_l.at(i))
-        self._type_constraint._owned = owned
-        return self._type_constraint
-
-    cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned):
-        for i in range(self.proxy_l.size()):
-            obj.accept(self.proxy_l.at(i))
-        self._type_expr._owned = owned
-        return self._type_expr
-        
     cpdef visitDataTypeEnum(self, DataTypeEnum t):
-        self._data_Type = t
+        self._set_obj(t)
     
     cpdef visitDataTypeInt(self, DataTypeInt t):
-        self._data_Type = t
+        self._set_obj(t)
     
     cpdef visitDataTypeStruct(self, DataTypeStruct t):
-        self._data_Type = t
+        self._set_obj(t)
 
     cpdef visitModelConstraintBlock(self, ModelConstraintBlock c):
-        self._model_constraint = c
+        self._set_obj(c)
 
     cpdef visitModelConstraintExpr(self, ModelConstraintExpr c):
-        self._model_constraint = c
+        self._set_obj(c)
 
     cpdef visitModelConstraintIfElse(self, ModelConstraintIfElse c):
-        self._model_constraint = c
+        self._set_obj(c)
 
     cpdef visitModelConstraintImplies(self, ModelConstraintImplies c):
-        self._model_constraint = c
+        self._set_obj(c)
 
     cpdef visitModelExprBin(self, ModelExprBin e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprCond(self, ModelExprCond e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprFieldRef(self, ModelExprFieldRef e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprIn(self, ModelExprIn e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprPartSelect(self, ModelExprPartSelect e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprRange(self, ModelExprRange e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprRangelist(self, ModelExprRangelist e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprRef(self, ModelExprRef e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprUnary(self, ModelExprUnary e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprVal(self, ModelExprVal e):
-        self._model_expr = e
+        self._set_obj(e)
 
     cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e):
-        self._model_expr = e
+        self._set_obj(e)
         
     cpdef void visitModelFieldRef(self, ModelFieldRef f):
         self._set_obj(f)

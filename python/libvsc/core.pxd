@@ -743,14 +743,6 @@ cdef class WrapperBuilder(VisitorBase):
 
     cdef ObjBase mkObj(self, decl.IAccept *obj, bool owned)
     
-    cdef ModelExpr mkModelExpr(self, decl.IModelExpr *obj, bool owned)
-    
-    cdef ModelConstraint mkModelConstraint(self, decl.IModelConstraint *obj, bool owned)
-
-    cdef TypeConstraint mkTypeConstraint(self, decl.ITypeConstraint *obj, bool owned)
-
-    cdef TypeExpr mkTypeExpr(self, decl.ITypeExpr *obj, bool owned)
-
     cdef _set_obj(self, ObjBase obj)
 
     cpdef visitModelConstraintBlock(self, ModelConstraintBlock c)

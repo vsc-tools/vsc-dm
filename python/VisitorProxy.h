@@ -16,11 +16,13 @@ public:
 
 	virtual ~VisitorProxy();
 
+	virtual void visitDataTypeEnum(vsc::IDataTypeEnum *t) override;
+
+	virtual void visitDataTypeInt(vsc::IDataTypeInt *t) override;
+
+	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) override;
+
 #ifdef UNDEFINED
-	virtual void visitDataTypeInt(vsc::IDataTypeInt *t) { }
-
-	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) { }
-
 	virtual void visitModelConstraint(vsc::IModelConstraint *c) { }
 #endif
 
