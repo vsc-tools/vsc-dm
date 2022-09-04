@@ -42,7 +42,7 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
   ci-macos-arm64:
-    runs-on: self-hosted
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v1
       - name: Fetch source dependencies
@@ -61,7 +61,7 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
   ci-macos-x86_64:
-    runs-on: self-hosted
+    runs-on: [self-hosted, macOS, ARM64]
     steps:
       - uses: actions/checkout@v1
       - name: Fetch source dependencies
