@@ -56,10 +56,11 @@ jobs:
           ./packages/python/bin/python3 setup.py bdist_wheel
       - name: Publish to PyPi
         if: startsWith(github.ref, 'refs/heads/master')
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python3 -m twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
   ci-macos-x86_64:
     runs-on: [self-hosted, macOS, ARM64]
     steps:
@@ -75,9 +76,9 @@ jobs:
           ./packages/python/bin/python3 setup.py bdist_wheel
       - name: Publish to PyPi
         if: startsWith(github.ref, 'refs/heads/master')
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-      
-          
+        run: |
+          python3 -m twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
