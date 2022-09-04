@@ -75,7 +75,7 @@ jobs:
       - name: Build packages
         run: |
           export BUILD_NUM=$GITHUB_RUN_ID
-          arch -x86_64 ./packages/python/bin/python3 setup.py bdist_wheel --plat-name macos_10_9_x86_64
+          arch -x86_64 ./packages/python/bin/python3 setup.py bdist_wheel --plat-name macosx_10_9_x86_64
       - name: Publish to PyPi
         if: startsWith(github.ref, 'refs/heads/master')
         run: |
