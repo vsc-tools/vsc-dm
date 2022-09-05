@@ -1098,7 +1098,21 @@ cdef class ModelField(ObjBase):
         return WrapperBuilder().mkObj(hndl, owned)
     
 cdef class ModelFieldRef(ModelField):
-    pass
+    cpdef setRef(self, ModelField r):
+        self.asRef().setRef(r.asField())
+
+    cpdef ModelField getRef(self):
+        return ModelField.mk(self.asRef().getRef(), False)
+
+    cdef decl.IModelFieldRef *asRef(self):
+        return dynamic_cast[decl.IModelFieldRefP](self._hndl)
+
+    @staticmethod
+    cdef mk(decl.IModelFieldRef *hndl, bool owned=True):
+        ret = ModelFieldRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
 cdef class ModelFieldRoot(ModelField):
 
@@ -1865,16 +1879,13 @@ cdef public void VisitorProxy_visitModelExprVecSubscript(obj, decl.IModelExprVec
     obj.visitModelExprVecSubscript(ModelExprVecSubscript.mk(e, False))
     
 cdef public void VisitorProxy_visitModelFieldRef(obj, decl.IModelFieldRef *f) with gil:
-#    obj.visitModelFieldRef(ModelFieldRef.mk(f, False))
-    pass
+    obj.visitModelFieldRef(ModelFieldRef.mk(f, False))
 
 cdef public void VisitorProxy_visitModelFieldRefRoot(obj, decl.IModelFieldRef *f) with gil:
-#    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
-    pass
+    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
 
 cdef public void VisitorProxy_visitModelFieldRefType(obj, decl.IModelFieldRef *f) with gil:
-#    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
-    pass
+    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
 
 cdef public void VisitorProxy_visitModelFieldRoot(obj, decl.IModelFieldRoot *f) with gil:
     obj.visitModelFieldRoot(ModelFieldRoot.mk(f, False))
@@ -2020,6 +2031,9 @@ cdef class WrapperBuilder(VisitorBase):
         global _WrapperBuilderList
         cdef ObjBase ret = None
         cdef WrapperBuilder builder
+
+        if obj == NULL:
+            return None
 
         self._obj.append(None)
         self.visitAccept(obj)

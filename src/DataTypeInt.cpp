@@ -70,7 +70,11 @@ IModelField *DataTypeInt::mkTypeField(
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
+		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
 		ret = ctxt->ctxt()->mkModelFieldType(type);
+		if (type_p->getInit()) {
+			ret->val()->set(type_p->getInit());
+		}
 	}
 
 	return ret;

@@ -392,7 +392,13 @@ cdef class ModelField(ObjBase):
     cdef mk(decl.IModelField *, bool owned=*)
     
 cdef class ModelFieldRef(ModelField):
-    pass
+    cpdef setRef(self, ModelField r)
+    cpdef ModelField getRef(self)
+
+    cdef decl.IModelFieldRef *asRef(self)
+
+    @staticmethod
+    cdef mk(decl.IModelFieldRef *hndl, bool owned=*)
     
 cdef class ModelFieldRoot(ModelField):
 
