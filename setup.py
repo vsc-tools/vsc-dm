@@ -198,11 +198,11 @@ class build_ext(_build_ext):
 
         # Copy libgmp over as well
         copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "libgmp.so"),
-            os.path.join(package_dir, "libgmp.so"))
+            os.path.join(cwd, "build", "gmp", "lib", "%sgmp%s" % (pref,ext)),
+            os.path.join(package_dir, "%sgmp%s" % (pref,ext)))
         copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "libgmpxx.so"),
-            os.path.join(package_dir, "libgmpxx.so"))
+            os.path.join(cwd, "build", "gmp", "lib", "%sgmpxx%s" % (pref,ext)),
+            os.path.join(package_dir, "%sgmpxx%s" % (pref,ext)))
                 
         dest_filename = os.path.join(package_dir, filename)
         
