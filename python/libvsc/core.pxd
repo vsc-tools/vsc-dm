@@ -368,7 +368,7 @@ cdef class ModelExprVecSubscript(ModelExpr):
     cdef mk(decl.IModelExprVecSubscript *, bool owned=*)
 
 cdef class ModelField(ObjBase):
-    
+
     cpdef name(self)
     cpdef getDataType(self)
     cpdef getParent(self)
@@ -476,6 +476,7 @@ cdef class RandState(object):
 
     cpdef void setState(self, RandState other)
     cpdef RandState clone(self)
+    cpdef RandState next(self)
     
     @staticmethod
     cdef mk(decl.IRandState *)

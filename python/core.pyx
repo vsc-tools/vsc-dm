@@ -26,6 +26,7 @@ cdef class Context(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+        pass
         
     cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
         return ModelField.mk(
@@ -390,8 +391,9 @@ cdef class ModelBuildContext(object):
     cpdef Context ctxt(self):
         return Context.mk(self._hndl.ctxt(), False)
 
-    def __dealloc__(self):
-        del self._hndl
+    def __dal__(self):
+#        del self._hndl
+        pass
 
 #    @staticmethod
 #    cpdef ModelBuildContext mk(Context ctxt):
@@ -410,6 +412,7 @@ cdef class CompoundSolver(object):
 
     def __dealloc__(self):
         del self._hndl
+        pass
     
     cpdef solve(self, RandState rs, fields, constraints, flags):
         cdef cpp_vector[decl.IModelFieldP] fields_v;
@@ -448,6 +451,7 @@ cdef class ObjBase(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+        pass
             
     
 cdef class DataType(ObjBase):
@@ -521,6 +525,10 @@ cdef class DataTypeInt(DataType):
     
 cdef class DataTypeStruct(DataType):
 
+    def __dealloc__(self):
+        if self._owned:
+            self.setCreateHook(None)
+
     cpdef name(self):
         return self.asTypeStruct().name().decode()
 
@@ -558,7 +566,9 @@ cdef class DataTypeStruct(DataType):
         return ret
     
     cpdef setCreateHook(self, hook_f):
-        cdef decl.ModelStructCreateHookClosure *closure = new decl.ModelStructCreateHookClosure(<cpy_ref.PyObject *>(hook_f))
+        cdef decl.ModelStructCreateHookClosure *closure = NULL
+        if hook_f is not None:
+            closure = new decl.ModelStructCreateHookClosure(<cpy_ref.PyObject *>(hook_f))
         self.asTypeStruct().setCreateHook(closure)
     
     @staticmethod
@@ -580,6 +590,7 @@ cdef class Debug(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+        pass
 
     @staticmethod
     cdef mk(decl.IDebug *hndl, bool owned=True):
@@ -595,6 +606,7 @@ cdef class DebugMgr(object):
     def __dealloc__(self):
         if self._owned:
             del self._hndl
+        pass
 
     cpdef enable(self, bool en):
         self._hndl.enable(en)
@@ -1006,8 +1018,13 @@ class ModelFieldFlag(IntFlag):
     UsedRand = decl.ModelFieldFlag.UsedRand
     Resolved = decl.ModelFieldFlag.Resolved
     VecSize  = decl.ModelFieldFlag.VecSize
-    
+
 cdef class ModelField(ObjBase):
+
+    def __dealloc__(self):
+        if self._owned:
+            self.setFieldData(None)
+
 
     cpdef name(self):
         return self.asField().name().decode()
@@ -1077,7 +1094,9 @@ cdef class ModelField(ObjBase):
         return self.asField().isFlagSet(<decl.ModelFieldFlag>(flags_i))
     
     cpdef setFieldData(self, data):
-        cdef decl.ModelFieldDataClosure *c = new decl.ModelFieldDataClosure(<cpy_ref.PyObject *>(data))
+        cdef decl.ModelFieldDataClosure *c = NULL
+        if data is not None:
+            c = new decl.ModelFieldDataClosure(<cpy_ref.PyObject *>(data))
         self.asField().setFieldData(c)
         
     cpdef getFieldData(self):
@@ -1190,6 +1209,7 @@ cdef class ModelVal(object):
     def __dealloc__(self):
         if self._owned and self._hndl != NULL:
             del self._hndl
+        pass
 
     cpdef bits(self):
         return self._hndl.bits()
@@ -1226,6 +1246,7 @@ cdef class Randomizer(object):
 
     def __dealloc__(self):
         del self._hndl
+        pass
         
     cpdef randomize(
         self,
@@ -1262,6 +1283,7 @@ cdef class RandState(object):
 
     def __dealloc__(self):
         del self._hndl
+        pass
 
     cpdef str seed(self):
         return self._hndl.seed().decode()
@@ -1279,6 +1301,11 @@ cdef class RandState(object):
         ret = RandState()
         ret._hndl = self._hndl.clone()
         return ret
+
+    cpdef RandState next(self):
+        ret = RandState()
+        ret._hndl = self._hndl.next()
+        return ret
     
     @staticmethod
     cdef mk(decl.IRandState *hndl):
@@ -1293,6 +1320,7 @@ cdef class SolverFactory(object):
 
     def __dealloc__(self):
         del self._hndl
+        pass
         
 cdef class TypeConstraint(ObjBase):
 
@@ -1695,6 +1723,7 @@ cdef class VisitorBase(object):
         for i in range(self.proxy_l.size()):
             v = self.proxy_l.at(i)
             del v
+            pass
         
     cpdef visit(self, ObjBase obj):
         self._visit_s.push_back(False)

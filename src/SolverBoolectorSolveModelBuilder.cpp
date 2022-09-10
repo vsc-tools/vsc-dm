@@ -22,6 +22,7 @@
 #include "Debug.h"
 #include "SolverBoolectorSolveModelBuilder.h"
 #include "boolector/boolector.h"
+#include "vsc/impl/TaskIsDataTypeSigned.h"
 
 #define EN_DEBUG_SOLVER_BOOLECTOR_SOLVE_MODEL_BUILDER
 
@@ -336,6 +337,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(IModelExprFieldRef
 		m_solver->addFieldData(e->field(), n);
 	} else {
 		// TODO: determine signedness of field
+		is_signed = TaskIsDataTypeSigned().check(e->field()->getDataType());
 		DEBUG("n: %p", n);
 	}
 
@@ -444,7 +446,7 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(IModelExprVal *e) {
 
 	DEBUG("bits=%s", bits);
 	m_node_i.second = boolector_const(m_solver->btor(), bits);
-	m_node_i.first = false; // TODO:
+	m_node_i.first = true; // TODO:
 
 	DEBUG_LEAVE("visitModelExprVal");
 }
@@ -496,7 +498,7 @@ void SolverBoolectorSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
 
 		DEBUG("bits=%s", bits);
 		m_node_i.second = boolector_const(m_solver->btor(), bits);
-		m_node_i.first = false; // TODO:
+		m_node_i.first = TaskIsDataTypeSigned().check(f->getDataType());
 	}
 	DEBUG_LEAVE("visitModelFieldType %s", f->name().c_str());
 }

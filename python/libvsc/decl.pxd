@@ -496,7 +496,8 @@ cdef extern from "vsc/IRandState.h" namespace "vsc":
         int64_t rand_i64()
         void randbits(IModelVal *)
         void setState(IRandState *)
-        IRandState *clone()
+        IRandState *clone() const
+        IRandState *next()
         
 #********************************************************************
 #* ISolverFactory

@@ -22,6 +22,7 @@
 #include "Debug.h"
 #include "SolverBitwuzlaSolveModelBuilder.h"
 #include "bitwuzla/bitwuzla.h"
+#include "vsc/impl/TaskIsDataTypeSigned.h"
 
 #define EN_DEBUG_SOLVER_BITWUZLA_SOLVE_MODEL_BUILDER
 

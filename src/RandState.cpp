@@ -45,7 +45,8 @@ int64_t RandState::rand_i64() {
 
 void RandState::randbits(IModelVal *val) {
 	if (val->bits() <= 64) {
-		val->val_u(next_ui64());
+		uint64_t bits = next_ui64();
+		val->val_u(bits);
 	} else {
 		uint32_t n_words = (val->bits()-1)/64+1;
 		for (uint32_t i=0; i<n_words; i++) {
@@ -69,7 +70,8 @@ void RandState::randbits(IModelVal *val) {
 }
 
 uint64_t RandState::next_ui64() {
-    return m_state();
+	uint64_t ret = m_state();
+	return ret;
 }
 
 void RandState::setState(IRandState *other) {
