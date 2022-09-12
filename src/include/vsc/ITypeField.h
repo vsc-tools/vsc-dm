@@ -24,11 +24,11 @@ public:
 
 	virtual ~ITypeField() { }
 
-	virtual IDataTypeStruct *getParent() = 0;
+	virtual ITypeField *getParent() const = 0;
 
-	virtual void setParent(IDataTypeStruct *p) = 0;
+	virtual void setParent(ITypeField *p) = 0;
 
-	virtual int32_t getIndex() = 0;
+	virtual int32_t getIndex() const = 0;
 
 	virtual void setIndex(int32_t) = 0;
 
@@ -42,7 +42,7 @@ public:
 
 	virtual void setDataType(IDataType *t) = 0;
 
-	virtual ITypeField *getField(int32_t idx) = 0;
+	virtual ITypeField *getField(int32_t idx) const = 0;
 
 	virtual TypeFieldAttr getAttr() const = 0;
 

@@ -1629,15 +1629,15 @@ class TypeFieldAttr(IntFlag):
     
 cdef class TypeField(ObjBase):
 
-    cpdef DataTypeStruct getParent(self):
-        cdef decl.IDataTypeStruct *p = self.asField().getParent()
+    cpdef TypeField getParent(self):
+        cdef decl.ITypeField *p = self.asField().getParent()
         if p != NULL:
-            return DataTypeStruct.mk(p, False)
+            return TypeField.mk(p, False)
         else:
             return None
 
-    cpdef setParent(self, DataTypeStruct p):
-        self.asField().setParent(p.asTypeStruct())
+    cpdef setParent(self, TypeField p):
+        self.asField().setParent(p.asField())
         
     cpdef getIndex(self):
         return self.asField().getIndex()

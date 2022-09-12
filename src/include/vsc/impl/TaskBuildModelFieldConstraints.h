@@ -15,9 +15,9 @@ public:
         m_ctxt(ctxt), m_constraint_builder(ctxt) { }
 
     void build(IModelField *model, IDataType *type) {
-        m_ctxt->pushField(model);
+        m_ctxt->pushTopDownScope(model);
         type->accept(m_this);
-        m_ctxt->popField();
+        m_ctxt->popTopDownScope();
     }
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {

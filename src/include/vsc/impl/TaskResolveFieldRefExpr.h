@@ -30,13 +30,14 @@ public:
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
-		for (auto it=e->getPath().begin(); it!=e->getPath().end(); it++) {
+		for (std::vector<TypeExprFieldRefElem>::const_reverse_iterator
+			it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {
 			case TypeExprFieldRefElemKind::Root: {
-				m_field = m_ctxt->getField(-1);
+				m_field = m_ctxt->getTopDownScope();
 			} break;
 			case TypeExprFieldRefElemKind::ActiveScope: {
-				m_field = m_ctxt->getField(it->idx);
+				m_field = m_ctxt->getScope();
 			} break;
 			case TypeExprFieldRefElemKind::IdxOffset: {
 				m_field = m_field->getField(it->idx);

@@ -42,8 +42,8 @@ public:
 		m_pass = 1; // Now, build out constraints
 		type->accept(m_this);
 
-		IModelField *ret = m_ctxt->getField(0);
-		m_ctxt->popField();
+		IModelField *ret = m_ctxt->getTopDownScope();
+		m_ctxt->popTopDownScope();
 
 		return ret;
 	}
@@ -59,8 +59,8 @@ public:
 		m_pass = 1; // Now, build out constraints
 		type->accept(m_this);
 
-		IModelField *ret = m_ctxt->getField(0);
-		m_ctxt->popField();
+		IModelField *ret = m_ctxt->getTopDownScope();
+		m_ctxt->popTopDownScope();
 
 		return ret;
 	}
@@ -77,9 +77,9 @@ public:
 				field->val()->set(f->getInit());
 			}
 
-			m_ctxt->pushField(field);
+			m_ctxt->pushTopDownScope(field);
 			VisitorBase::visitTypeField(f);
-			m_ctxt->popField();
+			m_ctxt->popTopDownScope();
 		} else if (m_pass == 1) {
 			// The level above will have populated the field
 			VisitorBase::visitTypeField(f);
@@ -123,10 +123,12 @@ public:
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
 
 		if (m_pass == 0) {
+#ifdef UNDEFINED
 			if (m_ctxt->fieldStackSize() == 0) {
 				IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(t, m_name);
 				m_ctxt->pushField(field);
 			}
+#endif
 
 			for (std::vector<ITypeFieldUP>::const_iterator
 				it=t->getFields().begin();
@@ -157,7 +159,7 @@ public:
 			m_constraint_s.pop_back();
 
 			if (m_constraint_s.size() == 0) {
-				m_ctxt->getField(-1)->addConstraint(cm);
+				m_ctxt->getTopDownScope()->addConstraint(cm);
 			}
 		}
 	}
@@ -173,7 +175,7 @@ public:
 			if (m_constraint_s.size()) {
 				m_constraint_s.back()->addConstraint(cm);
 			} else {
-				m_ctxt->getField(-1)->addConstraint(cm);
+				m_ctxt->getTopDownScope()->addConstraint(cm);
 			}
 		}
 	}
@@ -184,12 +186,14 @@ public:
 
 protected:
 	void addField(IModelField *f) {
+#ifdef UNDEFINED
 		fprintf(stdout, "addField: %s %d\n", f->name().c_str(), m_ctxt->fieldStackSize());
 		if (m_ctxt->fieldStackSize() == 0) {
 			m_ctxt->pushField(f);
 		} else {
 			m_ctxt->getField(-1)->addField(f);
 		}
+#endif
 	}
 
 protected:

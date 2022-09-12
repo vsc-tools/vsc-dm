@@ -40,7 +40,7 @@ TypeField::~TypeField() {
 	// TODO Auto-generated destructor stub
 }
 
-ITypeField *TypeField::getField(int32_t idx) {
+ITypeField *TypeField::getField(int32_t idx) const {
 	IDataTypeStruct *s = dynamic_cast<IDataTypeStruct *>(getDataType());
 	if (s) {
 		return s->getField(idx);

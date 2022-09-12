@@ -633,8 +633,8 @@ cdef class TypeExprVal(TypeExpr):
     
 cdef class TypeField(ObjBase):
     
-    cpdef DataTypeStruct getParent(self)
-    cpdef setParent(self, DataTypeStruct)
+    cpdef TypeField getParent(self)
+    cpdef setParent(self, TypeField)
     cpdef getIndex(self)
     cpdef setIndex(self, idx)
     cpdef name(self)

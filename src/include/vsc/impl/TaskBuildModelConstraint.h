@@ -48,7 +48,7 @@ public:
 		m_constraint_s.pop_back();
 
 		if (m_constraint_s.size() == 0) {
-			m_ctxt->getField(-1)->addConstraint(cm);
+			m_ctxt->getTopDownScope()->addConstraint(cm);
 		}
 	}
 

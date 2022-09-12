@@ -39,13 +39,13 @@ public:
 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {
 			case TypeExprFieldRefElemKind::Root: {
-				f = m_ctxt->getField(-1);
+				f = m_ctxt->getTopDownScope();
 			} break;
 			case TypeExprFieldRefElemKind::ActiveScope: {
-				f = m_ctxt->getField(it->idx);
+				f = m_ctxt->getBottomUpScope(it->idx);
 			} break;
 			case TypeExprFieldRefElemKind::IdxOffset: {
-				f = m_ctxt->getField(-1)->getField(it->idx);
+				f = f->getField(it->idx);
 			} break;
 
 			default:

@@ -610,8 +610,8 @@ cdef extern from "vsc/ITypeField.h" namespace "vsc":
         Rand          "vsc::TypeFieldAttr::Rand"
     
     cdef cppclass ITypeField(IAccept):
-        IDataTypeStruct *getParent()
-        void setParent(IDataTypeStruct *)
+        ITypeField *getParent()
+        void setParent(ITypeField *)
         int32_t getIndex()
         void setIndex(int32_t)
         const cpp_string &name() const
