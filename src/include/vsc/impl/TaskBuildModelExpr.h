@@ -35,6 +35,8 @@ public:
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
+		bool references_ref_fields = false;
+
 		IModelField *f = 0;
 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {

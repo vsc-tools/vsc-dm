@@ -4,7 +4,7 @@
 #include <vector>
 #include "vsc/IContext.h"
 
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/impl/TaskCopyModelConstraintOnDemand.h"
 
 namespace vsc {
 
@@ -42,15 +42,28 @@ protected:
 
 };
 
-class TaskUnrollModelFieldRefConstraints : public virtual VisitorBase {
+/**
+ * @brief Builds a selector structure for a reference field
+ * 
+ * - Accepts the reference field, a set of candidates, and a set of
+ *   constraints (optionally) containing references to fields via 
+ *   the reference field.
+ */
+class TaskUnrollModelFieldRefConstraints : public virtual TaskCopyModelConstraintOnDemand {
 public:
-    TaskUnrollModelFieldRefConstraints(IContext *ctxt) : m_ctxt(ctxt) { }
+    TaskUnrollModelFieldRefConstraints(IContext *ctxt) : TaskCopyModelConstraintOnDemand(ctxt) { 
+        m_candidate_refs = 0;
+
+    }
 
     ModelFieldRefConstraintData *build(
-        IModelFieldRef                          *ref,
+        IModelFieldRef                          *ref, // target reference
         const std::vector<IModelField *>        &candidates,
+        const std::vector<IModelFieldRef *>     &candidate_refs, // (optional)
         const std::vector<IModelConstraint *>   &constraints) {
         uint32_t bits = 0, value = candidates.size();
+
+        m_candidate_refs = (candidate_refs.size())?&candidate_refs:0;
 
         // Determine how many bits are needed
         do {
@@ -104,12 +117,33 @@ public:
         m_result = ModelFieldRefConstraintDataUP(new ModelFieldRefConstraintData(
                 selector, valid_c, valid_soft_c));
 
-        for (std::vector<IModelField *>::const_iterator
-            it=candidates.begin();
-            it!=candidates.end(); it++) {
+        for (uint32_t i=0; i<candidates.size(); i++) {
             m_tmp_c = IModelConstraintScopeUP(m_ctxt->mkModelConstraintScope());
 
             // TODO: build out constraints
+            // (selector == i) -> {
+            //   (constraints via 'ref')
+            //   (constraints via 'candidate_refs[i]')
+            // }
+
+            m_target_ref = ref;
+            m_candidate = candidates.at(i);
+
+            // TODO: need a way to pass constraint-scope down
+            for (std::vector<IModelConstraint *>::const_iterator
+                c_it=constraints.begin();
+                c_it!=constraints.end(); c_it++) {
+                (*c_it)->accept(m_this);
+            }
+
+            if (candidate_refs.size()) {
+                m_target_ref = candidate_refs.at(i);
+                for (std::vector<IModelConstraint *>::const_iterator
+                    c_it=constraints.begin();
+                    c_it!=constraints.end(); c_it++) {
+                    (*c_it)->accept(m_this);
+                }
+            }
 
             m_result->addSelectC(m_tmp_c.release());
         }
@@ -117,10 +151,27 @@ public:
         return m_result.release();
     }
 
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override {
+
+/*
+        // Step through to see if we hit the target
+        int32_t i=0;
+        for (; i<e->getPath().size(); i++) {
+            IModelField *
+
+        }
+ */
+
+
+        m_expr_copy = 0;
+    }
+
 private:
-    IContext                                    *m_ctxt;
     IModelConstraintScopeUP                     m_tmp_c;
     ModelFieldRefConstraintDataUP               m_result;
+    IModelField                                 *m_target_ref;
+    IModelField                                 *m_candidate;
+    const std::vector<IModelField *>            *m_candidate_refs;
 
 
 };
