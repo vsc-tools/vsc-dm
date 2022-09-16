@@ -7,14 +7,24 @@
 namespace vsc {
 
 enum class ModelExprIndexedFieldRefKind {
-    Field,
-    FieldIndex,
-    VecIndex
+    Field,          // Value in the 'field' union entry
+    FieldIndex,     // Field offset in the 'offset' entry
+    VecIndex        // 
 };
 
 struct ModelExprIndexedFieldRefElem {
+    virtual ~ModelExprIndexedFieldRefElem() {
+        if (kind == ModelExprIndexedFieldRefKind::VecIndex && idx_e) {
+            delete idx_e;
+        }
+    }
+
     ModelExprIndexedFieldRefKind    kind;
-    IModelExprUP                    idx_e;
+    union {
+        IModelExpr                      *idx_e;
+        IModelField                     *field;
+        int32_t                         offset;
+    };
 };
 
 class IModelExprIndexedFieldRef;
@@ -24,9 +34,9 @@ public:
 
     virtual ~IModelExprIndexedFieldRef() { }
 
-    virtual void addFieldRef(IModelExprFieldRef *ref) = 0;
+    virtual void addField(IModelField *field) = 0;
 
-    virtual void addFieldIndexRef(IModelExpr *off_e) = 0;
+    virtual void addFieldOffsetRef(int32_t offset) = 0;
 
     virtual void addVecIndexRef(IModelExpr *idx_e) = 0;
 

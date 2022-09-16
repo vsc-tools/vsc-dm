@@ -60,7 +60,7 @@
 #include "Randomizer.h"
 #include "RandState.h"
 #include "TaskModelFieldBuilder.h"
-#include "TaskSetUsedRand.h"
+#include "vsc/impl/TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintIfElse.h"

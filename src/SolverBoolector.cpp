@@ -79,6 +79,8 @@ void SolverBoolector::initField(IModelField *f) {
 		m_field_node_m.insert({f, node});
 		DEBUG("node width: %d", boolector_get_width(m_btor, node));
 		m_issat_valid = false;
+	} else {
+		DEBUG(".. already initialized");
 	}
 
 	DEBUG_LEAVE("initField %s (width=%d)", f->name().c_str(), f->val()->bits());

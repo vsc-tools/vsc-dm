@@ -54,7 +54,7 @@ TEST_F(TestModelFieldVecUnconstrainedSz, fixed_foreach) {
         "i");
     constraint_b->addConstraint(constraint);
     IModelExprIndexedFieldRef *vec_i = ctx.mkModelExprIndexedFieldRef();
-    vec_i->addFieldRef(ctx.mkModelExprFieldRef(vec));
+    vec_i->addField(vec);
     vec_i->addVecIndexRef(ctx.mkModelExprFieldRef(constraint->getIndexIt()));
     constraint->addConstraint(ctx.mkModelConstraintExpr(
         ctx.mkModelExprBin(

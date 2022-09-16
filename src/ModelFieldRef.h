@@ -38,7 +38,7 @@ public:
 	}
 
 	virtual IModelField *getField(int32_t idx) override {
-		return m_ref->getField(idx);;
+		return (m_ref)?m_ref->getField(idx):0;
 	}
 
 	virtual const IModelVal *val() const override {

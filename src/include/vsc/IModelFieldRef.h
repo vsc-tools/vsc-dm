@@ -6,10 +6,13 @@
  */
 
 #pragma once
+#include <memory>
 #include "vsc/IModelField.h"
 
 namespace vsc {
 
+class IModelFieldRef;
+using IModelFieldRefUP=std::unique_ptr<IModelFieldRef>;
 class IModelFieldRef : public virtual IModelField {
 public:
 

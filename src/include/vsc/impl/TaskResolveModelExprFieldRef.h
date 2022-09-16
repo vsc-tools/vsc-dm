@@ -56,9 +56,12 @@ public:
             fflush(stdout);
             switch (it->kind) {
             case ModelExprIndexedFieldRefKind::Field:
-                field = resolve(0, it->idx_e.get());
+                field = it->field;
                 fprintf(stdout, "field=%p\n", field);
                 fflush(stdout);
+                break;
+            case ModelExprIndexedFieldRefKind::FieldIndex:
+                field = field->getField(it->offset);
                 break;
             case ModelExprIndexedFieldRefKind::VecIndex: {
                 IModelFieldVec *vec = dynamic_cast<IModelFieldVec *>(field);
@@ -72,15 +75,17 @@ public:
                     break;
                 }
 
-                TaskResolveModelExprVal(m_ctx).eval(
-                    m_val.get(),
-                    it->idx_e.get());
+                TaskResolveModelExprVal(m_ctx).eval(m_val.get(), it->idx_e);
 
                 fprintf(stdout, "Index: %lld\n", m_val->val_u());
 
                 field = vec->getField(m_val->val_u());
             } break;
 
+            }
+
+            if (!field) {
+                break;
             }
         }
 

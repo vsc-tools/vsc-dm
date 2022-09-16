@@ -38,7 +38,7 @@ public:
         m_constraint_copy = 0;
     };
 
-    virtual ~TaskCopyModelConstraintOnDemand();
+    virtual ~TaskCopyModelConstraintOnDemand() { }
 
     /**
      * @brief Copies the specified constraint, subject to requirements. 
@@ -50,6 +50,7 @@ public:
      */
     IModelConstraint *copy(IModelConstraint *c) {
         m_constraint_copy = 0;
+        m_expr_copy = 0;
         c->accept(m_this);
 
         return (m_constraint_copy)?m_constraint_copy:0;
@@ -126,7 +127,8 @@ public:
 
         if (need_copy || m_expr_copy) {
             IModelConstraintForeach *c_c = m_ctxt->mkModelConstraintForeach(
-                (m_expr_copy)?m_expr_copy:m_ctxt->mkModelExprRef(c->getTarget());
+                (m_expr_copy)?m_expr_copy:m_ctxt->mkModelExprRef(c->getTarget()),
+                c->getIndexIt()->name());
             for (uint32_t i=0; i<c->constraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     c_c->addConstraint(constraint_l.at(i));

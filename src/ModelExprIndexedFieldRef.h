@@ -18,9 +18,9 @@ public:
 
 	virtual void eval(IModelVal *dst) override { }
 
-    virtual void addFieldRef(IModelExprFieldRef *ref) override;
+    virtual void addField(IModelField *field) override;
 
-    virtual void addFieldIndexRef(IModelExpr *off_e) override;
+    virtual void addFieldOffsetRef(int32_t offset) override;
 
     virtual void addVecIndexRef(IModelExpr *idx_e) override;
 

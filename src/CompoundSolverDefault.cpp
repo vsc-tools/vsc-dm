@@ -5,6 +5,7 @@
  *      Author: mballance
  */
 
+#include "vsc/impl/PrettyPrinter.h"
 #include "vsc/impl/TaskUnrollModelIterativeConstraints.h"
 #include "vsc/impl/TaskRollbackConstraintSubst.h"
 #include "CommitFieldValueVisitor.h"
@@ -14,7 +15,7 @@
 #include "SolveSetSolveModelBuilder.h"
 #include "SolveSetSwizzlerPartsel.h"
 #include "SolveSpecBuilder.h"
-#include "TaskSetUsedRand.h"
+#include "vsc/impl/TaskSetUsedRand.h"
 #include "TaskResizeConstrainedModelVec.h"
 #include "vsc/impl/TaskUnrollModelIterativeConstraints.h"
 
@@ -166,11 +167,18 @@ bool CompoundSolverDefault::solve_sset(
 	ISolverFactory		*solver_f,
 	IRandState			*randstate,
 	SolveFlags			flags) {
+	DEBUG_ENTER("solve_sset");
 	bool ret = true;
 
 	ISolverUP solver(solver_f->createSolverInst(sset));
 	// Build solve data for this solve set
 	SolveSetSolveModelBuilder(solver.get()).build(sset);
+
+	for (std::vector<IModelConstraint *>::const_iterator
+		it=sset->constraints().begin();
+		it!=sset->constraints().end(); it++) {
+		DEBUG("Constraint: %s", PrettyPrinter().print(*it));
+	}
 
 	// First, ensure all constraints solve
 	for (auto c_it=sset->constraints().begin();
@@ -216,6 +224,7 @@ bool CompoundSolverDefault::solve_sset(
 		}
 	}
 
+	DEBUG_LEAVE("solve_sset");
 	return ret;
 }
 

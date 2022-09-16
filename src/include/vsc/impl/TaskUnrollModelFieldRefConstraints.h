@@ -23,11 +23,11 @@ public:
 
     int32_t getNumCandidates() const { return m_select_c_l.size(); }
 
-    void addSelectC(IModelConstraintScope *c) { m_select_c_l.push_back(IModelConstraintScopeUP(c)); }
+    void addSelectC(IModelConstraint *c) { m_select_c_l.push_back(IModelConstraintUP(c)); }
 
-    const std::vector<IModelConstraintScopeUP> &getSelectConstraints() const { return m_select_c_l; }
+    const std::vector<IModelConstraintUP> &getSelectConstraints() const { return m_select_c_l; }
 
-    IModelConstraintScope *getSelectConstraint(int32_t idx) const { return m_select_c_l.at(idx).get(); }
+    IModelConstraint *getSelectConstraint(int32_t idx) const { return m_select_c_l.at(idx).get(); }
 
     IModelConstraint *getValidC() const { return m_valid_c.get(); }
 
@@ -36,7 +36,7 @@ public:
 protected:
     IModelFieldUP                               m_selector;
     IModelConstraintScopeUP                     m_core_c;
-    std::vector<IModelConstraintScopeUP>        m_select_c_l;
+    std::vector<IModelConstraintUP>        m_select_c_l;
     IModelConstraintUP                          m_valid_c;
     IModelConstraintUP                          m_valid_soft_c;
 
@@ -63,6 +63,7 @@ public:
         const std::vector<IModelConstraint *>   &constraints) {
         uint32_t bits = 0, value = candidates.size();
 
+        m_candidates = &candidates;
         m_candidate_refs = (candidate_refs.size())?&candidate_refs:0;
 
         // Determine how many bits are needed
@@ -126,6 +127,8 @@ public:
             //   (constraints via 'candidate_refs[i]')
             // }
 
+            // First, see if there are constraints here
+            std::vector<IModelConstraint *> impl_constraints;
             m_target_ref = ref;
             m_candidate = candidates.at(i);
 
@@ -133,7 +136,11 @@ public:
             for (std::vector<IModelConstraint *>::const_iterator
                 c_it=constraints.begin();
                 c_it!=constraints.end(); c_it++) {
-                (*c_it)->accept(m_this);
+                IModelConstraint *cc = copy(*c_it);
+                fprintf(stdout, "cc: %p\n", cc);
+                if (cc) {
+                    impl_constraints.push_back(cc);
+                }
             }
 
             if (candidate_refs.size()) {
@@ -141,29 +148,96 @@ public:
                 for (std::vector<IModelConstraint *>::const_iterator
                     c_it=constraints.begin();
                     c_it!=constraints.end(); c_it++) {
-                    (*c_it)->accept(m_this);
+                    IModelConstraint *cc = copy(*c_it);
+                    fprintf(stdout, "cc: %p\n", cc);
+                    if (cc) {
+                        impl_constraints.push_back(cc);
+                    }
                 }
             }
 
-            m_result->addSelectC(m_tmp_c.release());
+            if (impl_constraints.size()) {
+                // Now, build the implication constraint
+                IModelConstraint *body = impl_constraints.at(0);
+                if (impl_constraints.size() > 1) {
+                    IModelConstraintScope *body_s = m_ctxt->mkModelConstraintScope();
+                    for (std::vector<IModelConstraint *>::const_iterator
+                        it=impl_constraints.begin();
+                        it!=impl_constraints.end(); it++) {
+                        body_s->addConstraint(*it);
+                    }
+                    body = body_s;
+                }
+
+                tmp_v1->set_val_i(i);
+                IModelConstraintImplies *impl = m_ctxt->mkModelConstraintImplies(
+                    m_ctxt->mkModelExprBin(
+                        m_ctxt->mkModelExprFieldRef(selector),
+                        BinOp::Eq,
+                        m_ctxt->mkModelExprVal(tmp_v1.get())),
+                        body
+                    );
+                m_result->addSelectC(impl);
+            } else {
+                m_result->addSelectC(0);
+            }
+
         }
 
         return m_result.release();
     }
 
 	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override {
-
-/*
-        // Step through to see if we hit the target
-        int32_t i=0;
-        for (; i<e->getPath().size(); i++) {
-            IModelField *
-
-        }
- */
-
+        IModelField *field = 0;
 
         m_expr_copy = 0;
+
+        int32_t i=0;
+        for (i=0; i<e->getPath().size(); i++) {
+            switch (e->getPath().at(i).kind) {
+                case ModelExprIndexedFieldRefKind::Field:
+                    field = e->getPath().at(i).field;
+                    break;
+                case ModelExprIndexedFieldRefKind::FieldIndex:
+                    field = field->getField(e->getPath().at(i).offset);
+                    break;
+                case ModelExprIndexedFieldRefKind::VecIndex:
+                    fprintf(stdout, "Error: VecIndex not supported\n");
+                    field = 0;
+                    break;
+            }
+
+            fprintf(stdout, "field=%p m_target_ref=%p\n", field, m_target_ref);
+            if (field == m_target_ref) {
+                i++;
+                field = m_candidate;
+                break;
+            }
+        }
+
+        if (i < e->getPath().size()) {
+            // Replace this reference with one relative to the target field
+            IModelExprIndexedFieldRef *e_c = m_ctxt->mkModelExprIndexedFieldRef();
+            e_c->addField(field);
+
+            for (; i<e->getPath().size(); i++) {
+                switch (e->getPath().at(i).kind) {
+                    case ModelExprIndexedFieldRefKind::Field:
+                        e_c->addField(e->getPath().at(i).field);
+                        break;
+                    case ModelExprIndexedFieldRefKind::FieldIndex:
+                        e_c->addFieldOffsetRef(e->getPath().at(i).offset);
+                        break;
+                    case ModelExprIndexedFieldRefKind::VecIndex:
+                        e_c->addVecIndexRef(m_ctxt->mkModelExprRef(e->getPath().at(i).idx_e));
+                        break;
+                }
+            }
+
+            fprintf(stdout, "New copy: old=%p new=%p\n", e, e_c);
+
+            m_expr_copy = e_c;
+        }
     }
 
 private:
@@ -171,7 +245,8 @@ private:
     ModelFieldRefConstraintDataUP               m_result;
     IModelField                                 *m_target_ref;
     IModelField                                 *m_candidate;
-    const std::vector<IModelField *>            *m_candidate_refs;
+    const std::vector<IModelFieldRef *>         *m_candidate_refs;
+    const std::vector<IModelField *>            *m_candidates;
 
 
 };

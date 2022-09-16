@@ -105,12 +105,12 @@ public:
             it!=e->getPath().end(); it++) {
             switch (it->kind) {
             case ModelExprIndexedFieldRefKind::Field:
-                ref->addFieldRef(exprT<IModelExprFieldRef>(it->idx_e.get()));
+                ref->addField(it->field);
                 break;
             case ModelExprIndexedFieldRefKind::FieldIndex:
-                ref->addFieldIndexRef(expr(it->idx_e.get()));
+                ref->addFieldOffsetRef(it->offset);
             case ModelExprIndexedFieldRefKind::VecIndex:
-                ref->addVecIndexRef(expr(it->idx_e.get()));
+                ref->addVecIndexRef(expr(it->idx_e));
                 break;
             }
         }

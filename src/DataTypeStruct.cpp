@@ -20,6 +20,7 @@
  */
 
 #include "vsc/impl/TaskIsTypeFieldRef.h"
+#include "vsc/impl/TaskBuildModelConstraint.h"
 #include "DataTypeStruct.h"
 #include "TypeField.h"
 #include "TypeConstraint.h"
@@ -72,6 +73,19 @@ IModelField *DataTypeStruct::mkRootField(
 		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
 
 		// Need to build sub-fields and constraints
+
+		for (std::vector<ITypeFieldUP>::const_iterator
+			it=getFields().begin();
+			it!=getFields().end(); it++) {
+			ret->addField((*it)->getDataType()->mkTypeField(ctxt, it->get()));
+		}
+	
+		for (std::vector<ITypeConstraintUP>::const_iterator
+			it=getConstraints().begin();
+			it!=getConstraints().end(); it++) {
+			// TODO:
+			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(it->get()));
+		}
 	}
 
 	if (getCreateHook()) {

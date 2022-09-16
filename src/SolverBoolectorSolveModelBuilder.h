@@ -45,6 +45,8 @@ public:
 
 	virtual void visitModelExprIn(IModelExprIn *e) override;
 
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override;
+
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override;
 
 	virtual void visitModelExprVal(IModelExprVal *e) override;
@@ -76,6 +78,7 @@ private:
 	std::vector<IModelField *>			m_field_s;
 	std::pair<bool,BoolectorNode *>		m_node_i;
 	std::vector<int32_t>				m_width_s;
+	bool								m_build_field;
 };
 
 } /* namespace vsc */

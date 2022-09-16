@@ -40,7 +40,7 @@ DEBUG_SCOPE(SolverBoolectorSolveModelBuilder);
 namespace vsc {
 
 SolverBoolectorSolveModelBuilder::SolverBoolectorSolveModelBuilder(
-		SolverBoolector *solver) : m_solver(solver) {
+		SolverBoolector *solver) : m_solver(solver), m_build_field(false) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -50,15 +50,20 @@ SolverBoolectorSolveModelBuilder::~SolverBoolectorSolveModelBuilder() {
 }
 
 BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelField *f) {
+	DEBUG_ENTER("build(Field)");
+	m_build_field = true;
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
 	f->accept(this);
 
+	DEBUG_LEAVE("build(Field)");
 	return m_node_i.second;
 }
 
 BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelConstraint *c) {
+	DEBUG_ENTER("build(Constraint)");
+	m_build_field = false;
 	m_width_s.clear();
 	m_width_s.push_back(-1);
 
@@ -68,12 +73,15 @@ BoolectorNode *SolverBoolectorSolveModelBuilder::build(IModelConstraint *c) {
 
 	if (!m_node_i.second) {
 		// Create a '1' node
+		DEBUG("CheckMe: returning '1' node");
 		return boolector_one(
 				m_solver->btor(),
 				m_solver->get_sort(1));
 	} else {
 		return m_node_i.second;
 	}
+
+	DEBUG_LEAVE("build(Constraint)");
 }
 
 void SolverBoolectorSolveModelBuilder::visitDataTypeEnum(IDataTypeEnum *t) {
@@ -328,20 +336,9 @@ void SolverBoolectorSolveModelBuilder::visitModelExprFieldRef(IModelExprFieldRef
 	bool is_signed = false;
 	DEBUG_ENTER("visitModelExprFieldRef %s", e->field()->name().c_str());
 
-	if (!(n=m_solver->findFieldData(e->field()))) {
-		// Need to build this field
-		DEBUG("Note: building field");
-		e->field()->accept(this);
-		n = m_node_i.second;
-		is_signed = m_node_i.first;
-		m_solver->addFieldData(e->field(), n);
-	} else {
-		// TODO: determine signedness of field
-		is_signed = TaskIsDataTypeSigned().check(e->field()->getDataType());
-		DEBUG("n: %p", n);
-	}
+	// This takes care of finding and/or constructing the field
+	visitModelField(e->field());
 
-	m_node_i = {is_signed, n};
 	DEBUG_LEAVE("visitModelExprFieldRef %s n=%p",
 			e->field()->name().c_str(), m_node_i.second);
 }
@@ -423,6 +420,34 @@ void SolverBoolectorSolveModelBuilder::visitModelExprIn(IModelExprIn *e) {
 	DEBUG_LEAVE("visitModelExprIn");
 }
 
+void SolverBoolectorSolveModelBuilder::visitModelExprIndexedFieldRef(
+		IModelExprIndexedFieldRef *e) {
+	DEBUG_ENTER("visitModelExprIndexedFieldRef");
+	IModelField *field = 0;
+
+	for (std::vector<ModelExprIndexedFieldRefElem>::const_iterator
+		it=e->getPath().begin();
+		it!=e->getPath().end(); it++) {
+		switch (it->kind) {
+			case ModelExprIndexedFieldRefKind::Field:
+				field = it->field;
+				break;
+
+			case ModelExprIndexedFieldRefKind::FieldIndex:
+				field = field->getField(it->offset);
+				break;
+
+			case ModelExprIndexedFieldRefKind::VecIndex:
+				fprintf(stdout, "TODO: vector index\n");
+				field = 0;
+				break;
+		}
+	}
+
+	visitModelField(field);
+	DEBUG_LEAVE("visitModelExprIndexedFieldRef");
+}
+
 void SolverBoolectorSolveModelBuilder::visitModelExprPartSelect(
 		IModelExprPartSelect *e) {
 	int32_t ctx_width = m_width_s.back();
@@ -454,14 +479,27 @@ void SolverBoolectorSolveModelBuilder::visitModelExprVal(IModelExprVal *e) {
 void SolverBoolectorSolveModelBuilder::visitModelField(IModelField *f) {
 	DEBUG_ENTER("visitModelField %s", f->name().c_str());
 	if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
-		// Create a solver-variable representation for this
-		m_field_s.push_back(f);
-		if (f->getDataType()) {
-			f->getDataType()->accept(this);
+		if (m_build_field) {
+			// If we're field-building, then the solver already
+			// knows it doesn't have a cached copy
+			m_node_i.second = 0;
 		} else {
-			DEBUG("Note: no datatype");
+			m_node_i.second = m_solver->findFieldData(f);
+			m_node_i.first = TaskIsDataTypeSigned().check(f->getDataType());
 		}
-		m_field_s.pop_back();
+
+		if (!m_node_i.second) {
+			DEBUG("Creating a new field node %s", f->name().c_str());
+			// Hasn't been initialized yet
+			m_field_s.push_back(f);
+			if (f->getDataType()) {
+				f->getDataType()->accept(this);
+			} else {
+				DEBUG("Note: no datatype");
+			}
+			m_field_s.pop_back();
+			m_solver->addFieldData(f, m_node_i.second);
+		}
 	} else {
 		// Create a value node
 		char *bits = (char *)alloca(f->val()->bits()+1);
@@ -481,16 +519,28 @@ void SolverBoolectorSolveModelBuilder::visitModelFieldRoot(IModelFieldRoot *f) {
 }
 
 void SolverBoolectorSolveModelBuilder::visitModelFieldType(IModelFieldType *f) {
-	DEBUG_ENTER("visitModelFieldType %s", f->name().c_str());
+	DEBUG_ENTER("visitModelFieldType %s(%p)", f->name().c_str(), f);
 	if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
 		// Create a solver-variable representation for this
-		m_field_s.push_back(f);
-		if (f->getDataType()) {
-			f->getDataType()->accept(this);
+		if (m_build_field) {
+			m_node_i.second = 0;
 		} else {
-			DEBUG("Note: no datatype");
+			m_node_i.second = m_solver->findFieldData(f);
+			m_node_i.first = TaskIsDataTypeSigned().check(f->getDataType());
 		}
-		m_field_s.pop_back();
+
+		if (!m_node_i.second) {
+			DEBUG("Creating a new field node %s", f->name().c_str());
+			// Hasn't been initialized yet
+			m_field_s.push_back(f);
+			if (f->getDataType()) {
+				f->getDataType()->accept(this);
+			} else {
+				DEBUG("Note: no datatype");
+			}
+			m_field_s.pop_back();
+			m_solver->addFieldData(f, m_node_i.second);
+		}
 	} else {
 		// Create a value node
 		char *bits = (char *)alloca(f->val()->bits()+1);

@@ -253,6 +253,13 @@ void SolveSpecBuilder::visitModelExprFieldRef(IModelExprFieldRef *e) {
 void SolveSpecBuilder::visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) {
 	DEBUG_ENTER("visitModelExprIndexedFieldRef");
 	IModelField *field = TaskResolveModelExprFieldRef(m_ctx).resolve(0, e);
+
+	// We ignore constraints via null field references
+	if (!field) {
+		DEBUG_LEAVE("visitModelExprIndexedFieldRef: null reference");
+		return;
+	}
+
 	if (m_pass == 0) {
 		// In pass 0, we're collecting fields
 		field->accept(this);
