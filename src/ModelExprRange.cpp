@@ -23,7 +23,7 @@ ModelExprRange::~ModelExprRange() {
 	// TODO Auto-generated destructor stub
 }
 
-int32_t ModelExprRange::width() const {
+int32_t ModelExprRange::width() {
 	if (m_upper) {
 		if (m_upper->width() > m_lower->width()) {
 			return m_upper->width();

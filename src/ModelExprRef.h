@@ -17,7 +17,7 @@ public:
 
 	virtual ~ModelExprRef();
 
-	virtual int32_t width() const { return m_expr->width(); }
+	virtual int32_t width() { return m_expr->width(); }
 
 	virtual void eval(IModelVal *dst) override { }
 

@@ -21,7 +21,7 @@ public:
 
 	virtual ~ModelExprRange();
 
-	virtual int32_t width() const override;
+	virtual int32_t width() override;
 
 	virtual bool isSingle() const override { return m_is_single; }
 

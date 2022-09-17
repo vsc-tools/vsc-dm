@@ -19,7 +19,8 @@ class IModelExpr : public IAccept {
 public:
 	virtual ~IModelExpr() { }
 
-	virtual int32_t width() const = 0;
+	virtual int32_t width() = 0;
+
 
 	/**
 	 * Evaluate the expression and return a result

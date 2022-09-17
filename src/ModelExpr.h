@@ -21,8 +21,6 @@ public:
 
 	virtual ~ModelExpr();
 
-//	virtual int32_t width() const = 0;
-
 	/**
 	 * Evaluate the expression and return a result
 	 */

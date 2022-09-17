@@ -22,7 +22,7 @@ public:
 
 	virtual ~ModelExprBin();
 
-	virtual int32_t width() const override { return m_width; }
+	virtual int32_t width() override { return m_width; }
 
 	virtual IModelExpr *lhs() const override { return m_lhs.get(); }
 

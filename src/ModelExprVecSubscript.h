@@ -19,7 +19,7 @@ public:
 
 	virtual ~ModelExprVecSubscript();
 
-	virtual int32_t width() const override { return -1; }
+	virtual int32_t width() override { return -1; }
 
 	virtual IModelExpr *expr() const override { return m_expr.get(); }
 

@@ -14,7 +14,7 @@ public:
 
     virtual ~ModelExprIndexedFieldRef();
 
-    virtual int32_t width() const override { return m_width; }
+    virtual int32_t width() override;
 
 	virtual void eval(IModelVal *dst) override { }
 

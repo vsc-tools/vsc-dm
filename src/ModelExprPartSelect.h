@@ -27,7 +27,7 @@ public:
 
 	virtual int32_t upper() const override { return m_upper; }
 
-	virtual int32_t width() const override { return m_upper-m_lower+1; }
+	virtual int32_t width() override { return m_upper-m_lower+1; }
 
 	virtual void eval(IModelVal *dst) override;
 

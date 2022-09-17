@@ -1,14 +1,40 @@
 
 #include "ModelExprIndexedFieldRef.h"
+#include "vsc/IModelField.h"
 
 namespace vsc {
 
-ModelExprIndexedFieldRef::ModelExprIndexedFieldRef() {
+ModelExprIndexedFieldRef::ModelExprIndexedFieldRef() : m_width(-1) {
 
 }
 
 ModelExprIndexedFieldRef::~ModelExprIndexedFieldRef() {
 
+}
+
+int32_t ModelExprIndexedFieldRef::width() {
+    if (m_width == -1) {
+        IModelField *f = 0;
+        for (std::vector<ModelExprIndexedFieldRefElem>::const_iterator
+            it=m_path.begin();
+            it!=m_path.end(); it++) {
+            switch (it->kind) {
+                case ModelExprIndexedFieldRefKind::Field: {
+                    f = it->field;
+                    if (f && f->val()) {
+                        m_width = f->val()->bits();
+                    }
+                } break;
+                case ModelExprIndexedFieldRefKind::FieldIndex: {
+                    f = f->getField(it->offset);
+                    if (f) {
+                        m_width = f->val()->bits();
+                    }
+                }
+            }
+        }
+    }
+    return m_width;
 }
 
 void ModelExprIndexedFieldRef::addField(IModelField *field) {

@@ -174,11 +174,13 @@ bool CompoundSolverDefault::solve_sset(
 	// Build solve data for this solve set
 	SolveSetSolveModelBuilder(solver.get()).build(sset);
 
+/*
 	for (std::vector<IModelConstraint *>::const_iterator
 		it=sset->constraints().begin();
 		it!=sset->constraints().end(); it++) {
 		DEBUG("Constraint: %s", PrettyPrinter().print(*it));
 	}
+ */
 
 	// First, ensure all constraints solve
 	for (auto c_it=sset->constraints().begin();

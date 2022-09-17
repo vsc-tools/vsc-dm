@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <stdarg.h>
 
 namespace vsc {
@@ -11,15 +12,24 @@ namespace vsc {
 class PrettyPrinter : public virtual VisitorBase {
 public:
 
+    PrettyPrinter() : VisitorBase(), m_prefix_s(), m_ind(""), m_str_tmp("") { 
+        fprintf(stdout, "PrettyPrinter::PrettyPrinter()\n");
+        fprintf(stdout, "prefix.size=%d\n", m_prefix_s.size());
+
+    }
+
+    virtual ~PrettyPrinter() { }
+
     const char *print(IAccept *it) {
-        std::stringstream sstr;
+//        std::stringstream sstr;
+//        m_out = &sstr;
 
-        m_prefix_s.clear();
-
-        m_out = &sstr;
+        m_out = 0;
+        m_str_tmp.clear();
         it->accept(m_this);
 
-        m_str_tmp = sstr.str();
+//        m_str_tmp = sstr.str();
+        m_prefix_s.clear();
         return m_str_tmp.c_str();
     }
 
@@ -97,6 +107,12 @@ public:
     }
 
 	virtual void visitModelExprBin(IModelExprBin *e) override {
+        const char *BinOp_s[] = {
+        	"==", "!=", ">", ">=", "<", "<=" 
+            "+", "-", "/", "*", "%", "&", "|",
+            "&&", "||", "<<", ">>", "^", "~"
+        };
+
         print("(");
         e->lhs()->accept(m_this);
         print(") %s (", BinOp_s[static_cast<int32_t>(e->op())]);
@@ -161,6 +177,9 @@ public:
     }
 
 	virtual void visitModelExprUnary(IModelExprUnary *e) override {
+        const char *UnaryOp_s[] = {
+            "!"
+        };
 
     }
 
@@ -182,7 +201,13 @@ protected:
 protected:
 
     void indent() {
-        m_out->write(m_ind.c_str(), m_ind.size());
+    	if (m_ind.size()) {
+            if (m_out) {
+    	        m_out->write(m_ind.c_str(), m_ind.size());
+            } else {
+                m_str_tmp += m_ind;
+            }
+	    }
     }
 
     void print(const char *fmt, ...) {
@@ -191,24 +216,38 @@ protected:
         va_start(ap, fmt);
 
         int len = vsnprintf(tmp, sizeof(tmp), fmt, ap);
-        m_out->write(tmp, len);
+        if (m_out) {
+            m_out->write(tmp, len);
+        } else {
+            m_str_tmp.append(tmp, len);
+        }
 
         va_end(ap);
     }
 
     void println() {
-        m_out->write("\n", 1);
+        if (m_out) {
+            m_out->write("\n", 1);
+        } else {
+            m_str_tmp += "\n";
+        }
     }
 
     void println(const char *fmt, ...) {
         va_list ap;
-        char tmp[1024];
+        char tmp[4096];
         va_start(ap, fmt);
 
         int len = vsnprintf(tmp, sizeof(tmp), fmt, ap);
-        m_out->write(m_ind.c_str(), m_ind.size());
-        m_out->write(tmp, len);
-        m_out->write("\n", 1);
+        if (m_out) {
+            m_out->write(m_ind.c_str(), m_ind.size());
+            m_out->write(tmp, len);
+            m_out->write("\n", 1);
+        } else {
+            m_str_tmp += m_ind;
+            m_str_tmp += tmp;
+            m_str_tmp += "\n";
+        }
 
         va_end(ap);
     }
@@ -250,18 +289,7 @@ protected:
     std::vector<Prefix>     m_prefix_s;
     std::string             m_str_tmp;
 
-    static const char       *BinOp_s[];
-    static const char       *UnaryOp_s[];
-
 };
 
-const char *PrettyPrinter::BinOp_s[] = {
-    	"==", "!=", ">", ">=", "<", "<=" 
-        "+", "-", "/", "*", "%", "&", "|",
-        "&&", "||", "<<", ">>", "^", "~"
-    };
-const char *PrettyPrinter::UnaryOp_s[] = {
-    "!"
-};
 
 }

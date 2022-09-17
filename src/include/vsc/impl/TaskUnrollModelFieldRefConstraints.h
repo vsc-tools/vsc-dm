@@ -209,6 +209,7 @@ public:
 
             fprintf(stdout, "field=%p m_target_ref=%p\n", field, m_target_ref);
             if (field == m_target_ref) {
+                fprintf(stdout, "Match:\n");
                 i++;
                 field = m_candidate;
                 break;

@@ -16,7 +16,7 @@ public:
 
 	virtual ~IModelExprBin() { }
 
-	virtual int32_t width() const = 0;
+	virtual int32_t width() = 0;
 
 	virtual IModelExpr *lhs() const = 0;
 

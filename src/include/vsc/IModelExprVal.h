@@ -15,7 +15,7 @@ public:
 
 	virtual ~IModelExprVal() { }
 
-	virtual int32_t width() const = 0;
+	virtual int32_t width() = 0;
 
 	virtual const IModelVal *val() const = 0;
 

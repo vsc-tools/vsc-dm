@@ -210,6 +210,9 @@ void SolverBoolectorSolveModelBuilder::visitModelExprBin(IModelExprBin *e) {
 	DEBUG_ENTER("visitModelExprBin %s", BinOp2Str_s(e->op()));
 	int32_t ctx_width = m_width_s.back();
 
+	fprintf(stdout, "ctx_width=%d\n", ctx_width);
+	fprintf(stdout, "e->lhs()->width=%d\n", e->lhs()->width());
+
 	if (e->lhs()->width() > ctx_width) {
 		ctx_width = e->lhs()->width();
 	}

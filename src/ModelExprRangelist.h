@@ -23,7 +23,7 @@ public:
 
 	virtual ~ModelExprRangelist();
 
-	virtual int32_t width() const override { return m_width; }
+	virtual int32_t width() override { return m_width; }
 
 	virtual const std::vector<IModelExprRangeUP> &ranges() const override {
 		return m_ranges;

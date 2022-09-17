@@ -20,7 +20,7 @@ public:
 
 	virtual ~ModelExprCond();
 
-	virtual int32_t width() const override { return m_width; }
+	virtual int32_t width() override { return m_width; }
 
 	virtual void eval(IModelVal *dst) override { }
 

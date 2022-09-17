@@ -8,6 +8,7 @@
 #pragma once
 #include "vsc/IModelBuildContext.h"
 #include "vsc/ITypeExprFieldRef.h"
+#include "vsc/impl/TaskIsModelFieldRef.h"
 #include "vsc/impl/VisitorBase.h"
 
 
@@ -35,9 +36,7 @@ public:
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
-		bool references_ref_fields = false;
-
-		// On the first pass, confirm whether we have any indexed
+ 		bool references_ref_fields = false;
 		IModelField *f = 0;
 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
 			switch (it->kind) {
@@ -54,9 +53,65 @@ public:
 			default:
 				fprintf(stdout, "Unhandled case\n");
 			}
+
+			if (TaskIsModelFieldRef().check(f)) {
+				references_ref_fields = true;
+				break;
+			}
 		}
 
-		m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
+		if (references_ref_fields) {
+			// Rebuild as a relative-reference expression
+			IModelExprIndexedFieldRef *ref = m_ctxt->ctxt()->mkModelExprIndexedFieldRef();
+			int32_t width = -1;
+			for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
+				switch (it->kind) {
+					case TypeExprFieldRefElemKind::Root: {
+						ref->addField(m_ctxt->getTopDownScope());
+					} break;
+					case TypeExprFieldRefElemKind::ActiveScope: {
+						ref->addField(m_ctxt->getBottomUpScope(it->idx));
+					} break;
+					case TypeExprFieldRefElemKind::IdxOffset: {
+						ref->addFieldOffsetRef(it->idx);
+					} break;
+					default:
+						fprintf(stdout, "Unhandled case\n");
+				}
+			}
+
+			m_expr = ref;
+		} else {
+			// Good to go:
+			m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
+		}
+
+
+// 		IModelExprIndexedFieldRef *ref = m_ctxt->ctxt()->mkModelExprIndexedFieldRef();
+
+// 		// On the first pass, confirm whether we have any indexed
+// 		IModelField *f = 0;
+// 		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
+// 			switch (it->kind) {
+// 			case TypeExprFieldRefElemKind::Root: {
+// 				f = m_ctxt->getTopDownScope();
+// 				ref->addField(f);
+// 			} break;
+// 			case TypeExprFieldRefElemKind::ActiveScope: {
+// 				f = m_ctxt->getBottomUpScope(it->idx);
+// 				ref->addField(f);
+// 			} break;
+// 			case TypeExprFieldRefElemKind::IdxOffset: {
+// 				ref->addFieldOffsetRef(it->idx);
+// //				f = f->getField(it->idx);
+// 			} break;
+
+// 			default:
+// 				fprintf(stdout, "Unhandled case\n");
+// 			}
+// 		}
+
+// //		m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
 	}
 
 	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) override {

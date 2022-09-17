@@ -19,7 +19,7 @@ public:
 
 	virtual ~ModelExprIn();
 
-	virtual int32_t width() const override { return 1; }
+	virtual int32_t width() override { return 1; }
 
 	virtual IModelExpr *lhs() const override { return m_lhs.get(); }
 
