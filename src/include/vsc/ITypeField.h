@@ -12,6 +12,7 @@
 #include "vsc/IDataType.h"
 #include "vsc/TypeFieldAttr.h"
 #include "vsc/IModelVal.h"
+#include "vsc/IModelBuildContext.h"
 
 namespace vsc {
 
@@ -40,11 +41,19 @@ public:
 		return dynamic_cast<T *>(getDataType());
 	}
 
-	virtual void setDataType(IDataType *t) = 0;
+	virtual void setDataType(IDataType *t, bool owned=false) = 0;
 
 	virtual ITypeField *getField(int32_t idx) const = 0;
 
 	virtual TypeFieldAttr getAttr() const = 0;
+
+	virtual IModelField *mkModelField(
+		IModelBuildContext 			*ctxt) = 0;
+
+	template <class T> T *mkModelFieldT(
+		IModelBuildContext 			*ctxt) {
+		return dynamic_cast<T *>(mkModelField(ctxt));
+	}
 
 };
 

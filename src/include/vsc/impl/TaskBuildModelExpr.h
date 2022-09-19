@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "vsc/IContext.h"
 #include "vsc/IModelBuildContext.h"
 #include "vsc/ITypeExprFieldRef.h"
 #include "vsc/impl/TaskIsModelFieldRef.h"

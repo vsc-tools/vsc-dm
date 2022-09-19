@@ -30,6 +30,10 @@ public:
 		m_delegate->visitDataTypeStruct(t);
 	}
 
+	virtual void visitDataTypeTypeRef(IDataTypeTypeRef *t) override {
+		m_delegate->visitDataTypeTypeRef(t);
+	}
+
 	virtual void visitModelConstraint(IModelConstraint *c) override {
 		m_delegate->visitModelConstraint(c);
 	}

@@ -6,10 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IContext.h"
-#include "vsc/IModelField.h"
+#include <stdint.h>
 
 namespace vsc {
+
+class IContext;
+class IModelField;
 
 class IModelBuildContext {
 public:

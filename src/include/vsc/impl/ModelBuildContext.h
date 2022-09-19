@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include "vsc/IModelBuildContext.h"
+#include "vsc/IModelField.h"
 
 namespace vsc {
 

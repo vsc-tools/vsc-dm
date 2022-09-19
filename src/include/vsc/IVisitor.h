@@ -31,6 +31,7 @@ namespace vsc {
 class IDataTypeEnum;
 class IDataTypeInt;
 class IDataTypeStruct;
+class IDataTypeTypeRef;
 
 class IModelConstraint;
 class IModelConstraintBlock;
@@ -104,6 +105,8 @@ public:
 	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) = 0;
+
+	virtual void visitDataTypeTypeRef(IDataTypeTypeRef *t) = 0;
 
 	virtual void visitModelConstraint(IModelConstraint *c) = 0;
 

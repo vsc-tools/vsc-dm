@@ -49,4 +49,9 @@ ITypeField *TypeField::getField(int32_t idx) const {
 	}
 }
 
+IModelField *TypeField::mkModelField(
+		IModelBuildContext 			*ctxt) {
+	return getDataType()->mkTypeField(ctxt, this);
+}
+
 } /* namespace vsc */

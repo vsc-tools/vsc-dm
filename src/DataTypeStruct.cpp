@@ -77,7 +77,7 @@ IModelField *DataTypeStruct::mkRootField(
 		for (std::vector<ITypeFieldUP>::const_iterator
 			it=getFields().begin();
 			it!=getFields().end(); it++) {
-			ret->addField((*it)->getDataType()->mkTypeField(ctxt, it->get()));
+			ret->addField((*it)->mkModelField(ctxt));
 		}
 	
 		for (std::vector<ITypeConstraintUP>::const_iterator
@@ -104,6 +104,19 @@ IModelField *DataTypeStruct::mkTypeField(
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
 		ret = ctxt->ctxt()->mkModelFieldType(type);
+
+		for (std::vector<ITypeFieldUP>::const_iterator
+			it=getFields().begin();
+			it!=getFields().end(); it++) {
+			ret->addField((*it)->mkModelField(ctxt));
+		}
+	
+		for (std::vector<ITypeConstraintUP>::const_iterator
+			it=getConstraints().begin();
+			it!=getConstraints().end(); it++) {
+			// TODO:
+			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(it->get()));
+		}
 	}
 
 	if (getCreateHook()) {

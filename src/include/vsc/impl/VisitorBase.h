@@ -11,6 +11,7 @@
 #include "vsc/IDataTypeEnum.h"
 #include "vsc/IDataTypeInt.h"
 #include "vsc/IDataTypeStruct.h"
+#include "vsc/IDataTypeTypeRef.h"
 
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
@@ -97,6 +98,10 @@ public:
 				it!=t->getConstraints().end(); it++) {
 			(*it)->accept(m_this);
 		}
+	}
+
+	virtual void visitDataTypeTypeRef(IDataTypeTypeRef *t) override {
+		// Don't propagate by default
 	}
 
 	virtual void visitModelConstraint(IModelConstraint *c) override { }
