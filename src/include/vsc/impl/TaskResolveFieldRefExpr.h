@@ -29,6 +29,10 @@ public:
 		return m_field;
 	}
 
+	template <class T> T *resolveT(ITypeExpr *target) {
+		return dynamic_cast<T *>(resolve(target));
+	}
+
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
 		for (std::vector<TypeExprFieldRefElem>::const_reverse_iterator
 			it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
