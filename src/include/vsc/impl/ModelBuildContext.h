@@ -7,6 +7,7 @@
 
 #pragma once
 #include <stdio.h>
+#include <string>
 #include <vector>
 #include "vsc/IModelBuildContext.h"
 #include "vsc/IModelField.h"
