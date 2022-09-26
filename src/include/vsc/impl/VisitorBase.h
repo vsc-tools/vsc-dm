@@ -248,15 +248,11 @@ public:
 	}
 
 	virtual void visitModelFieldRefRoot(IModelFieldRef *f) override {
-		if (f->getRef()) {
-			visitModelFieldRef(f);
-		}
+		visitModelFieldRef(f);
 	}
 
 	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
-		if (f->getRef()) {
-			visitModelFieldRef(f);
-		}
+		visitModelFieldRef(f);
 	}
 
 	virtual void visitModelFieldRoot(IModelFieldRoot *f) override {

@@ -22,11 +22,16 @@ public:
 
 	virtual const std::string &name() const override { return m_type->name(); }
 
+
 	virtual IDataType *getDataType() const override { return m_type->getDataType(); }
 
 	virtual IModelField *getParent() const override { return m_parent; }
 
 	virtual void setParent(IModelField *p) override { m_parent = p; }
+
+	virtual ITypeField *getTypeField() const override {
+		return m_type;
+	}
 
 	virtual const std::vector<IModelConstraintUP> &constraints() const override {
 		return m_constraints;

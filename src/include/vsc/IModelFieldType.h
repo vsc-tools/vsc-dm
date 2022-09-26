@@ -15,7 +15,11 @@ public:
 
 	virtual ~IModelFieldType() { }
 
-	virtual const std::string &name() const = 0;
+	virtual ITypeField *getTypeField() const = 0;
+
+	template <class T> T *getTypeFieldT() const {
+		return dynamic_cast<T *>(getTypeField());
+	}
 
 };
 

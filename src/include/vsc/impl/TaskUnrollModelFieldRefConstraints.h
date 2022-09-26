@@ -14,10 +14,12 @@ class ModelFieldRefConstraintData {
 public:
 
     ModelFieldRefConstraintData(
-        IModelField         *selector,
-        IModelConstraint    *valid_c,
-        IModelConstraint    *valid_soft_c) : m_selector(selector),
-        m_valid_c(valid_c), m_valid_soft_c(valid_soft_c) { }
+        IModelField                         *selector,
+        const std::vector<IModelField *>    &candidates,
+        IModelConstraint                    *valid_c,
+        IModelConstraint                    *valid_soft_c) : 
+            m_selector(selector), m_candidates(candidates.begin(), candidates.end()),
+            m_valid_c(valid_c), m_valid_soft_c(valid_soft_c) { }
 
     IModelField *getSelector() const { return m_selector.get(); }
 
@@ -33,12 +35,17 @@ public:
 
     IModelConstraint *getValidSoftC() const { return m_valid_soft_c.get(); }
 
+    IModelField *getSelected() const { 
+        return m_candidates.at(m_selector->val()->val_u()); 
+    }
+
 protected:
     IModelFieldUP                               m_selector;
     IModelConstraintScopeUP                     m_core_c;
-    std::vector<IModelConstraintUP>        m_select_c_l;
+    std::vector<IModelConstraintUP>             m_select_c_l;
     IModelConstraintUP                          m_valid_c;
     IModelConstraintUP                          m_valid_soft_c;
+    std::vector<IModelField *>                  m_candidates;
 
 };
 
@@ -116,7 +123,7 @@ public:
                     m_ctxt->mkModelExprVal(tmp_v1.get()))));
 
         m_result = ModelFieldRefConstraintDataUP(new ModelFieldRefConstraintData(
-                selector, valid_c, valid_soft_c));
+                selector, candidates, valid_c, valid_soft_c));
 
         for (uint32_t i=0; i<candidates.size(); i++) {
             m_tmp_c = IModelConstraintScopeUP(m_ctxt->mkModelConstraintScope());
