@@ -90,9 +90,8 @@ SolveSpec *SolveSpecBuilder::build(
 	for (auto it=m_unconstrained_l.begin(); it!=m_unconstrained_l.end(); it++) {
 		if (*it) {
 			if ((*it)->isFlagSet(ModelFieldFlag::VecSize)) {
-				fprintf(stdout, "sz parent=%p FieldVec=%p\n", (*it)->getParent(), (*it)->getParentT<IModelFieldVec>());
 				unconstrained_sz_vec.push_back((*it)->getParentT<IModelFieldVec>());
-			} else {
+			} else if ((*it)->isFlagSet(ModelFieldFlag::UsedRand)) {
 				unconstrained.push_back(*it);
 			}
 		}
@@ -359,9 +358,6 @@ void SolveSpecBuilder::process_fieldref(IModelField *f) {
 		auto uc_it = m_unconstrained_m.find(f);
 		if (uc_it != m_unconstrained_m.end()) {
 			m_unconstrained_l.at(uc_it->second) = 0;
-		} else {
-			fprintf(stdout, "Field %s isn't in the unconstrained list\n",
-					f->name().c_str());
 		}
 
 		m_active_solveset->add_field(f);

@@ -76,6 +76,7 @@
 #include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
 #include "TypeFieldVec.h"
+#include "VscImpl.h"
 
 namespace vsc {
 
@@ -93,6 +94,10 @@ IModelField *Context::buildModelField(
 		const std::string		&name) {
 	ModelBuildContext ctxt(this);
 	return dt->mkRootField(&ctxt, name, false);
+}
+
+IDebugMgr *Context::getDebugMgr() {
+	return VscImpl::inst()->getDebugMgr();
 }
 
 ICompoundSolver *Context::mkCompoundSolver() {

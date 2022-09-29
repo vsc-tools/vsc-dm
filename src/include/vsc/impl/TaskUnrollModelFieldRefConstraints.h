@@ -4,6 +4,7 @@
 #include <vector>
 #include "vsc/IContext.h"
 
+#include "vsc/impl/TaskBuildRefSelector.h"
 #include "vsc/impl/TaskCopyModelConstraintOnDemand.h"
 
 namespace vsc {
@@ -39,9 +40,25 @@ public:
         return m_candidates.at(m_selector->val()->val_u()); 
     }
 
+    void addFieldsConstraints(
+        std::vector<IModelField *>          &fields,
+        std::vector<IModelConstraint *>     &constraints,
+        bool                                add_valid_c=true) const {
+        fields.push_back(m_selector.get());
+        for (std::vector<IModelConstraintUP>::const_iterator
+            it=m_select_c_l.begin();
+            it!=m_select_c_l.end(); it++) {
+            if (it->get()) {
+                constraints.push_back(it->get());
+            }
+        }
+        if (add_valid_c) {
+            constraints.push_back(m_valid_c.get());
+        }
+    }
+
 protected:
     IModelFieldUP                               m_selector;
-    IModelConstraintScopeUP                     m_core_c;
     std::vector<IModelConstraintUP>             m_select_c_l;
     IModelConstraintUP                          m_valid_c;
     IModelConstraintUP                          m_valid_soft_c;
@@ -58,140 +75,105 @@ protected:
  */
 class TaskUnrollModelFieldRefConstraints : public virtual TaskCopyModelConstraintOnDemand {
 public:
-    TaskUnrollModelFieldRefConstraints(IContext *ctxt) : TaskCopyModelConstraintOnDemand(ctxt) { 
-        m_candidate_refs = 0;
-
+    TaskUnrollModelFieldRefConstraints(IContext *ctxt) : 
+        TaskCopyModelConstraintOnDemand(ctxt, true) { 
+        m_result = 0;
     }
 
-    ModelFieldRefConstraintData *build(
-        IModelFieldRef                          *ref, // target reference
-        const std::vector<IModelField *>        &candidates,
-        const std::vector<IModelFieldRef *>     &candidate_refs, // (optional)
+    void build(
+        std::vector<IModelConstraintUP>         &result,
+        const std::vector<RefSelector *>        &selectors,
         const std::vector<IModelConstraint *>   &constraints) {
-        uint32_t bits = 0, value = candidates.size();
 
-        m_candidates = &candidates;
-        m_candidate_refs = (candidate_refs.size())?&candidate_refs:0;
+        m_result = &result;
 
-        // Determine how many bits are needed
-        do {
-            bits++;
-            value >>= 1;
-        } while (value);
+        // Target refs holds the ref fields we're looking for
+        std::vector<IModelValUP> sel_values;
 
-        IDataTypeInt *selector_t = m_ctxt->findDataTypeInt(true, bits);
-        if (!selector_t) {
-            selector_t = m_ctxt->mkDataTypeInt(true, bits);
-            m_ctxt->addDataTypeInt(selector_t);
+        // Setup a target-ref list and a list for holding values
+        m_target_ref_l.clear();
+        for (std::vector<RefSelector *>::const_iterator
+            it=selectors.begin();
+            it!=selectors.end(); it++) {
+            m_target_ref_l.push_back((*it)->m_ref);
+            sel_values.push_back(IModelValUP(m_ctxt->mkModelVal()));
+            sel_values.back()->setBits((*it)->m_bits);
         }
 
-        IModelField *selector = m_ctxt->mkModelFieldRoot(selector_t, "selector");
+        process_selector(selectors, constraints, sel_values, 0);
+    }
 
-        // Add a constraint on the value range
-        IModelValUP tmp_v1 = IModelValUP(m_ctxt->mkModelVal());
-        IModelValUP tmp_v2 = IModelValUP(m_ctxt->mkModelVal());
+    void process_selector(
+        const std::vector<RefSelector *>            &selectors, 
+        const std::vector<IModelConstraint *>       &constraints,
+        const std::vector<IModelValUP>              &sel_values,
+        uint32_t                                    i) {
+        RefSelector *sel = selectors.at(i);
 
-        tmp_v1->setBits(bits);
-        tmp_v2->setBits(bits);
-        tmp_v1->set_val_i(-1);
-        tmp_v2->set_val_i(candidates.size()-1);
+        for (uint32_t ci=0; ci<sel->m_candidates.size(); ci++) {
+            if (sel->m_candidates.at(ci)) {
+                m_candidate_l.push_back(sel->m_candidates.at(ci));
+                sel_values.at(i)->set_val_i(ci);
 
-        // Ranges -1..N-1
-        selector->addConstraint(m_ctxt->mkModelConstraintExpr(
-            m_ctxt->mkModelExprBin(
-                m_ctxt->mkModelExprBin(
-                    m_ctxt->mkModelExprFieldRef(selector),
-                    BinOp::Ge,
-                    m_ctxt->mkModelExprVal(tmp_v1.get())),
-                BinOp::LogAnd,
-                m_ctxt->mkModelExprBin(
-                    m_ctxt->mkModelExprFieldRef(selector),
-                    BinOp::Le,
-                    m_ctxt->mkModelExprVal(tmp_v2.get())))));
+                if (i+1 < selectors.size()) {
+                    process_selector(selectors, constraints, sel_values, i+1);
+                } else {
+                    // Go ahead and process the constraints
+                    std::vector<IModelConstraint *> impl_constraints;
 
-        IModelConstraint *valid_c = m_ctxt->mkModelConstraintExpr(
-            m_ctxt->mkModelExprBin(
-                m_ctxt->mkModelExprFieldRef(selector),
-                BinOp::Ne,
-                m_ctxt->mkModelExprVal(tmp_v1.get())));
-
-        IModelConstraint *valid_soft_c = m_ctxt->mkModelConstraintSoft(
-            m_ctxt->mkModelConstraintExpr(
-                m_ctxt->mkModelExprBin(
-                    m_ctxt->mkModelExprFieldRef(selector),
-                    BinOp::Ne,
-                    m_ctxt->mkModelExprVal(tmp_v1.get()))));
-
-        m_result = ModelFieldRefConstraintDataUP(new ModelFieldRefConstraintData(
-                selector, candidates, valid_c, valid_soft_c));
-
-        for (uint32_t i=0; i<candidates.size(); i++) {
-            m_tmp_c = IModelConstraintScopeUP(m_ctxt->mkModelConstraintScope());
-
-            // TODO: build out constraints
-            // (selector == i) -> {
-            //   (constraints via 'ref')
-            //   (constraints via 'candidate_refs[i]')
-            // }
-
-            // First, see if there are constraints here
-            std::vector<IModelConstraint *> impl_constraints;
-            m_target_ref = ref;
-            m_candidate = candidates.at(i);
-
-            // TODO: need a way to pass constraint-scope down
-            for (std::vector<IModelConstraint *>::const_iterator
-                c_it=constraints.begin();
-                c_it!=constraints.end(); c_it++) {
-                IModelConstraint *cc = copy(*c_it);
-                fprintf(stdout, "cc: %p\n", cc);
-                if (cc) {
-                    impl_constraints.push_back(cc);
-                }
-            }
-
-            if (candidate_refs.size()) {
-                m_target_ref = candidate_refs.at(i);
-                for (std::vector<IModelConstraint *>::const_iterator
-                    c_it=constraints.begin();
-                    c_it!=constraints.end(); c_it++) {
-                    IModelConstraint *cc = copy(*c_it);
-                    fprintf(stdout, "cc: %p\n", cc);
-                    if (cc) {
-                        impl_constraints.push_back(cc);
-                    }
-                }
-            }
-
-            if (impl_constraints.size()) {
-                // Now, build the implication constraint
-                IModelConstraint *body = impl_constraints.at(0);
-                if (impl_constraints.size() > 1) {
-                    IModelConstraintScope *body_s = m_ctxt->mkModelConstraintScope();
                     for (std::vector<IModelConstraint *>::const_iterator
-                        it=impl_constraints.begin();
-                        it!=impl_constraints.end(); it++) {
-                        body_s->addConstraint(*it);
+                        c_it=constraints.begin();
+                        c_it!=constraints.end(); c_it++) {
+                        IModelConstraint *cc = copy(*c_it);
+                        if (cc) {
+                            impl_constraints.push_back(cc);
+                        }
                     }
-                    body = body_s;
+
+                    if (impl_constraints.size()) {
+                        // Now, build the implication constraint
+                        IModelConstraint *body = impl_constraints.at(0);
+                        if (impl_constraints.size() > 1) {
+                            IModelConstraintScope *body_s = m_ctxt->mkModelConstraintScope();
+                            for (std::vector<IModelConstraint *>::const_iterator
+                                it=impl_constraints.begin();
+                                it!=impl_constraints.end(); it++) {
+                                body_s->addConstraint(*it);
+                            }
+                            body = body_s;
+                        }
+
+                        IModelExpr *cond = 0;
+                        for (uint32_t vi=0; vi<selectors.size(); vi++) {
+                            IModelExpr *cc = m_ctxt->mkModelExprBin(
+                                m_ctxt->mkModelExprFieldRef(selectors.at(vi)->m_selector.get()),
+                                BinOp::Eq,
+                                m_ctxt->mkModelExprVal(sel_values.at(vi).get())
+                            );
+
+                            if (!cond) {
+                                cond = cc;
+                            } else {
+                                cond = m_ctxt->mkModelExprBin(
+                                    cond,
+                                    BinOp::LogAnd,
+                                    cc
+                                );
+                            }
+                        }
+
+                        IModelConstraintImplies *impl = m_ctxt->mkModelConstraintImplies(
+                            cond,
+                            body
+                        );
+
+                        m_result->push_back(IModelConstraintUP(impl));
+                    }
                 }
 
-                tmp_v1->set_val_i(i);
-                IModelConstraintImplies *impl = m_ctxt->mkModelConstraintImplies(
-                    m_ctxt->mkModelExprBin(
-                        m_ctxt->mkModelExprFieldRef(selector),
-                        BinOp::Eq,
-                        m_ctxt->mkModelExprVal(tmp_v1.get())),
-                        body
-                    );
-                m_result->addSelectC(impl);
-            } else {
-                m_result->addSelectC(0);
+                m_candidate_l.pop_back();
             }
-
         }
-
-        return m_result.release();
     }
 
 	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override {
@@ -214,11 +196,17 @@ public:
                     break;
             }
 
-            fprintf(stdout, "field=%p m_target_ref=%p\n", field, m_target_ref);
-            if (field == m_target_ref) {
-                fprintf(stdout, "Match:\n");
+            bool found = false;
+            for (uint32_t fi=0; fi<m_target_ref_l.size(); fi++) {
+                if (field == m_target_ref_l.at(fi)) {
+                    field = m_candidate_l.at(fi);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
                 i++;
-                field = m_candidate;
                 break;
             }
         }
@@ -242,19 +230,15 @@ public:
                 }
             }
 
-            fprintf(stdout, "New copy: old=%p new=%p\n", e, e_c);
-
             m_expr_copy = e_c;
         }
     }
 
 private:
     IModelConstraintScopeUP                     m_tmp_c;
-    ModelFieldRefConstraintDataUP               m_result;
-    IModelField                                 *m_target_ref;
-    IModelField                                 *m_candidate;
-    const std::vector<IModelFieldRef *>         *m_candidate_refs;
-    const std::vector<IModelField *>            *m_candidates;
+    std::vector<IModelField *>                  m_target_ref_l;
+    std::vector<IModelField *>                  m_candidate_l;
+    std::vector<IModelConstraintUP>             *m_result;
 
 
 };

@@ -45,20 +45,14 @@ public:
     }
 
 	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override {
-        fprintf(stdout, "ResolveFieldRef::visitModelExprIndexedFieldRef\n");
-        fflush(stdout);
         IModelField *field = m_field;
 
         for (std::vector<ModelExprIndexedFieldRefElem>::const_iterator
             it=e->getPath().begin();
             it!=e->getPath().end(); it++) {
-            fprintf(stdout, "IT: %d\n", it->kind);
-            fflush(stdout);
             switch (it->kind) {
             case ModelExprIndexedFieldRefKind::Field:
                 field = it->field;
-                fprintf(stdout, "field=%p\n", field);
-                fflush(stdout);
                 break;
             case ModelExprIndexedFieldRefKind::FieldIndex:
                 field = field->getField(it->offset);
@@ -69,16 +63,12 @@ public:
                     m_val = IModelValUP(m_ctx->mkModelVal());
                     m_val->setBits(32);
                 }
-                fprintf(stdout, "vec=%p\n", vec);
                 if (!vec) {
                     field = 0;
                     break;
                 }
 
                 TaskResolveModelExprVal(m_ctx).eval(m_val.get(), it->idx_e);
-
-                fprintf(stdout, "Index: %lld\n", m_val->val_u());
-
                 field = vec->getField(m_val->val_u());
             } break;
 

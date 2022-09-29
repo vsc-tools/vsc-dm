@@ -19,6 +19,7 @@
  *     Author: 
  */
 #pragma once
+#include "vsc/impl/PrettyPrinter.h"
 #include "vsc/impl/VisitorBase.h"
 #include "vsc/IContext.h"
 #include "vsc/IModelExpr.h"
@@ -81,7 +82,7 @@ public:
             for (uint32_t i=0; i<c->constraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     block->addConstraint(constraint_l.at(i));
-                } else {
+                } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
                     block->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
                 }
@@ -132,7 +133,7 @@ public:
             for (uint32_t i=0; i<c->constraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     c_c->addConstraint(constraint_l.at(i));
-                } else {
+                } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
                     c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
                 }
@@ -224,7 +225,7 @@ public:
             for (uint32_t i=0; i<c->constraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     c_c->addConstraint(constraint_l.at(i));
-                } else {
+                } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
                     c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
                 }

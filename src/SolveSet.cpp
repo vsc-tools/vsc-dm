@@ -19,14 +19,19 @@
  *      Author: mballance
  */
 
+#include "Debug.h"
 #include "SolveSet.h"
 #include "ModelFieldVec.h"
+
+DEBUG_SCOPE(SolveSet);
+#define DEBUG_ENTER(fmt, ...) DEBUG_ENTER_BASE(SolveSet, fmt, ##__VA_ARGS__)
+#define DEBUG_LEAVE(fmt, ...) DEBUG_LEAVE_BASE(SolveSet, fmt, ##__VA_ARGS__)
+#define DEBUG(fmt, ...) DEBUG_BASE(SolveSet, fmt, ##__VA_ARGS__)
 
 namespace vsc {
 
 SolveSet::SolveSet() : m_flags(SolveSetFlag::NoFlags) {
 	// TODO Auto-generated constructor stub
-
 }
 
 SolveSet::~SolveSet() {
@@ -34,9 +39,11 @@ SolveSet::~SolveSet() {
 }
 
 void SolveSet::add_field(IModelField *f) {
+	DEBUG_ENTER("add_field %s", f->name().c_str());
 	if (m_field_s.find(f) == m_field_s.end()) {
 		m_all_fields.push_back(f);
 		if (f->isFlagSet(ModelFieldFlag::UsedRand)) {
+			DEBUG("  Field is marked used-rand");
 			m_rand_fields.push_back(f);
 		}
 		// If this is the size of a vector, save the vec
@@ -46,6 +53,7 @@ void SolveSet::add_field(IModelField *f) {
 		}
 		m_field_s.insert(f);
 	}
+	DEBUG_LEAVE("add_field %s", f->name().c_str());
 }
 
 void SolveSet::add_constraint(IModelConstraint *c) {

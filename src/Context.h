@@ -25,6 +25,8 @@ public:
 			IDataTypeStruct			*dt,
 			const std::string		&name) override;
 
+	virtual IDebugMgr *getDebugMgr() override;
+
 	virtual IModelValOp *getModelValOp() override { return &m_model_val_op; }
 
 	virtual ICompoundSolver *mkCompoundSolver() override;

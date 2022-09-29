@@ -134,7 +134,6 @@ cdef class Context(object):
         for e in exprs:
             expr = <ModelExpr>(e)
             expr._owned = False
-            print("expr._hndl=%x" % <intptr_t>(expr._hndl))
             expr_l.push_back(expr.asExpr())
 
         return ModelConstraintUnique.mk(self._hndl.mkModelConstraintUnique(expr_l), True)
@@ -173,7 +172,6 @@ cdef class Context(object):
                 rhs.asRangelist()))
         
     cpdef mkModelExprFieldRef(self, ModelField field):
-        print("mkModelExprFieldRef: %x" % <intptr_t>(field._hndl))
         return ModelExprFieldRef.mk(
             self._hndl.mkModelExprFieldRef(field.asField()))
         
@@ -631,7 +629,6 @@ cdef public void model_struct_create_hook_closure_invoke(
     hook_f,
     decl.IModelField  *field_h) with gil:
     cdef ModelField field = ModelField.mk(field_h, False)
-    print("Field: %s" % str(field))
     hook_f(field)
     
 cdef class ModelConstraint(ObjBase):
@@ -1070,12 +1067,8 @@ cdef class ModelField(ObjBase):
         cdef decl.IModelField *field = self.asField().getField(idx)
         
         if field != NULL:
-            print("Field @ %d is not null" % idx)
-            sys.stdout.flush()
             return ModelField.mk(field, False)
         else:
-            print("Field @ %d is null" % idx)
-            sys.stdout.flush()
             return None
         
     cpdef val(self):
@@ -1515,10 +1508,6 @@ cdef class TypeExprRangelist(TypeExpr):
     
     cpdef getRanges(self):
         cdef decl.ITypeExprRangelist *rl = self.asRangelist()
-        if rl == NULL:
-            print("rl is NULL")
-        else:
-            print("rl is OK")
         ret = []
         for i in range(self.asRangelist().getRanges().size()):
             ret.append(TypeExprRange.mk(
@@ -1651,10 +1640,8 @@ cdef class TypeField(ObjBase):
     cpdef DataType getDataType(self):
         cdef decl.IDataType *t = self.asField().getDataType()
         if t != NULL:
-            print("TypeField: t is not NULL")
             return DataType.mk(t, False)
         else:
-            print("TypeField: t IS NULL")
             return None
         
     cpdef TypeField getField(self, idx):
@@ -2068,13 +2055,10 @@ cdef class WrapperBuilder(VisitorBase):
         self.visitAccept(obj)
         ret = self._obj.pop()
 
-        print("WrapperBuilder.mkObj: ret=%s" % str(ret))
-
         if ret is None:
             for i,b in enumerate(_WrapperBuilderList):
                 builder = <WrapperBuilder>b
                 ret = builder.mkObj(obj, owned)
-                print("[%d] WrapperBuilder.mkObj: ret=%s" % (i, str(ret)))
                 if ret is not None:
                     break
         else:
@@ -2189,7 +2173,6 @@ cdef _WrapperBuilderInst = None
 
 cpdef addWrapperBuilder(WrapperBuilder builder):
     global _WrapperBuilderList
-    print("addWrapperBuilder")
     _WrapperBuilderList.append(builder)
 
         

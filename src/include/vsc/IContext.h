@@ -11,6 +11,7 @@
 #include "vsc/IDataTypeInt.h"
 #include "vsc/IDataTypeStruct.h"
 #include "vsc/IDataTypeVec.h"
+#include "vsc/IDebugMgr.h"
 #include "vsc/IModelConstraintBlock.h"
 #include "vsc/IModelConstraintExpr.h"
 #include "vsc/IModelConstraintForeach.h"
@@ -78,6 +79,8 @@ public:
 	virtual IModelField *buildModelField(
 			IDataTypeStruct			*dt,
 			const std::string		&name) = 0;
+
+	virtual IDebugMgr *getDebugMgr() = 0;
 
 	virtual IModelValOp *getModelValOp() = 0;
 

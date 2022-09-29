@@ -26,12 +26,15 @@ public:
 	}
 
 	virtual void visitModelField(IModelField *f) override {
-		if (is_used_rand()) {
+		bool used_rand = is_used_rand(f->flags());
+
+		if (used_rand) {
 			f->setFlag(ModelFieldFlag::UsedRand);
 		}
 
-		if (f->fields().size() > 0) {
-			m_used_rand.push_back(is_used_rand());
+		// Once we go through a non-rand section, there's no point in continuing
+		if (used_rand && f->fields().size() > 0) {
+			m_used_rand.push_back(used_rand);
 			for (auto fi=f->fields().begin(); fi!=f->fields().end(); fi++) {
 				(*fi)->accept(this);
 			}
@@ -41,10 +44,11 @@ public:
 
 protected:
 
-	bool is_used_rand() {
+	bool is_used_rand(ModelFieldFlag flags) {
 		if (m_used_rand.size() > 0) {
 			return ((m_max_depth == -1 || m_max_depth < m_used_rand.size()) &&
-					m_used_rand.at(m_used_rand.size()-1));
+					m_used_rand.at(m_used_rand.size()-1) && 
+					(flags & ModelFieldFlag::DeclRand) != ModelFieldFlag::NoFlags);
 		} else {
 			return m_set_root;
 		}

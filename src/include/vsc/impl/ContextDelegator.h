@@ -27,6 +27,10 @@ public:
 		return m_ctxt->buildModelField(dt, name);
 	}
 
+	virtual IDebugMgr *getDebugMgr() override {
+		return m_ctxt->getDebugMgr();
+	}
+
 	virtual ICompoundSolver *mkCompoundSolver() override {
 		return m_ctxt->mkCompoundSolver();
 	}
