@@ -12,6 +12,6 @@
 #define DEBUG_LEAVE(fmt, ...) \
     if (m_dbg && m_dbg->en()) m_dbg->leave(fmt, ##__VA_ARGS__)
 #define DEBUG(fmt, ...) \
-    if (m_dbg && m_dbg->en()) m_dbg.debug(fmt, ##__VA_ARGS__)
+    if (m_dbg && m_dbg->en()) m_dbg->debug(fmt, ##__VA_ARGS__)
 
 #endif
