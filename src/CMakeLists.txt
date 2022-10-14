@@ -48,3 +48,7 @@ install(TARGETS vsc_static
     DESTINATION lib
     EXPORT libvsc-targets)
 
+install(TARGETS vsc
+    DESTINATION lib
+    EXPORT libvsc-targets)
+

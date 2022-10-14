@@ -71,6 +71,8 @@ enum class TaskE {
 	SetUsedRand
 };
 
+class IContext;
+using IContextUP=std::unique_ptr<IContext>;
 class IContext {
 public:
 
