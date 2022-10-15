@@ -41,46 +41,46 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-  ci-macos-arm64:
-    runs-on: [self-hosted, macOS, ARM64]
-    steps:
-      - uses: actions/checkout@v1
-      - name: Fetch source dependencies
-        run: |
-          export IVPM_PYTHON=python3
-          ${IVPM_PYTHON} -m pip install ivpm 
-          ${IVPM_PYTHON} -m ivpm update -a
-          ./packages/python/bin/python3 -m pip install twine
-      - name: Build packages
-        run: |
-          export BUILD_NUM=$GITHUB_RUN_ID
-          ./packages/python/bin/python3 setup.py bdist_wheel
-      - name: Publish to PyPi
-        if: startsWith(github.ref, 'refs/heads/master')
-        run: |
-          python3 -m twine upload dist/*
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-  ci-macos-x86_64:
-    runs-on: [self-hosted, macOS, ARM64]
-    steps:
-      - uses: actions/checkout@v1
-      - name: Fetch source dependencies
-        run: |
-          export IVPM_PYTHON=/usr/local/bin/python3
-          arch -x86_64 ${IVPM_PYTHON} -m pip install ivpm 
-          arch -x86_64 ${IVPM_PYTHON} -m ivpm update -a
-          arch -x86_64 ./packages/python/bin/python3 -m pip install twine
-      - name: Build packages
-        run: |
-          export BUILD_NUM=$GITHUB_RUN_ID
-          arch -x86_64 ./packages/python/bin/python3 setup.py bdist_wheel --plat-name macosx_10_9_x86_64
-      - name: Publish to PyPi
-        if: startsWith(github.ref, 'refs/heads/master')
-        run: |
-          arch -x86_64 ./packages/python/bin/python3 -m twine upload dist/*_x86_64.whl
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-
+#  ci-macos-arm64:
+#    runs-on: [self-hosted, macOS, ARM64]
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Fetch source dependencies
+#        run: |
+#          export IVPM_PYTHON=python3
+#          ${IVPM_PYTHON} -m pip install ivpm 
+#          ${IVPM_PYTHON} -m ivpm update -a
+#          ./packages/python/bin/python3 -m pip install twine
+#      - name: Build packages
+#        run: |
+#          export BUILD_NUM=$GITHUB_RUN_ID
+#          ./packages/python/bin/python3 setup.py bdist_wheel
+#      - name: Publish to PyPi
+#        if: startsWith(github.ref, 'refs/heads/master')
+#        run: |
+#          python3 -m twine upload dist/*
+#        env:
+#          TWINE_USERNAME: __token__
+#          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+#  ci-macos-x86_64:
+#    runs-on: [self-hosted, macOS, ARM64]
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Fetch source dependencies
+#        run: |
+#          export IVPM_PYTHON=/usr/local/bin/python3
+#          arch -x86_64 ${IVPM_PYTHON} -m pip install ivpm 
+#          arch -x86_64 ${IVPM_PYTHON} -m ivpm update -a
+#          arch -x86_64 ./packages/python/bin/python3 -m pip install twine
+#      - name: Build packages
+#        run: |
+#          export BUILD_NUM=$GITHUB_RUN_ID
+#          arch -x86_64 ./packages/python/bin/python3 setup.py bdist_wheel --plat-name macosx_10_9_x86_64
+#      - name: Publish to PyPi
+#        if: startsWith(github.ref, 'refs/heads/master')
+#        run: |
+#          arch -x86_64 ./packages/python/bin/python3 -m twine upload dist/*_x86_64.whl
+#        env:
+#          TWINE_USERNAME: __token__
+#          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+#
