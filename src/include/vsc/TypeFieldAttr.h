@@ -10,9 +10,10 @@
 namespace vsc {
 
 enum class TypeFieldAttr {
-	NoAttr = 0,
-	Rand = (1 << 0),
-	VecSize  = (1 << 1)
+	NoAttr   = 0,
+	Rand     = (1 << 0),
+	VecSize  = (1 << 1),
+	Final    = (1 << 2) // Used to qualify methods
 };
 
 static inline TypeFieldAttr operator | (const TypeFieldAttr lhs, const TypeFieldAttr rhs) {

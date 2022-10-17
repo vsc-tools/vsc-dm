@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <string>
 #include <vector>
 #include "vsc/IAccept.h"
 #include "vsc/IDataType.h"
