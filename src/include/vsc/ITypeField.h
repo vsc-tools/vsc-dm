@@ -45,6 +45,10 @@ public:
 
 	virtual ITypeField *getField(int32_t idx) const = 0;
 
+	template <class T> T *getFieldT(int32_t idx) const {
+		return dynamic_cast<T *>(getField(idx));
+	}
+
 	virtual TypeFieldAttr getAttr() const = 0;
 
 	virtual IModelField *mkModelField(

@@ -2,6 +2,7 @@
 #pragma once
 #include <memory>
 #include "vsc/IContext.h"
+#include "vsc/IModelConstraint.h"
 #include "vsc/IModelField.h"
 #include "vsc/impl/VisitorBase.h"
 
@@ -16,11 +17,33 @@ public:
         const std::vector<IModelField *>    &candidates) :
     m_ref(ref), m_candidates(candidates.begin(),  candidates.end()) { }
 
+    using SelValConstraintM=std::unordered_map<int32_t,std::vector<IModelConstraint *>>;
+
+    // Adds a constraint specific to the specified selector value
+    void addSelValConstraint(int32_t val, IModelConstraint *c) {
+        SelValConstraintM::iterator it = m_selval_constraints.find(val);
+
+        if (it == m_selval_constraints.end()) {
+            it = m_selval_constraints.insert({val, {}}).first;
+        }
+        it->second.push_back(c);
+        m_constraints.push_back(IModelConstraintUP(c));
+    }
+
+    bool hasSelValConstraint(int32_t val) {
+        return (m_selval_constraints.find(val) != m_selval_constraints.end());
+    }
+
+    const std::vector<IModelConstraint *> &getSelValConstraints(int32_t val) const {
+        return m_selval_constraints.find(val)->second;
+    }
+
     IModelField                             *m_ref;
     uint32_t                                m_bits;
     IModelFieldUP                           m_selector;
     IModelConstraintUP                      m_valid_c;
     IModelConstraintUP                      m_valid_soft_c;
+    SelValConstraintM                       m_selval_constraints;
     std::vector<IModelConstraintUP>         m_constraints;
     std::vector<IModelField *>              m_candidates;
 };
@@ -37,6 +60,10 @@ public:
         const std::vector<IModelField *>    &candidates) {
         RefSelector *sel = new RefSelector(ref, candidates);
 
+        // TODO:
+        // Actually, all of this should be done post to allow 
+        // selectors to be built before the full candidate set
+        // is known
         uint32_t bits = 0, value = candidates.size();
 
         // Determine how many bits are needed
@@ -67,6 +94,8 @@ public:
         tmp_v1->set_val_i(-1);
         tmp_v2->set_val_i(candidates.size()-1);
 
+        // TODO: this should really be built after any reductions 
+        //       in the valid set have been made
         // Ranges -1..N-1
         sel->m_selector->addConstraint(m_ctxt->mkModelConstraintExpr(
             m_ctxt->mkModelExprBin(
@@ -80,6 +109,7 @@ public:
                     BinOp::Le,
                     m_ctxt->mkModelExprVal(tmp_v2.get())))));
 
+        // Validity constraints
         sel->m_valid_c = IModelConstraintUP(m_ctxt->mkModelConstraintExpr(
             m_ctxt->mkModelExprBin(
                 m_ctxt->mkModelExprFieldRef(sel->m_selector.get()),

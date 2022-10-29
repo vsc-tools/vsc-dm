@@ -31,6 +31,10 @@ public:
 
 	virtual ITypeField *getField(int32_t idx) = 0;
 
+	template <class T> T *getFieldT(int32_t idx) {
+		return dynamic_cast<T *>(getField(idx));
+	}
+
 	virtual void addConstraint(ITypeConstraint *c) = 0;
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
