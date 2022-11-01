@@ -20,6 +20,7 @@ cdef class Context(object):
     cdef decl.IContext               *_hndl
     cdef bool                        _owned
 
+    cpdef ModelBuildContext mkModelBuildContext(self, Context ctxt)
     cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
     cpdef mkCompoundSolver(self)
     cpdef DataTypeEnum findDataTypeEnum(self, name)

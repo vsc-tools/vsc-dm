@@ -27,6 +27,9 @@ cdef class Context(object):
         if self._owned:
             del self._hndl
         pass
+
+    cpdef ModelBuildContext mkModelBuildContext(self, Context ctxt):
+        return ModelBuildContext(ctxt)
         
     cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
         return ModelField.mk(
@@ -209,10 +212,11 @@ cdef class Context(object):
         
         if type is not None:
             type_h = type.asType()
-            
-        return ModelFieldRoot.mk(self._hndl.mkModelFieldRoot(
-            type_h, 
-            name.encode()),
+
+        return WrapperBuilder().mkObj(
+            self._hndl.mkModelFieldRoot(
+                type_h, 
+                name.encode()),
             True)
         
     cpdef mkModelFieldVecRoot(self, DataType type, name):
