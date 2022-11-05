@@ -27,6 +27,11 @@ version="0.0.1"
 if "BUILD_NUM" in os.environ.keys():
     version += ".%s" % os.environ["BUILD_NUM"]
 
+if "CMAKE_BUILD_TOOL" in os.environ.keys():
+    cmake_build_tool = os.environ["CMAKE_BUILD_TOOL"]
+else:
+    cmake_build_tool = "Ninja"
+
 # First need to establish where things are
 libvsc_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -68,7 +73,7 @@ else:
 result = subprocess.run(
     ["cmake", 
      libvsc_dir,
-     "-GNinja",
+     "-G%s" % cmake_build_tool,
 #     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
      BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
@@ -79,13 +84,24 @@ result = subprocess.run(
 if result.returncode != 0:
     raise Exception("cmake configure failed")
 
-result = subprocess.run(
-    ["ninja",
-     "-j",
-     "%d" % os.cpu_count()
-     ],
-    cwd=os.path.join(cwd, "build"),
-    env=env)
+if cmake_build_tool == "Ninja":
+    result = subprocess.run(
+        ["ninja",
+         "-j",
+         "%d" % os.cpu_count()
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+elif cmake_build_tool == "Unix Makefiles":
+    result = subprocess.run(
+        ["make",
+         "-j%d" % os.cpu_count()
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+else:
+    raise Exception("Unknown make system %s" % cmake_build_tool)
+
 if result.returncode != 0:
     raise Exception("build failed")
 
