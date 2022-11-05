@@ -26,7 +26,7 @@
 #include "vsc/IContext.h"
 #include "vsc/IModelFieldRef.h"
 #include "vsc/impl/VisitorBase.h"
-#include "DebugMacros.h"
+#include "vsc/impl/DebugMacros.h"
 
 namespace vsc {
 

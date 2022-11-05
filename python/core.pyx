@@ -445,6 +445,7 @@ cdef class CompoundSolver(object):
 
 cdef class Accept(object):
 
+
     cdef decl.IAccept *hndl(self):
         return NULL
 
@@ -454,6 +455,13 @@ cdef class ObjBase(object):
         if self._owned:
             del self._hndl
         pass
+
+    def __hash__(self):
+        return <intptr_t>(self._hndl)
+    
+    def __eq__(self, ObjBase other):
+        return self._hndl == other._hndl
+        
             
     
 cdef class DataType(ObjBase):

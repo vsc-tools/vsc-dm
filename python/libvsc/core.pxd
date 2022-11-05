@@ -105,7 +105,6 @@ cdef class ObjBase(object):
     cdef decl.IAccept           *_hndl
     cdef bool                   _owned
 
-
 cdef class DataType(ObjBase):
 
     cpdef ModelField mkRootField(
