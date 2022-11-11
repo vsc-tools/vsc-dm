@@ -51,6 +51,7 @@
 #include "vsc/IModelFieldRef.h"
 #include "vsc/IModelFieldRoot.h"
 #include "vsc/IModelFieldType.h"
+#include "vsc/IModelFieldTypeRef.h"
 #include "vsc/IModelFieldVec.h"
 #include "vsc/IModelFieldVecRoot.h"
 
@@ -251,7 +252,7 @@ public:
 		visitModelFieldRef(f);
 	}
 
-	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
+	virtual void visitModelFieldRefType(IModelFieldTypeRef *f) override {
 		visitModelFieldRef(f);
 	}
 

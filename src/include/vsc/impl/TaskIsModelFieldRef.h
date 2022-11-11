@@ -26,7 +26,7 @@ public:
         m_ret = true;
     }
 
-	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
+	virtual void visitModelFieldRefType(IModelFieldTypeRef *f) override {
         m_ret = true;
     }
 

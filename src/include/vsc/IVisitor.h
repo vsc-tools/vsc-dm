@@ -71,6 +71,7 @@ class IModelField;
 class IModelFieldRef;
 class IModelFieldRoot;
 class IModelFieldType;
+class IModelFieldTypeRef;
 class IModelFieldVec;
 class IModelFieldVecRoot;
 
@@ -176,7 +177,7 @@ public:
 
 	virtual void visitModelFieldRefRoot(IModelFieldRef *f) = 0;
 
-	virtual void visitModelFieldRefType(IModelFieldRef *f) = 0;
+	virtual void visitModelFieldRefType(IModelFieldTypeRef *f) = 0;
 
 	virtual void visitModelFieldRoot(IModelFieldRoot *f) = 0;
 

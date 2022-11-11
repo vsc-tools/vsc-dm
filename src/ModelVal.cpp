@@ -18,10 +18,10 @@
  *  Created on: Sep 24, 2021
  *      Author: mballance
  */
-
+#include <string.h>
+#include "vsc/IContext.h"
 #include "ModelVal.h"
 #include "DataTypeWidthVisitor.h"
-#include <string.h>
 
 namespace vsc {
 
@@ -358,6 +358,16 @@ ModelVal ModelVal::slice(
 	}
 	return ret;
 #endif
+}
+
+IModelVal *ModelVal::clone(IContext *ctxt) const {
+	IModelVal *ret = (ctxt)?ctxt->mkModelVal():new ModelVal(this);
+
+	if (!ctxt) {
+		ret->set(this);
+	}
+
+	return ret;
 }
 
 } /* namespace vsc */

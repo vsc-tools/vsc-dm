@@ -78,7 +78,7 @@ public:
 
 	virtual void visitModelFieldRefRoot(vsc::IModelFieldRef *f) override;
 
-	virtual void visitModelFieldRefType(vsc::IModelFieldRef *f) override;
+	virtual void visitModelFieldRefType(vsc::IModelFieldTypeRef *f) override;
 
 	virtual void visitModelFieldRoot(vsc::IModelFieldRoot *f) override;
 

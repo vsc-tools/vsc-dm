@@ -11,6 +11,8 @@
 
 namespace vsc {
 
+class IContext;
+
 class IModelVal;
 using IModelValUP=std::unique_ptr<IModelVal>;
 class IModelVal {
@@ -61,6 +63,8 @@ public:
 	}
 
 	inline uint64_t val_u() const { return (bits()<=64)?val().v:val().vp[0]; }
+
+	virtual IModelVal *clone(IContext *ctxt=0) const = 0;
 
 };
 

@@ -415,6 +415,13 @@ cdef class ModelFieldType(ModelField):
     
     @staticmethod
     cdef mk(decl.IModelFieldType *, bool owned=*)
+
+cdef class ModelFieldTypeRef(ModelFieldRef):
+
+    cdef decl.IModelFieldTypeRef *asType(self)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldTypeRef *, bool owned=*)
     
 cdef class ModelFieldVec(ModelField):
 
@@ -713,7 +720,7 @@ cdef class VisitorBase(object):
 
     cpdef void visitModelFieldRefRoot(self, ModelFieldRef f)
 
-    cpdef void visitModelFieldRefType(self, ModelFieldRef f)
+    cpdef void visitModelFieldRefType(self, ModelFieldTypeRef f)
 
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f)
 

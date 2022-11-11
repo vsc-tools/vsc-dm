@@ -101,7 +101,7 @@ void VisitorProxy::visitModelFieldRefRoot(vsc::IModelFieldRef *f) {
 	VisitorProxy_visitModelFieldRefRoot(m_obj, f);
 }
 
-void VisitorProxy::visitModelFieldRefType(vsc::IModelFieldRef *f) {
+void VisitorProxy::visitModelFieldRefType(vsc::IModelFieldTypeRef *f) {
 	VisitorProxy_visitModelFieldRefType(m_obj, f);
 }
 

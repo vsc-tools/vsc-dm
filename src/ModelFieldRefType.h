@@ -7,11 +7,14 @@
 
 #pragma once
 #include "vsc/ITypeField.h"
+#include "vsc/IModelFieldTypeRef.h"
 #include "ModelFieldRef.h"
 
 namespace vsc {
 
-class ModelFieldRefType : public ModelFieldRef {
+class ModelFieldRefType : 
+	public virtual IModelFieldTypeRef, 
+	public virtual ModelFieldRef {
 public:
 	ModelFieldRefType(ITypeField *type);
 
@@ -21,7 +24,15 @@ public:
 		return m_type->name();
 	}
 
+	virtual ITypeField *getTypeField() const override {
+		return m_type;
+	}
+
 	virtual IDataType *getDataType() const override {
+		return m_type->getDataType();
+	}
+
+    virtual IDataType *getDataTypeRef() const override {
 		return m_type->getDataType();
 	}
 

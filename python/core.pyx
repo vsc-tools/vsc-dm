@@ -1164,6 +1164,18 @@ cdef class ModelFieldType(ModelField):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+
+cdef class ModelFieldTypeRef(ModelFieldRef):
+
+    cdef decl.IModelFieldTypeRef *asType(self):
+        return dynamic_cast[decl.IModelFieldTypeRefP](self._hndl)
+    
+    @staticmethod
+    cdef mk(decl.IModelFieldTypeRef *hndl, bool owned=True):
+        ret = ModelFieldTypeRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
 cdef class ModelFieldVec(ModelField):
 
@@ -1807,7 +1819,7 @@ cdef class VisitorBase(object):
     cpdef void visitModelFieldRefRoot(self, ModelFieldRef f):
         pass
 
-    cpdef void visitModelFieldRefType(self, ModelFieldRef f):
+    cpdef void visitModelFieldRefType(self, ModelFieldTypeRef f):
         pass
 
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f):
@@ -1912,8 +1924,8 @@ cdef public void VisitorProxy_visitModelFieldRef(obj, decl.IModelFieldRef *f) wi
 cdef public void VisitorProxy_visitModelFieldRefRoot(obj, decl.IModelFieldRef *f) with gil:
     obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
 
-cdef public void VisitorProxy_visitModelFieldRefType(obj, decl.IModelFieldRef *f) with gil:
-    obj.visitModelFieldRefRoot(ModelFieldRef.mk(f, False))
+cdef public void VisitorProxy_visitModelFieldRefType(obj, decl.IModelFieldTypeRef *f) with gil:
+    obj.visitModelFieldRefType(ModelFieldTypeRef.mk(f, False))
 
 cdef public void VisitorProxy_visitModelFieldRoot(obj, decl.IModelFieldRoot *f) with gil:
     obj.visitModelFieldRoot(ModelFieldRoot.mk(f, False))
@@ -2141,7 +2153,7 @@ cdef class WrapperBuilder(VisitorBase):
     cpdef void visitModelFieldRefRoot(self, ModelFieldRef f):
         self._set_obj(f)
 
-    cpdef void visitModelFieldRefType(self, ModelFieldRef f):
+    cpdef void visitModelFieldRefType(self, ModelFieldTypeRef f):
         self._set_obj(f)
 
     cpdef void visitModelFieldRoot(self, ModelFieldRoot f):

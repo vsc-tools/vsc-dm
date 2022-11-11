@@ -170,7 +170,7 @@ public:
 		m_delegate->visitModelFieldRefRoot(f);
 	}
 
-	virtual void visitModelFieldRefType(IModelFieldRef *f) override {
+	virtual void visitModelFieldRefType(IModelFieldTypeRef *f) override {
 		m_delegate->visitModelFieldRefType(f);
 	}
 

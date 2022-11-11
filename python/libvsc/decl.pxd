@@ -46,6 +46,7 @@ ctypedef IModelField *IModelFieldP
 ctypedef IModelFieldRef *IModelFieldRefP
 ctypedef IModelFieldRoot *IModelFieldRootP
 ctypedef IModelFieldType *IModelFieldTypeP
+ctypedef IModelFieldTypeRef *IModelFieldTypeRefP
 ctypedef IModelFieldVec *IModelFieldVecP
 ctypedef IModelFieldVecRoot *IModelFieldVecRootP
 ctypedef IModelFieldData *IModelFieldDataP
@@ -448,6 +449,10 @@ cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
     
 cdef extern from "vsc/IModelFieldType.h" namespace "vsc":
     cdef cppclass IModelFieldType(IModelField):
+        pass
+
+cdef extern from "vsc/IModelFieldTypeRef.h" namespace "vsc":
+    cdef cppclass IModelFieldTypeRef(IModelFieldRef):
         pass
     
 cdef extern from "vsc/IModelStructCreateHook.h" namespace "vsc":

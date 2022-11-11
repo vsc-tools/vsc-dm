@@ -58,6 +58,8 @@ public:
 
 	virtual val_t &val() override { return m_val; }
 
+	virtual IModelVal *clone(IContext *ctxt=0) const override;
+
 	ModelVal slice(
 			int32_t		upper,
 			int32_t		lower);
