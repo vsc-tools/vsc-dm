@@ -60,7 +60,8 @@ bool CompoundSolverDefault::solve(
 		for (auto f=fields.begin(); f!=fields.end(); f++) {
 			task.apply(*f,
 					(flags & SolveFlags::RandomizeTopFields) != SolveFlags::NoFlags,
-					((flags & SolveFlags::RandomizeDeclRand) != SolveFlags::NoFlags)?-1:0);
+					((flags & SolveFlags::RandomizeDeclRand) != SolveFlags::NoFlags)?-1:1);
+			DEBUG("Flags: %s 0x%08llx", (*f)->name().c_str(), (*f)->flags());
 		}
 	}
 
