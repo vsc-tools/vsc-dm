@@ -56,13 +56,43 @@ public:
 
 	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) override { }
 
-	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override { }
+	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override { 
+		DEBUG_ENTER("visitModelConstraintExpr");
+		IModelExpr *expr_c = copyT<IModelExpr>(c->expr());
+
+		IModelConstraintExpr *cc = m_ctxt->mkModelConstraintExpr(expr_c);
+
+		ret(cc);
+
+		DEBUG_LEAVE("visitModelConstraintExpr");
+	}
 
 	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override { }
 
-	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { }
+	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 
+		DEBUG_ENTER("visitModelConstraintIfElse");
+		IModelExpr *cond_c = copyT<IModelExpr>(c->getCond());
+		IModelConstraint *true_c = copyT<IModelConstraint>(c->getTrue());
+		IModelConstraint *false_c = (c->getFalse())?copyT<IModelConstraint>(c->getFalse()):0;
 
-	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { }
+		IModelConstraintIfElse *cc = m_ctxt->mkModelConstraintIfElse(cond_c, true_c, false_c);
+
+		ret(cc);
+
+		DEBUG_LEAVE("visitModelConstraintIfElse");
+	}
+
+	virtual void visitModelConstraintImplies(IModelConstraintImplies *c) override { 
+		DEBUG_ENTER("visitModelConstraintImplies");
+
+		IModelExpr *cond_c = copyT<IModelExpr>(c->getCond());
+		IModelConstraint *body_c = copyT<IModelConstraint>(c->getBody());
+		IModelConstraintImplies *cc = m_ctxt->mkModelConstraintImplies(cond_c, body_c);
+
+		ret(cc);
+
+		DEBUG_LEAVE("visitModelConstraintImplies");
+	}
 
 	virtual void visitModelConstraintRef(IModelConstraintRef *c) override { }
 
@@ -123,24 +153,35 @@ public:
 		std::unordered_map<IAccept*,IModelValUP>::const_iterator v_it;
 		std::unordered_map<IAccept*,IAccept*>::const_iterator f_it;
 
+		IModelExpr *ec = 0;
+
 		// Two special cases here:
 		// - We might be referencing an already-cloned field
 		// - We might be referencing a field whose value we should capture instead
 		if ((v_it=m_field_val_m.find(e->field())) != m_field_val_m.end()) {
 			// Produce a value expression instead
+			ec = m_ctxt->mkModelExprVal(v_it->second.get());
 		} else if ((f_it=m_obj_m.find(e->field())) != m_obj_m.end()) {
 			// Reference the cloned field
-
+			ec = m_ctxt->mkModelExprFieldRef(
+				dynamic_cast<IModelField *>(f_it->second));
 		} else {
 			// Reproduce the reference expression as-is
+			ec = m_ctxt->mkModelExprFieldRef(e->field());
 		}
+
+		ret(ec);
 
 		DEBUG_LEAVE("visitModelExprFieldRef");
 	}
 
 	virtual void visitModelExprIn(IModelExprIn *e) override { }
 
-	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { }
+	virtual void visitModelExprIndexedFieldRef(IModelExprIndexedFieldRef *e) override { 
+		DEBUG_ENTER("visitModelExprIndexedFieldRef");
+
+		DEBUG_LEAVE("visitModelExprIndexedFieldRef");
+	}
 
 	virtual void visitModelExprPartSelect(IModelExprPartSelect *e) override { }
 
@@ -150,9 +191,25 @@ public:
 
 	virtual void visitModelExprRef(IModelExprRef *e) override { }
 
-	virtual void visitModelExprUnary(IModelExprUnary *e) override { }
+	virtual void visitModelExprUnary(IModelExprUnary *e) override { 
+		DEBUG_ENTER("visitModelExprUnary");
+		IModelExpr *expr_c = copyT<IModelExpr>(e->expr());
+		IModelExpr *ec = m_ctxt->mkModelExprUnary(e->op(), expr_c);
 
-	virtual void visitModelExprVal(IModelExprVal *e) override { }
+		ret(ec);
+
+		DEBUG_LEAVE("visitModelExprUnary");
+	}
+
+	virtual void visitModelExprVal(IModelExprVal *e) override { 
+		DEBUG_ENTER("visitModelExprVal");
+
+		IModelExprVal *ec = m_ctxt->mkModelExprVal(e->val());
+		
+		ret(ec);
+
+		DEBUG_LEAVE("visitModelExprVal");
+	}
 
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override { }
 
