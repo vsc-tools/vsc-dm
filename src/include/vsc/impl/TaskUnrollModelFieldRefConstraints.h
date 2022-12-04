@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 #include "vsc/IContext.h"
+#include "vsc/IRefSelector.h"
 
-#include "vsc/impl/TaskBuildRefSelector.h"
 #include "vsc/impl/TaskCopyModelConstraintOnDemand.h"
 
 namespace vsc {
@@ -82,7 +82,7 @@ public:
 
     void build(
         std::vector<IModelConstraintUP>         &result,
-        const std::vector<RefSelector *>        &selectors,
+        const std::vector<IRefSelector *>       &selectors,
         const std::vector<IModelConstraint *>   &constraints) {
 
         m_result = &result;
@@ -92,27 +92,27 @@ public:
 
         // Setup a target-ref list and a list for holding values
         m_target_ref_l.clear();
-        for (std::vector<RefSelector *>::const_iterator
+        for (std::vector<IRefSelector *>::const_iterator
             it=selectors.begin();
             it!=selectors.end(); it++) {
-            m_target_ref_l.push_back((*it)->m_ref);
+            m_target_ref_l.push_back((*it)->getRef());
             sel_values.push_back(IModelValUP(m_ctxt->mkModelVal()));
-            sel_values.back()->setBits((*it)->m_bits);
+            sel_values.back()->setBits((*it)->getSelectorBits());
         }
 
         process_selector(selectors, constraints, sel_values, 0);
     }
 
     void process_selector(
-        const std::vector<RefSelector *>            &selectors, 
+        const std::vector<IRefSelector *>           &selectors, 
         const std::vector<IModelConstraint *>       &constraints,
         const std::vector<IModelValUP>              &sel_values,
         uint32_t                                    i) {
-        RefSelector *sel = selectors.at(i);
+        IRefSelector *sel = selectors.at(i);
 
-        for (uint32_t ci=0; ci<sel->m_candidates.size(); ci++) {
-            if (sel->m_candidates.at(ci)) {
-                m_candidate_l.push_back(sel->m_candidates.at(ci));
+        for (uint32_t ci=0; ci<sel->getCandidates().size(); ci++) {
+            if (sel->getCandidates().at(ci)) {
+                m_candidate_l.push_back(sel->getCandidates().at(ci));
                 sel_values.at(i)->set_val_i(ci);
 
                 if (i+1 < selectors.size()) {
@@ -146,7 +146,7 @@ public:
                         IModelExpr *cond = 0;
                         for (uint32_t vi=0; vi<selectors.size(); vi++) {
                             IModelExpr *cc = m_ctxt->mkModelExprBin(
-                                m_ctxt->mkModelExprFieldRef(selectors.at(vi)->m_selector.get()),
+                                m_ctxt->mkModelExprFieldRef(selectors.at(vi)->getSelector()),
                                 BinOp::Eq,
                                 m_ctxt->mkModelExprVal(sel_values.at(vi).get())
                             );

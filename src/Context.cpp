@@ -59,6 +59,7 @@
 #include "ModelVal.h"
 #include "Randomizer.h"
 #include "RandState.h"
+#include "RefSelector.h"
 #include "TaskModelFieldBuilder.h"
 #include "vsc/impl/TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
@@ -428,6 +429,12 @@ IRandomizer *Context::mkRandomizer(
 
 IRandState *Context::mkRandState(const std::string &seed) {
 	return new RandState(seed);
+}
+
+IRefSelector *Context::mkRefSelector(
+			IModelFieldRef						*ref,
+			const std::vector<IModelField *>	&candidates) {
+	return new RefSelector(this, ref, candidates);
 }
 
 ITask *Context::mkTask(TaskE id) {

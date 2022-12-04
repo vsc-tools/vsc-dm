@@ -47,6 +47,7 @@
 #include "vsc/IModelValOp.h"
 #include "vsc/IRandomizer.h"
 #include "vsc/IRandState.h"
+#include "vsc/IRefSelector.h"
 #include "vsc/ISolverFactory.h"
 #include "vsc/ITask.h"
 #include "vsc/ITypeConstraintBlock.h"
@@ -250,6 +251,10 @@ public:
 			IRandState			*randstate) = 0;
 
 	virtual IRandState *mkRandState(const std::string &seed) = 0;
+
+	virtual IRefSelector *mkRefSelector(
+			IModelFieldRef						*ref,
+			const std::vector<IModelField *>	&candidates) = 0;
 
 	virtual ITask *mkTask(TaskE id) = 0;
 

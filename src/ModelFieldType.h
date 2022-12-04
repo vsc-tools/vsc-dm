@@ -25,6 +25,9 @@ public:
 
 	virtual IDataType *getDataType() const override { return m_type->getDataType(); }
 
+	// Ignore
+	virtual void setDataType(IDataType *t) override { }
+
 	virtual IModelField *getParent() const override { return m_parent; }
 
 	virtual void setParent(IModelField *p) override { m_parent = p; }

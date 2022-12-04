@@ -32,6 +32,9 @@ public:
 		return m_type->getDataType();
 	}
 
+	// Ignore
+	virtual void setDataType(IDataType *t) override { }
+
     virtual IDataType *getDataTypeRef() const override {
 		return m_type->getDataType();
 	}

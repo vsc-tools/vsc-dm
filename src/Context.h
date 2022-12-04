@@ -150,6 +150,10 @@ public:
 
 	virtual IRandState *mkRandState(const std::string &seed) override;
 
+	virtual IRefSelector *mkRefSelector(
+			IModelFieldRef						*ref,
+			const std::vector<IModelField *>	&candidates) override;
+
 	virtual ITask *mkTask(TaskE id) override;
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override;

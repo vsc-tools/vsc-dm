@@ -59,6 +59,8 @@ public:
 		return dynamic_cast<T *>(getDataType());
 	}
 
+	virtual void setDataType(IDataType *t) = 0;
+
 	virtual IModelField *getParent() const = 0;
 
 	template <class T> T *getParentT() const {

@@ -288,6 +288,12 @@ public:
 		return m_ctxt->mkRandState(seed);
 	}
 
+	virtual IRefSelector *mkRefSelector(
+			IModelFieldRef						*ref,
+			const std::vector<IModelField *>	&candidates) override {
+		return m_ctxt->mkRefSelector(ref, candidates);
+	}
+
 	virtual ITask *mkTask(TaskE id) override {
 		return m_ctxt->mkTask(id);
 	}
