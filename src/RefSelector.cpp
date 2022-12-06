@@ -20,6 +20,7 @@
  */
 #include <algorithm>
 #include "vsc/IContext.h"
+#include "vsc/impl/DebugMacros.h"
 #include "RefSelector.h"
 
 
@@ -32,6 +33,11 @@ RefSelector::RefSelector(
     const std::vector<IModelField *>        &candidates) 
         : m_ref(ref), m_candidates(&candidates), m_sel_bits(-1) {
 
+    DEBUG_INIT("RefSelector", ctxt->getDebugMgr());
+
+    std::string name = ref->name();
+    name += ".selector";
+
     // Use a placeholder type for now
     IDataTypeInt *selector_t = ctxt->findDataTypeInt(true, 16);
     if (!selector_t) {
@@ -40,7 +46,7 @@ RefSelector::RefSelector(
     }
 
     m_selector = IModelFieldUP(
-        ctxt->mkModelFieldRoot(selector_t, "selector"));
+        ctxt->mkModelFieldRoot(selector_t, name));
 }
 
 RefSelector::~RefSelector() {
@@ -48,6 +54,7 @@ RefSelector::~RefSelector() {
 }
 
 void RefSelector::init(IContext *ctxt) {
+    DEBUG_ENTER("init %s", m_selector->name().c_str());
     int32_t bits = 0, value = m_candidates->size();
 
     // Determine how many bits are needed
@@ -129,6 +136,33 @@ void RefSelector::init(IContext *ctxt) {
             valid_range.insert(valid_range.begin(), {-1,-1});
         }
 
+        if (valid_range.size() == 1) {
+            tmp_v1->set_val_i(valid_range.at(0).first);
+            tmp_v2->set_val_i(valid_range.at(0).second);
+            DEBUG("Range: %d..%d", valid_range.at(0).first, valid_range.at(0).second);
+
+            m_selector->addConstraint(ctxt->mkModelConstraintExpr(
+                ctxt->mkModelExprBin(
+                    ctxt->mkModelExprBin(
+                        ctxt->mkModelExprFieldRef(m_selector.get()),
+                        BinOp::Ge,
+                        ctxt->mkModelExprVal(tmp_v1.get())),
+                    BinOp::LogAnd,
+                        ctxt->mkModelExprBin(
+                          ctxt->mkModelExprFieldRef(m_selector.get()),
+                          BinOp::Le,
+                          ctxt->mkModelExprVal(tmp_v2.get())))));
+        } else {
+            DEBUG("TODO: form rangelist constraint");
+
+            for (std::vector<std::pair<int32_t,int32_t>>::const_iterator
+                it=valid_range.begin();
+                it!=valid_range.end(); it++) {
+                DEBUG("Range: %d..%d", it->first, it->second);
+            }
+        }
+
+
         // TODO: Now, form a rangelist from the intervals
     }
 
@@ -145,10 +179,14 @@ void RefSelector::init(IContext *ctxt) {
                 ctxt->mkModelExprFieldRef(m_selector.get()),
                 BinOp::Ne,
                 ctxt->mkModelExprVal(tmp_v1.get())))));
+
+    DEBUG_LEAVE("init %s", m_selector->name().c_str());
 }
 
 void RefSelector::addIncludeRange(int32_t l, int32_t h, IModelExpr *cond) {
     m_inc_ranges.push_back({l, h, IModelExprUP(cond)});
 }
+
+IDebug *RefSelector::m_dbg = 0;
 
 }

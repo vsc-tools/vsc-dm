@@ -4,7 +4,7 @@
  *  Created on: May 10, 2022
  *      Author: mballance
  */
-
+#include "DataTypeWidthVisitor.h"
 #include "ModelFieldRefRoot.h"
 
 namespace vsc {
@@ -18,6 +18,11 @@ ModelFieldRefRoot::ModelFieldRefRoot(
 
 ModelFieldRefRoot::~ModelFieldRefRoot() {
 	// TODO Auto-generated destructor stub
+}
+
+void ModelFieldRefRoot::setDataType(IDataType *t) {
+	m_type = t;
+	val()->setBits(DataTypeWidthVisitor().width(t).second);
 }
 
 } /* namespace vsc */

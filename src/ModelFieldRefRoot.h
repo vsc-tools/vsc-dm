@@ -26,9 +26,7 @@ public:
 		return m_type;
 	}
 
-	virtual void setDataType(IDataType *t) override {
-		m_type = t;
-	}
+	virtual void setDataType(IDataType *t) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelFieldRefRoot(this); }
 

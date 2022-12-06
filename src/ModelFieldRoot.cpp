@@ -39,4 +39,12 @@ ModelFieldRoot::~ModelFieldRoot() {
 	// TODO Auto-generated destructor stub
 }
 
+void ModelFieldRoot::setDataType(IDataType *t) { 
+	m_type = t; 
+	std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(t);
+	if (width.second > 0) {
+		m_val.setBits(width.second);
+	}
+}
+
 } /* namespace vsc */
