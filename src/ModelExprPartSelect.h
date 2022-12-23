@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExpr.h"
-#include "vsc/IModelExprPartSelect.h"
+#include "vsc/dm/IModelExpr.h"
+#include "vsc/dm/IModelExprPartSelect.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprPartSelect : public IModelExprPartSelect {
 public:
@@ -39,5 +40,6 @@ private:
 	int32_t						m_lower;
 };
 
+}
 } /* namespace vsc */
 

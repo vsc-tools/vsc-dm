@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 class PrettyPrinter : public VisitorBase {
 public:
@@ -16,5 +17,6 @@ public:
 	virtual ~PrettyPrinter();
 };
 
+}
 } /* namespace vsc */
 

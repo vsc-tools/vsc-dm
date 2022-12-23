@@ -8,6 +8,7 @@
 #include "ModelCovergroup.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCovergroup::ModelCovergroup(const std::string &name) : ModelCoverItem(name) {
 	m_coverage = 0.0;
@@ -72,4 +73,5 @@ void ModelCovergroup::coverageEvent() {
 	m_coverage_valid = false;
 }
 
+}
 } /* namespace vsc */

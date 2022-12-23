@@ -8,9 +8,10 @@
 #pragma once
 #include <vector>
 #include "ModelVal.h"
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprEvaluator : public VisitorBase {
 public:
@@ -49,5 +50,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

@@ -5,10 +5,11 @@
  *      Author: mballance
  */
 #pragma once
-#include "vsc/ITypeExprRange.h"
+#include "vsc/dm/ITypeExprRange.h"
 #include "TypeExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeExprRange : public ITypeExprRange, public virtual TypeExpr {
 public:
@@ -33,5 +34,6 @@ private:
 	ITypeExprUP			m_upper;
 };
 
+}
 } /* namespace vsc */
 

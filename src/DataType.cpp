@@ -21,6 +21,7 @@
 #include "DataType.h"
 
 namespace vsc {
+namespace dm {
 
 DataType::DataType() {
 	// TODO Auto-generated constructor stub
@@ -31,4 +32,5 @@ DataType::~DataType() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

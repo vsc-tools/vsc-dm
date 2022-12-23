@@ -9,6 +9,7 @@
 #include "ModelExprRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprRangelist::ModelExprRangelist() : m_width(-1) {
 
@@ -33,4 +34,5 @@ void ModelExprRangelist::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprRangeList::eval\n");
 }
 
+}
 } /* namespace vsc */

@@ -2,6 +2,7 @@
 #include "ModelConstraintSelect.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintSelect::ModelConstraintSelect(
     IContext        *ctxt,
@@ -26,4 +27,5 @@ void ModelConstraintSelect::addRhs(IModelField *rhs) {
     m_rhs.push_back(rhs);
 }
 
+}
 }

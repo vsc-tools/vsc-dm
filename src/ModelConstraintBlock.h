@@ -7,10 +7,11 @@
 
 #pragma once
 #include <string>
-#include "vsc/IModelConstraintBlock.h"
+#include "vsc/dm/IModelConstraintBlock.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintBlock : 
 	public virtual IModelConstraintBlock, 
@@ -30,5 +31,6 @@ private:
 	std::string							m_name;
 };
 
+}
 } /* namespace vsc */
 

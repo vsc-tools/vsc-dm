@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/IModelExprRange.h"
+#include "vsc/dm/IModelExprRange.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprRange;
 using ModelExprRangeUP=std::unique_ptr<ModelExprRange>;
@@ -39,5 +40,6 @@ private:
 	IModelExprUP			m_upper;
 };
 
+}
 } /* namespace vsc */
 

@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IModelFieldVecRoot.h"
+#include "vsc/dm/IModelFieldVecRoot.h"
 #include "DataType.h"
 #include "ModelFieldVec.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldVecRoot : public virtual IModelFieldVecRoot, public virtual ModelFieldVec {
 public:
@@ -36,5 +37,6 @@ protected:
 	std::string					m_name;
 };
 
+}
 } /* namespace vsc */
 

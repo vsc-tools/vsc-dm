@@ -22,6 +22,7 @@
 #include "ModelConstraintExpr.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintExpr::ModelConstraintExpr(IModelExpr *expr) : m_expr(expr) {
 	// TODO Auto-generated constructor stub
@@ -32,4 +33,5 @@ ModelConstraintExpr::~ModelConstraintExpr() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

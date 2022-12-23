@@ -8,6 +8,7 @@
 #include "TypeExprFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 TypeExprFieldRef::TypeExprFieldRef() {
 	// TODO Auto-generated constructor stub
@@ -30,4 +31,6 @@ void TypeExprFieldRef::addRootRef() {
 	m_path.push_back({TypeExprFieldRefElemKind::Root, -1});
 }
 
+}
 } /* namespace vsc */
+

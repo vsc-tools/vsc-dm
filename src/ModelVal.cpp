@@ -19,11 +19,12 @@
  *      Author: mballance
  */
 #include <string.h>
-#include "vsc/IContext.h"
+#include "vsc/dm/IContext.h"
 #include "ModelVal.h"
 #include "DataTypeWidthVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 ModelVal::ModelVal() : m_val{0}, m_bits(0) {
 
@@ -370,4 +371,6 @@ IModelVal *ModelVal::clone(IContext *ctxt) const {
 	return ret;
 }
 
+}
 } /* namespace vsc */
+

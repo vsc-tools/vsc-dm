@@ -1,8 +1,9 @@
 
 #pragma once
-#include "vsc/ITypeConstraintImplies.h"
+#include "vsc/dm/ITypeConstraintImplies.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintImplies : public virtual ITypeConstraintImplies {
 public:
@@ -24,4 +25,5 @@ private:
 };
 
 
+}
 }

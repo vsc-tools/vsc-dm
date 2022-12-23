@@ -10,6 +10,7 @@
 #include "ModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverBinSingleVal::ModelCoverBinSingleVal(
 		const std::string			&name,
@@ -49,4 +50,5 @@ void ModelCoverBinSingleVal::sample() {
 	}
 }
 
+}
 } /* namespace vsc */

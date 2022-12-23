@@ -20,9 +20,10 @@
  */
 
 #include "TypeField.h"
-#include "vsc/IDataTypeStruct.h"
+#include "vsc/dm/IDataTypeStruct.h"
 
 namespace vsc {
+namespace dm {
 
 TypeField::TypeField(
 		const std::string		&name,
@@ -31,7 +32,7 @@ TypeField::TypeField(
 		TypeFieldAttr			attr) :
 				m_parent(0), m_idx(-1), m_name(name), m_type(type), m_attr(attr) {
 	if (own_type) {
-		m_type_owned = vsc::IDataTypeUP(type);
+		m_type_owned = vsc::dm::IDataTypeUP(type);
 	}
 
 }
@@ -54,4 +55,6 @@ IModelField *TypeField::mkModelField(
 	return getDataType()->mkTypeField(ctxt, this);
 }
 
+}
 } /* namespace vsc */
+

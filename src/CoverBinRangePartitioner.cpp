@@ -8,6 +8,7 @@
 #include "CoverBinRangePartitioner.h"
 
 namespace vsc {
+namespace dm {
 
 CoverBinRangePartitioner::CoverBinRangePartitioner() : m_specs(0) {
 	// TODO Auto-generated constructor stub
@@ -36,4 +37,5 @@ void CoverBinRangePartitioner::partition(
 	}
 }
 
+}
 } /* namespace vsc */

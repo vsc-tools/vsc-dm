@@ -1,9 +1,10 @@
 
 #pragma once
-#include "vsc/IModelCoverItem.h"
+#include "vsc/dm/IModelCoverItem.h"
 #include "ModelCoverOpts.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverItem : public virtual IModelCoverItem {
 public:
@@ -26,4 +27,5 @@ protected:
 };
 
 
+}
 }

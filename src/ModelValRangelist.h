@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelValRangelist.h"
+#include "vsc/dm/IModelValRangelist.h"
 #include "ModelValRange.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelValRangelist : public IModelValRangelist {
 public:
@@ -40,5 +41,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

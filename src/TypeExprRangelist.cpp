@@ -8,6 +8,7 @@
 #include "TypeExprRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 TypeExprRangelist::TypeExprRangelist() {
 
@@ -25,5 +26,6 @@ void TypeExprRangelist::addRange(ITypeExprRange *rng) {
 	m_ranges.push_back(ITypeExprRangeUP(rng));
 }
 
+}
 } /* namespace vsc */
 

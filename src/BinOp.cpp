@@ -18,9 +18,10 @@
  *      Author: mballance
  */
 
-#include "vsc/BinOp.h"
+#include "vsc/dm/BinOp.h"
 
 namespace vsc {
+namespace dm {
 
 const char *BinOp2Str_s(BinOp op) {
 	switch (op) {
@@ -47,4 +48,5 @@ const char *BinOp2Str_s(BinOp op) {
 	}
 }
 
+}
 } /* namespace vsc */

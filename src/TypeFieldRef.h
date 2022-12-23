@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/ITypeFieldRef.h"
+#include "vsc/dm/ITypeFieldRef.h"
 #include "TypeField.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeFieldRef : public virtual ITypeFieldRef, public TypeField {
 public:
@@ -24,5 +25,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

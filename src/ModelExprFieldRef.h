@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExprFieldRef.h"
+#include "vsc/dm/IModelExprFieldRef.h"
 #include "ModelField.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprFieldRef : public IModelExprFieldRef {
 public:
@@ -32,5 +33,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

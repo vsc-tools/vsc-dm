@@ -1,9 +1,10 @@
 
 #pragma once
-#include "vsc/IModelExprIndexedFieldRef.h"
+#include "vsc/dm/IModelExprIndexedFieldRef.h"
 #include "ModelExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprIndexedFieldRef : 
     public virtual IModelExprIndexedFieldRef,
@@ -42,4 +43,5 @@ private:
 
 };
 
+}
 }

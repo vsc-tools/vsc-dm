@@ -9,6 +9,7 @@
 #include <memory>
 
 namespace vsc {
+namespace dm {
 
 class CoverBinSpec;
 using CoverBinSpecUP=std::unique_ptr<CoverBinSpec>;
@@ -24,5 +25,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

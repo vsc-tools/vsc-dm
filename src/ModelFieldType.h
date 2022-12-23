@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelFieldType.h"
+#include "vsc/dm/IModelFieldType.h"
 #include "ModelField.h"
 
 namespace vsc {
+namespace dm {
 
 /**
  * Field instance based on a field-type declaration
@@ -96,5 +97,6 @@ protected:
 
 };
 
+}
 } /* namespace vsc */
 

@@ -8,6 +8,7 @@
 #include "ModelExprVal.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprVal::ModelExprVal() {
 
@@ -29,4 +30,6 @@ void ModelExprVal::eval(IModelVal *dst) {
 	dst->set(&m_val);
 }
 
+}
 } /* namespace vsc */
+

@@ -1,10 +1,12 @@
 
 #pragma once
-#include "vsc/IModelConstraintSubst.h"
+#include "vsc/dm/IModelConstraintSubst.h"
 #include "ModelConstraintScope.h"
 
 
 namespace vsc {
+namespace dm {
+
 class ModelConstraintSubst : 
     public virtual IModelConstraintSubst, 
     public virtual ModelConstraintScope {
@@ -29,4 +31,5 @@ private:
 
 };
 
+}
 }

@@ -18,11 +18,12 @@
  *      Author: mballance
  */
 
-#include "vsc/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/impl/TaskIsTypeFieldRef.h"
 #include "DataTypeInt.h"
 #include "TypeExprRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 DataTypeInt::DataTypeInt(
 		bool				is_signed,
@@ -80,4 +81,5 @@ IModelField *DataTypeInt::mkTypeField(
 	return ret;
 }
 
+}
 } /* namespace vsc */

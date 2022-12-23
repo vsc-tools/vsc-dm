@@ -5,10 +5,11 @@
  *      Author: mballance
  */
 
-#include "vsc/IContext.h"
+#include "vsc/dm/IContext.h"
 #include "ModelFieldVecRoot.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldVecRoot::ModelFieldVecRoot(
 		IContext			*ctxt,
@@ -22,4 +23,6 @@ ModelFieldVecRoot::~ModelFieldVecRoot() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

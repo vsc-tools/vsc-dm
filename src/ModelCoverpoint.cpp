@@ -5,11 +5,12 @@
  *      Author: mballance
  */
 
-#include "vsc/IModelCovergroup.h"
+#include "vsc/dm/IModelCovergroup.h"
 #include "ModelCoverpoint.h"
 #include <string.h>
 
 namespace vsc {
+namespace dm {
 
 ModelCoverpoint::ModelCoverpoint(
 		const std::string		&name,
@@ -223,4 +224,5 @@ double ModelCoverpoint::getCoverage() {
 	return m_coverage;
 }
 
+}
 } /* namespace vsc */

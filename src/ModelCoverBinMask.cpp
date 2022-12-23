@@ -1,9 +1,10 @@
 
-#include "vsc/IModelCoverpoint.h"
+#include "vsc/dm/IModelCoverpoint.h"
 #include "ModelCoverBinMask.h"
 #include "ModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverBinMask::ModelCoverBinMask(
     const std::string               &name,
@@ -36,5 +37,5 @@ void ModelCoverBinMask::sample() {
     }
 }
 
-
+}
 }

@@ -9,6 +9,7 @@
 #include "ModelExprPartSelect.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprPartSelect::ModelExprPartSelect(
 		IModelExpr				*lhs,
@@ -26,4 +27,5 @@ void ModelExprPartSelect::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprPartSelect::eval\n");
 }
 
+}
 } /* namespace vsc */

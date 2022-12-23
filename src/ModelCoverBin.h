@@ -7,9 +7,10 @@
 
 #pragma once
 #include <string>
-#include "vsc/IModelCoverBin.h"
+#include "vsc/dm/IModelCoverBin.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverBin : public virtual IModelCoverBin {
 public:
@@ -43,5 +44,6 @@ protected:
 	int32_t				m_n_bins;
 };
 
+}
 } /* namespace vsc */
 

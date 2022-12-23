@@ -2,6 +2,7 @@
 #include "TypeConstraintIfElse.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintIfElse::TypeConstraintIfElse(
     ITypeExpr           *cond,
@@ -15,3 +16,5 @@ TypeConstraintIfElse::~TypeConstraintIfElse() {
 }
 
 }
+}
+

@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelConstraintImplies.h"
+#include "vsc/dm/IModelConstraintImplies.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintImplies : 
 	public virtual IModelConstraintImplies,
@@ -32,5 +33,6 @@ private:
 	IModelConstraintUP			m_body;
 };
 
+}
 } /* namespace vsc */
 

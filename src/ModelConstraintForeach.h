@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IModelConstraintForeach.h"
-#include "vsc/IContext.h"
+#include "vsc/dm/IModelConstraintForeach.h"
+#include "vsc/dm/IContext.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintForeach : 
 	public virtual IModelConstraintForeach,
@@ -35,5 +36,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

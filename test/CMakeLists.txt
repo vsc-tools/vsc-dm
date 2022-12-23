@@ -21,8 +21,6 @@ ExternalProject_Add(
   
 ExternalProject_Get_Property(GTEST source_dir binary_dir)
 
-# find_package(Gtest)
-
 add_library(libgtest IMPORTED STATIC GLOBAL)
 add_dependencies(libgtest GTEST)
 
@@ -44,20 +42,20 @@ include_directories(
 	"${source_dir}/googlemock/include"
 	)
 
-file(GLOB test_libvsc_SRC
+file(GLOB test_libvsc_dm_SRC
   "*.h"
   "*.cpp"
   )
 
-add_executable(test_libvsc ${test_libvsc_SRC})
-target_include_directories(test_libvsc PUBLIC
+add_executable(test_libvsc-dm ${test_libvsc_dm_SRC})
+target_include_directories(test_libvsc-dm PUBLIC
+    ${PROJECT_SOURCE_DIR}/src/include
     "${source_dir}/googletest/include"
     )
    
-target_link_directories(test_libvsc PRIVATE
+target_link_directories(test_libvsc-dm PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
-    ${CMAKE_BINARY_DIR}/gmp/lib
     )
   
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -66,12 +64,12 @@ else()
 	set(libglog glog)
 endif()
 
-target_link_libraries(test_libvsc 
-	vsc 
+target_link_libraries(test_libvsc-dm 
+	vsc-dm
 	libgtest 
 	libgmock
 	)
-add_dependencies(test_libvsc GTEST)
+add_dependencies(test_libvsc-dm GTEST)
 #set_property(TARGET test_libvsc PROPERTY INTERPROCEDURAL_OPTIMIZATION OFF)
 
-gtest_discover_tests(test_libvsc)
+gtest_discover_tests(test_libvsc-dm)

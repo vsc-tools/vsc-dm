@@ -8,6 +8,7 @@
 #include "GetModelValVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 GetModelValVisitor::GetModelValVisitor() : m_ctx(0), m_val(0) {
 	// TODO Auto-generated constructor stub
@@ -38,4 +39,5 @@ void GetModelValVisitor::visitModelExprVecSubscript(IModelExprVecSubscript *e) {
 
 }
 
+}
 } /* namespace vsc */

@@ -22,6 +22,7 @@
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraint::ModelConstraint() : m_parent(0) {
 	// TODO Auto-generated constructor stub
@@ -32,4 +33,5 @@ ModelConstraint::~ModelConstraint() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

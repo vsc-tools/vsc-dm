@@ -8,6 +8,7 @@
 #pragma one
 
 namespace vsc {
+namespace dm {
 
 enum class DataTypeKind {
 	Bool,
@@ -17,4 +18,5 @@ enum class DataTypeKind {
 
 const char *toString(DataTypeKind k);
 
+}
 } /* namespace vsc */

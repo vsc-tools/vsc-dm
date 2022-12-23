@@ -12,10 +12,11 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "vsc/IDebug.h"
-#include "vsc/IDebugMgr.h"
+#include "vsc/dm/IDebug.h"
+#include "vsc/dm/IDebugMgr.h"
 
 namespace vsc {
+namespace dm {
 
 class Debug;
 
@@ -52,5 +53,6 @@ private:
 	static DebugMgrUP								m_inst;
 };
 
+}
 } /* namespace vsc */
 

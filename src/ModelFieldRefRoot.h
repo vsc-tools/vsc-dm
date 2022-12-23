@@ -9,6 +9,7 @@
 #include "ModelFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldRefRoot : public ModelFieldRef {
 public:
@@ -35,5 +36,6 @@ private:
 	std::string					m_name;
 };
 
+}
 } /* namespace vsc */
 

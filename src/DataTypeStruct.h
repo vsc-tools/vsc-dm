@@ -7,10 +7,11 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IDataTypeStruct.h"
+#include "vsc/dm/IDataTypeStruct.h"
 #include "DataType.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeField;
 using TypeFieldUP=std::unique_ptr<TypeField>;
@@ -67,5 +68,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

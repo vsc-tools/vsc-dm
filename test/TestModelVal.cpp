@@ -9,6 +9,7 @@
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 TestModelVal::TestModelVal() {
 	// TODO Auto-generated constructor stub
@@ -52,4 +53,6 @@ TEST_F(TestModelVal, push_val_word) {
 #endif
 }
 
+}
 } /* namespace vsc */
+

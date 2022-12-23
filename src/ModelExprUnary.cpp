@@ -9,6 +9,7 @@
 #include "ModelExprUnary.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprUnary::ModelExprUnary(
 		UnaryOp			op,
@@ -25,4 +26,6 @@ void ModelExprUnary::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprUnary::eval\n");
 }
 
+}
 } /* namespace vsc */
+

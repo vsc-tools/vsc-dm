@@ -7,9 +7,10 @@
 
 #pragma once
 #include <memory>
-#include "vsc/IModelConstraint.h"
+#include "vsc/dm/IModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraint;
 using ModelConstraintUP=std::unique_ptr<ModelConstraint>;
@@ -34,5 +35,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

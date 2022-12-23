@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IModelCoverBinSingleVal.h"
+#include "vsc/dm/IModelCoverBinSingleVal.h"
 #include "ModelCoverBin.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverBinSingleVal : 
 	public virtual IModelCoverBinSingleVal,
@@ -39,5 +40,6 @@ private:
 	ModelVal						m_val;
 };
 
+}
 } /* namespace vsc */
 

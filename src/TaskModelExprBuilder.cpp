@@ -8,6 +8,7 @@
 #include "TaskModelExprBuilder.h"
 
 namespace vsc {
+namespace dm {
 
 TaskModelExprBuilder::TaskModelExprBuilder(
 		IContext		*ctxt,
@@ -63,5 +64,6 @@ IModelExpr *TaskModelExprBuilder::expr(ITypeExpr *e) {
 	return m_expr;
 }
 
+}
 }
 

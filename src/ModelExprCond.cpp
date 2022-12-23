@@ -8,6 +8,7 @@
 #include "ModelExprCond.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprCond::ModelExprCond(
 		IModelExpr		*cond,
@@ -21,4 +22,5 @@ ModelExprCond::~ModelExprCond() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

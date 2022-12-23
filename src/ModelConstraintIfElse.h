@@ -6,12 +6,13 @@
  */
 
 #pragma once
-#include "vsc/IModelConstraintIfElse.h"
+#include "vsc/dm/IModelConstraintIfElse.h"
 #include "ModelExpr.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintIfElse : 
 	public virtual IModelConstraintIfElse,
@@ -53,5 +54,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

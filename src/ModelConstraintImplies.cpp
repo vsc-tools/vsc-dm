@@ -8,6 +8,7 @@
 #include "ModelConstraintImplies.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintImplies::ModelConstraintImplies(
 		IModelExpr			*cond,
@@ -20,4 +21,5 @@ ModelConstraintImplies::~ModelConstraintImplies() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

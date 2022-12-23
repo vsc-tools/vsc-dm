@@ -2,6 +2,7 @@
 #include "TypeConstraintImplies.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintImplies::TypeConstraintImplies(
     ITypeExpr       *cond,
@@ -14,3 +15,5 @@ TypeConstraintImplies::~TypeConstraintImplies() {
 }
 
 }
+}
+

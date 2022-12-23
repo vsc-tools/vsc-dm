@@ -1,9 +1,10 @@
 
 #include "TestTaskResolveModelExprVal.h"
-#include "vsc/impl/TaskResolveModelExprVal.h"
+#include "vsc/dm/impl/TaskResolveModelExprVal.h"
 #include "Context.h"
 
 namespace vsc {
+namespace dm {
 
 TEST_F(TestTaskResolveModelExprVal, smoke) {
     Context ctx;
@@ -43,4 +44,5 @@ TEST_F(TestTaskResolveModelExprVal, smoke) {
     ASSERT_EQ(res_2->val_u(), 0);
 }
 
+}
 }

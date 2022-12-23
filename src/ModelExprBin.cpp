@@ -23,6 +23,7 @@
 #include "ModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprBin::ModelExprBin(
 		IModelExpr			*lhs,
@@ -156,4 +157,5 @@ void ModelExprBin::eq_op_64(
 	dst->bits(1);
 }
 
+}
 } /* namespace vsc */

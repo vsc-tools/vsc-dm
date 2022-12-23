@@ -7,12 +7,13 @@
 
 #pragma once
 #include <memory>
-#include "vsc/IContext.h"
-#include "vsc/IDataType.h"
-#include "vsc/IModelBuildContext.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IDataType.h"
+#include "vsc/dm/IModelBuildContext.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class DataType;
 typedef std::unique_ptr<DataType> DataTypeUP;
@@ -26,5 +27,6 @@ protected:
 
 };
 
+}
 } /* namespace vsc */
 

@@ -22,6 +22,8 @@
 
 
 namespace vsc {
+namespace dm {
+
 DataTypeTypeRef::DataTypeTypeRef(
     IDataType       *type,
     bool            own) : m_type(type), m_type_u((own)?type:0) {
@@ -33,4 +35,5 @@ DataTypeTypeRef::~DataTypeTypeRef() {
 
 }
 
+}
 }

@@ -7,13 +7,14 @@
 
 #pragma once
 #include <unordered_map>
-#include "vsc/IContext.h"
+#include "vsc/dm/IContext.h"
 #include "DataTypeInt.h"
 #include "DataTypeVec.h"
 #include "DataTypeStruct.h"
 #include "ModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 class Context : public IContext {
 public:
@@ -28,8 +29,6 @@ public:
 	virtual IDebugMgr *getDebugMgr() override;
 
 	virtual IModelValOp *getModelValOp() override { return &m_model_val_op; }
-
-	virtual ICompoundSolver *mkCompoundSolver() override;
 
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override;
 
@@ -143,12 +142,6 @@ public:
 			const std::string	&name) override;
 
 	virtual IModelVal *mkModelVal() override;
-
-	virtual IRandomizer *mkRandomizer(
-			ISolverFactory		*solver_factory,
-			IRandState			*randstate) override;
-
-	virtual IRandState *mkRandState(const std::string &seed) override;
 
 	virtual IRefSelector *mkRefSelector(
 			IModelFieldRef						*ref,
@@ -279,5 +272,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

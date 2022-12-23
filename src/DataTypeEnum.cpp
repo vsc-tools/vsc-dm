@@ -6,8 +6,8 @@
  */
 
 #include <algorithm>
-#include "vsc/IContext.h"
-#include "vsc/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/impl/TaskIsTypeFieldRef.h"
 #include "DataTypeEnum.h"
 #include "ModelValOp.h"
 #include "TypeExprRange.h"
@@ -15,6 +15,7 @@
 #include "TypeExprVal.h"
 
 namespace vsc {
+namespace dm {
 
 DataTypeEnum::DataTypeEnum(
 		const std::string	&name,
@@ -203,4 +204,5 @@ IModelField *DataTypeEnum::mkTypeField(
 	return ret;
 }
 
+}
 } /* namespace vsc */

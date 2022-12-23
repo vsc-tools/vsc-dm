@@ -2,6 +2,7 @@
 #include "TypeConstraintUnique.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintUnique::TypeConstraintUnique(const std::vector<ITypeExpr *> &exprs) {
 
@@ -17,4 +18,5 @@ TypeConstraintUnique::~TypeConstraintUnique() {
 
 }
 
+}
 }

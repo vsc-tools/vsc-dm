@@ -9,9 +9,10 @@
 #include <memory>
 #include <stdint.h>
 #include <vector>
-#include "vsc/IModelVal.h"
+#include "vsc/dm/IModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class DataType;
 
@@ -69,13 +70,14 @@ private:
 	uint32_t			m_bits;
 };
 
+}
 } /* namespace vsc */
 
 namespace std {
 template <>
-struct hash<vsc::ModelVal>
+struct hash<vsc::dm::ModelVal>
 {
-  std::size_t operator()(const vsc::ModelVal & k) const
+  std::size_t operator()(const vsc::dm::ModelVal & k) const
   {
     using std::size_t;
     using std::hash;

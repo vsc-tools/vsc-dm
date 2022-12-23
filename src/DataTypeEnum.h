@@ -10,12 +10,13 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include "vsc/IDataTypeEnum.h"
-#include "vsc/ITypeExprRangelist.h"
+#include "vsc/dm/IDataTypeEnum.h"
+#include "vsc/dm/ITypeExprRangelist.h"
 #include "DataType.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class DataTypeEnum : public virtual IDataTypeEnum, public virtual DataType {
 public:
@@ -62,5 +63,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

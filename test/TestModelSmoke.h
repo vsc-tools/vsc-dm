@@ -9,6 +9,7 @@
 #include "gtest/gtest.h"
 
 namespace vsc {
+namespace dm {
 
 class TestModelSmoke : public ::testing::Test {
 public:
@@ -18,5 +19,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

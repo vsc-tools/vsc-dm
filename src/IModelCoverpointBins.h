@@ -10,9 +10,10 @@
 #include <stdint.h>
 #include <string>
 #include "BinsType.h"
-#include "vsc/IAccept.h"
+#include "vsc/dm/IAccept.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverpoint;
 
@@ -36,4 +37,5 @@ public:
 	virtual void bin_type(BinsType t) = 0;
 };
 
+}
 }

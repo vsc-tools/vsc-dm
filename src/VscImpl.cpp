@@ -10,6 +10,7 @@
 #include "VscImpl.h"
 
 namespace vsc {
+namespace dm {
 
 VscImpl::VscImpl() {
 	// TODO Auto-generated constructor stub
@@ -37,8 +38,9 @@ IVsc *VscImpl::inst() {
 
 IVscUP VscImpl::m_inst;
 
+}
 } /* namespace vsc */
 
-extern "C" vsc::IVsc *ivsc() {
-	return vsc::VscImpl::inst();
+extern "C" vsc::dm::IVsc *ivsc() {
+	return vsc::dm::VscImpl::inst();
 }

@@ -23,6 +23,7 @@
 #include "DataTypeWidthVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldRoot::ModelFieldRoot(
 		IDataType			*type,
@@ -47,4 +48,6 @@ void ModelFieldRoot::setDataType(IDataType *t) {
 	}
 }
 
+}
 } /* namespace vsc */
+

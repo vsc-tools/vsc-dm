@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 class DataTypeWidthVisitor : public VisitorBase {
 public:
@@ -26,5 +27,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

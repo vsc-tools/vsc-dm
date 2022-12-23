@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IContext.h"
-#include "vsc/IModelFieldVec.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IModelFieldVec.h"
 #include "ModelField.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldVec : public virtual IModelFieldVec, public virtual ModelField {
 public:
@@ -42,5 +43,6 @@ protected:
 
 };
 
+}
 } /* namespace vsc */
 

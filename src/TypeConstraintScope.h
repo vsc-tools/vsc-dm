@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/ITypeConstraintScope.h"
+#include "vsc/dm/ITypeConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintScope : public ITypeConstraintScope {
 public:
@@ -28,5 +29,6 @@ private:
 	std::vector<ITypeConstraintUP>			m_constraints;
 };
 
+}
 } /* namespace vsc */
 

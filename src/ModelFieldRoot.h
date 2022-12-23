@@ -7,11 +7,12 @@
 
 #pragma once
 #include <string>
-#include "vsc/IModelFieldRoot.h"
+#include "vsc/dm/IModelFieldRoot.h"
 #include "ModelVal.h"
 #include "ModelField.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldRoot;
 using ModelFieldRootUP=std::unique_ptr<ModelFieldRoot>;
@@ -42,5 +43,6 @@ protected:
 	std::string					m_name;
 };
 
+}
 } /* namespace vsc */
 

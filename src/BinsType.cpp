@@ -8,6 +8,7 @@
 #include "BinsType.h"
 
 namespace vsc {
+namespace dm {
 
 const char *toString(BinsType t) {
 	switch (t) {
@@ -18,5 +19,5 @@ const char *toString(BinsType t) {
 	}
 }
 
-
+}
 } /* namespace vsc */

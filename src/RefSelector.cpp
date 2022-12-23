@@ -19,12 +19,13 @@
  *     Author:
  */
 #include <algorithm>
-#include "vsc/IContext.h"
-#include "vsc/impl/DebugMacros.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/impl/DebugMacros.h"
 #include "RefSelector.h"
 
 
 namespace vsc {
+namespace dm {
 
 
 RefSelector::RefSelector(
@@ -189,4 +190,5 @@ void RefSelector::addIncludeRange(int32_t l, int32_t h, IModelExpr *cond) {
 
 IDebug *RefSelector::m_dbg = 0;
 
+}
 }

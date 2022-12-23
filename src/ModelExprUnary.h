@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/IModelExprUnary.h"
+#include "vsc/dm/IModelExprUnary.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprUnary : public IModelExprUnary {
 public:
@@ -36,5 +37,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

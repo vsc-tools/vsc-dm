@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/ITypeExpr.h"
+#include "vsc/dm/ITypeExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeExpr : public virtual ITypeExpr {
 public:
@@ -18,5 +19,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

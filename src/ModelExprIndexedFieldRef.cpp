@@ -1,8 +1,9 @@
 
 #include "ModelExprIndexedFieldRef.h"
-#include "vsc/IModelField.h"
+#include "vsc/dm/IModelField.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprIndexedFieldRef::ModelExprIndexedFieldRef() : m_width(-1) {
 
@@ -58,4 +59,5 @@ void ModelExprIndexedFieldRef::addVecIndexRef(IModelExpr *idx_e) {
     m_path.push_back(ref_e);
 }
 
+}
 }

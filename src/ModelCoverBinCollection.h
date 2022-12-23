@@ -7,10 +7,11 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IModelCoverBinCollection.h"
+#include "vsc/dm/IModelCoverBinCollection.h"
 #include "ModelCoverBin.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverBinCollection : 
 	public virtual IModelCoverBinCollection, 
@@ -38,5 +39,6 @@ private:
 	std::vector<IModelCoverBinUP>		m_bins;
 };
 
+}
 } /* namespace vsc */
 

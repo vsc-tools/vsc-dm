@@ -7,10 +7,11 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IModelConstraintScope.h"
+#include "vsc/dm/IModelConstraintScope.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintScope;
 using ModelConstraintScopeUP=std::unique_ptr<ModelConstraintScope>;
@@ -38,5 +39,6 @@ private:
 	std::vector<IModelConstraintUP>		m_constraints;
 };
 
+}
 } /* namespace vsc */
 

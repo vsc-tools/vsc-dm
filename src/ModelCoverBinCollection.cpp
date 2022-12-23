@@ -8,6 +8,7 @@
 #include "ModelCoverBinCollection.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverBinCollection::ModelCoverBinCollection(ModelCoverBinType type) : 
 	ModelCoverBin("", type, false) {
@@ -69,4 +70,5 @@ void ModelCoverBinCollection::sample() {
 	}
 }
 
+}
 } /* namespace vsc */

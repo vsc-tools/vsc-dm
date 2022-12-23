@@ -22,6 +22,7 @@
 #include "PrettyPrinter.h"
 
 namespace vsc {
+namespace dm {
 
 PrettyPrinter::PrettyPrinter() {
 	// TODO Auto-generated constructor stub
@@ -32,4 +33,6 @@ PrettyPrinter::~PrettyPrinter() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

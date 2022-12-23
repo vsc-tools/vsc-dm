@@ -8,6 +8,7 @@
 #include "TypeConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintScope::TypeConstraintScope() {
 	// TODO Auto-generated constructor stub
@@ -22,4 +23,6 @@ void TypeConstraintScope::addConstraint(ITypeConstraint *c) {
 	m_constraints.push_back(ITypeConstraintUP(c));
 }
 
+}
 } /* namespace vsc */
+

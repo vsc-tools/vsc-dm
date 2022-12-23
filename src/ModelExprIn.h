@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExprIn.h"
+#include "vsc/dm/IModelExprIn.h"
 #include "ModelExprRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprIn : public IModelExprIn {
 public:
@@ -35,5 +36,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

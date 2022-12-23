@@ -8,6 +8,7 @@
 #include "ModelFieldVecType.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldVecType::ModelFieldVecType(
 		IContext		*ctxt,
@@ -20,4 +21,6 @@ ModelFieldVecType::~ModelFieldVecType() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

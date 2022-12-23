@@ -23,6 +23,7 @@
 #include "DataTypeWidthVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldType::ModelFieldType(ITypeField *type) :
 		m_type(type), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
@@ -68,4 +69,5 @@ IModelFieldData *ModelFieldType::getFieldData() {
 	return m_field_data.get();
 }
 
+}
 } /* namespace vsc */

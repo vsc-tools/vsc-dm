@@ -8,9 +8,10 @@
 #pragma once
 #include <stdint.h>
 #include <string>
-#include "vsc/IModelCoverOpts.h"
+#include "vsc/dm/IModelCoverOpts.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverOpts : public virtual IModelCoverOpts {
 public:
@@ -51,5 +52,6 @@ private:
 	uint32_t			m_auto_bin_max;
 };
 
+}
 } /* namespace vsc */
 

@@ -8,6 +8,7 @@
 #include "TypeConstraintBlock.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintBlock::TypeConstraintBlock(const std::string &name) :
 	m_name(name) {
@@ -22,4 +23,6 @@ void TypeConstraintBlock::addConstraint(ITypeConstraint *c) {
 	m_constraints.push_back(ITypeConstraintUP(c));
 }
 
+}
 } /* namespace vsc */
+

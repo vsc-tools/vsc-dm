@@ -8,6 +8,7 @@
 #include "TypeConstraintExpr.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraintExpr::TypeConstraintExpr(ITypeExpr *expr) : m_expr(expr) {
 	// TODO Auto-generated constructor stub
@@ -18,4 +19,6 @@ TypeConstraintExpr::~TypeConstraintExpr() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

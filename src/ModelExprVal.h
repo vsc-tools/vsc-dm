@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExprVal.h"
+#include "vsc/dm/IModelExprVal.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprVal : public IModelExprVal {
 public:
@@ -35,5 +36,6 @@ private:
 	ModelVal			m_val;
 };
 
+}
 } /* namespace vsc */
 

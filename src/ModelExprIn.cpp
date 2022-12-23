@@ -9,6 +9,7 @@
 #include "ModelExprIn.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprIn::ModelExprIn(
 		IModelExpr			*lhs,
@@ -24,4 +25,5 @@ void ModelExprIn::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprIn::eval\n");
 }
 
+}
 } /* namespace vsc */

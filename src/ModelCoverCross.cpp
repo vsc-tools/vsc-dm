@@ -9,6 +9,7 @@
 #include "ModelCoverCross.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverCross::ModelCoverCross(
 	const std::string			&name,
@@ -92,4 +93,5 @@ double ModelCoverCross::getCoverage() {
 	return m_coverage;
 }
 
+}
 } /* namespace vsc */

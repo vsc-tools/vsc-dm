@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IModelExpr.h"
-#include "vsc/IModelConstraintExpr.h"
+#include "vsc/dm/IModelExpr.h"
+#include "vsc/dm/IModelConstraintExpr.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintExpr;
 using ModelConstraintExprUP=std::unique_ptr<ModelConstraintExpr>;
@@ -33,5 +34,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

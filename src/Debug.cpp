@@ -23,6 +23,7 @@
 #include "DebugMgr.h"
 
 namespace vsc {
+namespace dm {
 
 Debug::Debug(const std::string &name) : m_en(false), m_name(name) {
 	m_mgr = DebugMgr::inst();
@@ -54,4 +55,5 @@ void Debug::debug(const char *fmt, ...) {
 	va_end(ap);
 }
 
+}
 } /* namespace vsc */

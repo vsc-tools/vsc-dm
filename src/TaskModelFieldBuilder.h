@@ -8,10 +8,11 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "vsc/IContext.h"
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 class TaskModelFieldBuilder : public VisitorBase {
 public:
@@ -43,5 +44,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

@@ -8,6 +8,7 @@
 #include "TypeExprRange.h"
 
 namespace vsc {
+namespace dm {
 
 TypeExprRange::TypeExprRange(
 		bool				is_single,
@@ -23,4 +24,6 @@ TypeExprRange::~TypeExprRange() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

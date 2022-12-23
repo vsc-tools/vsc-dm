@@ -9,6 +9,7 @@
 #include "ModelExprRange.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprRange::ModelExprRange(
 		bool			is_single,
@@ -39,4 +40,5 @@ void ModelExprRange::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprRange::eval\n");
 }
 
+}
 } /* namespace vsc */

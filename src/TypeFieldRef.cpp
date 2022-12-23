@@ -8,6 +8,7 @@
 #include "TypeFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 TypeFieldRef::TypeFieldRef(
 		const std::string		&name,
@@ -20,4 +21,6 @@ TypeFieldRef::~TypeFieldRef() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

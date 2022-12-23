@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExprCond.h"
+#include "vsc/dm/IModelExprCond.h"
 #include "ModelExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprCond : public virtual IModelExprCond, public virtual ModelExpr {
 public:
@@ -45,5 +46,6 @@ private:
 	IModelExprUP				m_false_e;
 };
 
+}
 } /* namespace vsc */
 

@@ -1,9 +1,10 @@
 
 #pragma once
-#include "vsc/IModelConstraintRef.h"
+#include "vsc/dm/IModelConstraintRef.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintRef : public virtual IModelConstraintRef, public ModelConstraint {
 public:
@@ -20,4 +21,5 @@ private:
 
 };
 
+}
 }

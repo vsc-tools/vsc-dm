@@ -9,9 +9,10 @@
 #include <vector>
 #include "ModelVal.h"
 #include "ModelValRangelist.h"
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 /**
  * Constructs a list of value ranges that describe
@@ -32,5 +33,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

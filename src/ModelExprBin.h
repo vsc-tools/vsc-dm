@@ -6,12 +6,13 @@
  */
 
 #pragma once
-#include "vsc/IModelExprBin.h"
-#include "vsc/BinOp.h"
+#include "vsc/dm/IModelExprBin.h"
+#include "vsc/dm/BinOp.h"
 #include "ModelExpr.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprBin : public IModelExprBin {
 public:
@@ -45,5 +46,6 @@ private:
 	bool						m_signed;
 };
 
+}
 } /* namespace vsc */
 

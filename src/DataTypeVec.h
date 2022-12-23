@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/IDataTypeVec.h"
+#include "vsc/dm/IDataTypeVec.h"
 
 namespace vsc {
+namespace dm {
 
 class DataTypeVec : public virtual IDataTypeVec {
 public:
@@ -24,5 +25,6 @@ private:
 	IDataType			*m_elem_t;
 };
 
+}
 } /* namespace vsc */
 

@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IDataTypeInt.h"
-#include "vsc/ITypeExprRangelist.h"
+#include "vsc/dm/IDataTypeInt.h"
+#include "vsc/dm/ITypeExprRangelist.h"
 #include "DataType.h"
 
 namespace vsc {
+namespace dm {
 
 class DataTypeInt;
 using DataTypeIntUP=std::unique_ptr<DataTypeInt>;
@@ -49,5 +50,6 @@ protected:
 	ITypeExprRangelistUP	m_domain;
 };
 
+}
 } /* namespace vsc */
 

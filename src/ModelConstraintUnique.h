@@ -1,9 +1,10 @@
 
 #pragma once
-#include "vsc/IModelConstraintUnique.h"
+#include "vsc/dm/IModelConstraintUnique.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintUnique : 
     public virtual IModelConstraintUnique,
@@ -24,4 +25,5 @@ private:
     std::vector<IModelExprUP>           m_exprs;
 };
 
+}
 }

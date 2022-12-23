@@ -8,6 +8,7 @@
 #include "ModelConstraintIfElse.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintIfElse::ModelConstraintIfElse(
 		IModelExpr			*cond,
@@ -21,4 +22,5 @@ ModelConstraintIfElse::~ModelConstraintIfElse() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

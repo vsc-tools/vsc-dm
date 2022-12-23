@@ -9,6 +9,7 @@
 #define SRC_MODELTYPEDVAL_H_
 
 namespace vsc {
+namespace dm {
 
 class ModelTypedVal {
 public:
@@ -16,6 +17,7 @@ public:
 	virtual ~ModelTypedVal();
 };
 
+}
 } /* namespace vsc */
 
 #endif /* SRC_MODELTYPEDVAL_H_ */

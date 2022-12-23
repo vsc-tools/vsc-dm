@@ -9,6 +9,7 @@
 #include "gtest/gtest.h"
 
 namespace vsc {
+namespace dm {
 
 class TestModelVal : public ::testing::Test {
 public:
@@ -16,5 +17,6 @@ public:
 	virtual ~TestModelVal();
 };
 
+}
 } /* namespace vsc */
 

@@ -23,6 +23,7 @@
 #include "DataTypeWidthVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 ModelField::ModelField() : m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
 	// TODO Auto-generated constructor stub
@@ -69,4 +70,6 @@ IModelFieldData *ModelField::getFieldData() {
 }
 
 
+}
 } /* namespace vsc */
+

@@ -20,11 +20,12 @@
  */
 #pragma once
 #include <vector>
-#include "vsc/IContext.h"
-#include "vsc/IRefSelector.h"
-#include "vsc/IModelFieldRef.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IRefSelector.h"
+#include "vsc/dm/IModelFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 
 class RefSelector : public virtual IRefSelector {
@@ -71,6 +72,7 @@ private:
     std::vector<IncRange>                   m_inc_ranges;
 };
 
+}
 }
 
 

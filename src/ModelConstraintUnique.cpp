@@ -2,6 +2,7 @@
 #include "ModelConstraintUnique.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintUnique::ModelConstraintUnique(const std::vector<IModelExpr *> &exprs) {
     for (std::vector<IModelExpr *>::const_iterator
@@ -15,4 +16,5 @@ ModelConstraintUnique::~ModelConstraintUnique() {
 
 }
 
+}
 }

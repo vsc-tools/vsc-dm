@@ -9,6 +9,7 @@
 #include <memory>
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraint;
 using TypeConstraintUP=std::unique_ptr<TypeConstraint>;
@@ -20,5 +21,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

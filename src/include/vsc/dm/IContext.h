@@ -1,0 +1,320 @@
+/*
+ * IContext.h
+ *
+ *  Created on: Jan 27, 2022
+ *      Author: mballance
+ */
+
+#pragma once
+#include "vsc/dm/IDataTypeEnum.h"
+#include "vsc/dm/IDataTypeInt.h"
+#include "vsc/dm/IDataTypeStruct.h"
+#include "vsc/dm/IDataTypeVec.h"
+#include "vsc/dm/IDebugMgr.h"
+#include "vsc/dm/IModelConstraintBlock.h"
+#include "vsc/dm/IModelConstraintExpr.h"
+#include "vsc/dm/IModelConstraintForeach.h"
+#include "vsc/dm/IModelConstraintIfElse.h"
+#include "vsc/dm/IModelConstraintImplies.h"
+#include "vsc/dm/IModelConstraintScope.h"
+#include "vsc/dm/IModelConstraintSoft.h"
+#include "vsc/dm/IModelConstraintSubst.h"
+#include "vsc/dm/IModelConstraintUnique.h"
+#include "vsc/dm/IModelCoverBin.h"
+#include "vsc/dm/IModelCoverBinCollection.h"
+#include "vsc/dm/IModelCoverCross.h"
+#include "vsc/dm/IModelCovergroup.h"
+#include "vsc/dm/IModelCoverpoint.h"
+#include "vsc/dm/IModelCoverpointTarget.h"
+#include "vsc/dm/IModelExpr.h"
+#include "vsc/dm/IModelExprBin.h"
+#include "vsc/dm/IModelExprCond.h"
+#include "vsc/dm/IModelExprFieldRef.h"
+#include "vsc/dm/IModelExprIn.h"
+#include "vsc/dm/IModelExprIndexedFieldRef.h"
+#include "vsc/dm/IModelExprPartSelect.h"
+#include "vsc/dm/IModelExprRange.h"
+#include "vsc/dm/IModelExprRangelist.h"
+#include "vsc/dm/IModelExprRef.h"
+#include "vsc/dm/IModelExprUnary.h"
+#include "vsc/dm/IModelExprVal.h"
+#include "vsc/dm/IModelFieldRef.h"
+#include "vsc/dm/IModelFieldRoot.h"
+#include "vsc/dm/IModelFieldVecRoot.h"
+#include "vsc/dm/IModelFieldType.h"
+#include "vsc/dm/IModelVal.h"
+#include "vsc/dm/IModelValOp.h"
+#include "vsc/dm/IRefSelector.h"
+#include "vsc/dm/ITask.h"
+#include "vsc/dm/ITypeConstraintBlock.h"
+#include "vsc/dm/ITypeConstraintExpr.h"
+#include "vsc/dm/ITypeConstraintIfElse.h"
+#include "vsc/dm/ITypeConstraintImplies.h"
+#include "vsc/dm/ITypeConstraintScope.h"
+#include "vsc/dm/ITypeConstraintSoft.h"
+#include "vsc/dm/ITypeConstraintUnique.h"
+#include "vsc/dm/ITypeExprBin.h"
+#include "vsc/dm/ITypeExprFieldRef.h"
+#include "vsc/dm/ITypeExprRange.h"
+#include "vsc/dm/ITypeExprRangelist.h"
+#include "vsc/dm/ITypeExprVal.h"
+#include "vsc/dm/ITypeFieldPhy.h"
+#include "vsc/dm/ITypeFieldRef.h"
+#include "vsc/dm/ITypeFieldVec.h"
+
+namespace vsc {
+namespace dm {
+
+enum class TaskE {
+	SetUsedRand
+};
+
+class IContext;
+using IContextUP=std::unique_ptr<IContext>;
+class IContext {
+public:
+
+	virtual ~IContext() { }
+
+	virtual IModelField *buildModelField(
+			IDataTypeStruct			*dt,
+			const std::string		&name) = 0;
+
+	virtual IDebugMgr *getDebugMgr() = 0;
+
+	virtual IModelValOp *getModelValOp() = 0;
+
+#ifdef UNDEFINED
+	virtual ICompoundSolver *mkCompoundSolver() = 0;
+#endif
+
+	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) = 0;
+
+	virtual IDataTypeEnum *mkDataTypeEnum(
+			const std::string 	&name,
+			bool				is_signed) = 0;
+
+	virtual bool addDataTypeEnum(IDataTypeEnum *e) = 0;
+
+	virtual IDataTypeInt *findDataTypeInt(
+			bool			is_signed,
+			int32_t			width) = 0;
+
+	/**
+	 * Returns a new datatype. The expectation is that
+	 * it will be subsequently added to the context
+	 */
+	virtual IDataTypeInt *mkDataTypeInt(
+			bool			is_signed,
+			int32_t			width) = 0;
+
+	virtual bool addDataTypeInt(IDataTypeInt *t) = 0;
+
+	virtual IDataTypeStruct *findDataTypeStruct(const std::string &name) = 0;
+
+	virtual IDataTypeStruct *mkDataTypeStruct(const std::string &name) = 0;
+
+	virtual bool addDataTypeStruct(IDataTypeStruct *t) = 0;
+
+	virtual IDataTypeVec *findDataTypeVec(IDataType *t) = 0;
+
+	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) = 0;
+
+	virtual bool *addDataTypeVec(IDataTypeVec *t) = 0;
+
+	virtual IModelConstraintBlock *mkModelConstraintBlock(
+			const std::string &name) = 0;
+
+	virtual IModelConstraintExpr *mkModelConstraintExpr(
+			IModelExpr		*expr) = 0;
+
+	virtual IModelConstraintForeach *mkModelConstraintForeach(
+			IModelExpr			*target,
+			const std::string	&index_it_name) = 0;
+
+	virtual IModelConstraintIfElse *mkModelConstraintIfElse(
+			IModelExpr			*cond,
+			IModelConstraint	*true_c,
+			IModelConstraint	*false_c) = 0;
+
+	virtual IModelConstraintImplies *mkModelConstraintImplies(
+			IModelExpr			*cond,
+			IModelConstraint	*body) = 0;
+
+	virtual IModelConstraintRef *mkModelConstraintRef(
+			IModelConstraint	*target) = 0;
+
+	virtual IModelConstraintScope *mkModelConstraintScope() = 0;
+
+	virtual IModelConstraintSoft *mkModelConstraintSoft(
+		IModelConstraintExpr	*c) = 0;
+
+	virtual IModelConstraintSubst *mkModelConstraintSubst(
+		IModelConstraint		*c) = 0;
+
+	virtual IModelConstraintUnique *mkModelConstraintUnique(
+		const std::vector<IModelExpr *>		&exprs) = 0;
+
+	virtual IModelCoverBinCollection *mkModelCoverBinCollection(
+		ModelCoverBinType			type) = 0;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleRange(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		bool						is_signed,
+		IModelVal					*lower,
+		IModelVal					*upper) = 0;
+
+	virtual IModelCoverBin *mkModelCoverBinSingleVal(
+		const std::string			&name,
+		ModelCoverBinType			type,
+		IModelVal					*value) = 0;
+
+	virtual IModelCoverCross *mkModelCoverCross(
+		const std::string			&name,
+		IModelCoverpointIff			*iff) = 0;
+
+	virtual IModelCovergroup *mkModelCovergroup(
+		const std::string			&name) = 0;
+
+	virtual IModelCoverpoint *mkModelCoverpoint(
+		const std::string			&name,
+		IModelCoverpointTarget		*target,
+		IModelCoverpointIff			*iff) = 0;
+
+	virtual IModelCoverpointTarget *mkModelCoverpointTargetExpr(
+		IModelExpr					*expr,
+		int32_t						width) = 0;
+
+	virtual IModelExprBin *mkModelExprBin(
+			IModelExpr		*lhs,
+			BinOp			op,
+			IModelExpr		*rhs) = 0;
+			
+	virtual IModelExprCond *mkModelExprCond(
+			IModelExpr		*cond,
+			IModelExpr		*true_e,
+			IModelExpr		*false_e) = 0;
+
+	virtual IModelExprFieldRef *mkModelExprFieldRef(
+			IModelField		*field) = 0;
+
+	virtual IModelExprIn *mkModelExprIn(
+			IModelExpr				*lhs,
+			IModelExprRangelist		*rnglist) = 0;
+
+	virtual IModelExprIndexedFieldRef *mkModelExprIndexedFieldRef() = 0;
+
+	virtual IModelExprPartSelect *mkModelExprPartSelect(
+			IModelExpr				*lhs,
+			int32_t					lower,
+			int32_t					upper) = 0;
+
+	virtual IModelExprRange *mkModelExprRange(
+			bool			is_single,
+			IModelExpr		*lower,
+			IModelExpr		*upper) = 0;
+
+	virtual IModelExprRangelist *mkModelExprRangelist() = 0;
+
+	virtual IModelExprRef *mkModelExprRef(IModelExpr *target) = 0;
+
+	virtual IModelExprUnary *mkModelExprUnary(
+		UnaryOp		op,
+		IModelExpr	*e) = 0;
+
+	virtual IModelExprVal *mkModelExprVal(IModelVal *) = 0;
+
+	virtual IModelFieldRef *mkModelFieldRefRoot(
+			IDataType			*type,
+			const std::string	&name) = 0;
+
+	virtual IModelFieldRef *mkModelFieldRefType(
+			ITypeField			*type) = 0;
+
+	virtual IModelFieldRoot *mkModelFieldRoot(
+			IDataType 			*type,
+			const std::string	&name) = 0;
+
+	virtual IModelFieldType *mkModelFieldType(
+			ITypeField			*type) = 0;
+
+	virtual IModelFieldVec *mkModelFieldVecRoot(
+			IDataType			*type,
+			const std::string	&name) = 0;
+
+	virtual IModelVal *mkModelVal() = 0;
+
+#ifdef UNDEFINED
+	virtual IRandomizer *mkRandomizer(
+			ISolverFactory		*solver_factory,
+			IRandState			*randstate) = 0;
+
+	virtual IRandState *mkRandState(const std::string &seed) = 0;
+#endif
+
+	virtual IRefSelector *mkRefSelector(
+			IModelFieldRef						*ref,
+			const std::vector<IModelField *>	&candidates) = 0;
+
+	virtual ITask *mkTask(TaskE id) = 0;
+
+	virtual ITypeExprBin *mkTypeExprBin(
+			ITypeExpr		*lhs,
+			BinOp			op,
+			ITypeExpr		*rhs) = 0;
+
+	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
+
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) = 0;
+
+	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
+			ITypeExpr 		*cond,
+			ITypeConstraint	*true_c,
+			ITypeConstraint	*false_c) = 0;
+
+	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
+			ITypeExpr		*cond,
+			ITypeConstraint	*body) = 0;
+
+	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
+
+	virtual ITypeConstraintSoft *mkTypeConstraintSoft(
+			ITypeConstraintExpr	*c) = 0;
+
+	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
+			const std::vector<ITypeExpr *>		&exprs) = 0;
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+
+	virtual ITypeExprRange *mkTypeExprRange(
+			bool				is_single,
+			ITypeExpr			*lower,
+			ITypeExpr			*upper) = 0;
+
+	virtual ITypeExprRangelist *mkTypeExprRangelist() = 0;
+
+	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) = 0;
+
+	virtual ITypeFieldPhy *mkTypeFieldPhy(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init) = 0;
+
+	virtual ITypeFieldRef *mkTypeFieldRef(
+			const std::string		&name,
+			IDataType				*dtype,
+			TypeFieldAttr			attr) = 0;
+
+	virtual ITypeFieldVec *mkTypeFieldVec(
+			const std::string		&name,
+			IDataType				*dtype,
+			bool					own_dtype,
+			TypeFieldAttr			attr,
+			IModelVal				*init_sz) = 0;
+
+};
+}
+}

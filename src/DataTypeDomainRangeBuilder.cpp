@@ -8,6 +8,7 @@
 #include "DataTypeDomainRangeBuilder.h"
 
 namespace vsc {
+namespace dm {
 
 DataTypeDomainRangeBuilder::DataTypeDomainRangeBuilder() {
 	// TODO Auto-generated constructor stub
@@ -58,4 +59,5 @@ void DataTypeDomainRangeBuilder::visitDataTypeInt(IDataTypeInt *t) {
 }
 
 
+}
 } /* namespace vsc */

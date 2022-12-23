@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IContext.h"
-#include "vsc/ITypeFieldVec.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/ITypeFieldVec.h"
 #include "TypeField.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeFieldVec : public virtual ITypeFieldVec, public virtual TypeField {
 public:
@@ -35,5 +36,6 @@ private:
 	IModelValUP							m_init_sz;
 };
 
+}
 } /* namespace vsc */
 

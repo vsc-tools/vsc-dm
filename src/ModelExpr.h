@@ -7,10 +7,11 @@
 
 #pragma once
 #include <memory>
-#include "vsc/IModelExpr.h"
+#include "vsc/dm/IModelExpr.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExpr;
 using ModelExprUP = std::unique_ptr<ModelExpr>;
@@ -47,5 +48,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

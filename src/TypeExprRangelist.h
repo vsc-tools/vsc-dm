@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/ITypeExprRangelist.h"
+#include "vsc/dm/ITypeExprRangelist.h"
 #include "TypeExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeExprRangelist : public ITypeExprRangelist, public virtual TypeExpr {
 public:
@@ -32,5 +33,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

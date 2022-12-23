@@ -9,6 +9,7 @@
 #include "ModelExprVecSubscript.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprVecSubscript::ModelExprVecSubscript(
 		IModelExpr			*expr,
@@ -25,4 +26,6 @@ void ModelExprVecSubscript::eval(IModelVal *dst) {
 	fprintf(stdout, "TODO: ModelExprVecSubscript::eval\n");
 }
 
+}
 } /* namespace vsc */
+

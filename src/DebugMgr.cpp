@@ -9,6 +9,7 @@
 #include "Debug.h"
 
 namespace vsc {
+namespace dm {
 
 DebugMgr::DebugMgr() {
 	m_en = false;
@@ -82,4 +83,5 @@ DebugMgr *DebugMgr::inst() {
 
 DebugMgrUP DebugMgr::m_inst;
 
+}
 } /* namespace vsc */

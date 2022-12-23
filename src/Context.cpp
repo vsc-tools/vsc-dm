@@ -18,9 +18,8 @@
  *      Author: mballance
  */
 
-#include "vsc/impl/ModelBuildContext.h"
+#include "vsc/dm/impl/ModelBuildContext.h"
 #include "Context.h"
-#include "CompoundSolverDefault.h"
 #include "DataTypeEnum.h"
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
@@ -57,11 +56,9 @@
 #include "ModelFieldType.h"
 #include "ModelFieldVecRoot.h"
 #include "ModelVal.h"
-#include "Randomizer.h"
-#include "RandState.h"
 #include "RefSelector.h"
 #include "TaskModelFieldBuilder.h"
-#include "vsc/impl/TaskSetUsedRand.h"
+#include "vsc/dm/impl/TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintIfElse.h"
@@ -80,6 +77,7 @@
 #include "VscImpl.h"
 
 namespace vsc {
+namespace dm {
 
 Context::Context() {
 	// TODO Auto-generated constructor stub
@@ -101,9 +99,11 @@ IDebugMgr *Context::getDebugMgr() {
 	return VscImpl::inst()->getDebugMgr();
 }
 
+#ifdef UNDEFINED
 ICompoundSolver *Context::mkCompoundSolver() {
 	return new CompoundSolverDefault(this);
 }
+#endif
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
 	std::unordered_map<std::string, IDataTypeEnum *>::const_iterator it;
@@ -421,6 +421,7 @@ IModelVal *Context::mkModelVal() {
 	return new ModelVal();
 }
 
+#ifdef UNDEFINED
 IRandomizer *Context::mkRandomizer(
 			ISolverFactory		*solver_factory,
 			IRandState			*randstate) {
@@ -430,6 +431,7 @@ IRandomizer *Context::mkRandomizer(
 IRandState *Context::mkRandState(const std::string &seed) {
 	return new RandState(seed);
 }
+#endif
 
 IRefSelector *Context::mkRefSelector(
 			IModelFieldRef						*ref,
@@ -557,4 +559,5 @@ ITypeFieldVec *Context::mkTypeFieldVec(
 	return new TypeFieldVec(this, name, dtype, own_dtype, attr, init_sz);
 }
 
+}
 } /* namespace vsc */

@@ -8,6 +8,7 @@
 #include "ModelFieldVec.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldVec::ModelFieldVec(IContext *ctxt) {
 	IDataTypeInt *ui32_t = ctxt->findDataTypeInt(false, 32);
@@ -41,4 +42,6 @@ void ModelFieldVec::pop_back() {
 	m_fields.pop_back();
 }
 
+}
 } /* namespace vsc */
+

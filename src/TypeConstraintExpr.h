@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/ITypeConstraintExpr.h"
+#include "vsc/dm/ITypeConstraintExpr.h"
 
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintExpr : public ITypeConstraintExpr {
 public:
@@ -28,5 +29,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

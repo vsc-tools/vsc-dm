@@ -10,13 +10,14 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "vsc/IDataType.h"
-#include "vsc/IModelField.h"
+#include "vsc/dm/IDataType.h"
+#include "vsc/dm/IModelField.h"
 #include "ModelConstraint.h"
 #include "ModelVal.h"
 #include "TypeField.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelField;
 using ModelFieldUP=std::unique_ptr<ModelField>;
@@ -89,5 +90,6 @@ protected:
 
 };
 
+}
 } /* namespace vsc */
 

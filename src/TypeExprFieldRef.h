@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/ITypeExprFieldRef.h"
+#include "vsc/dm/ITypeExprFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeExprFieldRef : public ITypeExprFieldRef {
 public:
@@ -42,5 +43,6 @@ private:
 	std::vector<TypeExprFieldRefElem>					m_path;
 };
 
+}
 } /* namespace vsc */
 

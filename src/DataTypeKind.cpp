@@ -8,6 +8,7 @@
 #include "DataTypeKind.h"
 
 namespace vsc {
+namespace dm {
 
 const char *toString(DataTypeKind k) {
 	switch (k) {
@@ -18,4 +19,5 @@ const char *toString(DataTypeKind k) {
 	}
 }
 
+}
 } /* namespace vsc */

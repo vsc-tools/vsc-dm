@@ -1,8 +1,9 @@
 
 #pragma once
-#include "vsc/ITypeConstraintUnique.h"
+#include "vsc/dm/ITypeConstraintUnique.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintUnique : public virtual ITypeConstraintUnique {
 public:
@@ -21,4 +22,5 @@ private:
     std::vector<ITypeExprUP>            m_exprs;
 };
 
+}
 }

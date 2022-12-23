@@ -8,6 +8,7 @@
 #include "TypeFieldPhy.h"
 
 namespace vsc {
+namespace dm {
 
 TypeFieldPhy::TypeFieldPhy(
 		const std::string	&name,
@@ -22,4 +23,6 @@ TypeFieldPhy::~TypeFieldPhy() {
 	// TODO Auto-generated destructor stub
 }	
 
+}
 } /* namespace vsc */
+

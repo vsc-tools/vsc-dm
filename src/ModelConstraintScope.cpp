@@ -22,6 +22,7 @@
 #include "ModelConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintScope::ModelConstraintScope() {
 	// TODO Auto-generated constructor stub
@@ -45,4 +46,5 @@ IModelConstraint *ModelConstraintScope::swapConstraint(
 	return ret;
 }
 
+}
 } /* namespace vsc */

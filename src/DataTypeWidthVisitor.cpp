@@ -8,6 +8,7 @@
 #include "DataTypeWidthVisitor.h"
 
 namespace vsc {
+namespace dm {
 
 DataTypeWidthVisitor::DataTypeWidthVisitor() :
 		m_is_signed(false), m_width(-1) {
@@ -31,4 +32,5 @@ void DataTypeWidthVisitor::visitDataTypeInt(IDataTypeInt *t) {
 	m_width = t->width();
 }
 
+}
 } /* namespace vsc */

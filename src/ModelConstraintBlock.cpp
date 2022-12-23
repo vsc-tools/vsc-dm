@@ -8,6 +8,7 @@
 #include "ModelConstraintBlock.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintBlock::ModelConstraintBlock(const std::string &name) :
 		m_name(name) {
@@ -18,4 +19,5 @@ ModelConstraintBlock::~ModelConstraintBlock() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

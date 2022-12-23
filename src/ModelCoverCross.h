@@ -7,11 +7,12 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IAccept.h"
-#include "vsc/IModelCoverCross.h"
+#include "vsc/dm/IAccept.h"
+#include "vsc/dm/IModelCoverCross.h"
 #include "ModelCoverItem.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverCross;
 using ModelCoverCrossUP=std::unique_ptr<ModelCoverCross>;
@@ -61,5 +62,6 @@ private:
 	double									m_coverage;
 };
 
+}
 } /* namespace vsc */
 

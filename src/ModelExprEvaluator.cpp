@@ -8,6 +8,7 @@
 #include "ModelExprEvaluator.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprEvaluator::ModelExprEvaluator() {
 	// TODO Auto-generated constructor stub
@@ -72,5 +73,5 @@ void ModelExprEvaluator::visitModelExprVecSubscript(IModelExprVecSubscript *e) {
 
 }
 
-
+}
 } /* namespace vsc */

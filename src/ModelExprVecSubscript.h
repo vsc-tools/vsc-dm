@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/IModelExprVecSubscript.h"
+#include "vsc/dm/IModelExprVecSubscript.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprVecSubscript : public IModelExprVecSubscript {
 public:
@@ -33,5 +34,6 @@ private:
 	IModelExprUP				m_subscript;
 };
 
+}
 } /* namespace vsc */
 

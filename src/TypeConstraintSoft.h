@@ -1,8 +1,9 @@
 
 #pragma once
-#include "vsc/ITypeConstraintSoft.h"
+#include "vsc/dm/ITypeConstraintSoft.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintSoft : public virtual ITypeConstraintSoft {
 public:
@@ -22,4 +23,5 @@ private:
 
 };
 
+}
 }

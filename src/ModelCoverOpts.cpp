@@ -8,6 +8,7 @@
 #include "ModelCoverOpts.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverOpts::ModelCoverOpts() :
 	m_weight(1), m_goal(100),
@@ -24,4 +25,5 @@ void ModelCoverOpts::init(const IModelCoverOpts *opts) {
 	m_auto_bin_max = opts->getAutoBinMax();
 }
 
+}
 } /* namespace vsc */

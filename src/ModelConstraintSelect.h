@@ -1,11 +1,12 @@
 
 #pragma once
-#include "vsc/IContext.h"
-#include "vsc/IModelConstraintSelect.h"
-#include "vsc/IModelField.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IModelConstraintSelect.h"
+#include "vsc/dm/IModelField.h"
 #include "ModelConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintSelect : 
     public virtual IModelConstraintSelect, 
@@ -40,5 +41,5 @@ private:
 
 };
 
-
+}
 }

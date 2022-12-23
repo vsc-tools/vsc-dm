@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/ITypeExprBin.h"
+#include "vsc/dm/ITypeExprBin.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeExprBin : public ITypeExprBin {
 public:
@@ -40,5 +41,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

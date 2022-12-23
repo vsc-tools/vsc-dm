@@ -6,9 +6,10 @@
  */
 
 #pragma once
-#include "vsc/IVsc.h"
+#include "vsc/dm/IVsc.h"
 
 namespace vsc {
+namespace dm {
 
 class VscImpl : public IVsc {
 public:
@@ -27,6 +28,7 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 
 

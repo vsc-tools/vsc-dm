@@ -8,6 +8,7 @@
 #include "ModelFieldRefRoot.h"
 
 namespace vsc {
+namespace dm {
 
 ModelFieldRefRoot::ModelFieldRefRoot(
 		IDataType			*type,
@@ -25,4 +26,6 @@ void ModelFieldRefRoot::setDataType(IDataType *t) {
 	val()->setBits(DataTypeWidthVisitor().width(t).second);
 }
 
+}
 } /* namespace vsc */
+

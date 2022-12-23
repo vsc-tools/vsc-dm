@@ -7,10 +7,11 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IModelExprRangelist.h"
+#include "vsc/dm/IModelExprRangelist.h"
 #include "ModelExprRange.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprRangelist;
 using ModelExprRangelistUP=std::unique_ptr<ModelExprRangelist>;
@@ -47,5 +48,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

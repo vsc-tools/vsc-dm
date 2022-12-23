@@ -19,10 +19,11 @@
  *     Author: 
  */
 #pragma once
-#include "vsc/IDataTypeTypeRef.h"
+#include "vsc/dm/IDataTypeTypeRef.h"
 #include "DataType.h"
 
 namespace vsc {
+namespace dm {
 
 
 class DataTypeTypeRef : public virtual IDataTypeTypeRef, virtual DataType {
@@ -43,5 +44,6 @@ private:
 
 };
 
+}
 }
 

@@ -10,6 +10,7 @@
 #include "ModelValRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 class CoverBinRangePartitioner {
 public:
@@ -27,4 +28,5 @@ private:
 
 };
 
+}
 } /* namespace vsc */

@@ -8,6 +8,7 @@
 #include "VscTestBase.h"
 
 namespace vsc {
+namespace dm {
 
 VscTestBase::VscTestBase() {
 	// TODO Auto-generated constructor stub
@@ -24,4 +25,5 @@ void VscTestBase::SetUp() {
 void VscTestBase::TearDown() {
 }
 
+}
 } /* namespace vsc */

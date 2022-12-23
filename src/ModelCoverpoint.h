@@ -7,14 +7,15 @@
 
 #pragma once
 #include <vector>
-#include "vsc/IModelCoverpoint.h"
-#include "vsc/IModelCoverBin.h"
+#include "vsc/dm/IModelCoverpoint.h"
+#include "vsc/dm/IModelCoverBin.h"
 #include "ModelCoverItem.h"
 #include "ModelCoverOpts.h"
 #include "ModelExpr.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class IModelCovergroup;
 
@@ -88,5 +89,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IContext.h"
-#include "vsc/impl/VisitorBase.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
+namespace dm {
 
 class TaskModelExprBuilder : public VisitorBase {
 public:
@@ -39,6 +40,7 @@ private:
 
 };
 
+}
 }
 
 

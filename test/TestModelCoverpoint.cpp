@@ -3,6 +3,7 @@
 #include "Context.h"
 
 namespace vsc {
+namespace dm {
 
 TEST_F(TestModelCoverpoint, single_cp_single_bin) {
     Context ctx;
@@ -38,4 +39,5 @@ TEST_F(TestModelCoverpoint, single_cp_single_bin) {
 
 }
 
+}
 }

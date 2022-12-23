@@ -1,8 +1,9 @@
 
 #pragma once
-#include "vsc/ITypeConstraintIfElse.h"
+#include "vsc/dm/ITypeConstraintIfElse.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintIfElse : public virtual ITypeConstraintIfElse {
 public:
@@ -42,3 +43,5 @@ private:
 };
 
 }
+}
+

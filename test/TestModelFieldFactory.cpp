@@ -1,10 +1,11 @@
 
 #include "TestModelFieldFactory.h"
-#include "vsc/impl/TaskBuildModelField.h"
+#include "vsc/dm/impl/TaskBuildModelField.h"
 #include "Context.h"
-#include "vsc/impl/ModelBuildContext.h"
+#include "vsc/dm/impl/ModelBuildContext.h"
 
 namespace vsc {
+namespace dm {
 
 TEST_F(TestModelFieldFactory, smoke) {
     Context ctxt;
@@ -34,6 +35,7 @@ TEST_F(TestModelFieldFactory, smoke) {
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
+#ifdef UNMDEFINED
     IRandStateUP state(ctxt.mkRandState("0"));
     ICompoundSolverUP solver(ctxt.mkCompoundSolver());
 
@@ -48,6 +50,7 @@ TEST_F(TestModelFieldFactory, smoke) {
             field->getField(0)->val()->val_u(),
             field->getField(1)->val()->val_u());
     }
+#endif
 }
 
 TEST_F(TestModelFieldFactory, struct_type_subfields) {
@@ -84,6 +87,7 @@ TEST_F(TestModelFieldFactory, struct_type_subfields) {
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
+#ifdef UNDEFINED
     IRandStateUP state(ctxt.mkRandState("0"));
     ICompoundSolverUP solver(ctxt.mkCompoundSolver());
 
@@ -106,6 +110,7 @@ TEST_F(TestModelFieldFactory, struct_type_subfields) {
             field->getField(1)->getField(0)->val()->val_u(),
             field->getField(1)->getField(1)->val()->val_u());
     }
+#endif
 }
 
 TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
@@ -155,6 +160,7 @@ TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
+#ifdef UNDEFINED
     IRandStateUP state(ctxt.mkRandState("0"));
     ICompoundSolverUP solver(ctxt.mkCompoundSolver());
 
@@ -180,6 +186,8 @@ TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
             field->getField(0)->getField(0)->val()->val_u(),
             field->getField(1)->getField(0)->val()->val_u());
     }
+#endif
 }
 
+}
 }

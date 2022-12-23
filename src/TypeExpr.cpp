@@ -8,6 +8,7 @@
 #include "TypeExpr.h"
 
 namespace vsc {
+namespace dm {
 
 TypeExpr::TypeExpr() {
 	// TODO Auto-generated constructor stub
@@ -18,4 +19,6 @@ TypeExpr::~TypeExpr() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

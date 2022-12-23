@@ -7,9 +7,9 @@
 
 #pragma once
 #include <string>
-#include "vsc/IDebug.h"
+#include "vsc/dm/IDebug.h"
 
-#define DEBUG_SCOPE(scope) static vsc::Debug __dbg(#scope)
+#define DEBUG_SCOPE(scope) static vsc::dm::Debug __dbg(#scope)
 #define DEBUG_ENTER_BASE(scope, fmt, ...) if (__dbg.en()) __dbg.enter(fmt, ##__VA_ARGS__)
 #define DEBUG_LEAVE_BASE(scope, fmt, ...) if (__dbg.en()) __dbg.leave(fmt, ##__VA_ARGS__)
 #define DEBUG_BASE(scope, fmt, ...) if (__dbg.en()) __dbg.debug(fmt, ##__VA_ARGS__)
@@ -22,6 +22,7 @@
 //	fprintf(stdout, #scope ": " fmt "\n", ##__VA_ARGS__)
 
 namespace vsc {
+namespace dm {
 
 class DebugMgr;
 class Debug : public virtual IDebug {
@@ -49,5 +50,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 

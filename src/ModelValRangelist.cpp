@@ -8,6 +8,7 @@
 #include "ModelValRangelist.h"
 
 namespace vsc {
+namespace dm {
 
 ModelValRangelist::ModelValRangelist(bool is_signed)
 		: m_is_signed(is_signed) {
@@ -42,4 +43,6 @@ IModelValRange *ModelValRangelist::at(uint32_t i) {
 }
 
 
+}
 } /* namespace vsc */
+

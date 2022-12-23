@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelValRange.h"
+#include "vsc/dm/IModelValRange.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelValRange : public IModelValRange {
 public:
@@ -42,6 +43,7 @@ private:
 	ModelVal				m_upper;
 };
 
+}
 }
 
 

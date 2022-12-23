@@ -8,6 +8,7 @@
 #include "TypeFieldVec.h"
 
 namespace vsc {
+namespace dm {
 
 TypeFieldVec::TypeFieldVec(
 		IContext			*ctxt,
@@ -33,4 +34,6 @@ TypeFieldVec::~TypeFieldVec() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

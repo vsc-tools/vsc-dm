@@ -19,13 +19,14 @@
  *      Author: mballance
  */
 
-#include "vsc/impl/TaskIsTypeFieldRef.h"
-#include "vsc/impl/TaskBuildModelConstraint.h"
+#include "vsc/dm/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/impl/TaskBuildModelConstraint.h"
 #include "DataTypeStruct.h"
 #include "TypeField.h"
 #include "TypeConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 DataTypeStruct::DataTypeStruct(const std::string &name) : m_name(name) {
 	// TODO Auto-generated constructor stub
@@ -126,4 +127,5 @@ IModelField *DataTypeStruct::mkTypeField(
 	return ret;
 }
 
+}
 } /* namespace vsc */

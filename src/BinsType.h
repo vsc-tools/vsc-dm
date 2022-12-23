@@ -8,6 +8,7 @@
 #pragma once
 
 namespace vsc {
+namespace dm {
 
 enum class BinsType {
 	Bins,
@@ -17,5 +18,6 @@ enum class BinsType {
 
 const char *toString(BinsType t);
 
+}
 } /* namespace vsc */
 

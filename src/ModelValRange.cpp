@@ -8,6 +8,7 @@
 #include "ModelValRange.h"
 
 namespace vsc {
+namespace dm {
 
 ModelValRange::ModelValRange(const IModelVal *lower) {
 	m_lower.set(lower);
@@ -38,5 +39,6 @@ ModelValRange::ModelValRange(const IModelValRange *rhs) {
 	m_upper.set(rhs->upper());
 }
 
+}
 }
 

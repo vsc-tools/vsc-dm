@@ -6,11 +6,12 @@
  */
 
 #pragma once
-#include "vsc/IModelConstraintSoft.h"
+#include "vsc/dm/IModelConstraintSoft.h"
 #include "ModelConstraint.h"
 #include "ModelConstraintExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelConstraintSoft : 
 	public virtual IModelConstraintSoft,
@@ -33,5 +34,6 @@ private:
 	int32_t							m_priority;
 };
 
+}
 } /* namespace vsc */
 

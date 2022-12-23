@@ -8,6 +8,7 @@
 #include "ModelConstraintForeach.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintForeach::ModelConstraintForeach(
 	IContext 			*ctxt,
@@ -27,4 +28,5 @@ ModelConstraintForeach::~ModelConstraintForeach() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

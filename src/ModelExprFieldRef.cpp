@@ -22,6 +22,7 @@
 #include "ModelExprFieldRef.h"
 
 namespace vsc {
+namespace dm {
 
 ModelExprFieldRef::ModelExprFieldRef(IModelField *field) : m_field(field) {
 
@@ -38,4 +39,5 @@ void ModelExprFieldRef::eval(IModelVal *dst) {
 			m_field->val()->val_u(), m_field->val()->bits());
 }
 
+}
 } /* namespace vsc */

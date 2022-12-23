@@ -1,10 +1,11 @@
 
 #pragma once
-#include "vsc/IModelCoverpointTarget.h"
-#include "vsc/IModelExpr.h"
-#include "vsc/impl/TaskResolveModelExprVal.h"
+#include "vsc/dm/IModelCoverpointTarget.h"
+#include "vsc/dm/IModelExpr.h"
+#include "vsc/dm/impl/TaskResolveModelExprVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverpointTargetExpr : public virtual IModelCoverpointTarget {
 public:
@@ -25,4 +26,5 @@ private:
 
 };
 
+}
 }

@@ -8,6 +8,7 @@
 #include "ModelCoverBin.h"
 
 namespace vsc {
+namespace dm {
 
 ModelCoverBin::ModelCoverBin(
 	const std::string		&name,
@@ -22,4 +23,5 @@ ModelCoverBin::~ModelCoverBin() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

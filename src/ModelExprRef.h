@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelExprRef.h"
+#include "vsc/dm/IModelExprRef.h"
 #include "ModelExpr.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelExprRef : public virtual IModelExprRef, public virtual ModelExpr {
 public:
@@ -29,5 +30,6 @@ private:
 	IModelExpr				*m_expr;
 };
 
+}
 } /* namespace vsc */
 

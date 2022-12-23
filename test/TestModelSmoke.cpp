@@ -8,9 +8,9 @@
 #include "TestModelSmoke.h"
 #include "Context.h"
 #include "ModelFieldRoot.h"
-#include "SolverBoolector.h"
 
 namespace vsc {
+namespace dm {
 
 TestModelSmoke::TestModelSmoke() {
 	// TODO Auto-generated constructor stub
@@ -30,11 +30,15 @@ TEST_F(TestModelSmoke, smoke) {
 		ctx.addDataTypeInt(vsc_uint32_t);
 	}
 	IModelFieldRoot *a = new ModelFieldRoot(vsc_uint32_t, "a");
+#ifdef UNDEFINED
 	SolverBoolector *solver = new SolverBoolector();
 
 	solver->initField(a);
 	solver->isSAT();
 	solver->setFieldValue(a);
+#endif
 }
 
+}
 } /* namespace vsc */
+

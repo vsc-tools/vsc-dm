@@ -8,6 +8,7 @@
 #include "TypeExprBin.h"
 
 namespace vsc {
+namespace dm {
 
 TypeExprBin::TypeExprBin(
 		ITypeExpr			*lhs,
@@ -20,4 +21,6 @@ TypeExprBin::~TypeExprBin() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+

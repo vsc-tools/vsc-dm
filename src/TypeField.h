@@ -9,12 +9,13 @@
 #include <memory>
 #include <string>
 #include "DataType.h"
-#include "vsc/IAccept.h"
-#include "vsc/ITypeField.h"
-#include "vsc/IModelVal.h"
+#include "vsc/dm/IAccept.h"
+#include "vsc/dm/ITypeField.h"
+#include "vsc/dm/IModelVal.h"
 
 
 namespace vsc {
+namespace dm {
 
 class DataTypeStruct;
 
@@ -45,7 +46,7 @@ public:
 	virtual void setDataType(IDataType *t, bool own=false) override { 
 		m_type = t; 
 		if (own) {
-			m_type_owned = vsc::IDataTypeUP(t);
+			m_type_owned = vsc::dm::IDataTypeUP(t);
 		}
 	}
 
@@ -66,5 +67,6 @@ protected:
 
 };
 
+}
 } /* namespace vsc */
 

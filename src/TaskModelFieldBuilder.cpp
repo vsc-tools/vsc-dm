@@ -9,9 +9,9 @@
 #include "TaskModelExprBuilder.h"
 #include "TaskModelFieldBuilder.h"
 
-#include "include/vsc/IDataTypeStruct.h"
-#include "include/vsc/IModelFieldRoot.h"
-#include "include/vsc/IModelFieldType.h"
+#include "vsc/dm/IDataTypeStruct.h"
+#include "vsc/dm/IModelFieldRoot.h"
+#include "vsc/dm/IModelFieldType.h"
 
 #define EN_DEBUG_TASK_MODEL_FIELD_BUILDER
 
@@ -31,6 +31,7 @@ DEBUG_SCOPE(TaskModelFieldBuilder);
 
 
 namespace vsc {
+namespace dm {
 
 TaskModelFieldBuilder::TaskModelFieldBuilder(IContext *ctxt) :
 		m_ctxt(ctxt), m_type_field(0) {
@@ -123,5 +124,5 @@ void TaskModelFieldBuilder::visitTypeConstraintScope(ITypeConstraintScope *c) {
 	DEBUG_LEAVE("visitTypeConstraintScope");
 }
 
-
+}
 } /* namespace vsc */

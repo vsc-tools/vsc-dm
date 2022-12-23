@@ -8,6 +8,7 @@
 #include "ModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 ModelValOp::ModelValOp() {
 	// TODO Auto-generated constructor stub
@@ -632,4 +633,6 @@ void ModelValOp::sub_s(
 	}
 }
 
+}
 } /* namespace vsc */
+

@@ -1,11 +1,12 @@
 
 #pragma once
-#include "vsc/IModelCoverBinMask.h"
-#include "vsc/IModelVal.h"
+#include "vsc/dm/IModelCoverBinMask.h"
+#include "vsc/dm/IModelVal.h"
 #include "ModelCoverBin.h"
 #include "ModelVal.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelCoverBinMask : 
     public virtual IModelCoverBinMask,
@@ -42,4 +43,5 @@ private:
 
 };
 
+}
 }

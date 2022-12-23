@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/IModelVal.h"
-#include "vsc/IModelValOp.h"
+#include "vsc/dm/IModelVal.h"
+#include "vsc/dm/IModelValOp.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelValOp : public virtual IModelValOp {
 public:
@@ -329,5 +330,6 @@ public:
 
 };
 
+}
 } /* namespace vsc */
 

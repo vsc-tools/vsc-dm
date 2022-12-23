@@ -6,10 +6,11 @@
  */
 
 #pragma once
-#include "vsc/ITypeField.h"
+#include "vsc/dm/ITypeField.h"
 #include "ModelFieldVec.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldVecType : public ModelFieldVec {
 public:
@@ -31,5 +32,6 @@ private:
 	ITypeField				*m_type;
 };
 
+}
 } /* namespace vsc */
 

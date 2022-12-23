@@ -1,9 +1,10 @@
 
 #pragma once
-#include "vsc/ITypeConstraintForeach.h"
+#include "vsc/dm/ITypeConstraintForeach.h"
 #include "TypeConstraintScope.h"
 
 namespace vsc {
+namespace dm {
 
 class TypeConstraintForeach : 
     public virtual ITypeConstraintForeach, 
@@ -23,5 +24,6 @@ private:
 
 };
 
-
 }
+}
+

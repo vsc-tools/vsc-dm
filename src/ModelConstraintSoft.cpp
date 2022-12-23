@@ -22,6 +22,7 @@
 #include "ModelConstraintSoft.h"
 
 namespace vsc {
+namespace dm {
 
 ModelConstraintSoft::ModelConstraintSoft(IModelConstraintExpr *c, int32_t priority) :
 	m_constraint(c), m_priority(priority) {
@@ -32,4 +33,5 @@ ModelConstraintSoft::~ModelConstraintSoft() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */

@@ -22,6 +22,7 @@
 #include "TypeConstraint.h"
 
 namespace vsc {
+namespace dm {
 
 TypeConstraint::TypeConstraint() {
 	// TODO Auto-generated constructor stub
@@ -32,4 +33,6 @@ TypeConstraint::~TypeConstraint() {
 	// TODO Auto-generated destructor stub
 }
 
+}
 } /* namespace vsc */
+
