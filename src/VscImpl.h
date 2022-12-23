@@ -19,7 +19,7 @@ public:
 
 	virtual IContext *mkContext() override;
 
-	virtual IDebugMgr *getDebugMgr() override;
+	virtual dmgr::IDebugMgr *getDebugMgr() override;
 
 	static IVsc *inst();
 

@@ -6,11 +6,11 @@
  */
 
 #pragma once
+#include "dmgr/IDebugMgr.h"
 #include "vsc/dm/IDataTypeEnum.h"
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeStruct.h"
 #include "vsc/dm/IDataTypeVec.h"
-#include "vsc/dm/IDebugMgr.h"
 #include "vsc/dm/IModelConstraintBlock.h"
 #include "vsc/dm/IModelConstraintExpr.h"
 #include "vsc/dm/IModelConstraintForeach.h"
@@ -80,7 +80,7 @@ public:
 			IDataTypeStruct			*dt,
 			const std::string		&name) = 0;
 
-	virtual IDebugMgr *getDebugMgr() = 0;
+	virtual dmgr::IDebugMgr *getDebugMgr() = 0;
 
 	virtual IModelValOp *getModelValOp() = 0;
 

@@ -9,6 +9,7 @@ add_library(vsc-dm SHARED ${libvsc_dm_SRC})
 target_include_directories(vsc-dm PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/include
+    ${DEBUG_MGR_DIR}/src/include
     )
    
 target_link_directories(vsc-dm PRIVATE
@@ -21,6 +22,7 @@ add_library(vsc-dm_static STATIC ${libvsc_dm_SRC})
 target_include_directories(vsc-dm_static PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/include
+    ${DEBUG_MGR_DIR}/src/include
     )
    
 target_link_directories(vsc-dm_static PRIVATE

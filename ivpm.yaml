@@ -14,11 +14,15 @@ package:
        url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
      - name: ninja
        src: pypi
+     - name: debug-mgr
+       url: https://github.com/mballance/debug-mgr.git
 
    deps:
      - name: cython
        src: pypi
      - name: gtest
        url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
+     - name: debug-mgr
+       url: https://github.com/mballance/debug-mgr.git
        
 

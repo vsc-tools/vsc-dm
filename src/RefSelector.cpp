@@ -20,7 +20,7 @@
  */
 #include <algorithm>
 #include "vsc/dm/IContext.h"
-#include "vsc/dm/impl/DebugMacros.h"
+#include "dmgr/impl/DebugMacros.h"
 #include "RefSelector.h"
 
 
@@ -188,7 +188,7 @@ void RefSelector::addIncludeRange(int32_t l, int32_t h, IModelExpr *cond) {
     m_inc_ranges.push_back({l, h, IModelExprUP(cond)});
 }
 
-IDebug *RefSelector::m_dbg = 0;
+dmgr::IDebug *RefSelector::m_dbg = 0;
 
 }
 }

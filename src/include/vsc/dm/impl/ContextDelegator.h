@@ -28,7 +28,7 @@ public:
 		return m_ctxt->buildModelField(dt, name);
 	}
 
-	virtual IDebugMgr *getDebugMgr() override {
+	virtual dmgr::IDebugMgr *getDebugMgr() override {
 		return m_ctxt->getDebugMgr();
 	}
 

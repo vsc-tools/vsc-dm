@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "dmgr/IDebug.h"
 #include "vsc/dm/IContext.h"
 #include "vsc/dm/impl/VisitorBase.h"
 
@@ -35,6 +36,7 @@ public:
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override;
 
 private:
+    static dmgr::IDebug                     *m_dbg;
 	IContext								*m_ctxt;
 	std::string								m_name;
 	ITypeField								*m_type_field;

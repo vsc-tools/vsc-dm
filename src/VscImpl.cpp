@@ -6,7 +6,6 @@
  */
 
 #include "Context.h"
-#include "DebugMgr.h"
 #include "VscImpl.h"
 
 namespace vsc {
@@ -25,8 +24,9 @@ IContext *VscImpl::mkContext() {
 	return new Context();
 }
 
-IDebugMgr *VscImpl::getDebugMgr() {
-	return DebugMgr::inst();
+dmgr::IDebugMgr *VscImpl::getDebugMgr() {
+    // TODO:
+    return 0;
 }
 
 IVsc *VscImpl::inst() {

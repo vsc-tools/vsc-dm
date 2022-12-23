@@ -56,7 +56,7 @@ public:
     virtual void addIncludeRange(int32_t l, int32_t h, IModelExpr *cond) override;
 
 private:
-    static IDebug                           *m_dbg;
+    static dmgr::IDebug                     *m_dbg;
 
     struct IncRange {
         int32_t             l;

@@ -5,7 +5,7 @@
  *      Author: mballance
  */
 
-#include "Debug.h"
+#include "dmgr/impl/DebugMacros.h"
 #include "TaskModelExprBuilder.h"
 #include "TaskModelFieldBuilder.h"
 
@@ -13,28 +13,12 @@
 #include "vsc/dm/IModelFieldRoot.h"
 #include "vsc/dm/IModelFieldType.h"
 
-#define EN_DEBUG_TASK_MODEL_FIELD_BUILDER
-
-#ifdef EN_DEBUG_TASK_MODEL_FIELD_BUILDER
-DEBUG_SCOPE(TaskModelFieldBuilder);
-#define DEBUG_ENTER(fmt, ...) \
-	DEBUG_ENTER_BASE(TaskModelFieldBuilder, fmt, ##__VA_ARGS__)
-#define DEBUG_LEAVE(fmt, ...) \
-	DEBUG_LEAVE_BASE(TaskModelFieldBuilder, fmt, ##__VA_ARGS__)
-#define DEBUG(fmt, ...) \
-	DEBUG_BASE(TaskModelFieldBuilder, fmt, ##__VA_ARGS__)
-#else
-#define DEBUG_ENTER(fmt, ...)
-#define DEBUG_LEAVE(fmt, ...)
-#define DEBUG(fmt, ...)
-#endif
-
-
 namespace vsc {
 namespace dm {
 
 TaskModelFieldBuilder::TaskModelFieldBuilder(IContext *ctxt) :
 		m_ctxt(ctxt), m_type_field(0) {
+    DEBUG_INIT("TaskModelFieldBuilder", ctxt->getDebugMgr());
 }
 
 TaskModelFieldBuilder::~TaskModelFieldBuilder() {
@@ -123,6 +107,8 @@ void TaskModelFieldBuilder::visitTypeConstraintScope(ITypeConstraintScope *c) {
 	VisitorBase::visitTypeConstraintScope(c);
 	DEBUG_LEAVE("visitTypeConstraintScope");
 }
+
+dmgr::IDebug *TaskModelFieldBuilder::m_dbg = 0;
 
 }
 } /* namespace vsc */

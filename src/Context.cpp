@@ -95,7 +95,7 @@ IModelField *Context::buildModelField(
 	return dt->mkRootField(&ctxt, name, false);
 }
 
-IDebugMgr *Context::getDebugMgr() {
+dmgr::IDebugMgr *Context::getDebugMgr() {
 	return VscImpl::inst()->getDebugMgr();
 }
 
