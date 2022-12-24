@@ -1,5 +1,6 @@
 
-from libvsc cimport decl
+cimport debug_mgr.core as dm_core
+from libvsc_dm cimport decl
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t
@@ -10,11 +11,6 @@ from libcpp.vector cimport vector as cpp_vector
 from enum import IntFlag, IntEnum
 cimport cpython.ref as cpy_ref
 
-cdef class Vsc(object):
-    cdef decl.IVsc              *_hndl
-    
-    cpdef Context mkContext(self)
-    cpdef DebugMgr getDebugMgr(self)
    
 cdef class Context(object):
     cdef decl.IContext               *_hndl
@@ -160,25 +156,12 @@ cdef class DataTypeStruct(DataType):
 
     cdef decl.IDataTypeStruct *asTypeStruct(self)
 
-cdef class Debug(object):
-    cdef decl.IDebug            *_hndl
-    cdef bool                   _owned
+cdef class Factory(object):
+    cdef decl.IFactory              *_hndl
 
-    @staticmethod
-    cdef mk(decl.IDebug *hndl, bool owned=*)
-
-cdef class DebugMgr(object):
-    cdef decl.IDebugMgr         *_hndl
-    cdef bool                   _owned
-
-    cpdef enable(self, bool en)
-
-    cpdef addDebug(self, Debug dbg)
-
-    cpdef Debug findDebug(self, name)
-
-    @staticmethod
-    cdef mk(decl.IDebugMgr *hndl, bool owned=*)
+    cdef init(self, dm_core.Factory)
+    cpdef Context mkContext(self)
+    cpdef dm_core.DebugMgr getDebugMgr(self)
 
 cdef class ModelConstraint(ObjBase):
 

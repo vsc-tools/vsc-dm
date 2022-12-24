@@ -5,11 +5,12 @@
  *      Author: mballance
  */
 #include "VscTasks.h"
-#include "vsc/impl/ModelBuildContext.h"
-#include "vsc/impl/TaskBuildModelField.h"
-#include "vsc/impl/TaskRollbackConstraintSubst.h"
+#include "vsc/dm/impl/ModelBuildContext.h"
+#include "vsc/dm/impl/TaskBuildModelField.h"
+#include "vsc/dm/impl/TaskRollbackConstraintSubst.h"
 
 namespace vsc {
+namespace dm {
 
 IModelField *Task_BuildModelField(
 		IContext				*ctxt,
@@ -25,5 +26,6 @@ void Task_RollbackConstraintSubst(
 }
 
 
+}
 }
 

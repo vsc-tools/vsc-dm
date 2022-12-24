@@ -1,6 +1,7 @@
 #*****************************************************************************
 #* decl.pxd
 #*****************************************************************************
+from debug_mgr cimport decl as dm_decl
 from libcpp.pair cimport pair as cpp_pair
 from libcpp.set cimport set as cpp_set
 from libcpp.string cimport string as cpp_string
@@ -20,8 +21,7 @@ ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IDataTypeVec *IDataTypeVecP
-ctypedef IDebug *IDebugP
-ctypedef IDebugMgr *IDebugMgrP
+ctypedef IFactory *IFactoryP
 ctypedef IModelConstraint *IModelConstraintP
 ctypedef IModelConstraintBlock *IModelConstraintBlockP
 ctypedef IModelConstraintExpr *IModelConstraintExprP
@@ -76,7 +76,7 @@ ctypedef IVisitor *IVisitorP
 #********************************************************************
 #* IContext
 #********************************************************************
-cdef extern from "vsc/IContext.h" namespace "vsc":
+cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
     cdef cppclass IContext:
         IModelFieldRoot *buildModelField(IDataTypeStruct *, const cpp_string &)
         ICompoundSolver *mkCompoundSolver()
@@ -148,7 +148,7 @@ cdef extern from "vsc/IContext.h" namespace "vsc":
             IDataType *,
             TypeFieldAttr)
 
-cdef extern from "vsc/IModelBuildContext.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelBuildContext.h" namespace "vsc::dm":
     cdef cppclass IModelBuildContext:
         IContext *ctxt()
         pass
@@ -156,7 +156,7 @@ cdef extern from "vsc/IModelBuildContext.h" namespace "vsc":
 #********************************************************************
 #* ICompoundSolver
 #********************************************************************
-cdef extern from "vsc/ICompoundSolver.h" namespace "vsc":
+cdef extern from "vsc/dm/ICompoundSolver.h" namespace "vsc::dm":
 
     cdef enum SolveFlags:
         Randomize          "vsc::SolveFlags::Randomize"
@@ -176,7 +176,7 @@ cdef extern from "vsc/ICompoundSolver.h" namespace "vsc":
 #********************************************************************
 #* IAccept
 #********************************************************************
-cdef extern from "vsc/IAccept.h" namespace "vsc":
+cdef extern from "vsc/dm/IAccept.h" namespace "vsc::dm":
     cdef cppclass IAccept:
         void accept(IVisitor *)
     
@@ -184,7 +184,7 @@ cdef extern from "vsc/IAccept.h" namespace "vsc":
 #* IDataType
 #********************************************************************
 
-cdef extern from "vsc/IDataType.h" namespace "vsc":
+cdef extern from "vsc/dm/IDataType.h" namespace "vsc::dm":
     cdef cppclass IDataType(IAccept):
         IModelField *mkRootField(
             IModelBuildContext     *ctxt,
@@ -194,7 +194,7 @@ cdef extern from "vsc/IDataType.h" namespace "vsc":
             IModelBuildContext     *ctxt,
             ITypeField             *type)
     
-cdef extern from "vsc/IDataTypeEnum.h" namespace "vsc":
+cdef extern from "vsc/dm/IDataTypeEnum.h" namespace "vsc::dm":
     cdef cppclass IDataTypeEnum(IDataType):
         const cpp_string &name() const
         bool isSigned() const
@@ -203,11 +203,11 @@ cdef extern from "vsc/IDataTypeEnum.h" namespace "vsc":
             const IModelVal     *val)
         ITypeExprRangelist *getDomain()
     
-cdef extern from "vsc/IDataTypeInt.h" namespace "vsc":
+cdef extern from "vsc/dm/IDataTypeInt.h" namespace "vsc::dm":
     cdef cppclass IDataTypeInt(IDataType):
         pass
     
-cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
+cdef extern from "vsc/dm/IDataTypeStruct.h" namespace "vsc::dm":
     cdef cppclass IDataTypeStruct(IDataType):
         const cpp_string &name() const
         void addField(ITypeField *)
@@ -217,70 +217,65 @@ cdef extern from "vsc/IDataTypeStruct.h" namespace "vsc":
         const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
         void setCreateHook(IModelStructCreateHook *)
        
-cdef extern from "vsc/IDataTypeVec.h" namespace "vsc":
+cdef extern from "vsc/dm/IDataTypeVec.h" namespace "vsc::dm":
     cdef cppclass IDataTypeVec(IDataType):
         IDataType *getElemType() const
 
 #********************************************************************
-#* Debug
+#* IFactory
 #********************************************************************
-
-cdef extern from "vsc/IDebug.h" namespace "vsc":
-    cdef cppclass IDebug:
-        pass
-
-cdef extern from "vsc/IDebugMgr.h" namespace "vsc":
-    cdef cppclass IDebugMgr:
-        void enable(bool en)
-        void addDebug(IDebug *)
-        IDebug *findDebug(const cpp_string &)
+cdef extern from "vsc/dm/IFactory.h" namespace "vsc::dm":
+    cdef cppclass IFactory:
+        void init(dm_decl.IDebugMgr *)
+        IContext *mkContext()
+        dm_decl.IDebugMgr *getDebugMgr()
 
 #********************************************************************
 #* IVsc
 #********************************************************************
-cdef extern from "vsc/IVsc.h" namespace "vsc":
-    cdef cppclass IVsc:
-        IContext *mkContext()
-        IDebugMgr *getDebugMgr()
+#cdef extern from "vsc/dm/IVsc.h" namespace "vsc::dm":
+#    cdef cppclass IVsc:
+#        IContext *mkContext()
+#        IDebugMgr *getDebugMgr()
     
         
 #********************************************************************
 #* IModelConstraint
 #********************************************************************
 #ctypedef IModelConstraint *IModelConstraintP
-cdef extern from "vsc/IModelConstraint.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraint.h" namespace "vsc::dm":
     cdef cppclass IModelConstraint(IAccept):
         pass
     
-cdef extern from "vsc/IModelConstraintScope.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintScope.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintScope(IModelConstraint):
         const cpp_vector[unique_ptr[IModelConstraint]] &constraints() const
         void addConstraint(IModelConstraint *)
 
-cdef extern from "vsc/IModelConstraintSoft.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintSoft.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintSoft(IModelConstraint):
         IModelConstraintExpr *constraint() const
 
-cdef extern from "vsc/IModelConstraintUnique.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintUnique.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintUnique(IModelConstraint):
         const cpp_vector[IModelExprUP] &getExprs() const
     
-cdef extern from "vsc/IModelConstraintBlock.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintBlock.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintBlock(IModelConstraintScope):
         const cpp_string &name()
     
-cdef extern from "vsc/IModelConstraintExpr.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintExpr.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintExpr(IModelConstraint):
         IModelExpr *expr() const
 
-cdef extern from "vsc/IModelConstraintIfElse.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintIfElse.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintIfElse(IModelConstraint):
         IModelExpr *getCond() const
         IModelConstraint *getTrue() const
         IModelConstraint *getFalse() const
         void setFalse(IModelConstraint *)
 
-cdef extern from "vsc/IModelConstraintImplies.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelConstraintImplies.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintImplies(IModelConstraint):
         IModelExpr *getCond() const
         IModelConstraint *getBody() const
@@ -288,42 +283,42 @@ cdef extern from "vsc/IModelConstraintImplies.h" namespace "vsc":
 #********************************************************************
 #* IModelExpr
 #********************************************************************
-cdef extern from "vsc/IModelExpr.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExpr.h" namespace "vsc::dm":
     cdef cppclass IModelExpr(IAccept):
         pass
     
-cdef extern from "vsc/IModelExprCond.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprCond.h" namespace "vsc::dm":
     cdef cppclass IModelExprCond(IModelExpr):
         IModelExpr *getCond() const
         IModelExpr *getTrue() const
         IModelExpr *getFalse() const
     
-cdef extern from "vsc/IModelExprFieldRef.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprFieldRef.h" namespace "vsc::dm":
     cdef cppclass IModelExprFieldRef(IModelExpr):
         IModelField *field() const
         
-cdef extern from "vsc/IModelExprPartSelect.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprPartSelect.h" namespace "vsc::dm":
     cdef cppclass IModelExprPartSelect(IModelExpr):
         IModelExpr *lhs() const
         int32_t lower() const
         int32_t upper() const
 
-cdef extern from "vsc/IModelExprRange.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprRange.h" namespace "vsc::dm":
     cdef cppclass IModelExprRange(IModelExpr):
         bool isSingle() const
         IModelExpr *lower() const
         IModelExpr *upper() const
         
-cdef extern from "vsc/IModelExprRangelist.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprRangelist.h" namespace "vsc::dm":
     cdef cppclass IModelExprRangelist(IModelExpr):
         const cpp_vector[IModelExprRangeUP] &ranges() const
         void addRange(IModelExprRange *)
 
-cdef extern from "vsc/IModelExprRef.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprRef.h" namespace "vsc::dm":
     cdef cppclass IModelExprRef(IModelExpr):
         IModelExpr *expr() const
 
-cdef extern from "vsc/IModelExprUnary.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprUnary.h" namespace "vsc::dm":
     cdef enum UnaryOp "vsc::UnaryOp":
         Un_Not     "vsc::UnaryOp::Not"
         
@@ -331,12 +326,12 @@ cdef extern from "vsc/IModelExprUnary.h" namespace "vsc":
         IModelExpr *expr() const
         UnaryOp op() const
 
-cdef extern from "vsc/IModelExprVal.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprVal.h" namespace "vsc::dm":
     cdef cppclass IModelExprVal(IModelExpr):
         int32_t width() const
         IModelVal *val()
 
-cdef extern from "vsc/IModelExprVecSubscript.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprVecSubscript.h" namespace "vsc::dm":
     cdef cppclass IModelExprVecSubscript(IModelExpr):
         IModelExpr *expr() const
         IModelExpr *subscript() const
@@ -344,7 +339,7 @@ cdef extern from "vsc/IModelExprVecSubscript.h" namespace "vsc":
 #********************************************************************
 #* IModelExprBin
 #********************************************************************
-cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelExprBin.h" namespace "vsc::dm":
     cdef enum BinOp "vsc::BinOp":
         Eq      "vsc::BinOp::Eq"
         Ne      "vsc::BinOp::Ne"
@@ -377,7 +372,7 @@ cdef extern from "vsc/IModelExprBin.h" namespace "vsc":
 #********************************************************************
 #ctypedef IModelField *IModelFieldP
 ctypedef unique_ptr[IModelField] IModelFieldUP
-cdef extern from "vsc/IModelField.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelField.h" namespace "vsc::dm":
 
     cdef enum ModelFieldFlag:
         NoFlags  "vsc::ModelFieldFlag::NoFlags"
@@ -406,17 +401,17 @@ cdef extern from "vsc/IModelField.h" namespace "vsc":
         void setFieldData(IModelFieldData *)
         IModelFieldData *getFieldData()
         
-cdef extern from "vsc/IModelFieldRef.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldRef.h" namespace "vsc::dm":
     cdef cppclass IModelFieldRef(IModelField):
         
         void setRef(IModelField *)
         IModelField *getRef() const
         
-cdef extern from "vsc/IModelFieldFactory.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldFactory.h" namespace "vsc::dm":
     cdef cppclass IModelFieldFactory:
         IModelField *create(const cpp_string &, IModelField *)
         
-cdef extern from "vsc/IModelFieldVec.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldVec.h" namespace "vsc::dm":
     cdef cppclass IModelFieldVec(IModelField):
         IModelField *getSizeRef() const
         uint32_t getSize() const
@@ -426,47 +421,47 @@ cdef extern from "vsc/IModelFieldVec.h" namespace "vsc":
         IModelFieldFactory *getFieldFactory()
         void setFieldFactory(IModelFieldFactory *)
         
-cdef extern from "vsc/IModelFieldVecRoot.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldVecRoot.h" namespace "vsc::dm":
 
     cdef cppclass IModelFieldVecRoot(IModelFieldVec):
         void setName(const cpp_string &)
         pass
 
-cdef extern from "vsc/IModelFieldData.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldData.h" namespace "vsc::dm":
     cdef cppclass IModelFieldData:
         pass
     
-cdef extern from "ModelFieldDataClosure.h" namespace "vsc":
+cdef extern from "ModelFieldDataClosure.h" namespace "vsc::dm":
     cdef cppclass ModelFieldDataClosure(IModelFieldData):
         ModelFieldDataClosure(cpy_ref.PyObject *)
         object getData()
 
-cdef extern from "vsc/IModelFieldRoot.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldRoot.h" namespace "vsc::dm":
 
     cdef cppclass IModelFieldRoot(IModelField):
         void setName(const cpp_string &)
         pass
     
-cdef extern from "vsc/IModelFieldType.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldType.h" namespace "vsc::dm":
     cdef cppclass IModelFieldType(IModelField):
         pass
 
-cdef extern from "vsc/IModelFieldTypeRef.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelFieldTypeRef.h" namespace "vsc::dm":
     cdef cppclass IModelFieldTypeRef(IModelFieldRef):
         pass
     
-cdef extern from "vsc/IModelStructCreateHook.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelStructCreateHook.h" namespace "vsc::dm":
     cdef cppclass IModelStructCreateHook:
         pass
     
-cdef extern from "ModelStructCreateHookClosure.h" namespace "vsc":
+cdef extern from "ModelStructCreateHookClosure.h" namespace "vsc::dm":
     cdef cppclass ModelStructCreateHookClosure(IModelStructCreateHook):
         ModelStructCreateHookClosure(cpy_ref.PyObject *)
 
 #********************************************************************
 #* IModelVal
 #********************************************************************
-cdef extern from "vsc/IModelVal.h" namespace "vsc":
+cdef extern from "vsc/dm/IModelVal.h" namespace "vsc::dm":
     cdef union val_t "IModelVal::val_t":
         uint64_t         v
         uint64_t        *vp
@@ -483,7 +478,7 @@ cdef extern from "vsc/IModelVal.h" namespace "vsc":
 #********************************************************************
 #* IRandomizer
 #********************************************************************
-cdef extern from "vsc/IRandomizer.h" namespace "vsc":
+cdef extern from "vsc/dm/IRandomizer.h" namespace "vsc::dm":
     cdef cppclass IRandomizer:
         bool randomize(
             const cpp_vector[IModelFieldP]       &fields,
@@ -493,7 +488,7 @@ cdef extern from "vsc/IRandomizer.h" namespace "vsc":
 #********************************************************************
 #* IRandState
 #********************************************************************
-cdef extern from "vsc/IRandState.h" namespace "vsc":
+cdef extern from "vsc/dm/IRandState.h" namespace "vsc::dm":
     cdef cppclass IRandState:
         const cpp_string &seed() const
         int32_t randint32(int32_t, int32_t)
@@ -507,54 +502,54 @@ cdef extern from "vsc/IRandState.h" namespace "vsc":
 #********************************************************************
 #* ISolverFactory
 #********************************************************************
-cdef extern from "vsc/ISolverFactory.h" namespace "vsc":
+cdef extern from "vsc/dm/ISolverFactory.h" namespace "vsc::dm":
     cdef cppclass ISolverFactory:
         pass
         
 #********************************************************************
 #* ITask
 #********************************************************************
-cdef extern from "vsc/ITask.h" namespace "vsc":
+cdef extern from "vsc/dm/ITask.h" namespace "vsc::dm":
     cdef cppclass ITask:
         void apply(IAccept *)
         
 #********************************************************************
 #* ITypeConstraint
 #********************************************************************
-cdef extern from "vsc/ITypeConstraint.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraint.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraint(IAccept):
         pass
     
-cdef extern from "vsc/ITypeConstraintExpr.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintExpr.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintExpr(ITypeConstraint):
         ITypeExpr *expr() const
 
-cdef extern from "vsc/ITypeConstraintIfElse.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintIfElse.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintIfElse(ITypeConstraint):
         ITypeExpr *getCond() const
         ITypeConstraint *getTrue() const
         ITypeConstraint *getFalse() const
         void setFalse(ITypeConstraint *)
 
-cdef extern from "vsc/ITypeConstraintImplies.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintImplies.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintImplies(ITypeConstraint):
         ITypeExpr *getCond() const
         ITypeConstraint *getBody() const
         
-cdef extern from "vsc/ITypeConstraintScope.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintScope.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintScope(ITypeConstraint):
         void addConstraint(ITypeConstraint *)
         const cpp_vector[unique_ptr[ITypeConstraint]] &constraints() const
 
-cdef extern from "vsc/ITypeConstraintSoft.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintSoft.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintSoft(ITypeConstraint):
         ITypeConstraintExpr *constraint() const
 
-cdef extern from "vsc/ITypeConstraintUnique.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintUnique.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintUnique(ITypeConstraint):
         const cpp_vector[ITypeExprUP] &getExprs() const
 
-cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeConstraintBlock.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintBlock(ITypeConstraintScope):
         const cpp_string &name() const
     
@@ -562,17 +557,17 @@ cdef extern from "vsc/ITypeConstraintBlock.h" namespace "vsc":
 #* ITypeExpr
 #********************************************************************
 
-cdef extern from "vsc/ITypeExpr.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExpr.h" namespace "vsc::dm":
     cdef cppclass ITypeExpr(IAccept):
         pass
     
-cdef extern from "vsc/ITypeExprBin.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExprBin.h" namespace "vsc::dm":
     cdef cppclass ITypeExprBin(ITypeExpr):
         ITypeExpr *lhs() const
         BinOp op() const
         ITypeExpr *rhs() const
     
-cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExprFieldRef.h" namespace "vsc::dm":
     cdef enum TypeExprFieldRefElemKind:
         Root "vsc::TypeExprFieldRefElemKind::Root" 
         ActiveScope "vsc::TypeExprFieldRefElemKind::ActiveScope" 
@@ -589,18 +584,18 @@ cdef extern from "vsc/ITypeExprFieldRef.h" namespace "vsc":
         uint32_t size() const
         const TypeExprFieldRefElem &at(int32_t) const
         
-cdef extern from "vsc/ITypeExprRange.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExprRange.h" namespace "vsc::dm":
     cdef cppclass ITypeExprRange(ITypeExpr):
         bool isSingle()
         ITypeExpr *lower() const
         ITypeExpr *upper() const
         
-cdef extern from "vsc/ITypeExprRangelist.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExprRangelist.h" namespace "vsc::dm":
     cdef cppclass ITypeExprRangelist(ITypeExpr):
         void addRange(ITypeExprRange *)
         const cpp_vector[ITypeExprRangeUP] &getRanges() const
 
-cdef extern from "vsc/ITypeExprVal.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeExprVal.h" namespace "vsc::dm":
 
     cdef cppclass ITypeExprVal(ITypeExpr):
         
@@ -609,7 +604,7 @@ cdef extern from "vsc/ITypeExprVal.h" namespace "vsc":
 #********************************************************************
 #* ITypeField
 #********************************************************************
-cdef extern from "vsc/ITypeField.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeField.h" namespace "vsc::dm":
     cdef enum TypeFieldAttr:
         NoAttr        "vsc::TypeFieldAttr::NoAttr"
         Rand          "vsc::TypeFieldAttr::Rand"
@@ -624,12 +619,12 @@ cdef extern from "vsc/ITypeField.h" namespace "vsc":
         ITypeField *getField(int32_t)
         TypeFieldAttr getAttr() const
         
-cdef extern from "vsc/ITypeFieldPhy.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeFieldPhy.h" namespace "vsc::dm":
 
     cdef cppclass ITypeFieldPhy(ITypeField):
         IModelVal *getInit() const
         
-cdef extern from "vsc/ITypeFieldRef.h" namespace "vsc":
+cdef extern from "vsc/dm/ITypeFieldRef.h" namespace "vsc::dm":
     
     cdef cppclass ITypeFieldRef(ITypeField):
         pass
@@ -637,7 +632,7 @@ cdef extern from "vsc/ITypeFieldRef.h" namespace "vsc":
 #********************************************************************
 #* IVisitor
 #********************************************************************
-cdef extern from "vsc/IVisitor.h" namespace "vsc":
+cdef extern from "vsc/dm/IVisitor.h" namespace "vsc::dm":
     cdef cppclass IVisitor:
         pass
     
@@ -653,7 +648,7 @@ cdef extern from "VisitorProxy.h":
 #********************************************************************
 #* IVsc
 #********************************************************************
-cdef extern from "vsc/IVsc.h" namespace "vsc":
+cdef extern from "vsc/dm/IVsc.h" namespace "vsc::dm":
     cdef cppclass IVsc:
         pass
 
@@ -669,7 +664,7 @@ cdef extern IModelBuildContext *mkModelBuildContext(IContext *ctxt)
 #* VscTasks
 #********************************************************************
 
-cdef extern from "VscTasks.h" namespace "vsc":
+cdef extern from "VscTasks.h" namespace "vsc::dm":
     cdef extern IModelField *Task_BuildModelField(
         IContext *ctxt,
         IDataType *dt, 

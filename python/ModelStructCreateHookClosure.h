@@ -7,9 +7,10 @@
 
 #pragma once
 #include <Python.h>
-#include "vsc/IModelStructCreateHook.h"
+#include "vsc/dm/IModelStructCreateHook.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelStructCreateHookClosure : public IModelStructCreateHook {
 public:
@@ -23,5 +24,6 @@ private:
 	PyObject				*m_obj;
 };
 
+}
 } /* namespace vsc */
 

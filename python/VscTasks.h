@@ -6,10 +6,11 @@
  */
 #pragma once
 #include <string>
-#include "vsc/IContext.h"
-#include "vsc/IDataType.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IDataType.h"
 
 namespace vsc {
+namespace dm {
 
 IModelField *Task_BuildModelField(
 		IContext				*ctxt,
@@ -19,4 +20,5 @@ IModelField *Task_BuildModelField(
 void Task_RollbackConstraintSubst(
 		IModelConstraint		*scope);
 
+}
 }

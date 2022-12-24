@@ -266,7 +266,7 @@ class build_ext(_build_ext):
 
 print("extra_compile_args=" + str(extra_compile_args))
 
-ext = Extension("libvsc.core",
+ext = Extension("libvsc_dm.core",
             extra_compile_args=extra_compile_args,
             sources=[
                 os.path.join(libvsc_dir, 'python', "core.pyx"), 
@@ -280,15 +280,16 @@ ext = Extension("libvsc.core",
             language="c++",
             include_dirs=[
                 os.path.join(libvsc_dir, 'src'),
-                os.path.join(libvsc_dir, 'src', 'include')
+                os.path.join(libvsc_dir, 'src', 'include'),
+                os.path.join(packages_dir, "debug-mgr/src/include")
             ]
         )
 ext.cython_directives={'language_level' : '3'}
 
 setup(
-  name = "libvsc",
+  name = "libvsc-dm",
   version=version,
-  packages=['libvsc'],
+  packages=['libvsc_dm'],
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
@@ -298,12 +299,12 @@ setup(
   """,
   license = "Apache 2.0",
   keywords = ["SystemVerilog", "Verilog", "RTL", "Python"],
-  url = "https://github.com/fvutils/libvsc",
-  entry_points={
-    'console_scripts': [
-      'tblink-rpc = tblink_rpc.__main__:main'
-    ]
-  },
+  url = "https://github.com/vsc-tools/libvsc-dm",
+#  entry_points={
+#    'console_scripts': [
+#      'tblink-rpc = tblink_rpc.__main__:main'
+#    ]
+#  },
   install_requires=[
   ],
   setup_requires=[

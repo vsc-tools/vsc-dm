@@ -7,9 +7,10 @@
 
 #pragma once
 #include <Python.h>
-#include "vsc/IModelFieldData.h"
+#include "vsc/dm/IModelFieldData.h"
 
 namespace vsc {
+namespace dm {
 
 class ModelFieldDataClosure : public IModelFieldData {
 public:
@@ -24,5 +25,6 @@ private:
 
 };
 
+}
 } /* namespace vsc */
 
