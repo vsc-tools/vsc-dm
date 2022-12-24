@@ -18,7 +18,6 @@ cdef class Context(object):
 
     cpdef ModelBuildContext mkModelBuildContext(self, Context ctxt)
     cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
-    cpdef mkCompoundSolver(self)
     cpdef DataTypeEnum findDataTypeEnum(self, name)
     cpdef DataTypeEnum mkDataTypeEnum(self,
         name,
@@ -52,8 +51,6 @@ cdef class Context(object):
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkModelFieldVecRoot(self, DataType type, name)
     cpdef mkModelVal(self)
-    cpdef mkRandState(self, str seed)
-    cpdef mkRandomizer(self, SolverFactory, RandState)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
     cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
@@ -86,14 +83,6 @@ cdef class ModelBuildContext(object):
 #    @staticmethod
 #    cpdef ModelBuildContext mk(Context ctxt)
 
-cdef class CompoundSolver(object):
-    cdef decl.ICompoundSolver   *_hndl
-    
-    cpdef solve(self, RandState, fields, constraints, flags)
-    
-    @staticmethod
-    cdef mk(decl.ICompoundSolver *)
-    
 cdef class Accept(object):
     cdef decl.IAccept *hndl(self)
 
@@ -447,32 +436,6 @@ cdef class ModelVal(object):
     
     @staticmethod 
     cdef mk(decl.IModelVal *, owned=*)
-    
-cdef class Randomizer(object):
-    cdef decl.IRandomizer      *_hndl
-    
-    cpdef randomize(self, list fields, list, bool)
-    
-    @staticmethod
-    cdef mk(decl.IRandomizer *hndl)
-    
-cdef class RandState(object):
-    cdef decl.IRandState       *_hndl
-
-    cpdef str seed(self)
-    
-    cpdef randint32(self, int32_t, int32_t)
-    cpdef randbits(self, ModelVal)
-
-    cpdef void setState(self, RandState other)
-    cpdef RandState clone(self)
-    cpdef RandState next(self)
-    
-    @staticmethod
-    cdef mk(decl.IRandState *)
-    
-cdef class SolverFactory(object):
-    cdef decl.ISolverFactory    *_hndl
     
 cdef class Task(object):
     cdef decl.ITask             *_hndl

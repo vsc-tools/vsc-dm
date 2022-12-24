@@ -36,9 +36,6 @@ cdef class Context(object):
         return ModelField.mk(
             self._hndl.buildModelField(dt.asTypeStruct(), name.encode()), True)
     
-    cpdef mkCompoundSolver(self):
-        return CompoundSolver.mk(self._hndl.mkCompoundSolver())
-    
     cpdef DataTypeEnum findDataTypeEnum(self, name):
         cdef decl.IDataTypeEnum *e = self._hndl.findDataTypeEnum(name.encode())
         if e != NULL:
@@ -233,19 +230,6 @@ cdef class Context(object):
     cpdef mkModelVal(self):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
         
-    cpdef mkRandState(self, str seed):
-        return RandState.mk(self._hndl.mkRandState(seed.encode()))
-    
-    cpdef mkRandomizer(self, SolverFactory sf, RandState rs):
-        cdef decl.ISolverFactory *sf_h = NULL
-        
-        if sf is not None:
-            sf_h = sf._hndl
-        
-        return Randomizer.mk(self._hndl.mkRandomizer(
-            sf_h,
-            rs._hndl))
-        
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name):
         return TypeConstraintBlock.mk(self._hndl.mkTypeConstraintBlock(
             name.encode()), True)
@@ -396,46 +380,6 @@ cdef class ModelBuildContext(object):
 #        ret._hndl = decl.mkModelBuildContext(ctxt._hndl)
 #        return ret
     
-class SolveFlags(IntFlag):
-    Randomize            = decl.SolveFlags.Randomize
-    RandomizeDeclRand    = decl.SolveFlags.RandomizeDeclRand
-    RandomizeTopFields   = decl.SolveFlags.RandomizeTopFields
-    DiagnoseFailures     = decl.SolveFlags.DiagnoseFailures
-
-    
-cdef class CompoundSolver(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-    
-    cpdef solve(self, RandState rs, fields, constraints, flags):
-        cdef cpp_vector[decl.IModelFieldP] fields_v;
-        cdef cpp_vector[decl.IModelConstraintP] constraints_v;
-        cdef int flags_i = int(flags)
-        cdef ModelField field_t
-        cdef ModelConstraint constraint_t
-        
-        for f in fields:
-            field_t = <ModelField>(f)
-            fields_v.push_back(field_t.asField())
-            
-        for c in constraints:
-            constraint_t = <ModelConstraint>(c)
-            constraints_v.push_back(constraint_t.asConstraint())
-        
-        return self._hndl.solve(
-            rs._hndl,
-            fields_v,
-            constraints_v,
-            <decl.SolveFlags>(flags_i))
-        
-    @staticmethod
-    cdef mk(decl.ICompoundSolver *hndl):
-        ret = CompoundSolver()
-        ret._hndl = hndl
-        return ret
-
 cdef class Accept(object):
 
 
@@ -1206,86 +1150,6 @@ cdef class ModelVal(object):
         ret._owned = owned
         return ret
     
-cdef class Randomizer(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-        
-    cpdef randomize(
-        self,
-        list        fields,
-        list        constraints,
-        bool        diagnose_failures):
-        cdef ModelField fcd
-        cdef ModelConstraint ccd
-        cdef cpp_vector[decl.IModelFieldP]      fields_v;
-        cdef cpp_vector[decl.IModelConstraintP] constraints_v;
-        
-        for f in fields:
-            fcd = <ModelField>(f)
-            fields_v.push_back(fcd.asField())
-            
-        for c in constraints:
-            ccd = <ModelConstraint>(c)
-            constraints_v.push_back(ccd.asConstraint())
-            
-        self._hndl.randomize(
-            fields_v,
-            constraints_v,
-            diagnose_failures)
-            
-        pass
-    
-    @staticmethod
-    cdef mk(decl.IRandomizer *hndl): 
-        ret = Randomizer()
-        ret._hndl = hndl
-        return ret
-    
-cdef class RandState(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-
-    cpdef str seed(self):
-        return self._hndl.seed().decode()
-        
-    cpdef randint32(self, int32_t low, int32_t high):
-        return self._hndl.randint32(low, high)
-    
-    cpdef randbits(self, ModelVal v):
-        return self._hndl.randbits(v._hndl)
-
-    cpdef void setState(self, RandState other):
-        self._hndl.setState(other._hndl)
-
-    cpdef RandState clone(self):
-        ret = RandState()
-        ret._hndl = self._hndl.clone()
-        return ret
-
-    cpdef RandState next(self):
-        ret = RandState()
-        ret._hndl = self._hndl.next()
-        return ret
-    
-    @staticmethod
-    cdef mk(decl.IRandState *hndl):
-        ret = RandState()
-        ret._hndl = hndl 
-        return ret
-    
-#********************************************************************
-#* SolverFactory
-#********************************************************************
-cdef class SolverFactory(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-        
 cdef class TypeConstraint(ObjBase):
 
     cdef decl.ITypeConstraint *asConstraint(self):

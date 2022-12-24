@@ -209,17 +209,9 @@ class build_ext(_build_ext):
         pref = "lib"
 
         copy_file(
-            os.path.join(cwd, "build", "src", "%svsc%s" % (pref, ext)),
-            os.path.join(package_dir, "%svsc%s" % (pref, ext)))
+            os.path.join(cwd, "build", "src", "%svsc-dm%s" % (pref, ext)),
+            os.path.join(package_dir, "%svsc-dm%s" % (pref, ext)))
 
-        # Copy libgmp over as well
-        copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "%sgmp%s" % (pref,ext)),
-            os.path.join(package_dir, "%sgmp%s" % (pref,ext)))
-        copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "%sgmpxx%s" % (pref,ext)),
-            os.path.join(package_dir, "%sgmpxx%s" % (pref,ext)))
-                
         dest_filename = os.path.join(package_dir, filename)
         
         print("package_dir: %s dest_filename: %s" % (package_dir, dest_filename))
@@ -271,7 +263,6 @@ ext = Extension("libvsc_dm.core",
             sources=[
                 os.path.join(libvsc_dir, 'python', "core.pyx"), 
                 os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
-                os.path.join(libvsc_dir, 'python', 'py_get_vsc.cpp'),
                 os.path.join(libvsc_dir, 'python', 'ModelFieldDataClosure.cpp'),
                 os.path.join(libvsc_dir, 'python', 'ModelStructCreateHookClosure.cpp'),
                 os.path.join(libvsc_dir, 'python', 'MkModelBuildContext.cpp'),

@@ -79,7 +79,6 @@ ctypedef IVisitor *IVisitorP
 cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
     cdef cppclass IContext:
         IModelFieldRoot *buildModelField(IDataTypeStruct *, const cpp_string &)
-        ICompoundSolver *mkCompoundSolver()
         IDataTypeEnum *findDataTypeEnum(const cpp_string &)
         IDataTypeEnum *mkDataTypeEnum(
             const cpp_string        &name,
@@ -116,8 +115,6 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         IModelField *mkModelFieldRoot(IDataType *, const cpp_string &)
         IModelFieldVec *mkModelFieldVecRoot(IDataType *, const cpp_string &)
         IModelVal *mkModelVal()
-        IRandState *mkRandState(const cpp_string &)
-        IRandomizer *mkRandomizer(ISolverFactory *, IRandState *)
         ITypeConstraintBlock *mkTypeConstraintBlock(const cpp_string &)
         ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *)
         ITypeConstraintIfElse *mkTypeConstraintIfElse(
@@ -152,26 +149,6 @@ cdef extern from "vsc/dm/IModelBuildContext.h" namespace "vsc::dm":
     cdef cppclass IModelBuildContext:
         IContext *ctxt()
         pass
-        
-#********************************************************************
-#* ICompoundSolver
-#********************************************************************
-cdef extern from "vsc/dm/ICompoundSolver.h" namespace "vsc::dm":
-
-    cdef enum SolveFlags:
-        Randomize          "vsc::SolveFlags::Randomize"
-        RandomizeDeclRand  "vsc::SolveFlags::RandomizeDeclRand"
-        RandomizeTopFields "vsc::SolveFlags::RandomizeTopFields"
-        DiagnoseFailures   "vsc::SolveFlags::DiagnoseFailures"
-    
-    cdef cppclass ICompoundSolver:
-        
-        bool solve(
-            IRandState                          *randstate,
-            const cpp_vector[IModelFieldP]      &fields,
-            const cpp_vector[IModelConstraintP] &constraints,
-            SolveFlags                          flags)
-        
         
 #********************************************************************
 #* IAccept
@@ -230,15 +207,6 @@ cdef extern from "vsc/dm/IFactory.h" namespace "vsc::dm":
         IContext *mkContext()
         dm_decl.IDebugMgr *getDebugMgr()
 
-#********************************************************************
-#* IVsc
-#********************************************************************
-#cdef extern from "vsc/dm/IVsc.h" namespace "vsc::dm":
-#    cdef cppclass IVsc:
-#        IContext *mkContext()
-#        IDebugMgr *getDebugMgr()
-    
-        
 #********************************************************************
 #* IModelConstraint
 #********************************************************************
@@ -319,8 +287,8 @@ cdef extern from "vsc/dm/IModelExprRef.h" namespace "vsc::dm":
         IModelExpr *expr() const
 
 cdef extern from "vsc/dm/IModelExprUnary.h" namespace "vsc::dm":
-    cdef enum UnaryOp "vsc::UnaryOp":
-        Un_Not     "vsc::UnaryOp::Not"
+    cdef enum UnaryOp "vsc::dm::UnaryOp":
+        Un_Not     "vsc::dm::UnaryOp::Not"
         
     cdef cppclass IModelExprUnary(IModelExpr):
         IModelExpr *expr() const
@@ -340,26 +308,26 @@ cdef extern from "vsc/dm/IModelExprVecSubscript.h" namespace "vsc::dm":
 #* IModelExprBin
 #********************************************************************
 cdef extern from "vsc/dm/IModelExprBin.h" namespace "vsc::dm":
-    cdef enum BinOp "vsc::BinOp":
-        Eq      "vsc::BinOp::Eq"
-        Ne      "vsc::BinOp::Ne"
-        Gt      "vsc::BinOp::Gt"
-        Ge      "vsc::BinOp::Ge"
-        Lt      "vsc::BinOp::Lt"
-        Le      "vsc::BinOp::Le"
-        Add     "vsc::BinOp::Add"
-        Sub     "vsc::BinOp::Sub"
-        Div     "vsc::BinOp::Div"
-        Mul     "vsc::BinOp::Mul"
-        Mod     "vsc::BinOp::Mod"
-        BinAnd  "vsc::BinOp::BinAnd"
-        BinOr   "vsc::BinOp::BinOr" 
-        LogAnd  "vsc::BinOp::LogAnd"
-        LogOr   "vsc::BinOp::LogOr"
-        Sll     "vsc::BinOp::Sll"
-        Srl     "vsc::BinOp::Srl"
-        Xor     "vsc::BinOp::Xor"
-        Not     "vsc::BinOp::Not"
+    cdef enum BinOp "vsc::dm::BinOp":
+        Eq      "vsc::dm::BinOp::Eq"
+        Ne      "vsc::dm::BinOp::Ne"
+        Gt      "vsc::dm::BinOp::Gt"
+        Ge      "vsc::dm::BinOp::Ge"
+        Lt      "vsc::dm::BinOp::Lt"
+        Le      "vsc::dm::BinOp::Le"
+        Add     "vsc::dm::BinOp::Add"
+        Sub     "vsc::dm::BinOp::Sub"
+        Div     "vsc::dm::BinOp::Div"
+        Mul     "vsc::dm::BinOp::Mul"
+        Mod     "vsc::dm::BinOp::Mod"
+        BinAnd  "vsc::dm::BinOp::BinAnd"
+        BinOr   "vsc::dm::BinOp::BinOr" 
+        LogAnd  "vsc::dm::BinOp::LogAnd"
+        LogOr   "vsc::dm::BinOp::LogOr"
+        Sll     "vsc::dm::BinOp::Sll"
+        Srl     "vsc::dm::BinOp::Srl"
+        Xor     "vsc::dm::BinOp::Xor"
+        Not     "vsc::dm::BinOp::Not"
         
     cdef cppclass IModelExprBin(IModelExpr):
         pass
@@ -375,11 +343,11 @@ ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/dm/IModelField.h" namespace "vsc::dm":
 
     cdef enum ModelFieldFlag:
-        NoFlags  "vsc::ModelFieldFlag::NoFlags"
-        DeclRand "vsc::ModelFieldFlag::DeclRand"
-        UsedRand "vsc::ModelFieldFlag::UsedRand"
-        Resolved "vsc::ModelFieldFlag::Resolved"
-        VecSize  "vsc::ModelFieldFlag::VecSize"
+        NoFlags  "vsc::dm::ModelFieldFlag::NoFlags"
+        DeclRand "vsc::dm::ModelFieldFlag::DeclRand"
+        UsedRand "vsc::dm::ModelFieldFlag::UsedRand"
+        Resolved "vsc::dm::ModelFieldFlag::Resolved"
+        VecSize  "vsc::dm::ModelFieldFlag::VecSize"
         
     cdef cppclass IModelField(IAccept):
     
@@ -476,37 +444,6 @@ cdef extern from "vsc/dm/IModelVal.h" namespace "vsc::dm":
         val_t &val()
         
 #********************************************************************
-#* IRandomizer
-#********************************************************************
-cdef extern from "vsc/dm/IRandomizer.h" namespace "vsc::dm":
-    cdef cppclass IRandomizer:
-        bool randomize(
-            const cpp_vector[IModelFieldP]       &fields,
-            const cpp_vector[IModelConstraintP]  &constraints,
-            bool                                 diagnose_failures)
-    
-#********************************************************************
-#* IRandState
-#********************************************************************
-cdef extern from "vsc/dm/IRandState.h" namespace "vsc::dm":
-    cdef cppclass IRandState:
-        const cpp_string &seed() const
-        int32_t randint32(int32_t, int32_t)
-        uint64_t rand_ui64()
-        int64_t rand_i64()
-        void randbits(IModelVal *)
-        void setState(IRandState *)
-        IRandState *clone() const
-        IRandState *next()
-        
-#********************************************************************
-#* ISolverFactory
-#********************************************************************
-cdef extern from "vsc/dm/ISolverFactory.h" namespace "vsc::dm":
-    cdef cppclass ISolverFactory:
-        pass
-        
-#********************************************************************
 #* ITask
 #********************************************************************
 cdef extern from "vsc/dm/ITask.h" namespace "vsc::dm":
@@ -569,9 +506,9 @@ cdef extern from "vsc/dm/ITypeExprBin.h" namespace "vsc::dm":
     
 cdef extern from "vsc/dm/ITypeExprFieldRef.h" namespace "vsc::dm":
     cdef enum TypeExprFieldRefElemKind:
-        Root "vsc::TypeExprFieldRefElemKind::Root" 
-        ActiveScope "vsc::TypeExprFieldRefElemKind::ActiveScope" 
-        IdxOffset "vsc::TypeExprFieldRefElemKind::IdxOffset" 
+        Root "vsc::dm::TypeExprFieldRefElemKind::Root" 
+        ActiveScope "vsc::dm::TypeExprFieldRefElemKind::ActiveScope" 
+        IdxOffset "vsc::dm::TypeExprFieldRefElemKind::IdxOffset" 
         
     cdef cppclass TypeExprFieldRefElem:
         TypeExprFieldRefElemKind        kind
@@ -606,8 +543,8 @@ cdef extern from "vsc/dm/ITypeExprVal.h" namespace "vsc::dm":
 #********************************************************************
 cdef extern from "vsc/dm/ITypeField.h" namespace "vsc::dm":
     cdef enum TypeFieldAttr:
-        NoAttr        "vsc::TypeFieldAttr::NoAttr"
-        Rand          "vsc::TypeFieldAttr::Rand"
+        NoAttr        "vsc::dm::TypeFieldAttr::NoAttr"
+        Rand          "vsc::dm::TypeFieldAttr::Rand"
     
     cdef cppclass ITypeField(IAccept):
         ITypeField *getParent()
@@ -644,19 +581,6 @@ cdef extern from "VisitorProxy.h":
         VisitorProxy(cpy_ref.PyObject *)
         void visitModelExprBinBase(IModelExprBin *)
         pass
-    
-#********************************************************************
-#* IVsc
-#********************************************************************
-cdef extern from "vsc/dm/IVsc.h" namespace "vsc::dm":
-    cdef cppclass IVsc:
-        pass
-
-#********************************************************************
-#* py_get_vsc
-#********************************************************************
-cdef extern IVsc *py_get_vsc(const char *path)
-#cdef extern from "py_get_vsc.h":
 
 cdef extern IModelBuildContext *mkModelBuildContext(IContext *ctxt)
     
