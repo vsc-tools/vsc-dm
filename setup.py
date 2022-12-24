@@ -1,5 +1,5 @@
 #****************************************************************************
-#* setup.py for libvsc
+#* setup.py for libvsc-dm
 #****************************************************************************
 import os
 import shutil
@@ -41,7 +41,7 @@ if os.path.isdir(os.path.join(libvsc_dir, "packages")):
 else:
     parent = os.path.dirname(libvsc_dir)
     
-    if os.path.isdir(os.path.join(parent, "libvsc")):
+    if os.path.isdir(os.path.join(parent, "libvsc-dm")):
         print("libvsc is a peer")
         packages_dir = parent
     else:
