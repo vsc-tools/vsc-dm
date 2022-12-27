@@ -54,6 +54,8 @@ IFactory *Factory::inst() {
     return m_inst.get();
 }
 
+FactoryUP            Factory::m_inst;
+
 }
 }
 
