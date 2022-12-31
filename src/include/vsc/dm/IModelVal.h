@@ -67,6 +67,11 @@ public:
 
 	virtual IModelVal *clone(IContext *ctxt=0) const = 0;
 
+    virtual void slice(
+        IModelVal           *target,
+        int32_t             upper,
+        int32_t             lower) = 0;
+
 };
 
 }
