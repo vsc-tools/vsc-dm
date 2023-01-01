@@ -17,139 +17,139 @@ VisitorProxy::~VisitorProxy() {
 	Py_DECREF(m_obj);
 }
 
-void VisitorProxy::visitDataTypeEnum(vsc::IDataTypeEnum *t) {
+void VisitorProxy::visitDataTypeEnum(vsc::dm::IDataTypeEnum *t) {
 	VisitorProxy_visitDataTypeEnum(m_obj, t);
 }
 
-void VisitorProxy::visitDataTypeInt(vsc::IDataTypeInt *t) {
+void VisitorProxy::visitDataTypeInt(vsc::dm::IDataTypeInt *t) {
 	VisitorProxy_visitDataTypeInt(m_obj, t);
 }
 
-void VisitorProxy::visitDataTypeStruct(vsc::IDataTypeStruct *t) {
+void VisitorProxy::visitDataTypeStruct(vsc::dm::IDataTypeStruct *t) {
 	VisitorProxy_visitDataTypeStruct(m_obj, t);
 }
 
-void VisitorProxy::visitModelConstraintBlock(vsc::IModelConstraintBlock *c) {
+void VisitorProxy::visitModelConstraintBlock(vsc::dm::IModelConstraintBlock *c) {
 	VisitorProxy_visitModelConstraintBlock(m_obj, c);
 }
 
-void VisitorProxy::visitModelConstraintExpr(vsc::IModelConstraintExpr *c) {
+void VisitorProxy::visitModelConstraintExpr(vsc::dm::IModelConstraintExpr *c) {
 	VisitorProxy_visitModelConstraintExpr(m_obj, c);
 }
 
-void VisitorProxy::visitModelConstraintIfElse(vsc::IModelConstraintIfElse *c) {
+void VisitorProxy::visitModelConstraintIfElse(vsc::dm::IModelConstraintIfElse *c) {
 	VisitorProxy_visitModelConstraintIfElse(m_obj, c);
 }
 
-void VisitorProxy::visitModelConstraintImplies(vsc::IModelConstraintImplies *c) {
+void VisitorProxy::visitModelConstraintImplies(vsc::dm::IModelConstraintImplies *c) {
 	VisitorProxy_visitModelConstraintImplies(m_obj, c);
 }
 
-void VisitorProxy::visitModelConstraintScope(vsc::IModelConstraintScope *c) {
+void VisitorProxy::visitModelConstraintScope(vsc::dm::IModelConstraintScope *c) {
 	VisitorProxy_visitModelConstraintScope(m_obj, c);
 }
 
-void VisitorProxy::visitModelExprBin(vsc::IModelExprBin *e) {
+void VisitorProxy::visitModelExprBin(vsc::dm::IModelExprBin *e) {
 	VisitorProxy_visitModelExprBin(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprCond(vsc::IModelExprCond *e) {
+void VisitorProxy::visitModelExprCond(vsc::dm::IModelExprCond *e) {
 	VisitorProxy_visitModelExprCond(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprFieldRef(vsc::IModelExprFieldRef *e) {
+void VisitorProxy::visitModelExprFieldRef(vsc::dm::IModelExprFieldRef *e) {
 	VisitorProxy_visitModelExprFieldRef(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprIn(vsc::IModelExprIn *e) {
+void VisitorProxy::visitModelExprIn(vsc::dm::IModelExprIn *e) {
 	VisitorProxy_visitModelExprIn(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprPartSelect(vsc::IModelExprPartSelect *e) {
+void VisitorProxy::visitModelExprPartSelect(vsc::dm::IModelExprPartSelect *e) {
 	VisitorProxy_visitModelExprPartSelect(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprRange(vsc::IModelExprRange *e) {
+void VisitorProxy::visitModelExprRange(vsc::dm::IModelExprRange *e) {
 	VisitorProxy_visitModelExprRange(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprRangelist(vsc::IModelExprRangelist *e) {
+void VisitorProxy::visitModelExprRangelist(vsc::dm::IModelExprRangelist *e) {
 	VisitorProxy_visitModelExprRangelist(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprRef(vsc::IModelExprRef *e) {
+void VisitorProxy::visitModelExprRef(vsc::dm::IModelExprRef *e) {
 	VisitorProxy_visitModelExprRef(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprUnary(vsc::IModelExprUnary *e) {
+void VisitorProxy::visitModelExprUnary(vsc::dm::IModelExprUnary *e) {
 	VisitorProxy_visitModelExprUnary(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprVal(vsc::IModelExprVal *e) {
+void VisitorProxy::visitModelExprVal(vsc::dm::IModelExprVal *e) {
 	VisitorProxy_visitModelExprVal(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprVecSubscript(vsc::IModelExprVecSubscript *e) {
+void VisitorProxy::visitModelExprVecSubscript(vsc::dm::IModelExprVecSubscript *e) {
 	VisitorProxy_visitModelExprVecSubscript(m_obj, e);
 }
 
-void VisitorProxy::visitModelFieldRef(vsc::IModelFieldRef *f) {
+void VisitorProxy::visitModelFieldRef(vsc::dm::IModelFieldRef *f) {
 	VisitorProxy_visitModelFieldRef(m_obj, f);
 }
 
-void VisitorProxy::visitModelFieldRefRoot(vsc::IModelFieldRef *f) {
+void VisitorProxy::visitModelFieldRefRoot(vsc::dm::IModelFieldRef *f) {
 	VisitorProxy_visitModelFieldRefRoot(m_obj, f);
 }
 
-void VisitorProxy::visitModelFieldRefType(vsc::IModelFieldTypeRef *f) {
+void VisitorProxy::visitModelFieldRefType(vsc::dm::IModelFieldTypeRef *f) {
 	VisitorProxy_visitModelFieldRefType(m_obj, f);
 }
 
-void VisitorProxy::visitModelFieldRoot(vsc::IModelFieldRoot *f) {
+void VisitorProxy::visitModelFieldRoot(vsc::dm::IModelFieldRoot *f) {
 	fprintf(stdout, "visitModelFieldRoot\n");
 	VisitorProxy_visitModelFieldRoot(m_obj, f);
 }
 
-void VisitorProxy::visitModelFieldType(vsc::IModelFieldType *f) {
+void VisitorProxy::visitModelFieldType(vsc::dm::IModelFieldType *f) {
 	VisitorProxy_visitModelFieldType(m_obj, f);
 }
 
-void VisitorProxy::visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) {
+void VisitorProxy::visitTypeConstraintBlock(vsc::dm::ITypeConstraintBlock *c) {
 	VisitorProxy_visitTypeConstraintBlock(m_obj, c);
 }
 
-void VisitorProxy::visitTypeConstraintExpr(vsc::ITypeConstraintExpr *c) {
+void VisitorProxy::visitTypeConstraintExpr(vsc::dm::ITypeConstraintExpr *c) {
 	VisitorProxy_visitTypeConstraintExpr(m_obj, c);
 }
 
-void VisitorProxy::visitTypeConstraintIfElse(vsc::ITypeConstraintIfElse *c) {
+void VisitorProxy::visitTypeConstraintIfElse(vsc::dm::ITypeConstraintIfElse *c) {
 	VisitorProxy_visitTypeConstraintIfElse(m_obj, c);
 }
 
-void VisitorProxy::visitTypeConstraintImplies(vsc::ITypeConstraintImplies *c) {
+void VisitorProxy::visitTypeConstraintImplies(vsc::dm::ITypeConstraintImplies *c) {
 	VisitorProxy_visitTypeConstraintImplies(m_obj, c);
 }
 
-void VisitorProxy::visitTypeConstraintScope(vsc::ITypeConstraintScope *c) {
+void VisitorProxy::visitTypeConstraintScope(vsc::dm::ITypeConstraintScope *c) {
 	VisitorProxy_visitTypeConstraintScope(m_obj, c);
 }
 
-void VisitorProxy::visitTypeExprBin(vsc::ITypeExprBin *e) {
+void VisitorProxy::visitTypeExprBin(vsc::dm::ITypeExprBin *e) {
 	VisitorProxy_visitTypeExprBin(m_obj, e);
 }
 
-void VisitorProxy::visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) {
+void VisitorProxy::visitTypeExprFieldRef(vsc::dm::ITypeExprFieldRef *e) {
 	VisitorProxy_visitTypeExprFieldRef(m_obj, e);
 }
 
-void VisitorProxy::visitTypeExprRange(vsc::ITypeExprRange *e) {
+void VisitorProxy::visitTypeExprRange(vsc::dm::ITypeExprRange *e) {
 	VisitorProxy_visitTypeExprRange(m_obj, e);
 }
 
-void VisitorProxy::visitTypeExprRangelist(vsc::ITypeExprRangelist *e) {
+void VisitorProxy::visitTypeExprRangelist(vsc::dm::ITypeExprRangelist *e) {
 	VisitorProxy_visitTypeExprRangelist(m_obj, e);
 }
 
-void VisitorProxy::visitTypeExprVal(vsc::ITypeExprVal *e) {
+void VisitorProxy::visitTypeExprVal(vsc::dm::ITypeExprVal *e) {
 	VisitorProxy_visitTypeExprVal(m_obj, e);
 }

@@ -6,10 +6,11 @@
  */
 
 #include "ModelStructCreateHookClosure.h"
-#include "vsc/IModelExprBin.h"
+#include "vsc/dm/IModelExprBin.h"
 #include "core.h"
 
 namespace vsc {
+namespace dm {
 
 ModelStructCreateHookClosure::ModelStructCreateHookClosure(PyObject *obj) {
 	m_obj = obj;
@@ -24,4 +25,5 @@ void ModelStructCreateHookClosure::create(IModelField *field) {
 	model_struct_create_hook_closure_invoke(m_obj, field);
 }
 
+}
 } /* namespace vsc */

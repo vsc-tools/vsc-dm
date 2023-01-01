@@ -3,9 +3,10 @@
 #****************************************************************************
 import os
 import sys
+import ctypes
 from enum import IntFlag, IntEnum
 from ctypes import CDLL
-from libvsc cimport decl
+from libvsc_dm cimport decl
 cimport cpython.ref as cpy_ref
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
@@ -34,9 +35,6 @@ cdef class Context(object):
     cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
         return ModelField.mk(
             self._hndl.buildModelField(dt.asTypeStruct(), name.encode()), True)
-    
-    cpdef mkCompoundSolver(self):
-        return CompoundSolver.mk(self._hndl.mkCompoundSolver())
     
     cpdef DataTypeEnum findDataTypeEnum(self, name):
         cdef decl.IDataTypeEnum *e = self._hndl.findDataTypeEnum(name.encode())
@@ -232,19 +230,6 @@ cdef class Context(object):
     cpdef mkModelVal(self):
         return ModelVal.mk(self._hndl.mkModelVal(), True)
         
-    cpdef mkRandState(self, str seed):
-        return RandState.mk(self._hndl.mkRandState(seed.encode()))
-    
-    cpdef mkRandomizer(self, SolverFactory sf, RandState rs):
-        cdef decl.ISolverFactory *sf_h = NULL
-        
-        if sf is not None:
-            sf_h = sf._hndl
-        
-        return Randomizer.mk(self._hndl.mkRandomizer(
-            sf_h,
-            rs._hndl))
-        
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name):
         return TypeConstraintBlock.mk(self._hndl.mkTypeConstraintBlock(
             name.encode()), True)
@@ -377,14 +362,6 @@ cdef class Context(object):
         ret._owned = owned
         return ret
     
-    @staticmethod
-    def inst():
-        global _Context_inst
-        if _Context_inst is None:
-            vsc = Vsc.inst()
-            _Context_inst = vsc.mkContext()
-        return _Context_inst
-
 cdef class ModelBuildContext(object):
 
     def __init__(self, Context ctxt):
@@ -403,46 +380,6 @@ cdef class ModelBuildContext(object):
 #        ret._hndl = decl.mkModelBuildContext(ctxt._hndl)
 #        return ret
     
-class SolveFlags(IntFlag):
-    Randomize            = decl.SolveFlags.Randomize
-    RandomizeDeclRand    = decl.SolveFlags.RandomizeDeclRand
-    RandomizeTopFields   = decl.SolveFlags.RandomizeTopFields
-    DiagnoseFailures     = decl.SolveFlags.DiagnoseFailures
-
-    
-cdef class CompoundSolver(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-    
-    cpdef solve(self, RandState rs, fields, constraints, flags):
-        cdef cpp_vector[decl.IModelFieldP] fields_v;
-        cdef cpp_vector[decl.IModelConstraintP] constraints_v;
-        cdef int flags_i = int(flags)
-        cdef ModelField field_t
-        cdef ModelConstraint constraint_t
-        
-        for f in fields:
-            field_t = <ModelField>(f)
-            fields_v.push_back(field_t.asField())
-            
-        for c in constraints:
-            constraint_t = <ModelConstraint>(c)
-            constraints_v.push_back(constraint_t.asConstraint())
-        
-        return self._hndl.solve(
-            rs._hndl,
-            fields_v,
-            constraints_v,
-            <decl.SolveFlags>(flags_i))
-        
-    @staticmethod
-    cdef mk(decl.ICompoundSolver *hndl):
-        ret = CompoundSolver()
-        ret._hndl = hndl
-        return ret
-
 cdef class Accept(object):
 
 
@@ -591,52 +528,6 @@ cdef class DataTypeStruct(DataType):
     cdef decl.IDataTypeStruct *asTypeStruct(self):
         return dynamic_cast[decl.IDataTypeStructP](self._hndl)
 
-#********************************************************************
-#* Debug
-#********************************************************************
-
-cdef class Debug(object):
-
-    def __dealloc__(self):
-        if self._owned:
-            del self._hndl
-        pass
-
-    @staticmethod
-    cdef mk(decl.IDebug *hndl, bool owned=True):
-        ret = Debug()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-
-    pass
-
-cdef class DebugMgr(object):
-
-    def __dealloc__(self):
-        if self._owned:
-            del self._hndl
-        pass
-
-    cpdef enable(self, bool en):
-        self._hndl.enable(en)
-
-    cpdef addDebug(self, Debug dbg):
-        dbg._owned = False
-        self._hndl.addDebug(dbg._hndl)
-
-    cpdef Debug findDebug(self, name):
-        return Debug.mk(self._hndl.findDebug(name.encode()), False)
-
-    @staticmethod
-    cdef mk(decl.IDebugMgr *hndl, bool owned=True):
-        ret = DebugMgr()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-
-
-    
 cdef public void model_struct_create_hook_closure_invoke(
     hook_f,
     decl.IModelField  *field_h) with gil:
@@ -1259,86 +1150,6 @@ cdef class ModelVal(object):
         ret._owned = owned
         return ret
     
-cdef class Randomizer(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-        
-    cpdef randomize(
-        self,
-        list        fields,
-        list        constraints,
-        bool        diagnose_failures):
-        cdef ModelField fcd
-        cdef ModelConstraint ccd
-        cdef cpp_vector[decl.IModelFieldP]      fields_v;
-        cdef cpp_vector[decl.IModelConstraintP] constraints_v;
-        
-        for f in fields:
-            fcd = <ModelField>(f)
-            fields_v.push_back(fcd.asField())
-            
-        for c in constraints:
-            ccd = <ModelConstraint>(c)
-            constraints_v.push_back(ccd.asConstraint())
-            
-        self._hndl.randomize(
-            fields_v,
-            constraints_v,
-            diagnose_failures)
-            
-        pass
-    
-    @staticmethod
-    cdef mk(decl.IRandomizer *hndl): 
-        ret = Randomizer()
-        ret._hndl = hndl
-        return ret
-    
-cdef class RandState(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-
-    cpdef str seed(self):
-        return self._hndl.seed().decode()
-        
-    cpdef randint32(self, int32_t low, int32_t high):
-        return self._hndl.randint32(low, high)
-    
-    cpdef randbits(self, ModelVal v):
-        return self._hndl.randbits(v._hndl)
-
-    cpdef void setState(self, RandState other):
-        self._hndl.setState(other._hndl)
-
-    cpdef RandState clone(self):
-        ret = RandState()
-        ret._hndl = self._hndl.clone()
-        return ret
-
-    cpdef RandState next(self):
-        ret = RandState()
-        ret._hndl = self._hndl.next()
-        return ret
-    
-    @staticmethod
-    cdef mk(decl.IRandState *hndl):
-        ret = RandState()
-        ret._hndl = hndl 
-        return ret
-    
-#********************************************************************
-#* SolverFactory
-#********************************************************************
-cdef class SolverFactory(object):
-
-    def __dealloc__(self):
-        del self._hndl
-        pass
-        
 cdef class TypeConstraint(ObjBase):
 
     cdef decl.ITypeConstraint *asConstraint(self):
@@ -1964,99 +1775,46 @@ cdef public void VisitorProxy_visitTypeExprVal(obj, decl.ITypeExprVal *c) with g
     obj.visitTypeExprVal(TypeExprVal.mk(c, False))
         
 #********************************************************************
-#* Vsc
+#* Factory
 #********************************************************************
-cdef Vsc _Vsc_inst = None
-cdef class Vsc(object):
+cdef Factory _inst = None
+cdef class Factory(object):
     
     def __init__(self):
-        path = "abc"
-        print("core file: %s" % str(os.path.abspath(__file__)))
-        paths = []
-        paths_s = set()
-        # These are libraries that we know are pointless to search
-        excludes = ['libgcc', 'libstdc++', 'libc', 'libdl', 'libz', 'libm', 'libutil', 'libpthread', 'ld-', 'libpython']
-        with open("/proc/%d/maps" % os.getpid(), "r") as fp:
-            while True:
-                line = fp.readline()
-                
-                if not line:
-                    break
-               
-                line = line.strip()
+        pass
 
-                idx = line.find('/')
-                if idx != -1:                
-                    path = line[idx:]
-                    
-                    if not os.path.isfile(path):
-                        # File doesn't exist, which probably means that
-                        # the path wraps around to the next line
-                        line = fp.readline().strip()
-                        
-                        path += line
-                        
-                    if path.rfind('.so') != -1:
-                        if path not in paths_s:
-                            exclude = False
-                            for e in excludes:
-                                if path.find(e) != -1:
-                                    exclude = True
-                                    break
+    cdef init(self, dm_core.Factory f):
+        self._hndl.init(f._hndl.getDebugMgr())
 
-                            paths_s.add(path)
-                            if not exclude:                                
-                                paths.append(path)
+    @staticmethod
+    def inst():
+        cdef decl.IFactory *hndl = NULL
+        cdef Factory factory
+        global _inst
+        if _inst is None:
+            ext_dir = os.path.dirname(os.path.abspath(__file__))
 
-        print("Paths: %s" % str(paths))
-        
-        lib_path = None
-        
-        for p in filter(lambda x : x.find('vsc') != -1, paths):
-            lib = CDLL(p)
-            try:
-                getattr(lib, 'ivsc')
-                lib_path = p
-                print("Found ivsc")
-                break
-            except Exception as e:
-                pass
+            core_lib = os.path.join(ext_dir, "libvsc-dm.so")
+            if not os.path.isfile(core_lib):
+                raise Exception("Extension library core \"%s\" doesn't exist" % core_lib)
             
-        if lib_path is None:
-            for p in filter(lambda x : x.find('vsc') == -1, paths):
-                lib = CDLL(p)
-                try:
-                    getattr(lib, 'ivsc')
-                    lib_path = p
-                    print("Found ivsc")
-                    break
-                except Exception as e:
-                    pass
+            so = ctypes.dll.LoadLibrary(core_lib)
+            func = so.vsc_dm_getFactory
+            func.restype = ctypes.c_void_p
 
-        # Nothing already loaded provides tblink, so load the core library
-        if lib_path is None:
-            lib_dir = os.path.dirname(os.path.abspath(__file__))
-            lib_path = os.path.join(lib_dir, "libvsc.so")
-            
-        print("lib_path: %s" % lib_path)
-        self._hndl = decl.py_get_vsc(lib_path.encode())
-        
-        if self._hndl == NULL:
-            raise Exception("Failed to load libvsc core library")
+            hndl = <decl.IFactoryP>(<intptr_t>(func()))
+            factory = Factory()
+            factory._hndl = hndl
+            factory.init(dm_core.Factory.inst())
+            _inst = factory
 
-    cpdef DebugMgr getDebugMgr(self):
-        return DebugMgr.mk(self._hndl.getDebugMgr(), False)
+        return _inst
+
+    cpdef dm_core.DebugMgr getDebugMgr(self):
+        return dm_core.DebugMgr.mk(self._hndl.getDebugMgr(), False)
         
     cpdef Context mkContext(self):
         return Context.mk(self._hndl.mkContext(), True)
-    
-    @staticmethod
-    def inst():
-        global _Vsc_inst
-        
-        if _Vsc_inst is None:
-            _Vsc_inst = Vsc()
-        return _Vsc_inst
     
 #********************************************************************    
 #* WrapperBuilder
@@ -2211,6 +1969,6 @@ cpdef ModelField Task_ModelBuildField(Context ctxt, DataType dt, name):
         True)
 
 cpdef enableDebug(bool en):
-    vsc = Vsc.inst()
-    vsc.getDebugMgr().enable(en)
+    factory = Factory.inst()
+    factory.getDebugMgr().enable(en)
 

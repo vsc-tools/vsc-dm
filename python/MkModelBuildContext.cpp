@@ -1,6 +1,6 @@
 
-#include "vsc/impl/ModelBuildContext.h"
+#include "vsc/dm/impl/ModelBuildContext.h"
 
-extern "C" vsc::IModelBuildContext *mkModelBuildContext(vsc::IContext *ctxt) {
-    return new vsc::ModelBuildContext(ctxt);
+extern "C" vsc::dm::IModelBuildContext *mkModelBuildContext(vsc::dm::IContext *ctxt) {
+    return new vsc::dm::ModelBuildContext(ctxt);
 }

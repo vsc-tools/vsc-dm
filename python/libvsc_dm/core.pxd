@@ -1,5 +1,6 @@
 
-from libvsc cimport decl
+cimport debug_mgr.core as dm_core
+from libvsc_dm cimport decl
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t
@@ -10,11 +11,6 @@ from libcpp.vector cimport vector as cpp_vector
 from enum import IntFlag, IntEnum
 cimport cpython.ref as cpy_ref
 
-cdef class Vsc(object):
-    cdef decl.IVsc              *_hndl
-    
-    cpdef Context mkContext(self)
-    cpdef DebugMgr getDebugMgr(self)
    
 cdef class Context(object):
     cdef decl.IContext               *_hndl
@@ -22,7 +18,6 @@ cdef class Context(object):
 
     cpdef ModelBuildContext mkModelBuildContext(self, Context ctxt)
     cpdef ModelField buildModelField(self, DataTypeStruct, name=*)
-    cpdef mkCompoundSolver(self)
     cpdef DataTypeEnum findDataTypeEnum(self, name)
     cpdef DataTypeEnum mkDataTypeEnum(self,
         name,
@@ -56,8 +51,6 @@ cdef class Context(object):
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkModelFieldVecRoot(self, DataType type, name)
     cpdef mkModelVal(self)
-    cpdef mkRandState(self, str seed)
-    cpdef mkRandomizer(self, SolverFactory, RandState)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
     cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
@@ -90,14 +83,6 @@ cdef class ModelBuildContext(object):
 #    @staticmethod
 #    cpdef ModelBuildContext mk(Context ctxt)
 
-cdef class CompoundSolver(object):
-    cdef decl.ICompoundSolver   *_hndl
-    
-    cpdef solve(self, RandState, fields, constraints, flags)
-    
-    @staticmethod
-    cdef mk(decl.ICompoundSolver *)
-    
 cdef class Accept(object):
     cdef decl.IAccept *hndl(self)
 
@@ -160,25 +145,12 @@ cdef class DataTypeStruct(DataType):
 
     cdef decl.IDataTypeStruct *asTypeStruct(self)
 
-cdef class Debug(object):
-    cdef decl.IDebug            *_hndl
-    cdef bool                   _owned
+cdef class Factory(object):
+    cdef decl.IFactory              *_hndl
 
-    @staticmethod
-    cdef mk(decl.IDebug *hndl, bool owned=*)
-
-cdef class DebugMgr(object):
-    cdef decl.IDebugMgr         *_hndl
-    cdef bool                   _owned
-
-    cpdef enable(self, bool en)
-
-    cpdef addDebug(self, Debug dbg)
-
-    cpdef Debug findDebug(self, name)
-
-    @staticmethod
-    cdef mk(decl.IDebugMgr *hndl, bool owned=*)
+    cdef init(self, dm_core.Factory)
+    cpdef Context mkContext(self)
+    cpdef dm_core.DebugMgr getDebugMgr(self)
 
 cdef class ModelConstraint(ObjBase):
 
@@ -464,32 +436,6 @@ cdef class ModelVal(object):
     
     @staticmethod 
     cdef mk(decl.IModelVal *, owned=*)
-    
-cdef class Randomizer(object):
-    cdef decl.IRandomizer      *_hndl
-    
-    cpdef randomize(self, list fields, list, bool)
-    
-    @staticmethod
-    cdef mk(decl.IRandomizer *hndl)
-    
-cdef class RandState(object):
-    cdef decl.IRandState       *_hndl
-
-    cpdef str seed(self)
-    
-    cpdef randint32(self, int32_t, int32_t)
-    cpdef randbits(self, ModelVal)
-
-    cpdef void setState(self, RandState other)
-    cpdef RandState clone(self)
-    cpdef RandState next(self)
-    
-    @staticmethod
-    cdef mk(decl.IRandState *)
-    
-cdef class SolverFactory(object):
-    cdef decl.ISolverFactory    *_hndl
     
 cdef class Task(object):
     cdef decl.ITask             *_hndl

@@ -1,5 +1,5 @@
 #****************************************************************************
-#* setup.py for libvsc
+#* setup.py for libvsc-dm
 #****************************************************************************
 import os
 import shutil
@@ -41,7 +41,7 @@ if os.path.isdir(os.path.join(libvsc_dir, "packages")):
 else:
     parent = os.path.dirname(libvsc_dir)
     
-    if os.path.isdir(os.path.join(parent, "libvsc")):
+    if os.path.isdir(os.path.join(parent, "libvsc-dm")):
         print("libvsc is a peer")
         packages_dir = parent
     else:
@@ -209,17 +209,9 @@ class build_ext(_build_ext):
         pref = "lib"
 
         copy_file(
-            os.path.join(cwd, "build", "src", "%svsc%s" % (pref, ext)),
-            os.path.join(package_dir, "%svsc%s" % (pref, ext)))
+            os.path.join(cwd, "build", "src", "%svsc-dm%s" % (pref, ext)),
+            os.path.join(package_dir, "%svsc-dm%s" % (pref, ext)))
 
-        # Copy libgmp over as well
-        copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "%sgmp%s" % (pref,ext)),
-            os.path.join(package_dir, "%sgmp%s" % (pref,ext)))
-        copy_file(
-            os.path.join(cwd, "build", "gmp", "lib", "%sgmpxx%s" % (pref,ext)),
-            os.path.join(package_dir, "%sgmpxx%s" % (pref,ext)))
-                
         dest_filename = os.path.join(package_dir, filename)
         
         print("package_dir: %s dest_filename: %s" % (package_dir, dest_filename))
@@ -266,12 +258,11 @@ class build_ext(_build_ext):
 
 print("extra_compile_args=" + str(extra_compile_args))
 
-ext = Extension("libvsc.core",
+ext = Extension("libvsc_dm.core",
             extra_compile_args=extra_compile_args,
             sources=[
                 os.path.join(libvsc_dir, 'python', "core.pyx"), 
                 os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
-                os.path.join(libvsc_dir, 'python', 'py_get_vsc.cpp'),
                 os.path.join(libvsc_dir, 'python', 'ModelFieldDataClosure.cpp'),
                 os.path.join(libvsc_dir, 'python', 'ModelStructCreateHookClosure.cpp'),
                 os.path.join(libvsc_dir, 'python', 'MkModelBuildContext.cpp'),
@@ -280,15 +271,16 @@ ext = Extension("libvsc.core",
             language="c++",
             include_dirs=[
                 os.path.join(libvsc_dir, 'src'),
-                os.path.join(libvsc_dir, 'src', 'include')
+                os.path.join(libvsc_dir, 'src', 'include'),
+                os.path.join(packages_dir, "debug-mgr/src/include")
             ]
         )
 ext.cython_directives={'language_level' : '3'}
 
 setup(
-  name = "libvsc",
+  name = "libvsc-dm",
   version=version,
-  packages=['libvsc'],
+  packages=['libvsc_dm'],
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
@@ -298,12 +290,12 @@ setup(
   """,
   license = "Apache 2.0",
   keywords = ["SystemVerilog", "Verilog", "RTL", "Python"],
-  url = "https://github.com/fvutils/libvsc",
-  entry_points={
-    'console_scripts': [
-      'tblink-rpc = tblink_rpc.__main__:main'
-    ]
-  },
+  url = "https://github.com/vsc-tools/libvsc-dm",
+#  entry_points={
+#    'console_scripts': [
+#      'tblink-rpc = tblink_rpc.__main__:main'
+#    ]
+#  },
   install_requires=[
   ],
   setup_requires=[

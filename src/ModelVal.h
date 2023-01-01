@@ -65,6 +65,11 @@ public:
 			int32_t		upper,
 			int32_t		lower);
 
+    virtual void slice(
+        IModelVal           *target,
+        int32_t             upper,
+        int32_t             lower) override;
+
 private:
 	val_t				m_val;
 	uint32_t			m_bits;

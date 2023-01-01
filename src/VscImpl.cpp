@@ -21,7 +21,7 @@ VscImpl::~VscImpl() {
 }
 
 IContext *VscImpl::mkContext() {
-	return new Context();
+	return new Context(0);
 }
 
 dmgr::IDebugMgr *VscImpl::getDebugMgr() {

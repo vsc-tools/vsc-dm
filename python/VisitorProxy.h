@@ -7,111 +7,111 @@
 
 #pragma once
 #include <Python.h>
-#include "vsc/impl/VisitorBase.h"
-#include "vsc/IModelExprBin.h"
+#include "vsc/dm/impl/VisitorBase.h"
+#include "vsc/dm/IModelExprBin.h"
 
-class VisitorProxy : public vsc::VisitorBase {
+class VisitorProxy : public vsc::dm::VisitorBase {
 public:
 	VisitorProxy(PyObject *obj);
 
 	virtual ~VisitorProxy();
 
-	virtual void visitDataTypeEnum(vsc::IDataTypeEnum *t) override;
+	virtual void visitDataTypeEnum(vsc::dm::IDataTypeEnum *t) override;
 
-	virtual void visitDataTypeInt(vsc::IDataTypeInt *t) override;
+	virtual void visitDataTypeInt(vsc::dm::IDataTypeInt *t) override;
 
-	virtual void visitDataTypeStruct(vsc::IDataTypeStruct *t) override;
+	virtual void visitDataTypeStruct(vsc::dm::IDataTypeStruct *t) override;
 
 #ifdef UNDEFINED
-	virtual void visitModelConstraint(vsc::IModelConstraint *c) { }
+	virtual void visitModelConstraint(vsc::dm::IModelConstraint *c) { }
 #endif
 
-	virtual void visitModelConstraintBlock(vsc::IModelConstraintBlock *c) override;
+	virtual void visitModelConstraintBlock(vsc::dm::IModelConstraintBlock *c) override;
 
-	virtual void visitModelConstraintExpr(vsc::IModelConstraintExpr *c) override;
+	virtual void visitModelConstraintExpr(vsc::dm::IModelConstraintExpr *c) override;
 
-	virtual void visitModelConstraintIfElse(vsc::IModelConstraintIfElse *c) override;
+	virtual void visitModelConstraintIfElse(vsc::dm::IModelConstraintIfElse *c) override;
 
-	virtual void visitModelConstraintImplies(vsc::IModelConstraintImplies *c) override;
+	virtual void visitModelConstraintImplies(vsc::dm::IModelConstraintImplies *c) override;
 
-	virtual void visitModelConstraintScope(vsc::IModelConstraintScope *c) override;
+	virtual void visitModelConstraintScope(vsc::dm::IModelConstraintScope *c) override;
 
 #ifdef UNDEFINED
 
-	virtual void visitModelConstraintSoft(vsc::IModelConstraintSoft *c) { }
+	virtual void visitModelConstraintSoft(vsc::dm::IModelConstraintSoft *c) { }
 
-	virtual void visitModelCoverCross(vsc::ModelCoverCross *c) { }
+	virtual void visitModelCoverCross(vsc::dm::ModelCoverCross *c) { }
 
-	virtual void visitModelCovergroup(vsc::ModelCovergroup *c) { }
+	virtual void visitModelCovergroup(vsc::dm::ModelCovergroup *c) { }
 
-	virtual void visitModelCoverpoint(vsc::ModelCoverpoint *c) { }
+	virtual void visitModelCoverpoint(vsc::dm::ModelCoverpoint *c) { }
 #endif
 
-	virtual void visitModelExprBin(vsc::IModelExprBin *e) override;
+	virtual void visitModelExprBin(vsc::dm::IModelExprBin *e) override;
 
-	virtual void visitModelExprCond(vsc::IModelExprCond *e) override;
+	virtual void visitModelExprCond(vsc::dm::IModelExprCond *e) override;
 
-	virtual void visitModelExprFieldRef(vsc::IModelExprFieldRef *e) override;
+	virtual void visitModelExprFieldRef(vsc::dm::IModelExprFieldRef *e) override;
 
-	virtual void visitModelExprIn(vsc::IModelExprIn *e) override;
+	virtual void visitModelExprIn(vsc::dm::IModelExprIn *e) override;
 
-	virtual void visitModelExprPartSelect(vsc::IModelExprPartSelect *e) override;
+	virtual void visitModelExprPartSelect(vsc::dm::IModelExprPartSelect *e) override;
 
-	virtual void visitModelExprRange(vsc::IModelExprRange *e) override;
+	virtual void visitModelExprRange(vsc::dm::IModelExprRange *e) override;
 
-	virtual void visitModelExprRangelist(vsc::IModelExprRangelist *e) override;
+	virtual void visitModelExprRangelist(vsc::dm::IModelExprRangelist *e) override;
 
-	virtual void visitModelExprRef(vsc::IModelExprRef *e) override;
+	virtual void visitModelExprRef(vsc::dm::IModelExprRef *e) override;
 
-	virtual void visitModelExprUnary(vsc::IModelExprUnary *e) override;
+	virtual void visitModelExprUnary(vsc::dm::IModelExprUnary *e) override;
 
-	virtual void visitModelExprVal(vsc::IModelExprVal *e) override;
+	virtual void visitModelExprVal(vsc::dm::IModelExprVal *e) override;
 
-	virtual void visitModelExprVecSubscript(vsc::IModelExprVecSubscript *e) override;
+	virtual void visitModelExprVecSubscript(vsc::dm::IModelExprVecSubscript *e) override;
 
 #ifdef UNDEFINED
 
-	virtual void visitModelField(vsc::IModelField *f) { }
+	virtual void visitModelField(vsc::dm::IModelField *f) { }
 #endif
 
-	virtual void visitModelFieldRef(vsc::IModelFieldRef *f) override;
+	virtual void visitModelFieldRef(vsc::dm::IModelFieldRef *f) override;
 
-	virtual void visitModelFieldRefRoot(vsc::IModelFieldRef *f) override;
+	virtual void visitModelFieldRefRoot(vsc::dm::IModelFieldRef *f) override;
 
-	virtual void visitModelFieldRefType(vsc::IModelFieldTypeRef *f) override;
+	virtual void visitModelFieldRefType(vsc::dm::IModelFieldTypeRef *f) override;
 
-	virtual void visitModelFieldRoot(vsc::IModelFieldRoot *f) override;
+	virtual void visitModelFieldRoot(vsc::dm::IModelFieldRoot *f) override;
 
-	virtual void visitModelFieldType(vsc::IModelFieldType *f) override;
+	virtual void visitModelFieldType(vsc::dm::IModelFieldType *f) override;
 
 #ifdef UNDEFINED
-	virtual void visitModelFieldVec(vsc::IModelFieldVec *f) { }
+	virtual void visitModelFieldVec(vsc::dm::IModelFieldVec *f) { }
 
-	virtual void visitModelFieldVecRoot(vsc::IModelFieldVecRoot *f) { }
+	virtual void visitModelFieldVecRoot(vsc::dm::IModelFieldVecRoot *f) { }
 #endif
 
-	virtual void visitTypeConstraintBlock(vsc::ITypeConstraintBlock *c) override;
+	virtual void visitTypeConstraintBlock(vsc::dm::ITypeConstraintBlock *c) override;
 
-	virtual void visitTypeConstraintExpr(vsc::ITypeConstraintExpr *c) override;
+	virtual void visitTypeConstraintExpr(vsc::dm::ITypeConstraintExpr *c) override;
 
-	virtual void visitTypeConstraintIfElse(vsc::ITypeConstraintIfElse *c) override;
+	virtual void visitTypeConstraintIfElse(vsc::dm::ITypeConstraintIfElse *c) override;
 
-	virtual void visitTypeConstraintImplies(vsc::ITypeConstraintImplies *c) override;
+	virtual void visitTypeConstraintImplies(vsc::dm::ITypeConstraintImplies *c) override;
 
-	virtual void visitTypeConstraintScope(vsc::ITypeConstraintScope *c) override;
+	virtual void visitTypeConstraintScope(vsc::dm::ITypeConstraintScope *c) override;
 
-	virtual void visitTypeExprBin(vsc::ITypeExprBin *e) override;
+	virtual void visitTypeExprBin(vsc::dm::ITypeExprBin *e) override;
 
-	virtual void visitTypeExprFieldRef(vsc::ITypeExprFieldRef *e) override;
+	virtual void visitTypeExprFieldRef(vsc::dm::ITypeExprFieldRef *e) override;
 
-	virtual void visitTypeExprRange(vsc::ITypeExprRange *e) override;
+	virtual void visitTypeExprRange(vsc::dm::ITypeExprRange *e) override;
 
-	virtual void visitTypeExprRangelist(vsc::ITypeExprRangelist *e) override;
+	virtual void visitTypeExprRangelist(vsc::dm::ITypeExprRangelist *e) override;
 
-	virtual void visitTypeExprVal(vsc::ITypeExprVal *e) override;
+	virtual void visitTypeExprVal(vsc::dm::ITypeExprVal *e) override;
 
 #ifdef UNDEFINED
-	virtual void visitTypeField(vsc::ITypeField *f) { }
+	virtual void visitTypeField(vsc::dm::ITypeField *f) { }
 #endif
 
 private:
