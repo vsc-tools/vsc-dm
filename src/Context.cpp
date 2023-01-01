@@ -79,7 +79,7 @@
 namespace vsc {
 namespace dm {
 
-Context::Context() {
+Context::Context(dmgr::IDebugMgr *dm) : m_dbg_mgr(dm) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -96,7 +96,7 @@ IModelField *Context::buildModelField(
 }
 
 dmgr::IDebugMgr *Context::getDebugMgr() {
-	return VscImpl::inst()->getDebugMgr();
+    return m_dbg_mgr;
 }
 
 #ifdef UNDEFINED

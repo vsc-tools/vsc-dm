@@ -7,6 +7,7 @@
 
 #pragma once
 #include <unordered_map>
+#include "dmgr/IDebugMgr.h"
 #include "vsc/dm/IContext.h"
 #include "DataTypeInt.h"
 #include "DataTypeVec.h"
@@ -18,7 +19,7 @@ namespace dm {
 
 class Context : public IContext {
 public:
-	Context();
+	Context(dmgr::IDebugMgr *dm);
 
 	virtual ~Context();
 
@@ -254,6 +255,7 @@ public:
 
 
 private:
+    dmgr::IDebugMgr                                         *m_dbg_mgr;
 	ModelValOp												m_model_val_op;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;
