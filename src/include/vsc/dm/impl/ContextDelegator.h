@@ -331,6 +331,11 @@ public:
 		return m_ctxt->mkTypeExprFieldRef();
 	}
 
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path) override {
+        return m_ctxt->mkTypeExprFieldRef(path);
+    }
+
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,
