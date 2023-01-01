@@ -287,6 +287,9 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
 
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+		const std::initializer_list<TypeExprFieldRefElem> path) = 0;
+
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,
