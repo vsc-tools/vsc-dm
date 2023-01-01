@@ -367,10 +367,17 @@ void ModelVal::slice(
         int32_t             lower) {
 	if (m_bits <= 64) {
 		target->setBits(upper-lower+1);
-        target->set_val_u(m_val.v >> lower);
+        	target->set_val_u(m_val.v >> lower);
 	} else {
 		// TODO:
 	}
+#ifdef UNDEFINED
+	ModelVal ret((upper-lower+1));
+	for (uint32_t bit=lower; bit<=upper; bit++) {
+		ret.set_bit(bit-lower, get_bit(bit));
+	}
+	return ret;
+#endif
 }
 
 IModelVal *ModelVal::clone(IContext *ctxt) const {
