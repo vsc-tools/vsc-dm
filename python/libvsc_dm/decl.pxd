@@ -1,7 +1,7 @@
 #*****************************************************************************
 #* decl.pxd
 #*****************************************************************************
-from debug_mgr cimport decl as dm_decl
+cimport debug_mgr.decl as dm_decl
 from libcpp.pair cimport pair as cpp_pair
 from libcpp.set cimport set as cpp_set
 from libcpp.string cimport string as cpp_string

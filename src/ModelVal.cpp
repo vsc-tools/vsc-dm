@@ -361,6 +361,18 @@ ModelVal ModelVal::slice(
 #endif
 }
 
+void ModelVal::slice(
+        IModelVal           *target,
+        int32_t             upper,
+        int32_t             lower) {
+	if (m_bits <= 64) {
+		target->setBits(upper-lower+1);
+        target->set_val_u(m_val.v >> lower);
+	} else {
+		// TODO:
+	}
+}
+
 IModelVal *ModelVal::clone(IContext *ctxt) const {
 	IModelVal *ret = (ctxt)?ctxt->mkModelVal():new ModelVal(this);
 
