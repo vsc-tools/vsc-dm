@@ -15,7 +15,8 @@ namespace dm {
 enum class TypeExprFieldRefElemKind {
 	Root,
 	ActiveScope,
-	IdxOffset
+	IdxOffset,
+    BottomUpScope
 };
 
 struct TypeExprFieldRefElem {

@@ -275,6 +275,19 @@ public:
 		return m_ctxt->mkModelVal();
 	}
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) override {
+        return m_ctxt->mkModelValS(val, bits);
+    }
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) override {
+        return m_ctxt->mkModelValU(val, bits);
+    }
+             
+
 	virtual IRefSelector *mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) override {

@@ -144,6 +144,14 @@ public:
 
 	virtual IModelVal *mkModelVal() override;
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) override;
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) override;
+
 	virtual IRefSelector *mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) override;

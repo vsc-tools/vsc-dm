@@ -245,6 +245,14 @@ public:
 
 	virtual IModelVal *mkModelVal() = 0;
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) = 0;
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) = 0;
+
 #ifdef UNDEFINED
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,

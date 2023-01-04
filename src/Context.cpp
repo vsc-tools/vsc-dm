@@ -421,6 +421,24 @@ IModelVal *Context::mkModelVal() {
 	return new ModelVal();
 }
 
+IModelVal *Context::mkModelValS(
+            int64_t             val,
+            int32_t             bits) {
+    IModelVal *ret = new ModelVal();
+    ret->setBits(bits);
+    ret->set_val_i(val);
+    return ret;
+}
+
+IModelVal *Context::mkModelValU(
+            uint64_t            val,
+            int32_t             bits) {
+    IModelVal *ret = new ModelVal();
+    ret->setBits(bits);
+    ret->set_val_u(val);
+    return ret;
+}
+
 #ifdef UNDEFINED
 IRandomizer *Context::mkRandomizer(
 			ISolverFactory		*solver_factory,
