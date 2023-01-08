@@ -119,7 +119,7 @@ public:
 
 	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
 		c->getTarget()->accept(m_this);
-		visitModelConstraintScope(c);
+		m_this->visitModelConstraintScope(c);
 	}
 
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 
