@@ -50,6 +50,10 @@ public:
 		}
 	}
 
+    virtual bool isDataTypeOwned() const override { 
+        return m_type_owned.get();
+    }
+
 	virtual ITypeField *getField(int32_t idx) const override;
 
 	virtual TypeFieldAttr getAttr() const override { return m_attr; }
