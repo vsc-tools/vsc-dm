@@ -259,14 +259,14 @@ IDataTypeInt *Context::mkDataTypeInt(
 bool Context::addDataTypeInt(IDataTypeInt *t) {
 	if (t->is_signed()) {
 		auto it = m_sint_type_m.find(t->width());
-		if (it != m_sint_type_m.end()) {
+		if (it == m_sint_type_m.end()) {
 			m_sint_type_m.insert({t->width(), t});
 			m_sint_type_l.push_back(IDataTypeIntUP(t));
 			return true;
 		}
 	} else {
 		auto it = m_uint_type_m.find(t->width());
-		if (it != m_uint_type_m.end()) {
+		if (it == m_uint_type_m.end()) {
 			m_uint_type_m.insert({t->width(), t});
 			m_uint_type_l.push_back(IDataTypeIntUP(t));
 			return true;
