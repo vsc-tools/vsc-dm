@@ -222,12 +222,17 @@ public:
 			BinOp			op,
 			ITypeExpr		*rhs) override;
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) override;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path) override;
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+        const std::initializer_list<int32_t>    path) override;
 
 	virtual IModelExprIn *mkModelExprIn(
+
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) override;
 

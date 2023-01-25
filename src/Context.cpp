@@ -512,18 +512,22 @@ ITypeExprBin *Context::mkTypeExprBin(
 	return new TypeExprBin(lhs, op, rhs);
 }
 
-ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
-	return new TypeExprFieldRef();
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) {
+	return new TypeExprFieldRef(kind, offset);
 }
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path) {
-	ITypeExprFieldRef *ret = new TypeExprFieldRef();
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+		const std::initializer_list<int32_t>    path) {
+	ITypeExprFieldRef *ret = new TypeExprFieldRef(kind, offset);
 
-	for (std::initializer_list<TypeExprFieldRefElem>::iterator
+	for (std::initializer_list<int32_t>::iterator
 		it=path.begin();
 		it!=path.end(); it++) {
-		ret->addRef(*it);
+		ret->addPathElem(*it);
 	}
 
 	return ret;

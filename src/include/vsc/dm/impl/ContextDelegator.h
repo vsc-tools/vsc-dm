@@ -340,13 +340,17 @@ public:
 		return m_ctxt->mkTypeConstraintUnique(exprs);
 	}
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override {
-		return m_ctxt->mkTypeExprFieldRef();
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) override {
+		return m_ctxt->mkTypeExprFieldRef(kind, offset);
 	}
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path) override {
-        return m_ctxt->mkTypeExprFieldRef(path);
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+		const std::initializer_list<int32_t>    path) override {
+        return m_ctxt->mkTypeExprFieldRef(kind, offset, path);
     }
 
 	virtual ITypeExprRange *mkTypeExprRange(

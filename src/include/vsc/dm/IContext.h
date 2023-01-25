@@ -293,10 +293,14 @@ public:
 	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
 			const std::vector<ITypeExpr *>		&exprs) = 0;
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) = 0;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path) = 0;
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+        const std::initializer_list<int32_t>    path) = 0;
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

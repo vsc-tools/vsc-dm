@@ -12,38 +12,31 @@
 namespace vsc {
 namespace dm {
 
-enum class TypeExprFieldRefElemKind {
-	Root,
-	ActiveScope,
-	IdxOffset,
-    BottomUpScope
-};
-
-struct TypeExprFieldRefElem {
-	TypeExprFieldRefElemKind		kind;
-	int32_t							idx;
-};
 
 class ITypeExprFieldRef;
 using ITypeExprFieldRefUP=std::unique_ptr<ITypeExprFieldRef>;
 class ITypeExprFieldRef : public ITypeExpr {
 public:
+enum class RootRefKind {
+	TopDownScope,
+	BottomUpScope
+};
+
+public:
 
 	virtual ~ITypeExprFieldRef() { }
 
-	virtual void addIdxRef(int32_t idx) = 0;
+	virtual RootRefKind getRootRefKind() const = 0;
 
-	virtual void addActiveScopeRef(int32_t off) = 0;
+	virtual int32_t getRootRefOffset() const = 0;
 
-	virtual void addRootRef() = 0;
-
-	virtual void addRef(const TypeExprFieldRefElem &ref) = 0;
+	virtual void addPathElem(int32_t idx) = 0;
 
 	virtual uint32_t size() const = 0;
 
-	virtual const TypeExprFieldRefElem &at(int32_t idx) const = 0;
+	virtual int32_t at(int32_t idx) const = 0;
 
-	virtual const std::vector<TypeExprFieldRefElem> &getPath() const = 0;
+	virtual const std::vector<int32_t> &getPath() const = 0;
 
 };
 
