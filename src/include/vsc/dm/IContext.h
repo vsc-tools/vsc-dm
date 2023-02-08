@@ -245,6 +245,14 @@ public:
 
 	virtual IModelVal *mkModelVal() = 0;
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) = 0;
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) = 0;
+
 #ifdef UNDEFINED
 	virtual IRandomizer *mkRandomizer(
 			ISolverFactory		*solver_factory,
@@ -285,7 +293,14 @@ public:
 	virtual ITypeConstraintUnique *mkTypeConstraintUnique(
 			const std::vector<ITypeExpr *>		&exprs) = 0;
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() = 0;
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) = 0;
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+        const std::initializer_list<int32_t>    path) = 0;
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

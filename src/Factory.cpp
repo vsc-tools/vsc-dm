@@ -20,6 +20,7 @@
  */
 #include "Context.h"
 #include "Factory.h"
+#include "vsc/dm/FactoryExt.h"
 
 
 namespace vsc {
@@ -54,6 +55,12 @@ IFactory *Factory::inst() {
     return m_inst.get();
 }
 
+
+FactoryUP            Factory::m_inst;
+
 }
 }
 
+vsc::dm::IFactory *vsc_dm_getFactory() {
+    return vsc::dm::Factory::inst();
+}

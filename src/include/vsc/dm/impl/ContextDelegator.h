@@ -275,6 +275,19 @@ public:
 		return m_ctxt->mkModelVal();
 	}
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) override {
+        return m_ctxt->mkModelValS(val, bits);
+    }
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) override {
+        return m_ctxt->mkModelValU(val, bits);
+    }
+             
+
 	virtual IRefSelector *mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) override {
@@ -327,9 +340,18 @@ public:
 		return m_ctxt->mkTypeConstraintUnique(exprs);
 	}
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override {
-		return m_ctxt->mkTypeExprFieldRef();
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) override {
+		return m_ctxt->mkTypeExprFieldRef(kind, offset);
 	}
+
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+		const std::initializer_list<int32_t>    path) override {
+        return m_ctxt->mkTypeExprFieldRef(kind, offset, path);
+    }
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

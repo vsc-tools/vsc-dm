@@ -57,6 +57,8 @@ public:
 		return dynamic_cast<T *>(getDataType());
 	}
 
+    virtual bool isDataTypeOwned() const = 0;
+
 	virtual void setDataType(IDataType *t, bool owned=false) = 0;
 
 	virtual ITypeField *getField(int32_t idx) const = 0;

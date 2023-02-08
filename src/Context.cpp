@@ -259,14 +259,14 @@ IDataTypeInt *Context::mkDataTypeInt(
 bool Context::addDataTypeInt(IDataTypeInt *t) {
 	if (t->is_signed()) {
 		auto it = m_sint_type_m.find(t->width());
-		if (it != m_sint_type_m.end()) {
+		if (it == m_sint_type_m.end()) {
 			m_sint_type_m.insert({t->width(), t});
 			m_sint_type_l.push_back(IDataTypeIntUP(t));
 			return true;
 		}
 	} else {
 		auto it = m_uint_type_m.find(t->width());
-		if (it != m_uint_type_m.end()) {
+		if (it == m_uint_type_m.end()) {
 			m_uint_type_m.insert({t->width(), t});
 			m_uint_type_l.push_back(IDataTypeIntUP(t));
 			return true;
@@ -421,6 +421,24 @@ IModelVal *Context::mkModelVal() {
 	return new ModelVal();
 }
 
+IModelVal *Context::mkModelValS(
+            int64_t             val,
+            int32_t             bits) {
+    IModelVal *ret = new ModelVal();
+    ret->setBits(bits);
+    ret->set_val_i(val);
+    return ret;
+}
+
+IModelVal *Context::mkModelValU(
+            uint64_t            val,
+            int32_t             bits) {
+    IModelVal *ret = new ModelVal();
+    ret->setBits(bits);
+    ret->set_val_u(val);
+    return ret;
+}
+
 #ifdef UNDEFINED
 IRandomizer *Context::mkRandomizer(
 			ISolverFactory		*solver_factory,
@@ -494,18 +512,22 @@ ITypeExprBin *Context::mkTypeExprBin(
 	return new TypeExprBin(lhs, op, rhs);
 }
 
-ITypeExprFieldRef *Context::mkTypeExprFieldRef() {
-	return new TypeExprFieldRef();
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) {
+	return new TypeExprFieldRef(kind, offset);
 }
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path) {
-	ITypeExprFieldRef *ret = new TypeExprFieldRef();
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+		const std::initializer_list<int32_t>    path) {
+	ITypeExprFieldRef *ret = new TypeExprFieldRef(kind, offset);
 
-	for (std::initializer_list<TypeExprFieldRefElem>::iterator
+	for (std::initializer_list<int32_t>::iterator
 		it=path.begin();
 		it!=path.end(); it++) {
-		ret->addRef(*it);
+		ret->addPathElem(*it);
 	}
 
 	return ret;

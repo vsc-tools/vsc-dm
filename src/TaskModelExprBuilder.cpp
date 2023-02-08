@@ -33,18 +33,20 @@ void TaskModelExprBuilder::visitTypeExprBin(ITypeExprBin *e) {
 
 void TaskModelExprBuilder::visitTypeExprFieldRef(ITypeExprFieldRef *e) {
 	IModelField *f = 0;
-	for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
-		switch (it->kind) {
-		case TypeExprFieldRefElemKind::Root: {
-			f = m_scope;
-		} break;
-		case TypeExprFieldRefElemKind::IdxOffset: {
-			f = m_scope->getField(it->idx);
-		} break;
 
-		default:
-			fprintf(stdout, "Unhandled case\n");
-		}
+    switch (e->getRootRefKind()) {
+        case ITypeExprFieldRef::RootRefKind::TopDownScope: {
+            f = m_scope;
+        } break;
+        case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
+            // ERROR;
+        } break;
+    }
+
+	for (std::vector<int32_t>::const_iterator
+        it=e->getPath().begin(); 
+        it!=e->getPath().end(); it++) {
+		f = m_scope->getField(*it);
 	}
 
 	m_expr = m_ctxt->mkModelExprFieldRef(f);

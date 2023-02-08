@@ -109,17 +109,17 @@ public:
 	virtual void visitModelConstraint(IModelConstraint *c) override { }
 
 	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) override {
-		visitModelConstraintScope(c);		;
+		m_this->visitModelConstraintScope(c);
 	}
 
 	virtual void visitModelConstraintExpr(IModelConstraintExpr *c) override {
-		visitModelConstraint(c);
+		m_this->visitModelConstraint(c);
 		c->expr()->accept(m_this);
 	}
 
 	virtual void visitModelConstraintForeach(IModelConstraintForeach *c) override {
 		c->getTarget()->accept(m_this);
-		visitModelConstraintScope(c);
+		m_this->visitModelConstraintScope(c);
 	}
 
 	virtual void visitModelConstraintIfElse(IModelConstraintIfElse *c) override { 

@@ -35,22 +35,18 @@ public:
 	}
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
-		for (std::vector<TypeExprFieldRefElem>::const_reverse_iterator
-			it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
-			switch (it->kind) {
-			case TypeExprFieldRefElemKind::Root: {
+        switch (e->getRootRefKind()) {
+            case ITypeExprFieldRef::RootRefKind::TopDownScope:
 				m_field = m_ctxt->getTopDownScope();
-			} break;
-			case TypeExprFieldRefElemKind::ActiveScope: {
+                break;
+            case ITypeExprFieldRef::RootRefKind::BottomUpScope:
 				m_field = m_ctxt->getScope();
-			} break;
-			case TypeExprFieldRefElemKind::IdxOffset: {
-				m_field = m_field->getField(it->idx);
-			} break;
-
-			default:
-				fprintf(stdout, "Unhandled case\n");
-			}
+                break;
+        }
+		for (std::vector<int32_t>::const_iterator
+			it=e->getPath().begin(); 
+            it!=e->getPath().end(); it++) {
+			m_field = m_field->getField(*it);
 		}
 	}
 

@@ -40,21 +40,20 @@ public:
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
  		bool references_ref_fields = false;
 		IModelField *f = 0;
-		for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
-			switch (it->kind) {
-			case TypeExprFieldRefElemKind::Root: {
-				f = m_ctxt->getTopDownScope();
-			} break;
-			case TypeExprFieldRefElemKind::ActiveScope: {
-				f = m_ctxt->getBottomUpScope(it->idx);
-			} break;
-			case TypeExprFieldRefElemKind::IdxOffset: {
-				f = f->getField(it->idx);
-			} break;
+        switch (e->getRootRefKind()) {
+            case ITypeExprFieldRef::RootRefKind::TopDownScope: {
+                f = m_ctxt->getTopDownScope();
+            } break;
+            case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
+                f = m_ctxt->getBottomUpScope(e->getRootRefOffset());
+            } break;
+        }
 
-			default:
-				fprintf(stdout, "Unhandled case\n");
-			}
+		for (std::vector<int32_t>::const_iterator 
+            it=e->getPath().begin(); 
+            it!=e->getPath().end(); it++) {
+
+			f = f->getField(*it);
 
 			if (TaskIsModelFieldRef().check(f)) {
 				references_ref_fields = true;
@@ -65,21 +64,19 @@ public:
 		if (references_ref_fields) {
 			// Rebuild as a relative-reference expression
 			IModelExprIndexedFieldRef *ref = m_ctxt->ctxt()->mkModelExprIndexedFieldRef();
+            switch (e->getRootRefKind()) {
+                case ITypeExprFieldRef::RootRefKind::TopDownScope: {
+					ref->addField(m_ctxt->getTopDownScope());
+                } break;
+                case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
+					ref->addField(m_ctxt->getBottomUpScope(e->getRootRefOffset()));
+                } break;
+            }
 			int32_t width = -1;
-			for (auto it=e->getPath().rbegin(); it!=e->getPath().rend(); it++) {
-				switch (it->kind) {
-					case TypeExprFieldRefElemKind::Root: {
-						ref->addField(m_ctxt->getTopDownScope());
-					} break;
-					case TypeExprFieldRefElemKind::ActiveScope: {
-						ref->addField(m_ctxt->getBottomUpScope(it->idx));
-					} break;
-					case TypeExprFieldRefElemKind::IdxOffset: {
-						ref->addFieldOffsetRef(it->idx);
-					} break;
-					default:
-						fprintf(stdout, "Unhandled case\n");
-				}
+			for (std::vector<int32_t>::const_iterator
+                it=e->getPath().begin(); 
+                it!=e->getPath().end(); it++) {
+				ref->addFieldOffsetRef(*it);
 			}
 
 			m_expr = ref;

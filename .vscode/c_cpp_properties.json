@@ -4,8 +4,8 @@
             "name": "Default",
             "includePath": [
                 "${default}",
-                "src/include",
                 "src",
+                "src/include",
                 "test",
                 "packages/gtest/googletest/include"
             ],

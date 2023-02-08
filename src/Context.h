@@ -144,6 +144,14 @@ public:
 
 	virtual IModelVal *mkModelVal() override;
 
+	virtual IModelVal *mkModelValS(
+            int64_t             val,
+            int32_t             bits) override;
+
+	virtual IModelVal *mkModelValU(
+            uint64_t            val,
+            int32_t             bits) override;
+
 	virtual IRefSelector *mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) override;
@@ -214,12 +222,17 @@ public:
 			BinOp			op,
 			ITypeExpr		*rhs) override;
 
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef() override;
+	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind      kind,
+        int32_t                             offset) override;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-		const std::initializer_list<TypeExprFieldRefElem> path);
+        ITypeExprFieldRef::RootRefKind          kind,
+        int32_t                                 offset,
+        const std::initializer_list<int32_t>    path) override;
 
 	virtual IModelExprIn *mkModelExprIn(
+
 			IModelExpr				*lhs,
 			IModelExprRangelist		*rnglist) override;
 

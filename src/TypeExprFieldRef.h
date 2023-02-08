@@ -13,34 +13,39 @@ namespace dm {
 
 class TypeExprFieldRef : public ITypeExprFieldRef {
 public:
-	TypeExprFieldRef();
+	TypeExprFieldRef(
+        ITypeExprFieldRef::RootRefKind  kind,
+        int32_t                         offset
+    );
 
 	virtual ~TypeExprFieldRef();
 
-	virtual void addIdxRef(int32_t idx) override;
+    virtual RootRefKind getRootRefKind() const override {
+        return m_root_ref_kind;
+    }
 
-	virtual void addActiveScopeRef(int32_t off) override;
+    virtual int32_t getRootRefOffset() const override {
+        return m_root_ref_offset;
+    }
 
-	virtual void addRootRef() override;
-
-	virtual void addRef(const TypeExprFieldRefElem &ref) {
-		m_path.push_back(ref);
-	}
+	virtual void addPathElem(int32_t idx) override;
 
 	virtual uint32_t size() const override { return m_path.size(); }
 
-	virtual const TypeExprFieldRefElem &at(int32_t idx) const override {
+	virtual int32_t at(int32_t idx) const override {
 		return m_path.at(idx);
 	}
 
-	virtual const std::vector<TypeExprFieldRefElem> &getPath() const override {
+	virtual const std::vector<int32_t> &getPath() const override {
 		return m_path;
 	}
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprFieldRef(this); }
 
 private:
-	std::vector<TypeExprFieldRefElem>					m_path;
+    RootRefKind                                 m_root_ref_kind;
+    int32_t                                     m_root_ref_offset;
+	std::vector<int32_t>	      				m_path;
 };
 
 }
