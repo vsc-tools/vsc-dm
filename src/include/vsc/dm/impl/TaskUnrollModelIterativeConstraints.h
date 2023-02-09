@@ -59,7 +59,7 @@ public:
         } else {
             if (m_src_scope_s.back() == m_dst) {
                 // Need to hook the constraint on here
-                m_scope_s.back()->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_scope_s.back()->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
             // Otherwise, the constraint is already attached to a referenced scope
         }
@@ -77,13 +77,15 @@ public:
             if (m_src_scope_s.back() == m_dst) {
                 // We're adding data to the false root
                 scope = m_ctxt->mkModelConstraintScope();
-                m_src_scope_s.back()->addConstraint(scope);
+                m_src_scope_s.back()->addConstraint(scope, true);
             } else {
                 // We're within an original source scope
                 IModelConstraintSubst *subst = m_ctxt->mkModelConstraintSubst(c);
 
                 // Replace the existing constraint with the substitute
+                /*
                 m_src_scope_s.back()->swapConstraint(m_src_index_s.back(), subst);
+                 */
 
                 scope = subst;
             }
@@ -96,11 +98,11 @@ public:
         c->getIndexIt()->setFlag(ModelFieldFlag::Resolved);
         for (uint32_t i=0; i<vec->getSize(); i++) {
             c->getIndexIt()->val()->set_val_u(i);
-            for (std::vector<IModelConstraintUP>::const_iterator
-                it=c->constraints().begin();
-                it!=c->constraints().end(); it++) {
+            for (std::vector<IModelConstraint *>::const_iterator
+                it=c->getConstraints().begin();
+                it!=c->getConstraints().end(); it++) {
                 fprintf(stdout, "--> visitForeachConstraint\n");
-                it->get()->accept(m_this);
+                (*it)->accept(m_this);
                 fprintf(stdout, "<-- visitForeachConstraint\n");
             }
         }
@@ -115,7 +117,7 @@ public:
             TaskCopyModelConstraint::visitModelConstraintIfElse(c);
         } else {
             if (m_src_scope_s.back() == m_dst) {
-                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
             VisitorBase::visitModelConstraintIfElse(c);
         }
@@ -126,7 +128,7 @@ public:
             TaskCopyModelConstraint::visitModelConstraintImplies(c);
         } else {
             if (m_src_scope_s.back() == m_dst) {
-                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
             VisitorBase::visitModelConstraintImplies(c);
         }
@@ -138,15 +140,15 @@ public:
             TaskCopyModelConstraint::visitModelConstraintScope(c);
         } else {
             if (m_src_scope_s.back() == m_dst) {
-                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
 
             m_src_scope_s.push_back(c);
 
             m_src_index_s.push_back(0);
-            for (uint32_t i=0; i<c->constraints().size(); i++) {
+            for (uint32_t i=0; i<c->getConstraints().size(); i++) {
                 m_src_index_s.back() = i;
-                c->constraints().at(i)->accept(m_this);
+                c->getConstraints().at(i)->accept(m_this);
             }
             m_src_index_s.pop_back();
             m_src_scope_s.pop_back();
@@ -158,7 +160,7 @@ public:
             TaskCopyModelConstraint::visitModelConstraintSoft(c);
         } else {
             if (m_src_scope_s.back() == m_dst) {
-                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
             VisitorBase::visitModelConstraintSoft(c);
         }
@@ -178,7 +180,7 @@ public:
             TaskCopyModelConstraint::visitModelConstraintUnique(c);
         } else {
             if (m_src_scope_s.back() == m_dst) {
-                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c));
+                m_dst->addConstraint(m_ctxt->mkModelConstraintRef(c), true);
             }
             VisitorBase::visitModelConstraintUnique(c);
         }

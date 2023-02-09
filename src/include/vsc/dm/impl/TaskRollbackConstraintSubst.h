@@ -16,9 +16,9 @@ public:
     virtual void visitModelConstraintScope(IModelConstraintScope *c) {
         m_index_s.push_back(0);
         m_scope_s.push_back(c);
-        for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+        for (std::vector<IModelConstraint *>::const_iterator
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
             (*it)->accept(m_this);
             m_index_s.back() += 1;
         }
@@ -26,11 +26,13 @@ public:
     }
 
     virtual void visitModelConstraintSubst(IModelConstraintSubst *c) {
+        /* TODO:
         IModelConstraint *orig = c->releaseOriginal();
         m_scope_s.back()->swapConstraint(
             m_index_s.back(),
             orig);
         delete c;
+         */
     }
 
 private:

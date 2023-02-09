@@ -51,9 +51,9 @@ public:
 	virtual void visitModelConstraintBlock(IModelConstraintBlock *c) override {
         println("constraint %s {", c->name().c_str());
         inc_indent();
-        for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+        for (std::vector<IModelConstraint *>::const_iterator
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
             (*it)->accept(m_this);
         }
         dec_indent();
@@ -100,9 +100,9 @@ public:
     }
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
-        for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+        for (std::vector<IModelConstraint *>::const_iterator
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
             (*it)->accept(m_this);
         }
     }

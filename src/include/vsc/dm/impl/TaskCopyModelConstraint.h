@@ -196,7 +196,7 @@ protected:
 
     void addConstraint(IModelConstraint *c) {
         if (m_scope_s.size() > 0) {
-            m_scope_s.back()->addConstraint(c);
+            m_scope_s.back()->addConstraint(c, true);
         }
         m_constraint = c;
     }
