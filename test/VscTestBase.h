@@ -7,6 +7,8 @@
 
 #pragma once
 #include "gtest/gtest.h"
+#include "vsc/dm/IContext.h"
+#include "vsc/dm/IFactory.h"
 
 namespace vsc {
 namespace dm {
@@ -21,6 +23,9 @@ public:
 
 	virtual void TearDown() override;
 
+protected:
+    IFactory                    *m_factory;
+    IContextUP                  m_ctxt;
 
 };
 

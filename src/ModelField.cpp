@@ -44,18 +44,28 @@ ModelField::~ModelField() {
 
 }
 
-void ModelField::addConstraint(IModelConstraint *c) {
-	m_constraints.push_back(IModelConstraintUP(c));
+void ModelField::addConstraint(
+    IModelConstraint        *c,
+    bool                    owned) {
+	m_constraints.push_back(c);
+    if (owned) {
+        m_owned.push_back(IAcceptUP(c));
+    }
 }
 
-void ModelField::addField(IModelField *field) {
+void ModelField::addField(
+    IModelField             *field,
+    bool                    owned) {
 	field->setParent(this);
-	m_fields.push_back(IModelFieldUP(field));
+	m_fields.push_back(field);
+    if (owned) {
+        m_owned.push_back(IAcceptUP(field));
+    }
 }
 
 IModelField *ModelField::getField(int32_t idx) {
 	if (idx >= 0 && idx < m_fields.size()) {
-		return m_fields.at(idx).get();
+		return m_fields.at(idx);
 	} else {
 		return 0;
 	}

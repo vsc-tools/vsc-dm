@@ -22,12 +22,10 @@ TestModelSmoke::~TestModelSmoke() {
 }
 
 TEST_F(TestModelSmoke, smoke) {
-	Context ctx;
-
-	IDataTypeInt *vsc_uint32_t = ctx.findDataTypeInt(false, 32);
+	IDataTypeInt *vsc_uint32_t = m_ctxt->findDataTypeInt(false, 32);
 	if (!vsc_uint32_t) {
-		vsc_uint32_t = ctx.mkDataTypeInt(false, 32);
-		ctx.addDataTypeInt(vsc_uint32_t);
+		vsc_uint32_t = m_ctxt->mkDataTypeInt(false, 32);
+		m_ctxt->addDataTypeInt(vsc_uint32_t);
 	}
 	IModelFieldRoot *a = new ModelFieldRoot(vsc_uint32_t, "a");
 #ifdef UNDEFINED

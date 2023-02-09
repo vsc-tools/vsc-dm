@@ -298,7 +298,9 @@ public:
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
-		for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+		for (std::vector<ITypeConstraint *>::const_iterator
+            it=c->getConstraints().begin(); 
+            it!=c->getConstraints().end(); it++) {
 			(*it)->accept(m_this);
 		}
 	}

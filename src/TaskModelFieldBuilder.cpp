@@ -44,7 +44,7 @@ IModelFieldRoot *TaskModelFieldBuilder::build(
 void TaskModelFieldBuilder::visitTypeField(ITypeField *f) {
 	DEBUG_ENTER("visitTypeField");
 	IModelFieldType *field = m_ctxt->mkModelFieldType(f);
-	m_field_s.back()->addField(field);
+	m_field_s.back()->addField(field, true);
 
 	m_field_s.push_back(field);
 	VisitorBase::visitTypeField(f);
@@ -76,14 +76,16 @@ void TaskModelFieldBuilder::visitTypeConstraintBlock(ITypeConstraintBlock *c) {
 	IModelConstraintBlock *cm = m_ctxt->mkModelConstraintBlock(c->name());
 
 	m_constraint_s.push_back(cm);
-	for (auto it=c->constraints().begin(); it!=c->constraints().end(); it++) {
+	for (std::vector<ITypeConstraint *>::const_iterator
+        it=c->getConstraints().begin(); 
+        it!=c->getConstraints().end(); it++) {
 		(*it)->accept(this);
 	}
 
 	m_constraint_s.pop_back();
 
 	if (m_constraint_s.size() == 0) {
-		m_field_s.back()->addConstraint(cm);
+		m_field_s.back()->addConstraint(cm, true);
 	}
 	DEBUG_LEAVE("visitTypeConstraintBlock");
 }
@@ -97,7 +99,7 @@ void TaskModelFieldBuilder::visitTypeConstraintExpr(ITypeConstraintExpr *c) {
 
 	IModelConstraintExpr *cm = m_ctxt->mkModelConstraintExpr(expr);
 
-	m_constraint_s.back()->addConstraint(cm);
+	m_constraint_s.back()->addConstraint(cm, true);
 
 	DEBUG_LEAVE("visitTypeConstraintExpr");
 }

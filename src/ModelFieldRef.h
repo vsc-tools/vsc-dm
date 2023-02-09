@@ -3,6 +3,21 @@
  *
  *  Created on: May 10, 2022
  *      Author: mballance
+ * 
+ * Copyright 2019-2023 Matthew Ballance and contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
  */
 
 #pragma once
@@ -22,20 +37,24 @@ public:
 
 	virtual void setParent(IModelField *p) override { m_parent = p; }
 
-	virtual const std::vector<IModelConstraintUP> &constraints() const override {
-		return m_ref->constraints();
+	virtual const std::vector<IModelConstraint *> &getConstraints() const override {
+		return m_ref->getConstraints();
 	}
 
-	virtual void addConstraint(IModelConstraint *c) override {
-		m_ref->addConstraint(c);
+	virtual void addConstraint(
+        IModelConstraint        *c,
+        bool                    owned) override {
+		m_ref->addConstraint(c, owned);
 	}
 
-	virtual const std::vector<IModelFieldUP> &fields() const override {
-		return m_ref->fields();
+	virtual const std::vector<IModelField *> &getFields() const override {
+		return m_ref->getFields();
 	}
 
-	virtual void addField(IModelField *field) override {
-		m_ref->addField(field);
+	virtual void addField(
+        IModelField             *field,
+        bool                    owned) override {
+		m_ref->addField(field, owned);
 	}
 
 	virtual IModelField *getField(int32_t idx) override {

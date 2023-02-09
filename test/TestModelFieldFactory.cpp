@@ -1,43 +1,41 @@
 
 #include "TestModelFieldFactory.h"
-#include "vsc/dm/impl/TaskBuildModelField.h"
-#include "Context.h"
 #include "vsc/dm/impl/ModelBuildContext.h"
+#include "vsc/dm/ITypeExprFieldRef.h"
 
 namespace vsc {
 namespace dm {
 
 TEST_F(TestModelFieldFactory, smoke) {
-    Context ctxt;
-    IDataTypeStruct *my_t = ctxt.mkDataTypeStruct("my_t");
-    IDataTypeInt *ui8_t = ctxt.mkDataTypeInt(false, 8);
-    ctxt.addDataTypeInt(ui8_t);
+    IDataTypeStruct *my_t = m_ctxt->mkDataTypeStruct("my_t");
+    IDataTypeInt *ui8_t = m_ctxt->mkDataTypeInt(false, 8);
+    m_ctxt->addDataTypeInt(ui8_t);
 
-    my_t->addField(ctxt.mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0));
-    my_t->addField(ctxt.mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0));
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
 
-    ITypeConstraintBlock *c = ctxt.mkTypeConstraintBlock("ab_c");
-    c->addConstraint(ctxt.mkTypeConstraintExpr(
-        ctxt.mkTypeExprBin(
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 0}}), // a
+    ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
+    c->addConstraint(m_ctxt->mkTypeConstraintExpr(
+        m_ctxt->mkTypeExprBin(
+            m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 0), // a
             BinOp::Lt,
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 1}})  // b
-        )));
-    my_t->addConstraint(c);
+            m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 1)  // b
+        )), true);
+    my_t->addConstraint(c, true);
 
-    ctxt.addDataTypeStruct(my_t);
+    m_ctxt->addDataTypeStruct(my_t);
 
-    ModelBuildContext build_ctxt(&ctxt);
+    ModelBuildContext build_ctxt(m_ctxt.get());
 
-    IModelFieldUP field(TaskBuildModelField(&build_ctxt).build(my_t, "abc"));
+    IModelFieldUP field(my_t->mkRootField(&build_ctxt, "abc", false));
 
-    ASSERT_EQ(field->fields().size(), 2);
+    ASSERT_EQ(field->getFields().size(), 2);
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
 #ifdef UNMDEFINED
-    IRandStateUP state(ctxt.mkRandState("0"));
-    ICompoundSolverUP solver(ctxt.mkCompoundSolver());
+    IRandStateUP state(m_ctxt->mkRandState("0"));
+    ICompoundSolverUP solver(m_ctxt->mkCompoundSolver());
 
     for (uint32_t i=0; i<10; i++) {
         ASSERT_TRUE(solver->solve(
@@ -54,42 +52,41 @@ TEST_F(TestModelFieldFactory, smoke) {
 }
 
 TEST_F(TestModelFieldFactory, struct_type_subfields) {
-    Context ctxt;
-    IDataTypeStruct *my_t = ctxt.mkDataTypeStruct("my_t");
-    IDataTypeInt *ui8_t = ctxt.mkDataTypeInt(false, 8);
-    ctxt.addDataTypeInt(ui8_t);
+    IDataTypeStruct *my_t = m_ctxt->mkDataTypeStruct("my_t");
+    IDataTypeInt *ui8_t = m_ctxt->mkDataTypeInt(false, 8);
+    m_ctxt->addDataTypeInt(ui8_t);
 
 
-    IDataTypeStruct *my_subfield_t = ctxt.mkDataTypeStruct("my_subfield_t");
-    my_subfield_t->addField(ctxt.mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0));
-    my_subfield_t->addField(ctxt.mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0));
+    IDataTypeStruct *my_subfield_t = m_ctxt->mkDataTypeStruct("my_subfield_t");
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
 
-    ITypeConstraintBlock *c = ctxt.mkTypeConstraintBlock("ab_c");
-    c->addConstraint(ctxt.mkTypeConstraintExpr(
-        ctxt.mkTypeExprBin(
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 0}}), // a
+    ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
+    c->addConstraint(m_ctxt->mkTypeConstraintExpr(
+        m_ctxt->mkTypeExprBin(
+            m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 0), // a
             BinOp::Lt,
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 1}})  // b
-        )));
-    my_subfield_t->addConstraint(c);
+            m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 1)  // b
+        )), true);
+    my_subfield_t->addConstraint(c, true);
 
-    ctxt.addDataTypeStruct(my_subfield_t);
+    m_ctxt->addDataTypeStruct(my_subfield_t);
 
-    my_t->addField(ctxt.mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0));
-    my_t->addField(ctxt.mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0));
-    ctxt.addDataTypeStruct(my_t);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
+    m_ctxt->addDataTypeStruct(my_t);
 
-    ModelBuildContext build_ctxt(&ctxt);
+    ModelBuildContext build_ctxt(m_ctxt.get());
 
-    IModelFieldUP field(TaskBuildModelField(&build_ctxt).build(my_t, "abc"));
+    IModelFieldUP field(my_t->mkRootField(&build_ctxt, "abc", false));
 
-    ASSERT_EQ(field->fields().size(), 2);
+    ASSERT_EQ(field->getFields().size(), 2);
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
 #ifdef UNDEFINED
-    IRandStateUP state(ctxt.mkRandState("0"));
-    ICompoundSolverUP solver(ctxt.mkCompoundSolver());
+    IRandStateUP state(m_ctxt->mkRandState("0"));
+    ICompoundSolverUP solver(m_ctxt->mkCompoundSolver());
 
     for (uint32_t i=0; i<10; i++) {
         ASSERT_TRUE(solver->solve(
@@ -114,55 +111,57 @@ TEST_F(TestModelFieldFactory, struct_type_subfields) {
 }
 
 TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
-    Context ctxt;
-    IDataTypeStruct *my_t = ctxt.mkDataTypeStruct("my_t");
-    IDataTypeInt *ui8_t = ctxt.mkDataTypeInt(false, 8);
-    ctxt.addDataTypeInt(ui8_t);
+    IDataTypeStruct *my_t = m_ctxt->mkDataTypeStruct("my_t");
+    IDataTypeInt *ui8_t = m_ctxt->mkDataTypeInt(false, 8);
+    m_ctxt->addDataTypeInt(ui8_t);
 
 
-    IDataTypeStruct *my_subfield_t = ctxt.mkDataTypeStruct("my_subfield_t");
-    my_subfield_t->addField(ctxt.mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0));
-    my_subfield_t->addField(ctxt.mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0));
+    IDataTypeStruct *my_subfield_t = m_ctxt->mkDataTypeStruct("my_subfield_t");
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
 
-    ITypeConstraintBlock *c = ctxt.mkTypeConstraintBlock("ab_c");
-    c->addConstraint(ctxt.mkTypeConstraintExpr(
-        ctxt.mkTypeExprBin(
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 0}}), // a
+    ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
+    c->addConstraint(m_ctxt->mkTypeConstraintExpr(
+        m_ctxt->mkTypeExprBin(
+            m_ctxt->mkTypeExprFieldRef(
+                ITypeExprFieldRef::RootRefKind::TopDownScope, 0,
+                {0}), // a
             BinOp::Lt,
-            ctxt.mkTypeExprFieldRef({{TypeExprFieldRefElemKind::IdxOffset, 1}})  // b
-        )));
-    my_subfield_t->addConstraint(c);
+            m_ctxt->mkTypeExprFieldRef(
+                ITypeExprFieldRef::RootRefKind::TopDownScope, 0,
+                {1})  // b
+        )), true);
+    my_subfield_t->addConstraint(c, true);
 
-    ctxt.addDataTypeStruct(my_subfield_t);
+    m_ctxt->addDataTypeStruct(my_subfield_t);
 
-    my_t->addField(ctxt.mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0));
-    my_t->addField(ctxt.mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0));
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
 
-    my_t->addConstraint(ctxt.mkTypeConstraintExpr(
-        ctxt.mkTypeExprBin(
-            ctxt.mkTypeExprFieldRef({
-                {TypeExprFieldRefElemKind::IdxOffset, 0},
-                {TypeExprFieldRefElemKind::ActiveScope, 0} // a.a
-            }),
+    my_t->addConstraint(m_ctxt->mkTypeConstraintExpr(
+        m_ctxt->mkTypeExprBin(
+            m_ctxt->mkTypeExprFieldRef(
+                ITypeExprFieldRef::RootRefKind::TopDownScope, 0,
+                {0}),
             BinOp::Eq,
-            ctxt.mkTypeExprFieldRef({
-                {TypeExprFieldRefElemKind::IdxOffset, 1},
-                {TypeExprFieldRefElemKind::ActiveScope, 0} // b.a
-            }))));
+            m_ctxt->mkTypeExprFieldRef(
+                ITypeExprFieldRef::RootRefKind::TopDownScope, 0,
+                {1}
+            ))), true);
 
-    ctxt.addDataTypeStruct(my_t);
+    m_ctxt->addDataTypeStruct(my_t);
 
-    ModelBuildContext build_ctxt(&ctxt);
+    ModelBuildContext build_ctxt(m_ctxt.get());
 
-    IModelFieldUP field(TaskBuildModelField(&build_ctxt).build(my_t, "abc"));
+    IModelFieldUP field(my_t->mkRootField(&build_ctxt, "abc", false));
 
-    ASSERT_EQ(field->fields().size(), 2);
+    ASSERT_EQ(field->getFields().size(), 2);
     ASSERT_EQ(field->getField(0)->name(), "a");
     ASSERT_EQ(field->getField(1)->name(), "b");
 
 #ifdef UNDEFINED
-    IRandStateUP state(ctxt.mkRandState("0"));
-    ICompoundSolverUP solver(ctxt.mkCompoundSolver());
+    IRandStateUP state(m_ctxt->mkRandState("0"));
+    ICompoundSolverUP solver(m_ctxt->mkCompoundSolver());
 
     for (uint32_t i=0; i<10; i++) {
         ASSERT_TRUE(solver->solve(

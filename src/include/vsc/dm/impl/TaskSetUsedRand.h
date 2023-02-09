@@ -34,9 +34,9 @@ public:
 		}
 
 		// Once we go through a non-rand section, there's no point in continuing
-		if (used_rand && f->fields().size() > 0) {
+		if (used_rand && f->getFields().size() > 0) {
 			m_used_rand.push_back(used_rand);
-			for (auto fi=f->fields().begin(); fi!=f->fields().end(); fi++) {
+			for (auto fi=f->getFields().begin(); fi!=f->getFields().end(); fi++) {
 				(*fi)->accept(this);
 			}
 			m_used_rand.pop_back();

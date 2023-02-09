@@ -4,7 +4,8 @@
  *  Created on: Oct 6, 2021
  *      Author: mballance
  */
-
+#include "dmgr/FactoryExt.h"
+#include "vsc/dm/FactoryExt.h"
 #include "VscTestBase.h"
 
 namespace vsc {
@@ -20,6 +21,10 @@ VscTestBase::~VscTestBase() {
 }
 
 void VscTestBase::SetUp() {
+    dmgr::IFactory *dmgr_f = dmgr_getFactory();
+    m_factory = vsc_dm_getFactory();
+    m_factory->init(dmgr_f->getDebugMgr());
+    m_ctxt = IContextUP(m_factory->mkContext());
 }
 
 void VscTestBase::TearDown() {

@@ -66,6 +66,7 @@ endif()
 
 target_link_libraries(test_libvsc-dm 
 	vsc-dm
+    debug-mgr
 	libgtest 
 	libgmock
 	)

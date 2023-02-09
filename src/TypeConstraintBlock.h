@@ -21,9 +21,11 @@ public:
 		return m_name;
 	}
 
-	virtual void addConstraint(ITypeConstraint *c) override;
+	virtual void addConstraint(
+        ITypeConstraint         *c,
+        bool                    owned) override;
 
-	virtual const std::vector<ITypeConstraintUP> &constraints() const override {
+	virtual const std::vector<ITypeConstraint *> &getConstraints() const override {
 		return m_constraints;
 	}
 
@@ -31,7 +33,8 @@ public:
 
 private:
 	std::string							m_name;
-	std::vector<ITypeConstraintUP>		m_constraints;
+	std::vector<ITypeConstraint *>		m_constraints;
+    std::vector<IAcceptUP>              m_owned;
 };
 
 }

@@ -7,38 +7,36 @@ namespace vsc {
 namespace dm {
 
 TEST_F(TestTaskResolveModelExprVal, smoke) {
-    Context ctx;
+    IDataTypeInt *vsc_uint32_t = m_ctxt->mkDataTypeInt(false, 32);
+    m_ctxt->addDataTypeInt(vsc_uint32_t);
 
-    IDataTypeInt *vsc_uint32_t = ctx.mkDataTypeInt(false, 32);
-    ctx.addDataTypeInt(vsc_uint32_t);
-
-    IModelField *a = ctx.mkModelFieldRoot(vsc_uint32_t, "a");
+    IModelField *a = m_ctxt->mkModelFieldRoot(vsc_uint32_t, "a");
     a->val()->set_val_u(1);
 
-    IModelVal *val_1 = ctx.mkModelVal();
+    IModelVal *val_1 = m_ctxt->mkModelVal();
     val_1->set_val_u(1, 15);
-    IModelExprUP true_e(ctx.mkModelExprBin(
-        ctx.mkModelExprFieldRef(a),
+    IModelExprUP true_e(m_ctxt->mkModelExprBin(
+        m_ctxt->mkModelExprFieldRef(a),
         BinOp::Eq,
-        ctx.mkModelExprVal(val_1)
+        m_ctxt->mkModelExprVal(val_1)
     ));
 
-    IModelVal *val_7 = ctx.mkModelVal();
+    IModelVal *val_7 = m_ctxt->mkModelVal();
     val_7->set_val_u(7, 15);
-    IModelExprUP false_e(ctx.mkModelExprBin(
-        ctx.mkModelExprFieldRef(a),
+    IModelExprUP false_e(m_ctxt->mkModelExprBin(
+        m_ctxt->mkModelExprFieldRef(a),
         BinOp::Eq,
-        ctx.mkModelExprVal(val_7)
+        m_ctxt->mkModelExprVal(val_7)
     ));
 
-    IModelValUP res_1(ctx.mkModelVal());
-    TaskResolveModelExprVal(&ctx).eval(
+    IModelValUP res_1(m_ctxt->mkModelVal());
+    TaskResolveModelExprVal(m_ctxt.get()).eval(
         res_1.get(),
         true_e.get());
     ASSERT_EQ(res_1->val_u(), 1);
 
-    IModelValUP res_2(ctx.mkModelVal());
-    TaskResolveModelExprVal(&ctx).eval(
+    IModelValUP res_2(m_ctxt->mkModelVal());
+    TaskResolveModelExprVal(m_ctxt.get()).eval(
         res_2.get(),
         false_e.get());
     ASSERT_EQ(res_2->val_u(), 0);

@@ -102,7 +102,7 @@ void RefSelector::init(IContext *ctxt) {
                 ctxt->mkModelExprBin(
                     ctxt->mkModelExprFieldRef(m_selector.get()),
                     BinOp::Le,
-                    ctxt->mkModelExprVal(tmp_v2.get())))));
+                    ctxt->mkModelExprVal(tmp_v2.get())))), true);
     } else { 
         // Create a custom range based on the inc ranges
         std::vector<std::pair<int32_t, int32_t>> valid_range;
@@ -152,7 +152,7 @@ void RefSelector::init(IContext *ctxt) {
                         ctxt->mkModelExprBin(
                           ctxt->mkModelExprFieldRef(m_selector.get()),
                           BinOp::Le,
-                          ctxt->mkModelExprVal(tmp_v2.get())))));
+                          ctxt->mkModelExprVal(tmp_v2.get())))), true);
         } else {
             DEBUG("TODO: form rangelist constraint");
 

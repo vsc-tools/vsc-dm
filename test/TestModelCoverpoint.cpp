@@ -1,22 +1,20 @@
 
 #include "TestModelCoverpoint.h"
-#include "Context.h"
 
 namespace vsc {
 namespace dm {
 
 TEST_F(TestModelCoverpoint, single_cp_single_bin) {
-    Context ctx;
 
-    IModelCovergroupUP cg(ctx.mkModelCovergroup("cg"));
-    IModelValUP val(ctx.mkModelVal());
-    IModelExprVal *val_e = ctx.mkModelExprVal(val.get());
-    IModelCoverpoint *cp1 = ctx.mkModelCoverpoint(
+    IModelCovergroupUP cg(m_ctxt->mkModelCovergroup("cg"));
+    IModelValUP val(m_ctxt->mkModelVal());
+    IModelExprVal *val_e = m_ctxt->mkModelExprVal(val.get());
+    IModelCoverpoint *cp1 = m_ctxt->mkModelCoverpoint(
         "cp1",
-        ctx.mkModelCoverpointTargetExpr(val_e, 32),
+        m_ctxt->mkModelCoverpointTargetExpr(val_e, 32),
         0);
     val->set_val_u(10, 32);
-    cp1->addBin(ctx.mkModelCoverBinSingleVal("b", ModelCoverBinType::Bins, val.get()));
+    cp1->addBin(m_ctxt->mkModelCoverBinSingleVal("b", ModelCoverBinType::Bins, val.get()));
     cg->addCoverpoint(cp1);
 
     cg->finalize();

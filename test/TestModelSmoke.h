@@ -6,12 +6,12 @@
  */
 
 #pragma once
-#include "gtest/gtest.h"
+#include "VscTestBase.h"
 
 namespace vsc {
 namespace dm {
 
-class TestModelSmoke : public ::testing::Test {
+class TestModelSmoke : public VscTestBase {
 public:
 	TestModelSmoke();
 

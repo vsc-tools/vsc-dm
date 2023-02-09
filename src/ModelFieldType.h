@@ -3,6 +3,21 @@
  *
  *  Created on: Sep 26, 2021
  *      Author: mballance
+ * 
+ * Copyright 2019-2023 Matthew Ballance and contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
  */
 
 #pragma once
@@ -37,17 +52,21 @@ public:
 		return m_type;
 	}
 
-	virtual const std::vector<IModelConstraintUP> &constraints() const override {
+	virtual const std::vector<IModelConstraint *> &getConstraints() const override {
 		return m_constraints;
 	}
 
-	virtual void addConstraint(IModelConstraint *c) override;
+	virtual void addConstraint(
+        IModelConstraint        *c,
+        bool                    owned) override;
 
-	virtual const std::vector<IModelFieldUP> &fields() const override {
+	virtual const std::vector<IModelField *> &getFields() const override {
 		return m_fields;
 	}
 
-	virtual void addField(IModelField *field) override;
+	virtual void addField(
+        IModelField             *field,
+        bool                    owned) override;
 
 	virtual IModelField *getField(int32_t idx) override;
 
@@ -90,8 +109,9 @@ protected:
 	// Typically only really used for scalar fields
 	ModelVal						m_val;
 
-	std::vector<IModelFieldUP>		m_fields;
-	std::vector<IModelConstraintUP>	m_constraints;
+	std::vector<IModelField *>		m_fields;
+	std::vector<IModelConstraint *>	m_constraints;
+    std::vector<IAcceptUP>          m_owned;
 	ModelFieldFlag					m_flags;
 	IModelFieldDataUP				m_field_data;
 

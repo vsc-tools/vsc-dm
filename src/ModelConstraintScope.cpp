@@ -33,17 +33,14 @@ ModelConstraintScope::~ModelConstraintScope() {
 	// TODO Auto-generated destructor stub
 }
 
-void ModelConstraintScope::addConstraint(IModelConstraint *c) {
+void ModelConstraintScope::addConstraint(
+    IModelConstraint    *c,
+    bool                owned) {
 	c->setParent(this);
-	m_constraints.push_back(IModelConstraintUP(c));
-}
-
-IModelConstraint *ModelConstraintScope::swapConstraint(
-		uint32_t			idx,
-		IModelConstraint	*c) {
-	IModelConstraint *ret = m_constraints.at(idx).release();
-	m_constraints.at(idx) = IModelConstraintUP(c);
-	return ret;
+	m_constraints.push_back(c);
+    if (owned) {
+        m_owned.push_back(IAcceptUP(c));
+    }
 }
 
 }
