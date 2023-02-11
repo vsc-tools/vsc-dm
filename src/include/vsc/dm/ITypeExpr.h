@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeExpr;
-using ITypeExprUP=std::unique_ptr<ITypeExpr>;
+using ITypeExprUP=UP<ITypeExpr>;
 class ITypeExpr : public IAccept {
 public:
 

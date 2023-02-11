@@ -472,15 +472,26 @@ ITypeConstraintBlock *Context::mkTypeConstraintBlock(const std::string &name) {
 	return new TypeConstraintBlock(name);
 }
 
-ITypeConstraintExpr *Context::mkTypeConstraintExpr(ITypeExpr *expr) {
-	return new TypeConstraintExpr(expr);
+ITypeConstraintExpr *Context::mkTypeConstraintExpr(
+    ITypeExpr       *expr,
+    bool            owned) {
+	return new TypeConstraintExpr(expr, owned);
 }
 
 ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
 			ITypeConstraint	*true_c,
-			ITypeConstraint	*false_c) {
-	return new TypeConstraintIfElse(cond, true_c, false_c);
+			ITypeConstraint	*false_c,
+            bool            cond_owned,
+            bool            true_owned,
+            bool            false_owned) {
+	return new TypeConstraintIfElse(
+        cond, 
+        cond_owned,
+        true_c, 
+        true_owned,
+        false_c,
+        false_owned);
 }
 
 ITypeConstraintImplies *Context::mkTypeConstraintImplies(

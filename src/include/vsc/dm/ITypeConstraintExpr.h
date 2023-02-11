@@ -14,7 +14,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeConstraintExpr;
-using ITypeConstraintExprUP=std::unique_ptr<ITypeConstraintExpr>;
+using ITypeConstraintExprUP=UP<ITypeConstraintExpr>;
 class ITypeConstraintExpr : public ITypeConstraint {
 public:
 

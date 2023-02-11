@@ -20,6 +20,7 @@
  */
 #include "Context.h"
 #include "Factory.h"
+#include "RewriteContext.h"
 #include "vsc/dm/FactoryExt.h"
 
 
@@ -45,7 +46,12 @@ dmgr::IDebugMgr *Factory::getDebugMgr() const {
 
 IContext *Factory::mkContext() {
     return new Context(m_dbg_mgr);
+}
 
+IRewriteContext *Factory::mkRewriteContext(
+    IContext                            *ctx,
+    const std::vector<IAccept *>        &roots) {
+    return new RewriteContext(ctx, roots);
 }
 
 IFactory *Factory::inst() {

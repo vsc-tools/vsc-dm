@@ -22,6 +22,7 @@
 
 #pragma once
 #include "vsc/dm/IContext.h"
+#include "vsc/dm/impl/UP.h"
 
 namespace vsc {
 namespace dm {
@@ -29,12 +30,10 @@ namespace dm {
 class ContextDelegator : public virtual vsc::dm::IContext {
 public:
 
-	ContextDelegator(IContext *ctxt) : m_ctxt(ctxt) { }
+	ContextDelegator(IContext *ctxt, bool owned=true) : 
+        m_ctxt(ctxt, owned) { }
 
 	virtual ~ContextDelegator() {
-		if (m_ctxt) {
-			delete m_ctxt;
-		}
 	}
 
 	virtual IModelField *buildModelField(
@@ -324,15 +323,26 @@ public:
 		return m_ctxt->mkTypeConstraintBlock(name);
 	}
 
-	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *e) override {
-		return m_ctxt->mkTypeConstraintExpr(e);
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(
+            ITypeExpr       *e,
+            bool            owned) override {
+		return m_ctxt->mkTypeConstraintExpr(e, owned);
 	}
 
 	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
 			ITypeConstraint	*true_c,
-			ITypeConstraint	*false_c) override {
-		return m_ctxt->mkTypeConstraintIfElse(cond, true_c, false_c);
+			ITypeConstraint	*false_c,
+            bool            cond_owned,
+            bool            true_owned,
+            bool            false_owned) override {
+		return m_ctxt->mkTypeConstraintIfElse(
+            cond, 
+            true_c, 
+            false_c,
+            cond_owned,
+            true_owned,
+            true_owned);
 	}
 
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
@@ -421,7 +431,7 @@ public:
 	}
 
 protected:
-	IContext				*m_ctxt;
+	UP<IContext>				m_ctxt;
 
 };
 

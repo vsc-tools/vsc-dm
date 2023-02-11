@@ -14,7 +14,9 @@ namespace dm {
 
 class TypeConstraintExpr : public ITypeConstraintExpr {
 public:
-	TypeConstraintExpr(ITypeExpr *expr);
+	TypeConstraintExpr(
+        ITypeExpr       *expr,
+        bool            owned);
 
 	virtual ~TypeConstraintExpr();
 

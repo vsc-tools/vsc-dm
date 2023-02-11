@@ -274,12 +274,17 @@ public:
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
 
-	virtual ITypeConstraintExpr *mkTypeConstraintExpr(ITypeExpr *) = 0;
+	virtual ITypeConstraintExpr *mkTypeConstraintExpr(
+            ITypeExpr       *expr,
+            bool            owned=true) = 0;
 
 	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
 			ITypeConstraint	*true_c,
-			ITypeConstraint	*false_c) = 0;
+			ITypeConstraint	*false_c,
+            bool            cond_owned=true,
+            bool            true_owned=true,
+            bool            false_owned=true) = 0;
 
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
 			ITypeExpr		*cond,

@@ -30,5 +30,10 @@ void VscTestBase::SetUp() {
 void VscTestBase::TearDown() {
 }
 
+void VscTestBase::enableDebug(bool en) {
+    dmgr::IFactory *dmgr_f = dmgr_getFactory();
+    dmgr_f->getDebugMgr()->enable(en);
+}
+
 }
 } /* namespace vsc */

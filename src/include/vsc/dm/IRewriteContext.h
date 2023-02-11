@@ -19,12 +19,14 @@
  *     Author: 
  */
 #pragma once
+#include "vsc/dm/impl/UP.h"
 #include "vsc/dm/IContext.h"
 
 namespace vsc {
 namespace dm {
 
-
+class IRewriteContext;
+using IRewriteContextUP=UP<IRewriteContext>;
 /**
  * @brief Maintains a stack of contexts, with support for 
  *        replacing root elements
@@ -35,11 +37,17 @@ public:
 
     virtual ~IRewriteContext() { }
 
-    virtual void pushContext() override;
+    virtual const std::vector<IAcceptUP> &getRoots() const = 0;
 
-    virtual void popContext() override;
+    virtual void setRoot(int32_t idx, IAccept *r, bool owned) = 0;
 
-    virtual int32_t contextDepth() override;
+    virtual void addRoot(IAccept *r, bool owned) = 0;
+
+    virtual void pushContext() = 0;
+
+    virtual void popContext() = 0;
+
+    virtual int32_t contextDepth() = 0;
 
 };
 

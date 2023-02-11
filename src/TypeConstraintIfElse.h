@@ -10,8 +10,11 @@ public:
 
     TypeConstraintIfElse(
         ITypeExpr           *cond,
+        bool                cond_owned,
         ITypeConstraint     *true_c,
-        ITypeConstraint     *false_c
+        bool                true_owned,
+        ITypeConstraint     *false_c,
+        bool                false_owned
     );
 
     virtual ~TypeConstraintIfElse();

@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeConstraint;
-using ITypeConstraintUP=std::unique_ptr<ITypeConstraint>;
+using ITypeConstraintUP=UP<ITypeConstraint>;
 class ITypeConstraint : public IAccept {
 public:
 	virtual ~ITypeConstraint() { }

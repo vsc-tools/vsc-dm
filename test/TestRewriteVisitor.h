@@ -1,5 +1,5 @@
 /**
- * Factory.h
+ * TestRewriteVisitor.h
  *
  * Copyright 2022 Matthew Ballance and Contributors
  *
@@ -19,36 +19,22 @@
  *     Author: 
  */
 #pragma once
-#include <memory>
-#include "vsc/dm/IFactory.h"
+#include "VscTestBase.h"
 
 namespace vsc {
 namespace dm {
 
-class Factory;
-using FactoryUP=std::unique_ptr<Factory>;
-class Factory : public virtual IFactory {
+
+
+class TestRewriteVisitor : public VscTestBase {
 public:
-    Factory();
+    TestRewriteVisitor();
 
-    virtual ~Factory();
+    virtual ~TestRewriteVisitor();
 
-    virtual void init(dmgr::IDebugMgr *dm) override;
-
-    virtual dmgr::IDebugMgr *getDebugMgr() const override;
-
-    virtual IContext *mkContext() override;
-
-    virtual IRewriteContext *mkRewriteContext(
-        IContext                        *ctx,
-        const std::vector<IAccept *>    &roots) override;
-
-    static IFactory *inst();
-
-private:
-    static FactoryUP            m_inst;
-    dmgr::IDebugMgr             *m_dbg_mgr;
 };
 
 }
 }
+
+

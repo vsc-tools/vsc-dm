@@ -28,7 +28,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeConstraintScope;
-using ITypeConstraintScopeUP=std::unique_ptr<ITypeConstraintScope>;
+using ITypeConstraintScopeUP=UP<ITypeConstraintScope>;
 class ITypeConstraintScope : public ITypeConstraint {
 public:
 

@@ -20,7 +20,7 @@ TEST_F(TestModelFieldFactory, smoke) {
             m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 0), // a
             BinOp::Lt,
             m_ctxt->mkTypeExprFieldRef(ITypeExprFieldRef::RootRefKind::TopDownScope, 1)  // b
-        )), true);
+        ), true), true);
     my_t->addConstraint(c, true);
 
     m_ctxt->addDataTypeStruct(my_t);

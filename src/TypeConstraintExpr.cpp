@@ -10,7 +10,9 @@
 namespace vsc {
 namespace dm {
 
-TypeConstraintExpr::TypeConstraintExpr(ITypeExpr *expr) : m_expr(expr) {
+TypeConstraintExpr::TypeConstraintExpr(
+    ITypeExpr       *expr,
+    bool            owned) : m_expr(expr, owned) {
 	// TODO Auto-generated constructor stub
 
 }

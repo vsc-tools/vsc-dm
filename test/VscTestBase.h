@@ -23,6 +23,8 @@ public:
 
 	virtual void TearDown() override;
 
+    void enableDebug(bool en);
+
 protected:
     IFactory                    *m_factory;
     IContextUP                  m_ctxt;

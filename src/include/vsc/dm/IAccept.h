@@ -22,13 +22,14 @@
 
 #pragma once
 #include <memory>
+#include "vsc/dm/impl/UP.h"
 #include "vsc/dm/IVisitor.h"
 
 namespace vsc {
 namespace dm {
 
 class IAccept;
-using IAcceptUP=std::unique_ptr<IAccept>;
+using IAcceptUP=UP<IAccept>;
 class IAccept {
 public:
 	virtual ~IAccept() { }

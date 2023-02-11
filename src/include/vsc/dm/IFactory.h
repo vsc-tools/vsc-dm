@@ -21,6 +21,7 @@
 #pragma once
 #include "dmgr/IDebugMgr.h"
 #include "vsc/dm/IContext.h"
+#include "vsc/dm/IRewriteContext.h"
 
 namespace vsc {
 namespace dm {
@@ -35,6 +36,10 @@ public:
     virtual dmgr::IDebugMgr *getDebugMgr() const = 0;
 
     virtual IContext *mkContext() = 0;
+
+    virtual IRewriteContext *mkRewriteContext(
+        IContext                        *ctx,
+        const std::vector<IAccept *>    &roots) = 0;
 
 };
 
