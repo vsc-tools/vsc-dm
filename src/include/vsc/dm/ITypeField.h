@@ -35,7 +35,7 @@ namespace dm {
 class IDataTypeStruct;
 
 class ITypeField;
-using ITypeFieldUP=std::unique_ptr<ITypeField>;
+using ITypeFieldUP=UP<ITypeField>;
 class ITypeField : public IAccept {
 public:
 

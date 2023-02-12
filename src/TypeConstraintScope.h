@@ -21,15 +21,14 @@ public:
         ITypeConstraint         *c,
         bool                    owned) override;
 
-	virtual const std::vector<ITypeConstraint *> &getConstraints() const override {
+	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override {
 		return m_constraints;
 	}
 
 	virtual void accept(IVisitor *v) override { v->visitTypeConstraintScope(this); }
 
 private:
-	std::vector<ITypeConstraint *>			m_constraints;
-    std::vector<IAcceptUP>                  m_owned;
+	std::vector<ITypeConstraintUP>			m_constraints;
 };
 
 }

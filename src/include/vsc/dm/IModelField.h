@@ -61,7 +61,7 @@ static inline ModelFieldFlag operator ~ (const ModelFieldFlag lhs) {
 }
 
 class IModelField;
-using IModelFieldUP=std::unique_ptr<IModelField>;
+using IModelFieldUP=UP<IModelField>;
 class IModelField : public virtual IAccept {
 public:
 
@@ -85,17 +85,17 @@ public:
 
 	virtual void setParent(IModelField *p) = 0;
 
-	virtual const std::vector<IModelConstraint *> &getConstraints() const = 0;
+	virtual const std::vector<IModelConstraintUP> &getConstraints() const = 0;
 
 	virtual void addConstraint(
         IModelConstraint    *c,
-        bool                owned) = 0;
+        bool                owned=true) = 0;
 
-	virtual const std::vector<IModelField *> &getFields() const = 0;
+	virtual const std::vector<IModelFieldUP> &getFields() const = 0;
 
 	virtual void addField(
         IModelField     *field,
-        bool            owned) = 0;
+        bool            owned=true) = 0;
 
 	virtual IModelField *getField(int32_t idx) = 0;
 

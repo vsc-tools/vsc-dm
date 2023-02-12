@@ -41,13 +41,10 @@ void DataTypeStruct::addField(
     ITypeField      *f,
     bool            owned) {
 	f->setIndex(m_fields.size());
-	m_fields.push_back(f);
-    if (owned) {
-        m_owned.push_back(IAcceptUP(f));
-    }
+	m_fields.push_back(ITypeFieldUP(f, owned));
 }
 
-const std::vector<ITypeField *> &DataTypeStruct::getFields() const {
+const std::vector<ITypeFieldUP> &DataTypeStruct::getFields() const {
 	return m_fields;
 }
 
@@ -55,20 +52,17 @@ ITypeField *DataTypeStruct::getField(int32_t idx) {
 	if (idx < 0 || idx >= m_fields.size()) {
 		return 0;
 	} else {
-		return m_fields.at(idx);
+		return m_fields.at(idx).get();
 	}
 }
 
 void DataTypeStruct::addConstraint(
     ITypeConstraint     *c,
     bool                owned) {
-	m_constraints.push_back(c);
-    if (owned) {
-        m_owned.push_back(IAcceptUP(c));
-    }
+	m_constraints.push_back(ITypeConstraintUP(c, owned));
 }
 
-const std::vector<ITypeConstraint *> &DataTypeStruct::getConstraints() const {
+const std::vector<ITypeConstraintUP> &DataTypeStruct::getConstraints() const {
 	return m_constraints;
 }
 
@@ -87,17 +81,17 @@ IModelField *DataTypeStruct::mkRootField(
 
 		// Need to build sub-fields and constraints
 
-		for (std::vector<ITypeField *>::const_iterator
+		for (std::vector<ITypeFieldUP>::const_iterator
 			it=getFields().begin();
 			it!=getFields().end(); it++) {
 			ret->addField((*it)->mkModelField(ctxt), true);
 		}
 	
-		for (std::vector<ITypeConstraint *>::const_iterator
+		for (std::vector<ITypeConstraintUP>::const_iterator
 			it=getConstraints().begin();
 			it!=getConstraints().end(); it++) {
 			// TODO:
-			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(*it), true);
+			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(it->get()), true);
 		}
 
         ctxt->popTopDownScope();
@@ -122,17 +116,17 @@ IModelField *DataTypeStruct::mkTypeField(
 
         ctxt->pushTopDownScope(ret);
 
-		for (std::vector<ITypeField *>::const_iterator
+		for (std::vector<ITypeFieldUP>::const_iterator
 			it=getFields().begin();
 			it!=getFields().end(); it++) {
 			ret->addField((*it)->mkModelField(ctxt), true);
 		}
 	
-		for (std::vector<ITypeConstraint *>::const_iterator
+		for (std::vector<ITypeConstraintUP>::const_iterator
 			it=getConstraints().begin();
 			it!=getConstraints().end(); it++) {
 			// TODO:
-			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(*it), true);
+			ret->addConstraint(TaskBuildModelConstraint<>(ctxt).build(it->get()), true);
 		}
 
         ctxt->popTopDownScope();

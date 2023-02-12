@@ -48,7 +48,7 @@ public:
 
 	virtual void setParent(IModelField *p) override { m_parent = p; }
 
-	virtual const std::vector<IModelConstraint *> &getConstraints() const override {
+	virtual const std::vector<IModelConstraintUP> &getConstraints() const override {
 		return m_constraints;
 	}
 
@@ -56,7 +56,7 @@ public:
         IModelConstraint        *c,
         bool                    owned) override;
 
-	virtual const std::vector<IModelField *> &getFields() const override {
+	virtual const std::vector<IModelFieldUP> &getFields() const override {
 		return m_fields;
 	}
 
@@ -102,8 +102,8 @@ protected:
 	// Typically only really used for scalar fields
 	ModelVal						m_val;
 
-	std::vector<IModelField *>		m_fields;
-	std::vector<IModelConstraint *>	m_constraints;
+	std::vector<IModelFieldUP>		m_fields;
+	std::vector<IModelConstraintUP>	m_constraints;
     std::vector<IAcceptUP>          m_owned;
 	ModelFieldFlag					m_flags;
 	IModelFieldDataUP				m_data;

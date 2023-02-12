@@ -76,7 +76,7 @@ void TaskModelFieldBuilder::visitTypeConstraintBlock(ITypeConstraintBlock *c) {
 	IModelConstraintBlock *cm = m_ctxt->mkModelConstraintBlock(c->name());
 
 	m_constraint_s.push_back(cm);
-	for (std::vector<ITypeConstraint *>::const_iterator
+	for (std::vector<ITypeConstraintUP>::const_iterator
         it=c->getConstraints().begin(); 
         it!=c->getConstraints().end(); it++) {
 		(*it)->accept(this);

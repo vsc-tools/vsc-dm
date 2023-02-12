@@ -23,6 +23,7 @@ template <class T> struct UPD {
  */
 template <class T> class UP : public std::unique_ptr<T,UPD<T>> {
 public:
+    UP() : std::unique_ptr<T,UPD<T>>() {}
     UP(T *p, bool owned=true) : std::unique_ptr<T,UPD<T>>(p, UPD<T>(owned)) {}
 
 };

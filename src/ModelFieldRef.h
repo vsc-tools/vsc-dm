@@ -37,7 +37,7 @@ public:
 
 	virtual void setParent(IModelField *p) override { m_parent = p; }
 
-	virtual const std::vector<IModelConstraint *> &getConstraints() const override {
+	virtual const std::vector<IModelConstraintUP> &getConstraints() const override {
 		return m_ref->getConstraints();
 	}
 
@@ -47,7 +47,7 @@ public:
 		m_ref->addConstraint(c, owned);
 	}
 
-	virtual const std::vector<IModelField *> &getFields() const override {
+	virtual const std::vector<IModelFieldUP> &getFields() const override {
 		return m_ref->getFields();
 	}
 

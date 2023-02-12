@@ -38,7 +38,7 @@ public:
         ITypeConstraint         *c,
         bool                    owned) = 0;
 
-	virtual const std::vector<ITypeConstraint *> &getConstraints() const = 0;
+	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
 
 };
 

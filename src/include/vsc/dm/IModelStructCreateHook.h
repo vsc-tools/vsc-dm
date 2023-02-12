@@ -6,7 +6,7 @@
  */
 
 #pragma once
-#include <memory>
+#include "vsc/dm/impl/UP.h"
 
 namespace vsc {
 namespace dm {
@@ -14,7 +14,7 @@ namespace dm {
 class IModelField;
 
 class IModelStructCreateHook;
-using IModelStructCreateHookUP=std::unique_ptr<IModelStructCreateHook>;
+using IModelStructCreateHookUP=UP<IModelStructCreateHook>;
 class IModelStructCreateHook {
 public:
 

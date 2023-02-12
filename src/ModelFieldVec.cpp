@@ -48,7 +48,7 @@ void ModelFieldVec::push_back(IModelField *f) {
 
 IModelField *ModelFieldVec::at(uint32_t idx) {
 	if (idx < m_fields.size()) {
-		return m_fields.at(idx);
+		return m_fields.at(idx).get();
 	} else {
 		return 0;
 	}
