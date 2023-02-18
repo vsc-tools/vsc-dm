@@ -16,7 +16,9 @@ public:
 	TypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
-			ITypeExpr		*rhs);
+			ITypeExpr		*rhs,
+            bool            lhs_owned=true,
+            bool            rhs_owned=true);
 
 	virtual ~TypeExprBin();
 

@@ -65,7 +65,7 @@ void ModelFieldType::addField(
 
 IModelField *ModelFieldType::getField(int32_t idx) {
 	if (idx >= 0 && idx < m_fields.size()) {
-		return m_fields.at(idx);
+		return m_fields.at(idx).get();
 	} else {
 		return 0;
 	}

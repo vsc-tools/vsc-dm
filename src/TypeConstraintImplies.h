@@ -9,7 +9,9 @@ class TypeConstraintImplies : public virtual ITypeConstraintImplies {
 public:
     TypeConstraintImplies(
         ITypeExpr       *cond,
-        ITypeConstraint *body);
+        ITypeConstraint *body,
+        bool            cond_owned,
+        bool            body_owned);
 
     virtual ~TypeConstraintImplies();
 

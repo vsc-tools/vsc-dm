@@ -160,8 +160,10 @@ IModelConstraintIfElse *Context::mkModelConstraintIfElse(
 
 IModelConstraintImplies *Context::mkModelConstraintImplies(
 			IModelExpr			*cond,
-			IModelConstraint	*body) {
-	return new ModelConstraintImplies(cond, body);
+			IModelConstraint	*body,
+            bool                cond_owned,
+            bool                body_owned) {
+	return new ModelConstraintImplies(cond, body, cond_owned, body_owned);
 }
 
 IModelConstraintRef *Context::mkModelConstraintRef(
@@ -496,8 +498,10 @@ ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
 
 ITypeConstraintImplies *Context::mkTypeConstraintImplies(
 			ITypeExpr 		*cond,
-			ITypeConstraint	*body) {
-	return new TypeConstraintImplies(cond, body);
+			ITypeConstraint	*body,
+            bool            cond_owned,
+            bool            body_owned) {
+	return new TypeConstraintImplies(cond, body, cond_owned, body_owned);
 }
 
 ITypeConstraintScope *Context::mkTypeConstraintScope() {
@@ -514,13 +518,13 @@ ITypeConstraintUnique *Context::mkTypeConstraintUnique(
 	return new TypeConstraintUnique(exprs);
 }
 
-
-
 ITypeExprBin *Context::mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
-			ITypeExpr		*rhs) {
-	return new TypeExprBin(lhs, op, rhs);
+			ITypeExpr		*rhs,
+            bool            lhs_owned,
+            bool            rhs_owned) {
+	return new TypeExprBin(lhs, op, rhs, lhs_owned, rhs_owned);
 }
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef(

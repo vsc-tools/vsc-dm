@@ -233,12 +233,12 @@ public:
 		if (f->getDataType()) {
 			f->getDataType()->accept(m_this);
 		}
-		for (std::vector<IModelField *>::const_iterator 
+		for (std::vector<IModelFieldUP>::const_iterator 
                 it=f->getFields().begin();
 				it!=f->getFields().end(); it++) {
 			(*it)->accept(m_this);
 		}
-		for (std::vector<IModelConstraint *>::const_iterator
+		for (std::vector<IModelConstraintUP>::const_iterator
                 it=f->getConstraints().begin();
 				it!=f->getConstraints().end(); it++) {
 			(*it)->accept(m_this);
@@ -298,7 +298,7 @@ public:
 	}
 
 	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
-		for (std::vector<ITypeConstraint *>::const_iterator
+		for (std::vector<ITypeConstraintUP>::const_iterator
             it=c->getConstraints().begin(); 
             it!=c->getConstraints().end(); it++) {
 			(*it)->accept(m_this);

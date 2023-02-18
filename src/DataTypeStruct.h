@@ -50,7 +50,7 @@ public:
         ITypeField      *f,
         bool            owned) override;
 
-	virtual const std::vector<ITypeField *> &getFields() const override;
+	virtual const std::vector<ITypeFieldUP> &getFields() const override;
 
 	virtual ITypeField *getField(int32_t idx) override;
 
@@ -58,14 +58,16 @@ public:
         ITypeConstraint     *c,
         bool                owned) override;
 
-	virtual const std::vector<ITypeConstraint *> &getConstraints() const override;
+	virtual const std::vector<ITypeConstraintUP> &getConstraints() const override;
 
 	virtual IModelStructCreateHook *getCreateHook() const override {
 		return m_create_hook.get();
 	}
 
-	virtual void setCreateHook(IModelStructCreateHook *hook) override {
-		m_create_hook = IModelStructCreateHookUP(hook);
+	virtual void setCreateHook(
+        IModelStructCreateHook      *hook,
+        bool                        owned) override {
+		m_create_hook = IModelStructCreateHookUP(hook, owned);
 	}
 
 	virtual IModelField *mkRootField(
@@ -81,9 +83,8 @@ public:
 
 private:
 	std::string							m_name;
-	std::vector<ITypeField *>			m_fields;
-	std::vector<IAcceptUP>			    m_owned;
-	std::vector<ITypeConstraint *>		m_constraints;
+	std::vector<ITypeFieldUP>			m_fields;
+	std::vector<ITypeConstraintUP>		m_constraints;
 	IModelStructCreateHookUP			m_create_hook;
 
 };

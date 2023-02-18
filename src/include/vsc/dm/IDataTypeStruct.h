@@ -43,9 +43,9 @@ public:
 
 	virtual void addField(
         ITypeField      *f,
-        bool            owned) = 0;
+        bool            owned=true) = 0;
 
-	virtual const std::vector<ITypeField *> &getFields() const = 0;
+	virtual const std::vector<ITypeFieldUP> &getFields() const = 0;
 
 	virtual ITypeField *getField(int32_t idx) = 0;
 
@@ -55,13 +55,15 @@ public:
 
 	virtual void addConstraint(
         ITypeConstraint     *c,
-        bool                owned) = 0;
+        bool                owned=true) = 0;
 
-	virtual const std::vector<ITypeConstraint *> &getConstraints() const = 0;
+	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
 
 	virtual IModelStructCreateHook *getCreateHook() const = 0;
 
-	virtual void setCreateHook(IModelStructCreateHook *hook) = 0;
+	virtual void setCreateHook(
+        IModelStructCreateHook *hook,
+        bool                    owned=true) = 0;
 
 };
 

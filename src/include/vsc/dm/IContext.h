@@ -139,7 +139,9 @@ public:
 
 	virtual IModelConstraintImplies *mkModelConstraintImplies(
 			IModelExpr			*cond,
-			IModelConstraint	*body) = 0;
+			IModelConstraint	*body,
+            bool                cond_owned=true,
+            bool                body_owned=true) = 0;
 
 	virtual IModelConstraintRef *mkModelConstraintRef(
 			IModelConstraint	*target) = 0;
@@ -270,7 +272,9 @@ public:
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
-			ITypeExpr		*rhs) = 0;
+			ITypeExpr		*rhs,
+            bool            lhs_owned=true,
+            bool            rhs_owned=true) = 0;
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
 
@@ -288,7 +292,9 @@ public:
 
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
 			ITypeExpr		*cond,
-			ITypeConstraint	*body) = 0;
+			ITypeConstraint	*body,
+            bool            cond_owned=true,
+            bool            body_owned=true) = 0;
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() = 0;
 

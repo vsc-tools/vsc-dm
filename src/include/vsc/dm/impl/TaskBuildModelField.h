@@ -147,14 +147,14 @@ public:
 			}
 #endif
 
-			for (std::vector<ITypeField *>::const_iterator
+			for (std::vector<ITypeFieldUP>::const_iterator
 				it=t->getFields().begin();
 				it!=t->getFields().end(); it++) {
 				(*it)->accept(m_this);
 			}
 		} else if (m_pass == 1) {
 			// Pass 1 builds out constraints, since fields are completely built
-			for (std::vector<ITypeConstraint *>::const_iterator
+			for (std::vector<ITypeConstraintUP>::const_iterator
 				it=t->getConstraints().begin();
 				it!=t->getConstraints().end(); it++) {
 				(*it)->accept(m_this);
@@ -169,7 +169,7 @@ public:
 			IModelConstraintBlock *cm = m_ctxt->ctxt()->mkModelConstraintBlock(c->name());
 
 			m_constraint_s.push_back(cm);
-			for (std::vector<ITypeConstraint *>::const_iterator
+			for (std::vector<ITypeConstraintUP>::const_iterator
                 it=c->getConstraints().begin(); 
                 it!=c->getConstraints().end(); it++) {
 				(*it)->accept(m_this);

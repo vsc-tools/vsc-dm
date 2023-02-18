@@ -13,7 +13,11 @@ namespace dm {
 TypeExprBin::TypeExprBin(
 		ITypeExpr			*lhs,
 		BinOp				op,
-		ITypeExpr			*rhs) : m_lhs(lhs), m_op(op), m_rhs(rhs) {
+		ITypeExpr			*rhs,
+        bool                lhs_owned,
+        bool                rhs_owned) : 
+        m_lhs(lhs, lhs_owned), m_op(op), 
+        m_rhs(rhs, rhs_owned) {
 
 }
 

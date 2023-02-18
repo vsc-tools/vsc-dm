@@ -6,7 +6,10 @@ namespace dm {
 
 TypeConstraintImplies::TypeConstraintImplies(
     ITypeExpr       *cond,
-    ITypeConstraint *body) : m_cond(cond), m_body(body) {
+    ITypeConstraint *body,
+    bool            cond_owned,
+    bool            body_owned) : 
+        m_cond(cond, cond_owned), m_body(body, body_owned) {
 
 }
 

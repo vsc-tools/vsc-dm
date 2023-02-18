@@ -18,7 +18,9 @@ class ModelConstraintImplies :
 public:
 	ModelConstraintImplies(
 			IModelExpr			*cond,
-			IModelConstraint	*body);
+			IModelConstraint	*body,
+            bool                cond_owned,
+            bool                body_owned);
 
 	virtual ~ModelConstraintImplies();
 

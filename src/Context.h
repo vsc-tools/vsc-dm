@@ -77,7 +77,9 @@ public:
 
 	virtual IModelConstraintImplies *mkModelConstraintImplies(
 			IModelExpr			*cond,
-			IModelConstraint	*body) override;
+			IModelConstraint	*body,
+            bool                cond_owned=true,
+            bool                body_owned=true) override;
 
 	virtual IModelConstraintScope *mkModelConstraintScope() override;
 
@@ -178,7 +180,9 @@ public:
 
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
 			ITypeExpr 		*cond,
-			ITypeConstraint	*body) override;
+			ITypeConstraint	*body,
+            bool            cond_owned,
+            bool            body_owned) override;
 			
 	virtual IModelConstraintRef *mkModelConstraintRef(
 			IModelConstraint	*target) override;
@@ -225,7 +229,9 @@ public:
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
-			ITypeExpr		*rhs) override;
+			ITypeExpr		*rhs,
+            bool            lhs_owned,
+            bool            rhs_owned) override;
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,

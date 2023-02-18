@@ -22,10 +22,7 @@ TypeConstraintBlock::~TypeConstraintBlock() {
 void TypeConstraintBlock::addConstraint(
     ITypeConstraint         *c,
     bool                    owned) {
-	m_constraints.push_back(c);
-    if (owned) {
-        m_owned.push_back(IAcceptUP(c));
-    }
+	m_constraints.push_back(ITypeConstraintUP(c, owned));
 }
 
 }

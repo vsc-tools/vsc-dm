@@ -57,7 +57,7 @@ public:
 		}
 
 		m_constraint_s.push_back(cm);
-		for (std::vector<ITypeConstraint *>::const_iterator
+		for (std::vector<ITypeConstraintUP>::const_iterator
             it=c->getConstraints().begin(); 
             it!=c->getConstraints().end(); it++) {
 			(*it)->accept(m_this);

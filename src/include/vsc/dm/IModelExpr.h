@@ -15,7 +15,7 @@ namespace vsc {
 namespace dm {
 
 class IModelExpr;
-using IModelExprUP=std::unique_ptr<IModelExpr>;
+using IModelExprUP=vsc::dm::UP<IModelExpr>;
 class IModelExpr : public IAccept {
 public:
 	virtual ~IModelExpr() { }

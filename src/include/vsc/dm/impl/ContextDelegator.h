@@ -133,7 +133,9 @@ public:
 
 	virtual IModelConstraintImplies *mkModelConstraintImplies(
 			IModelExpr			*cond,
-			IModelConstraint	*body) override {
+			IModelConstraint	*body,
+            bool                cond_owned=true,
+            bool                body_owned=true) override {
 		return m_ctxt->mkModelConstraintImplies(cond, body);
 	}
 
@@ -315,8 +317,10 @@ public:
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
-			ITypeExpr		*rhs) override {
-		return m_ctxt->mkTypeExprBin(lhs, op, rhs);
+			ITypeExpr		*rhs,
+            bool            lhs_owned=true,
+            bool            rhs_owned=true) override {
+		return m_ctxt->mkTypeExprBin(lhs, op, rhs, lhs_owned, rhs_owned);
 	}
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override {
@@ -347,8 +351,10 @@ public:
 
 	virtual ITypeConstraintImplies *mkTypeConstraintImplies(
 			ITypeExpr		*cond,
-			ITypeConstraint	*body) override {
-		return m_ctxt->mkTypeConstraintImplies(cond, body);
+			ITypeConstraint	*body,
+            bool            cond_owned=true,
+            bool            body_owned=true) override {
+		return m_ctxt->mkTypeConstraintImplies(cond, body, cond_owned, body_owned);
 	}
 
 	virtual ITypeConstraintScope *mkTypeConstraintScope() override {
