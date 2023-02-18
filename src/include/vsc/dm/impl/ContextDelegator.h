@@ -431,6 +431,9 @@ public:
 	}
 
 protected:
+    IContext *ctxt() const { return m_ctxt.get(); }
+
+protected:
 	UP<IContext>				m_ctxt;
 
 };

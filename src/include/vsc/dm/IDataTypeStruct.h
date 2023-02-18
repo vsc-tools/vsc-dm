@@ -33,7 +33,7 @@ namespace vsc {
 namespace dm {
 
 class IDataTypeStruct;
-using IDataTypeStructUP=std::unique_ptr<IDataTypeStruct>;
+using IDataTypeStructUP=UP<IDataTypeStruct>;
 class IDataTypeStruct : public virtual IDataType {
 public:
 
