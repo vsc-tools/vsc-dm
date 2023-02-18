@@ -98,7 +98,7 @@ public:
 
         uint32_t i;
 		for (i=0; !new_t && i<t->getFields().size(); i++) {
-            ITypeField *f = t->getFields().at(i);
+            ITypeField *f = t->getFields().at(i).get();
 
             m_res = 0;
             m_owned = false;
@@ -110,7 +110,7 @@ public:
 
                 // Add fields up to i-1
                 for (uint32_t j=0; j<i; j++) {
-                    new_t->addField(t->getFields().at(j), false);
+                    new_t->addField(t->getFields().at(j).get(), false);
                 }
                 new_t->addField(dynamic_cast<ITypeField *>(m_res), m_owned);
 
@@ -127,7 +127,7 @@ public:
 
         // Finish propagating fields (if we cloned the type)
         for (; i<t->getFields().size(); i++) {
-            ITypeField *f = t->getFields().at(i);
+            ITypeField *f = t->getFields().at(i).get();
 
             m_res = 0;
             m_owned = false;
@@ -148,7 +148,7 @@ public:
 
         // This loop doesn't execute if new_t is being filled
         for (i=0; !new_t && i<t->getConstraints().size(); i++) {
-            ITypeConstraint *c = t->getConstraints().at(i);
+            ITypeConstraint *c = t->getConstraints().at(i).get();
 
             ResT<ITypeConstraint> res = visit(c);
 
@@ -156,14 +156,14 @@ public:
                 new_t = m_ctxt->mkDataTypeStruct(t->name());
 
                 // Add all fields as non-owned entities
-                for (std::vector<ITypeField *>::const_iterator
+                for (std::vector<ITypeFieldUP>::const_iterator
                     it=t->getFields().begin();
                     it!=t->getFields().end(); it++) {
-                    new_t->addField(*it, false);
+                    new_t->addField(it->get(), false);
                 }
                 // Add constraints up to i-1
                 for (uint32_t j=0; j<i; j++) {
-                    new_t->addConstraint(t->getConstraints().at(j), false);
+                    new_t->addConstraint(t->getConstraints().at(j).get(), false);
                 }
                 new_t->addConstraint(res.first, m_owned);
 
@@ -180,7 +180,7 @@ public:
 
         // Finish with constraints (if we cloned the type)
         for (; i<t->getConstraints().size(); i++) {
-            ITypeConstraint *c = t->getConstraints().at(i);
+            ITypeConstraint *c = t->getConstraints().at(i).get();
 
             ResT<ITypeConstraint> res = visit(c);
 
@@ -266,19 +266,19 @@ public:
         std::vector<ITypeConstraint *> new_c;
         uint32_t i;
 		for (i=0; !ci && i<c->getConstraints().size(); i++) {
-            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i));
+            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
 
-            if (c->getConstraints().at(i) != res.first || m_new.size()) {
+            if (c->getConstraints().at(i).get() != res.first || m_new.size()) {
                 ci = m_ctxt->mkTypeConstraintScope();
                 for (uint32_t j=0; j<i; j++) {
-                    ci->addConstraint(c->getConstraints().at(j), false);
+                    ci->addConstraint(c->getConstraints().at(j).get(), false);
                 }
                 ci->addConstraint(res.first, res.second);
             }
         }
 
         for (; i<c->getConstraints().size(); i++) {
-            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i));
+            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
             ci->addConstraint(res.first, res.second);
         }
 
