@@ -12,7 +12,7 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraint;
-using IModelConstraintUP=std::unique_ptr<IModelConstraint>;
+using IModelConstraintUP=vsc::dm::UP<IModelConstraint>;
 class IModelConstraint : public IAccept {
 public:
 
