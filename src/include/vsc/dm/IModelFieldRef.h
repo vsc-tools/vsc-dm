@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelFieldRef;
-using IModelFieldRefUP=std::unique_ptr<IModelFieldRef>;
+using IModelFieldRefUP=UP<IModelFieldRef>;
 class IModelFieldRef : public virtual IModelField {
 public:
 

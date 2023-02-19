@@ -293,8 +293,12 @@ cdef class Context(object):
             <decl.BinOp>(op_i),
             rhs.asExpr()))
         
-    cpdef TypeExprFieldRef mkTypeExprFieldRef(self):
-        return TypeExprFieldRef.mk(self._hndl.mkTypeExprFieldRef(), True)
+    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx):
+        cdef int root_kind_i = int(root_kind)
+        return TypeExprFieldRef.mk(
+            self._hndl.mkTypeExprFieldRef(
+                <decl.TypeExprFieldRef_RootRefKind>(root_kind_i),
+                root_idx), True)
     
     cpdef TypeExprRange mkTypeExprRange(self,
                                         bool is_single,
@@ -489,7 +493,7 @@ cdef class DataTypeStruct(DataType):
         ret = []
         for i in range(self.asTypeStruct().getFields().size()):
             ret.append(TypeField.mk(
-                self.asTypeStruct().getFields().at(i).get(), False))
+                self.asTypeStruct().getField(i), False))
         return ret
     
     cpdef TypeField getField(self, int32_t idx):
@@ -545,8 +549,8 @@ cdef class ModelConstraint(ObjBase):
 
 cdef class ModelConstraintScope(ModelConstraint):
     
-    cpdef constraints(self):
-        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *cl = &self.asScope().constraints()
+    cpdef getConstraints(self):
+        cdef const cpp_vector[decl.IModelConstraintUP] *cl = &self.asScope().getConstraints()
         ret = []
         
         for i in range(cl.size()):
@@ -938,8 +942,8 @@ cdef class ModelField(ObjBase):
     cpdef setParent(self, ModelField parent):
         self.asField().setParent(parent.asField())
         
-    cpdef constraints(self):
-        cdef const cpp_vector[unique_ptr[decl.IModelConstraint]] *constraints_l = &self.asField().constraints()
+    cpdef getConstraints(self):
+        cdef const cpp_vector[decl.IModelConstraintUP] *constraints_l = &self.asField().getConstraints()
         ret = []
         
         for i in range(constraints_l.size()):
@@ -951,8 +955,8 @@ cdef class ModelField(ObjBase):
         c._owned = False
         self.asField().addConstraint(c.asConstraint())
 
-    cpdef fields(self):
-        cdef const cpp_vector[decl.IModelFieldUP] *fields_l = &self.asField().fields()
+    cpdef getFields(self):
+        cdef const cpp_vector[decl.IModelFieldUP] *fields_l = &self.asField().getFields()
         ret = []
         for i in range(fields_l.size()):
             ret.append(ModelField.mk(fields_l.at(i).get()))
@@ -1362,19 +1366,7 @@ cdef class TypeExprRangelist(TypeExpr):
         ret._owned = owned
         return ret
 
-class TypeExprFieldRefElemKind(IntEnum):
-    Root = decl.TypeExprFieldRefElemKind.Root
-    IdxOffset = decl.TypeExprFieldRefElemKind.IdxOffset
 
-cdef class TypeExprFieldRefElem(object):
-
-    cpdef getKind(self):
-        cdef int kind_i = int(self._hndl.kind)
-        return TypeExprFieldRefElemKind(kind_i)
-
-    cpdef int32_t getIdx(self):
-        return self._hndl.idx
-    
 cdef class TypeExprBin(TypeExpr):
     
     cpdef TypeExpr lhs(self):
@@ -1397,25 +1389,29 @@ cdef class TypeExprBin(TypeExpr):
         ret._owned = owned
         return ret    
     
+class TypeExprFieldRef_RootRefKind(IntEnum):
+    TopDownScope  = decl.TypeExprFieldRef_RootRefKind.TypeExprFieldRef_TopDownScope
+    BottomUpScope = decl.TypeExprFieldRef_RootRefKind.TypeExprFieldRef_BottomUpScope
+
 cdef class TypeExprFieldRef(TypeExpr):
 
-    cpdef addIdxRef(self, int32_t idx):
-        self.asFieldRef().addIdxRef(idx)
+    cpdef getRootRefKind(self):
+        pass
+
+    cpdef int32_t getRootRefOffset(self):
+        return self.asFieldRef().getRootRefOffset()
         
-    cpdef addRootRef(self):
-        self.asFieldRef().addRootRef()
-        
-    cpdef addActiveScopeRef(self, off):
-        self.asFieldRef().addActiveScopeRef(off)
+    cpdef addPathElem(self, int32_t idx):
+        self.asFieldRef().addPathElem(idx)
         
     cpdef uint32_t size(self):
         return self.asFieldRef().size()
     
-    cpdef TypeExprFieldRefElem at(self, idx):
-        cdef const decl.TypeExprFieldRefElem *elem = &self.asFieldRef().at(idx)
-        ret = TypeExprFieldRefElem()
-        ret._hndl = elem
-        return ret
+    cpdef int32_t at(self, idx):
+        return self.asFieldRef().getPath().at(idx)
+
+    cpdef getPath(self):
+        pass
     
     @staticmethod
     cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=True):

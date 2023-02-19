@@ -37,10 +37,7 @@ void ModelConstraintScope::addConstraint(
     IModelConstraint    *c,
     bool                owned) {
 	c->setParent(this);
-	m_constraints.push_back(c);
-    if (owned) {
-        m_owned.push_back(IAcceptUP(c));
-    }
+	m_constraints.push_back(IModelConstraintUP(c, owned));
 }
 
 }

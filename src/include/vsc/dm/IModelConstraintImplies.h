@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraintImplies;
-using IModelConstraintImpliesUP=std::unique_ptr<IModelConstraintImplies>;
+using IModelConstraintImpliesUP=UP<IModelConstraintImplies>;
 class IModelConstraintImplies : public virtual IModelConstraint {
 public:
 

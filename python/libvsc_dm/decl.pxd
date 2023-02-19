@@ -31,12 +31,10 @@ ctypedef IModelConstraintScope *IModelConstraintScopeP
 ctypedef IModelConstraintSoft *IModelConstraintSoftP
 ctypedef IModelConstraintUnique *IModelConstraintUniqueP
 ctypedef IModelExpr *IModelExprP
-ctypedef unique_ptr[IModelExpr] IModelExprUP
 ctypedef IModelExprCond *IModelExprCondP
 ctypedef IModelExprIn *IModelExprInP
 ctypedef IModelExprPartSelect *IModelExprPartSelectP
 ctypedef IModelExprRange *IModelExprRangeP
-ctypedef unique_ptr[IModelExprRange] IModelExprRangeUP
 ctypedef IModelExprRangelist *IModelExprRangelistP
 ctypedef IModelExprRef *IModelExprRefP
 ctypedef IModelExprUnary *IModelExprUnaryP
@@ -61,17 +59,30 @@ ctypedef ITypeConstraintScope *ITypeConstraintScopeP
 ctypedef ITypeConstraintSoft *ITypeConstraintSoftP
 ctypedef ITypeConstraintUnique *ITypeConstraintUniqueP
 ctypedef ITypeExpr *ITypeExprP
-ctypedef unique_ptr[ITypeExpr] ITypeExprUP
 ctypedef ITypeExprBin *ITypeExprBinP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeExprRange *ITypeExprRangeP
-ctypedef unique_ptr[ITypeExprRange] ITypeExprRangeUP
 ctypedef ITypeExprRangelist *ITypeExprRangelistP
 ctypedef ITypeExprVal *ITypeExprValP
 ctypedef ITypeField *ITypeFieldP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
 ctypedef ITypeFieldRef *ITypeFieldRefP
 ctypedef IVisitor *IVisitorP
+
+cdef extern from "vsc/dm/impl/UP.h" namespace "vsc::dm":
+    cdef cppclass UP[T](unique_ptr[T]):
+        UP()
+        UP(T *, bool owned=True)
+        T *get()
+
+ctypedef UP[IModelConstraint] IModelConstraintUP
+ctypedef UP[IModelExpr] IModelExprUP
+ctypedef UP[IModelExprRange] IModelExprRangeUP
+ctypedef UP[IModelField] IModelFieldUP
+ctypedef UP[ITypeExpr] ITypeExprUP
+ctypedef UP[ITypeExprRange] ITypeExprRangeUP
+ctypedef UP[ITypeField] ITypeFieldUP
+ctypedef UP[ITypeConstraint] ITypeConstraintUP
 
 #********************************************************************
 #* IContext
@@ -130,7 +141,10 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         ITypeConstraintUnique *mkTypeConstraintUnique(
             const cpp_vector[ITypeExprP]    &exprs)
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
-        ITypeExprFieldRef *mkTypeExprFieldRef()
+        ITypeExprFieldRef *mkTypeExprFieldRef(
+            TypeExprFieldRef_RootRefKind root_kind,
+            int32_t                      root_idx
+        )
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
         ITypeExprRangelist *mkTypeExprRangelist()
         ITypeExprVal *mkTypeExprVal(IModelVal *)
@@ -189,9 +203,9 @@ cdef extern from "vsc/dm/IDataTypeStruct.h" namespace "vsc::dm":
         const cpp_string &name() const
         void addField(ITypeField *)
         ITypeField *getField(int32_t idx)
-        const cpp_vector[unique_ptr[ITypeField]] &getFields() const
+        const cpp_vector[ITypeFieldUP] &getFields() const
         void addConstraint(ITypeConstraint *)
-        const cpp_vector[unique_ptr[ITypeConstraint]] &getConstraints() const
+        const cpp_vector[ITypeConstraintUP] &getConstraints() const
         void setCreateHook(IModelStructCreateHook *)
        
 cdef extern from "vsc/dm/IDataTypeVec.h" namespace "vsc::dm":
@@ -217,7 +231,7 @@ cdef extern from "vsc/dm/IModelConstraint.h" namespace "vsc::dm":
     
 cdef extern from "vsc/dm/IModelConstraintScope.h" namespace "vsc::dm":
     cdef cppclass IModelConstraintScope(IModelConstraint):
-        const cpp_vector[unique_ptr[IModelConstraint]] &constraints() const
+        const cpp_vector[IModelConstraintUP] &getConstraints() const
         void addConstraint(IModelConstraint *)
 
 cdef extern from "vsc/dm/IModelConstraintSoft.h" namespace "vsc::dm":
@@ -339,7 +353,6 @@ cdef extern from "vsc/dm/IModelExprBin.h" namespace "vsc::dm":
 #* IModelField
 #********************************************************************
 #ctypedef IModelField *IModelFieldP
-ctypedef unique_ptr[IModelField] IModelFieldUP
 cdef extern from "vsc/dm/IModelField.h" namespace "vsc::dm":
 
     cdef enum ModelFieldFlag:
@@ -355,9 +368,9 @@ cdef extern from "vsc/dm/IModelField.h" namespace "vsc::dm":
         IDataType *getDataType()
         IModelField *getParent()
         void setParent(IModelField *)
-        const cpp_vector[unique_ptr[IModelConstraint]] &constraints()
+        const cpp_vector[IModelConstraintUP] &getConstraints()
         void addConstraint(IModelConstraintP)
-        const cpp_vector[IModelFieldUP] &fields()
+        const cpp_vector[IModelFieldUP] &getFields()
         void addField(IModelField *)
         IModelField *getField(int32_t)
         IModelValP val()
@@ -476,7 +489,7 @@ cdef extern from "vsc/dm/ITypeConstraintImplies.h" namespace "vsc::dm":
 cdef extern from "vsc/dm/ITypeConstraintScope.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintScope(ITypeConstraint):
         void addConstraint(ITypeConstraint *)
-        const cpp_vector[unique_ptr[ITypeConstraint]] &constraints() const
+        const cpp_vector[ITypeConstraintUP] &getConstraints() const
 
 cdef extern from "vsc/dm/ITypeConstraintSoft.h" namespace "vsc::dm":
     cdef cppclass ITypeConstraintSoft(ITypeConstraint):
@@ -505,21 +518,18 @@ cdef extern from "vsc/dm/ITypeExprBin.h" namespace "vsc::dm":
         ITypeExpr *rhs() const
     
 cdef extern from "vsc/dm/ITypeExprFieldRef.h" namespace "vsc::dm":
-    cdef enum TypeExprFieldRefElemKind:
-        Root "vsc::dm::TypeExprFieldRefElemKind::Root" 
-        ActiveScope "vsc::dm::TypeExprFieldRefElemKind::ActiveScope" 
-        IdxOffset "vsc::dm::TypeExprFieldRefElemKind::IdxOffset" 
         
-    cdef cppclass TypeExprFieldRefElem:
-        TypeExprFieldRefElemKind        kind
-        int32_t                         idx
+    cdef enum TypeExprFieldRef_RootRefKind "vsc::dm::ITypeExprFieldRef::RootRefKind":
+        TypeExprFieldRef_TopDownScope  "vsc::dm::ITypeExprFieldRef::RootRefKind::TopDownScope" 
+        TypeExprFieldRef_BottomUpScope "vsc::dm::ITypeExprFieldRef::RootRefKind::BottomUpScope" 
 
     cdef cppclass ITypeExprFieldRef(ITypeExpr):
-        void addIdxRef(int32_t)
-        void addActiveScopeRef(int32_t)
-        void addRootRef()
+        TypeExprFieldRef_RootRefKind getRootRefKind() const
+        int32_t getRootRefOffset() const
+        void addPathElem(int32_t idx)
         uint32_t size() const
-        const TypeExprFieldRefElem &at(int32_t) const
+        int32_t at(int32_t) const
+        const cpp_vector[int32_t] &getPath() const
         
 cdef extern from "vsc/dm/ITypeExprRange.h" namespace "vsc::dm":
     cdef cppclass ITypeExprRange(ITypeExpr):

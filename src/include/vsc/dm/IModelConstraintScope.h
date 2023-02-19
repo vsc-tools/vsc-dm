@@ -28,16 +28,16 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraintScope;
-using IModelConstraintScopeUP=std::unique_ptr<IModelConstraintScope>;
+using IModelConstraintScopeUP=UP<IModelConstraintScope>;
 class IModelConstraintScope : public virtual IModelConstraint {
 public:
 	virtual ~IModelConstraintScope() { }
 
-	virtual const std::vector<IModelConstraint *> &getConstraints() const = 0;
+	virtual const std::vector<IModelConstraintUP> &getConstraints() const = 0;
 
 	virtual void addConstraint(
         IModelConstraint    *c,
-        bool                owned) = 0;
+        bool                owned=true) = 0;
 };
 
 }

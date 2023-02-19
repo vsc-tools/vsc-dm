@@ -12,7 +12,7 @@ namespace dm {
 class IModelCovergroup;
 
 class IModelCoverCross;
-using IModelCoverCrossUP=std::unique_ptr<IModelCoverCross>;
+using IModelCoverCrossUP=UP<IModelCoverCross>;
 class IModelCoverCross : public virtual IModelCoverItem {
 public:
 

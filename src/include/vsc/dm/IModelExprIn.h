@@ -12,7 +12,7 @@ namespace vsc {
 namespace dm {
 
 class IModelExprIn;
-using IModelExprInUP=std::unique_ptr<IModelExprIn>;
+using IModelExprInUP=UP<IModelExprIn>;
 class IModelExprIn : public IModelExpr {
 public:
 

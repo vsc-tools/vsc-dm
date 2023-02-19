@@ -12,7 +12,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeExprRange;
-using ITypeExprRangeUP=std::unique_ptr<ITypeExprRange>;
+using ITypeExprRangeUP=UP<ITypeExprRange>;
 class ITypeExprRange : public ITypeExpr {
 public:
 

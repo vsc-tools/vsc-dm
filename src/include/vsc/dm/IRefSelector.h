@@ -30,7 +30,7 @@ namespace dm {
 class IContext;
 
 class IRefSelector;
-using IRefSelectorUP=std::unique_ptr<IRefSelector>;
+using IRefSelectorUP=UP<IRefSelector>;
 class IRefSelector {
 public:
 

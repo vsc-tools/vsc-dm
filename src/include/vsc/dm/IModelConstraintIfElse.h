@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraintIfElse;
-using IModelConstraintIfElseUP=std::unique_ptr<IModelConstraintIfElse>;
+using IModelConstraintIfElseUP=UP<IModelConstraintIfElse>;
 class IModelConstraintIfElse : public virtual IModelConstraint {
 public:
 

@@ -36,7 +36,7 @@ public:
 
 	virtual void addConstraint(
         ITypeConstraint         *c,
-        bool                    owned) = 0;
+        bool                    owned=true) = 0;
 
 	virtual const std::vector<ITypeConstraintUP> &getConstraints() const = 0;
 

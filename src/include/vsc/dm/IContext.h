@@ -70,7 +70,7 @@ enum class TaskE {
 };
 
 class IContext;
-using IContextUP=std::unique_ptr<IContext>;
+using IContextUP=UP<IContext>;
 class IContext {
 public:
 

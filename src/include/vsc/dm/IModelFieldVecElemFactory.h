@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelFieldVecElemFactory;
-using IModelFieldVecElemFactoryUP=std::unique_ptr<IModelFieldVecElemFactory>;
+using IModelFieldVecElemFactoryUP=UP<IModelFieldVecElemFactory>;
 
 /**
  * Used to create vector elements when required

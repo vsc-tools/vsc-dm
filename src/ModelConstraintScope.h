@@ -38,7 +38,7 @@ public:
 
 	virtual ~ModelConstraintScope();
 
-	virtual const std::vector<IModelConstraint *> &getConstraints() const override {
+	virtual const std::vector<IModelConstraintUP> &getConstraints() const override {
 		return m_constraints;
 	}
 
@@ -49,8 +49,7 @@ public:
 	virtual void accept(IVisitor *v) override { v->visitModelConstraintScope(this); }
 
 private:
-	std::vector<IModelConstraint *>		m_constraints;
-    std::vector<IAcceptUP>              m_owned;
+	std::vector<IModelConstraintUP>		m_constraints;
 };
 
 }

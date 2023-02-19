@@ -7,7 +7,7 @@ namespace vsc {
 namespace dm {
 
 class IModelCoverpointTarget;
-using IModelCoverpointTargetUP=std::unique_ptr<IModelCoverpointTarget>;
+using IModelCoverpointTargetUP=UP<IModelCoverpointTarget>;
 class IModelCoverpointTarget {
 public:
 

@@ -6,13 +6,13 @@
  */
 
 #pragma once
-#include <memory>
+#include "vsc/dm/impl/UP.h"
 
 namespace vsc {
 namespace dm {
 
 class IModelFieldData;
-using IModelFieldDataUP=std::unique_ptr<IModelFieldData>;
+using IModelFieldDataUP=UP<IModelFieldData>;
 
 /**
  * This class is an opaque base type for data associated

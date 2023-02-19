@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraintForeach;
-using IModelConstraintForeachUP=std::unique_ptr<IModelConstraintForeach>;
+using IModelConstraintForeachUP=UP<IModelConstraintForeach>;
 class IModelConstraintForeach : public virtual IModelConstraintScope {
 public:
 

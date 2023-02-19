@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelConstraintExpr;
-using IModelConstraintExprUP=std::unique_ptr<IModelConstraintExpr>;
+using IModelConstraintExprUP=UP<IModelConstraintExpr>;
 class IModelConstraintExpr : public virtual IModelConstraint {
 public:
 

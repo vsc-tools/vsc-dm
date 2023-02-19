@@ -29,7 +29,7 @@ struct ModelExprIndexedFieldRefElem {
 };
 
 class IModelExprIndexedFieldRef;
-using IModelExprIndexedFieldRefUP=std::unique_ptr<IModelExprIndexedFieldRef>;
+using IModelExprIndexedFieldRefUP=UP<IModelExprIndexedFieldRef>;
 class IModelExprIndexedFieldRef : public virtual IModelExpr {
 public:
 

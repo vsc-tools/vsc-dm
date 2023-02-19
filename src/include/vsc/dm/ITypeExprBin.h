@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeExprBin;
-using ITypeExprBinUP=std::unique_ptr<ITypeExprBin>;
+using ITypeExprBinUP=UP<ITypeExprBin>;
 class ITypeExprBin : public ITypeExpr {
 public:
 	virtual ~ITypeExprBin() { }

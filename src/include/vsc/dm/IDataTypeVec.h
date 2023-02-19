@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IDataTypeVec;
-using IDataTypeVecUP=std::unique_ptr<IDataTypeVec>;
+using IDataTypeVecUP=UP<IDataTypeVec>;
 class IDataTypeVec : public virtual IDataType {
 public:
 

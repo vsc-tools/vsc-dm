@@ -13,7 +13,7 @@ class IModelField;
 class ITypeField;
 
 class IModelFieldFactory;
-using IModelFieldFactoryUP=std::unique_ptr<IModelFieldFactory>;
+using IModelFieldFactoryUP=UP<IModelFieldFactory>;
 class IModelFieldFactory {
 public:
 

@@ -16,7 +16,7 @@ enum class ModelCoverBinType {
 class IModelCoverpoint;
 
 class IModelCoverBin;
-using IModelCoverBinUP=std::unique_ptr<IModelCoverBin>;
+using IModelCoverBinUP=UP<IModelCoverBin>;
 class IModelCoverBin : public virtual IAccept {
 public:
 

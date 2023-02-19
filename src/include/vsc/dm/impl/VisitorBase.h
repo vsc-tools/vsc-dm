@@ -136,7 +136,7 @@ public:
 	}
 
 	virtual void visitModelConstraintScope(IModelConstraintScope *c) override {
-		for (std::vector<IModelConstraint *>::const_iterator
+		for (std::vector<IModelConstraintUP>::const_iterator
 				it=c->getConstraints().begin();
 				it!=c->getConstraints().end(); it++) {
 			(*it)->accept(m_this);

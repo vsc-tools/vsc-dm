@@ -14,7 +14,7 @@ namespace vsc {
 namespace dm {
 
 class ITypeExprRangelist;
-using ITypeExprRangelistUP=std::unique_ptr<ITypeExprRangelist>;
+using ITypeExprRangelistUP=UP<ITypeExprRangelist>;
 class ITypeExprRangelist : public ITypeExpr {
 public:
 

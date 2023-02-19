@@ -6,7 +6,7 @@ namespace vsc {
 namespace dm {
 
 class IModelCoverpointIff;
-using IModelCoverpointIffUP=std::unique_ptr<IModelCoverpointIff>;
+using IModelCoverpointIffUP=UP<IModelCoverpointIff>;
 class IModelCoverpointIff { 
 public:
 

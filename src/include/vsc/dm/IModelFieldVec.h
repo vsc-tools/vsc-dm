@@ -14,7 +14,7 @@ namespace vsc {
 namespace dm {
 
 class IModelFieldVec;
-using IModelFieldVecUP=std::unique_ptr<IModelFieldVec>;
+using IModelFieldVecUP=UP<IModelFieldVec>;
 class IModelFieldVec : public virtual IModelField {
 public:
 

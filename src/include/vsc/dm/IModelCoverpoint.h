@@ -22,7 +22,7 @@ namespace dm {
 class IModelCovergroup;
 
 class IModelCoverpoint;
-using IModelCoverpointUP=std::unique_ptr<IModelCoverpoint>;
+using IModelCoverpointUP=UP<IModelCoverpoint>;
 class IModelCoverpoint : public virtual IModelCoverItem {
 public:
 

@@ -14,7 +14,7 @@ namespace vsc {
 namespace dm {
 
 class IDataTypeEnum;
-using IDataTypeEnumUP=std::unique_ptr<IDataTypeEnum>;
+using IDataTypeEnumUP=UP<IDataTypeEnum>;
 class IDataTypeEnum : public virtual IDataTypeScalar {
 public:
 

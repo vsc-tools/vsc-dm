@@ -14,7 +14,7 @@ namespace vsc {
 namespace dm {
 
 class IVsc;
-using IVscUP=std::unique_ptr<IVsc>;
+using IVscUP=UP<IVsc>;
 class IVsc {
 public:
 	virtual ~IVsc() { }

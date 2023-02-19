@@ -64,7 +64,7 @@ cdef class Context(object):
     cpdef TypeConstraintSoft mkTypeConstraintSoft(self, TypeConstraintExpr c)
     cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
-    cpdef TypeExprFieldRef mkTypeExprFieldRef(self)
+    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
     cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
@@ -160,7 +160,7 @@ cdef class ModelConstraint(ObjBase):
     cdef mk(decl.IModelConstraint *hndl, bool owned=*)
     
 cdef class ModelConstraintScope(ModelConstraint):
-    cpdef constraints(self)
+    cpdef getConstraints(self)
     cpdef addConstraint(self, ModelConstraint)
     
     cdef decl.IModelConstraintScope *asScope(self)
@@ -345,9 +345,9 @@ cdef class ModelField(ObjBase):
     cpdef getDataType(self)
     cpdef getParent(self)
     cpdef setParent(self, ModelField)
-    cpdef constraints(self)
+    cpdef getConstraints(self)
     cpdef addConstraint(self, ModelConstraint)
-    cpdef fields(self)
+    cpdef getFields(self)
     cpdef addField(self, ModelField)
     cpdef ModelField getField(self, int32_t idx)
     cpdef val(self)
@@ -546,12 +546,6 @@ cdef class TypeExprRangelist(TypeExpr):
     @staticmethod
     cdef TypeExprRangelist mk(decl.ITypeExprRangelist *hndl, bool owned=*)
     
-cdef class TypeExprFieldRefElem(object):
-    cdef const decl.TypeExprFieldRefElem   *_hndl
-
-    cpdef getKind(self)
-    cpdef int32_t getIdx(self)
-
 cdef class TypeExprBin(TypeExpr):
 
     cpdef TypeExpr lhs(self)
@@ -564,12 +558,12 @@ cdef class TypeExprBin(TypeExpr):
     cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=*)    
 
 cdef class TypeExprFieldRef(TypeExpr):
-
-    cpdef addIdxRef(self, int32_t idx)
-    cpdef addRootRef(self)
-    cpdef addActiveScopeRef(self, off)
+    cpdef getRootRefKind(self)
+    cpdef int32_t getRootRefOffset(self)
+    cpdef addPathElem(self, int32_t)
     cpdef uint32_t size(self)
-    cpdef TypeExprFieldRefElem at(self, idx)
+    cpdef int32_t at(self, idx)
+    cpdef getPath(self)
     
     cdef decl.ITypeExprFieldRef *asFieldRef(self)
     

@@ -14,7 +14,7 @@ namespace dm {
 
 
 class ITypeExprFieldRef;
-using ITypeExprFieldRefUP=std::unique_ptr<ITypeExprFieldRef>;
+using ITypeExprFieldRefUP=UP<ITypeExprFieldRef>;
 class ITypeExprFieldRef : public ITypeExpr {
 public:
 enum class RootRefKind {

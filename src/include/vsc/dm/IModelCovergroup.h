@@ -11,7 +11,7 @@ namespace vsc {
 namespace dm {
 
 class IModelCovergroup;
-using IModelCovergroupUP=std::unique_ptr<IModelCovergroup>;
+using IModelCovergroupUP=UP<IModelCovergroup>;
 class IModelCovergroup : public virtual IModelCoverItem {
 public:
 

@@ -13,7 +13,7 @@ namespace vsc {
 namespace dm {
 
 class IModelExprRangelist;
-using IModelExprRangelistUP=std::unique_ptr<IModelExprRangelist>;
+using IModelExprRangelistUP=UP<IModelExprRangelist>;
 class IModelExprRangelist : public IModelExpr {
 public:
 

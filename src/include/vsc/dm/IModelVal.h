@@ -6,8 +6,8 @@
  */
 
 #pragma once
-#include <memory>
 #include <stdint.h>
+#include "vsc/dm/impl/UP.h"
 
 namespace vsc {
 namespace dm {
@@ -15,7 +15,7 @@ namespace dm {
 class IContext;
 
 class IModelVal;
-using IModelValUP=std::unique_ptr<IModelVal>;
+using IModelValUP=UP<IModelVal>;
 class IModelVal {
 public:
 	union val_t {
