@@ -98,7 +98,7 @@ public:
         c->getIndexIt()->setFlag(ModelFieldFlag::Resolved);
         for (uint32_t i=0; i<vec->getSize(); i++) {
             c->getIndexIt()->val()->set_val_u(i);
-            for (std::vector<IModelConstraint *>::const_iterator
+            for (std::vector<IModelConstraintUP>::const_iterator
                 it=c->getConstraints().begin();
                 it!=c->getConstraints().end(); it++) {
                 fprintf(stdout, "--> visitForeachConstraint\n");
