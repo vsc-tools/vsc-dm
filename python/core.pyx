@@ -1794,7 +1794,7 @@ cdef class Factory(object):
             if not os.path.isfile(core_lib):
                 raise Exception("Extension library core \"%s\" doesn't exist" % core_lib)
             
-            so = ctypes.dll.LoadLibrary(core_lib)
+            so = ctypes.cdll.LoadLibrary(core_lib)
             func = so.vsc_dm_getFactory
             func.restype = ctypes.c_void_p
 
