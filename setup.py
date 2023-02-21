@@ -77,6 +77,7 @@ result = subprocess.run(
 #     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
      BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
+     "-DCMAKE_INSTALL_PREFIX=%s" % os.path.join(cwd,"build")
      ],
     cwd=os.path.join(cwd, "build"),
     env=env)
@@ -96,6 +97,29 @@ elif cmake_build_tool == "Unix Makefiles":
     result = subprocess.run(
         ["make",
          "-j%d" % os.cpu_count()
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+else:
+    raise Exception("Unknown make system %s" % cmake_build_tool)
+
+if result.returncode != 0:
+    raise Exception("build failed")
+
+if cmake_build_tool == "Ninja":
+    result = subprocess.run(
+        ["ninja",
+         "-j",
+         "%d" % os.cpu_count(),
+         "install"
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+elif cmake_build_tool == "Unix Makefiles":
+    result = subprocess.run(
+        ["make",
+         "-j%d" % os.cpu_count(),
+         "install"
         ],
         cwd=os.path.join(cwd, "build"),
         env=env)
