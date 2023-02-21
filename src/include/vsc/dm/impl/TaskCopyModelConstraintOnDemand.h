@@ -63,8 +63,8 @@ public:
         bool need_copy = false;
 
         for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
 
             m_constraint_copy = 0;
             (*it)->accept(m_this);
@@ -80,12 +80,12 @@ public:
         if (need_copy) {
             IModelConstraintBlock *block = m_ctxt->mkModelConstraintBlock(c->name());
 
-            for (uint32_t i=0; i<c->constraints().size(); i++) {
+            for (uint32_t i=0; i<c->getConstraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     block->addConstraint(constraint_l.at(i));
                 } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
-                    block->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
+                    block->addConstraint(m_ctxt->mkModelConstraintRef(c->getConstraints().at(i).get()));
                 }
             }
             m_constraint_copy = block;
@@ -113,8 +113,8 @@ public:
         bool need_copy = false;
 
         for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
 
             m_constraint_copy = 0;
             (*it)->accept(m_this);
@@ -131,12 +131,12 @@ public:
             IModelConstraintForeach *c_c = m_ctxt->mkModelConstraintForeach(
                 (m_expr_copy)?m_expr_copy:m_ctxt->mkModelExprRef(c->getTarget()),
                 c->getIndexIt()->name());
-            for (uint32_t i=0; i<c->constraints().size(); i++) {
+            for (uint32_t i=0; i<c->getConstraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     c_c->addConstraint(constraint_l.at(i));
                 } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
-                    c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
+                    c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->getConstraints().at(i).get()));
                 }
             }
 
@@ -207,8 +207,8 @@ public:
         bool need_copy = false;
 
         for (std::vector<IModelConstraintUP>::const_iterator
-            it=c->constraints().begin();
-            it!=c->constraints().end(); it++) {
+            it=c->getConstraints().begin();
+            it!=c->getConstraints().end(); it++) {
 
             m_constraint_copy = 0;
             (*it)->accept(m_this);
@@ -223,12 +223,12 @@ public:
 
         if (need_copy) {
             IModelConstraintScope *c_c = m_ctxt->mkModelConstraintScope();
-            for (uint32_t i=0; i<c->constraints().size(); i++) {
+            for (uint32_t i=0; i<c->getConstraints().size(); i++) {
                 if (constraint_l.at(i)) {
                     c_c->addConstraint(constraint_l.at(i));
                 } else if (!m_prune_uncopied) {
                     // Need to create a ref to the existing constraint
-                    c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->constraints().at(i).get()));
+                    c_c->addConstraint(m_ctxt->mkModelConstraintRef(c->getConstraints().at(i).get()));
                 }
             }
 
