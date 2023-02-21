@@ -105,6 +105,29 @@ else:
 if result.returncode != 0:
     raise Exception("build failed")
 
+if cmake_build_tool == "Ninja":
+    result = subprocess.run(
+        ["ninja",
+         "-j",
+         "%d" % os.cpu_count(),
+         "install"
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+elif cmake_build_tool == "Unix Makefiles":
+    result = subprocess.run(
+        ["make",
+         "-j%d" % os.cpu_count(),
+         "install"
+        ],
+        cwd=os.path.join(cwd, "build"),
+        env=env)
+else:
+    raise Exception("Unknown make system %s" % cmake_build_tool)
+
+if result.returncode != 0:
+    raise Exception("build failed")
+
 extra_compile_args = sysconfig.get_config_var('CFLAGS').split()
 extra_compile_args = []
 #extra_compile_args += ["-std=c++11", "-Wall", "-Wextra"]

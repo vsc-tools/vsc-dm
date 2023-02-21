@@ -9,12 +9,13 @@ add_library(vsc-dm SHARED ${libvsc_dm_SRC})
 target_include_directories(vsc-dm PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/include
-    ${DEBUG_MGR_DIR}/src/include
+    ${debug_mgr_INCDIR}
     )
    
 target_link_directories(vsc-dm PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
+    "${debug_mgr_LIBDIR}"
     )
   
 # add_library(vsc-dm_static STATIC ${libvsc_dm_SRC})

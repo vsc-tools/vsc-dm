@@ -56,6 +56,7 @@ target_include_directories(test_libvsc-dm PUBLIC
 target_link_directories(test_libvsc-dm PRIVATE
     ${CMAKE_BINARY_DIR}/lib
     ${CMAKE_BINARY_DIR}/lib64
+    ${debug_mgr_LIBDIR}
     )
   
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
