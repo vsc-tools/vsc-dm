@@ -77,6 +77,7 @@ result = subprocess.run(
 #     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
      BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
+     "-DCMAKE_INSTALL_PREFIX=%s" % os.path.join(cwd,"build")
      ],
     cwd=os.path.join(cwd, "build"),
     env=env)
