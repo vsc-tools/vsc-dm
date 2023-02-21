@@ -20,8 +20,9 @@
  */
 #pragma once
 #include <unordered_map>
+#include "dmgr/IDebugMgr.h"
+#include "dmgr/impl/DebugMacros.h"
 #include "vsc/dm/IContext.h"
-#include "vsc/dm/impl/DebugMacros.h"
 #include "vsc/dm/impl/ModelBuildContext.h"
 #include "vsc/dm/impl/VisitorBase.h"
 
@@ -221,14 +222,14 @@ public:
 		add_copy(f, fc);
 
 		for (std::vector<IModelFieldUP>::const_iterator
-			it=f->fields().begin();
-			it!=f->fields().end(); it++) {
+			it=f->getFields().begin();
+			it!=f->getFields().end(); it++) {
 			fc->addField(copyT<IModelField>(it->get()));
 		}
 
 		for (std::vector<IModelConstraintUP>::const_iterator
-			it=f->constraints().begin();
-			it!=f->constraints().end(); it++) {
+			it=f->getConstraints().begin();
+			it!=f->getConstraints().end(); it++) {
 			fc->addConstraint(copyT<IModelConstraint>(it->get()));
 		}
 
@@ -245,7 +246,7 @@ public:
 
 	virtual void visitModelFieldRefType(IModelFieldTypeRef *f) override { 
 		DEBUG_ENTER("visitModelFieldRefType %s", f->name().c_str());
-		vsc::IModelField *fc = m_ctxt->mkModelFieldRefType(f->getTypeField());
+		vsc::dm::IModelField *fc = m_ctxt->mkModelFieldRefType(f->getTypeField());
 
 		add_copy(f, fc);
 
@@ -260,7 +261,7 @@ public:
 
 	virtual void visitModelFieldType(IModelFieldType *f) override { 
 		DEBUG_ENTER("visitModelFieldType %s", f->name().c_str());
-		vsc::IModelField *fc = m_ctxt->mkModelFieldType(f->getTypeField());
+		vsc::dm::IModelField *fc = m_ctxt->mkModelFieldType(f->getTypeField());
 
 		add_copy(f, fc);
 
@@ -275,10 +276,10 @@ public:
 	virtual void visitModelFieldVecRoot(IModelFieldVecRoot *f) override { }
 
 public:
-	void ret(vsc::IAccept *ret) { m_ret = ret; }
+	void ret(vsc::dm::IAccept *ret) { m_ret = ret; }
 
-	vsc::IAccept *get_copy(vsc::IAccept *s, vsc::IAccept *dflt=0) {
-		std::unordered_map<vsc::IAccept*,vsc::IAccept*>::const_iterator it;
+	vsc::dm::IAccept *get_copy(vsc::dm::IAccept *s, vsc::dm::IAccept *dflt=0) {
+		std::unordered_map<vsc::dm::IAccept*,vsc::dm::IAccept*>::const_iterator it;
 		it = m_obj_m.find(s);
 
 		if (it != m_obj_m.end()) {
@@ -288,17 +289,17 @@ public:
 		}
 	}
 
-	template <class T> T *get_copyT(vsc::IAccept *s, vsc::IAccept *dflt=0) {
+	template <class T> T *get_copyT(vsc::dm::IAccept *s, vsc::dm::IAccept *dflt=0) {
 		return dynamic_cast<T *>(get_copy(s, dflt));
 	}
 
-	void add_copy(vsc::IAccept *s, vsc::IAccept *c) {
+	void add_copy(vsc::dm::IAccept *s, vsc::dm::IAccept *c) {
 		if (m_obj_m.find(s) == m_obj_m.end()) {
 			m_obj_m.insert({s, c});
 		}
 	}
 
-	void set_field_val(vsc::IAccept *f, const vsc::IModelVal *val) {
+	void set_field_val(vsc::dm::IAccept *f, const vsc::dm::IModelVal *val) {
 		std::unordered_map<IAccept *,IModelValUP>::const_iterator it;
 
 		if ((it=m_field_val_m.find(f)) != m_field_val_m.end()) {
@@ -311,19 +312,19 @@ public:
 	}
 
 protected:
-	static vsc::IDebug									*m_dbg;
+	static dmgr::IDebug									*m_dbg;
     IContext                    						*m_ctxt;
 	IModelBuildContext									*m_build_ctxt;
 	ModelBuildContext									m_build_ctxt_l;
     IAccept                     						*m_ret;
-	std::unordered_map<vsc::IAccept *,vsc::IAccept *>	m_obj_m;
+	std::unordered_map<vsc::dm::IAccept *,vsc::dm::IAccept *>	m_obj_m;
 
 	// Holds a map of field references that must be converted 
 	// to a value
-	std::unordered_map<vsc::IAccept *,vsc::IModelValUP>	m_field_val_m;
+	std::unordered_map<vsc::dm::IAccept *,vsc::dm::IModelValUP>	m_field_val_m;
 };
 
-vsc::IDebug *CopyVisitor::m_dbg = 0;
+dmgr::IDebug *CopyVisitor::m_dbg = 0;
 
 }
 }
