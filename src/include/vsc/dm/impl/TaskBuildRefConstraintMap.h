@@ -46,6 +46,7 @@ struct RefConstraintMap {
 class TaskBuildRefConstraintMap : public VisitorBase {
 public:
     TaskBuildRefConstraintMap(IContext *ctxt) {
+        m_dbg = 0;
         DEBUG_INIT("TaskBuildRefConstraintMap", ctxt->getDebugMgr());
         m_atomic_scope_level = 0;
     }
