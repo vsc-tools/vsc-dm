@@ -46,6 +46,7 @@ struct RefConstraintMap {
 class TaskBuildRefConstraintMap : public VisitorBase {
 public:
     TaskBuildRefConstraintMap(IContext *ctxt) {
+        m_dbg = 0;
         DEBUG_INIT("TaskBuildRefConstraintMap", ctxt->getDebugMgr());
         m_atomic_scope_level = 0;
     }
@@ -202,7 +203,7 @@ private:
     }
 
 private:
-    static IDebug                                    *m_dbg;
+    dmgr::IDebug                                     *m_dbg;
     const std::vector<IModelField *>                 *m_target_l;
     std::unordered_set<IModelField *>                m_target_ref_s;
     std::vector<int32_t>                             m_target_ref_l;
@@ -210,8 +211,6 @@ private:
     std::vector<RefConstraintSet>                    m_result;
 
 };
-
-IDebug *TaskBuildRefConstraintMap::m_dbg = 0;
 
 }
 }
