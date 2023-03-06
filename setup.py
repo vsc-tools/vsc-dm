@@ -57,6 +57,12 @@ if _DEBUG:
 else:
     BUILD_TYPE = "-DCMAKE_BUILD_TYPE=Release"
 
+# Collect up dependencies from packages
+deps = {"debug-mgr"}
+for d in deps:
+    if os.path.isdir(os.path.join(packages_dir, d, "python")):
+        sys.path.insert(0, os.path.join(packages_dir, d, "python"))
+
 env = os.environ.copy()
 python_bindir = os.path.dirname(sys.executable)
 print("python_bindir: %s" % str(python_bindir))
