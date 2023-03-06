@@ -42,8 +42,7 @@ ModelFieldVec::~ModelFieldVec() {
 }
 
 void ModelFieldVec::push_back(IModelField *f) {
-	m_fields.push_back(f);
-    m_owned.push_back(IAcceptUP(f));
+	m_fields.push_back(IModelFieldUP(f));
 }
 
 IModelField *ModelFieldVec::at(uint32_t idx) {
