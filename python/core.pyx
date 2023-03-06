@@ -1,13 +1,14 @@
 #****************************************************************************
-#* libvsc.core
+#* vsc_dm.core
 #****************************************************************************
 import os
 import sys
 import ctypes
 from enum import IntFlag, IntEnum
 from ctypes import CDLL
-from libvsc_dm cimport decl
+from vsc_dm cimport decl
 cimport cpython.ref as cpy_ref
+cimport debug_mgr.core as dm_core
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t
@@ -33,8 +34,8 @@ cdef class Context(object):
         return ModelBuildContext(ctxt)
         
     cpdef ModelField buildModelField(self, DataTypeStruct dt, name=""):
-        return ModelField.mk(
-            self._hndl.buildModelField(dt.asTypeStruct(), name.encode()), True)
+       return ModelField.mk(
+           self._hndl.buildModelField(dt.asTypeStruct(), name.encode()), True)
     
     cpdef DataTypeEnum findDataTypeEnum(self, name):
         cdef decl.IDataTypeEnum *e = self._hndl.findDataTypeEnum(name.encode())

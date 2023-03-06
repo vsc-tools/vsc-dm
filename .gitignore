@@ -1,9 +1,9 @@
 
-python/libvsc.cpp
+python/vsc_dm.cpp
 python/core.cpp
 python/core.h
-python/libvsc_dm/*.so
-python/libvsc_dm/*.dylib
+python/vsc_dm/*.so
+python/vsc_dm/*.dylib
 *.egg-info
 
 build/

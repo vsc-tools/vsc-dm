@@ -1,6 +1,6 @@
 
 cimport debug_mgr.core as dm_core
-from libvsc_dm cimport decl
+from vsc_dm cimport decl
 from libc.stdint cimport intptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t

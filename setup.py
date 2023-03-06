@@ -1,5 +1,5 @@
 #****************************************************************************
-#* setup.py for libvsc-dm
+#* setup.py for vsc-dm
 #****************************************************************************
 import os
 import shutil
@@ -33,16 +33,16 @@ else:
     cmake_build_tool = "Ninja"
 
 # First need to establish where things are
-libvsc_dir = os.path.dirname(os.path.abspath(__file__))
+vsc_dir = os.path.dirname(os.path.abspath(__file__))
 
-if os.path.isdir(os.path.join(libvsc_dir, "packages")):
+if os.path.isdir(os.path.join(vsc_dir, "packages")):
     print("Packages are inside this directory")
-    packages_dir = os.path.join(libvsc_dir, "packages")
+    packages_dir = os.path.join(vsc_dir, "packages")
 else:
-    parent = os.path.dirname(libvsc_dir)
+    parent = os.path.dirname(vsc_dir)
     
-    if os.path.isdir(os.path.join(parent, "libvsc-dm")):
-        print("libvsc is a peer")
+    if os.path.isdir(os.path.join(parent, "vsc-dm")):
+        print("vsc-dm is a peer")
         packages_dir = parent
     else:
         raise Exception("Unexpected source layout")
@@ -51,9 +51,6 @@ else:
 cwd = os.getcwd()
 if not os.path.isdir(os.path.join(cwd, "build")):
     os.makedirs(os.path.join(cwd, "build"))
-
-#if not os.path.isdir(os.path.join(libvsc_dir, "python/libvsc")):
-#    os.makedirs(os.path.join(tblink_vsc, "python/libvsc"))
 
 if _DEBUG:
     BUILD_TYPE = "-DCMAKE_BUILD_TYPE=Debug"
@@ -72,7 +69,7 @@ else:
 # Run configure...
 result = subprocess.run(
     ["cmake", 
-     libvsc_dir,
+     vsc_dir,
      "-G%s" % cmake_build_tool,
 #     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
      BUILD_TYPE,
@@ -282,20 +279,20 @@ class build_ext(_build_ext):
 
 print("extra_compile_args=" + str(extra_compile_args))
 
-ext = Extension("libvsc_dm.core",
+ext = Extension("vsc_dm.core",
             extra_compile_args=extra_compile_args,
             sources=[
-                os.path.join(libvsc_dir, 'python', "core.pyx"), 
-                os.path.join(libvsc_dir, 'python', 'VisitorProxy.cpp'),
-                os.path.join(libvsc_dir, 'python', 'ModelFieldDataClosure.cpp'),
-                os.path.join(libvsc_dir, 'python', 'ModelStructCreateHookClosure.cpp'),
-                os.path.join(libvsc_dir, 'python', 'MkModelBuildContext.cpp'),
-                os.path.join(libvsc_dir, 'python', 'VscTasks.cpp'),
+                os.path.join(vsc_dir, 'python', "core.pyx"), 
+                os.path.join(vsc_dir, 'python', 'VisitorProxy.cpp'),
+                os.path.join(vsc_dir, 'python', 'ModelFieldDataClosure.cpp'),
+                os.path.join(vsc_dir, 'python', 'ModelStructCreateHookClosure.cpp'),
+                os.path.join(vsc_dir, 'python', 'MkModelBuildContext.cpp'),
+                os.path.join(vsc_dir, 'python', 'VscTasks.cpp'),
             ],
             language="c++",
             include_dirs=[
-                os.path.join(libvsc_dir, 'src'),
-                os.path.join(libvsc_dir, 'src', 'include'),
+                os.path.join(vsc_dir, 'src'),
+                os.path.join(vsc_dir, 'src', 'include'),
                 os.path.join(packages_dir, "debug-mgr/src/include")
             ]
         )
