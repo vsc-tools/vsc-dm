@@ -301,9 +301,9 @@ ext = Extension("libvsc_dm.core",
 ext.cython_directives={'language_level' : '3'}
 
 setup(
-  name = "libvsc-dm",
+  name = "vsc-dm",
   version=version,
-  packages=['libvsc_dm'],
+  packages=['vsc_dm'],
   package_dir = {'' : 'python'},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
@@ -313,7 +313,7 @@ setup(
   """,
   license = "Apache 2.0",
   keywords = ["SystemVerilog", "Verilog", "RTL", "Python"],
-  url = "https://github.com/vsc-tools/libvsc-dm",
+  url = "https://github.com/vsc-tools/vsc-dm",
 #  entry_points={
 #    'console_scripts': [
 #      'tblink-rpc = tblink_rpc.__main__:main'
