@@ -20,6 +20,7 @@
 
 #include "vsc/dm/impl/ModelBuildContext.h"
 #include "Context.h"
+#include "DataTypeBool.h"
 #include "DataTypeEnum.h"
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
@@ -104,6 +105,13 @@ ICompoundSolver *Context::mkCompoundSolver() {
 	return new CompoundSolverDefault(this);
 }
 #endif
+
+IDataTypeBool *Context::getDataTypeBool() {
+    if (!m_type_bool) {
+        m_type_bool = IDataTypeBoolUP(new DataTypeBool(this));
+    }
+    return m_type_bool.get();
+}
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
 	std::unordered_map<std::string, IDataTypeEnum *>::const_iterator it;

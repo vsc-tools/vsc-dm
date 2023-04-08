@@ -29,6 +29,7 @@
 namespace vsc {
 namespace dm {
 
+class IDataTypeBool;
 class IDataTypeEnum;
 class IDataTypeInt;
 class IDataTypeStruct;
@@ -101,6 +102,8 @@ public:
 	virtual ~IVisitor() { }
 
 	virtual bool cascade() const = 0;
+
+	virtual void visitDataTypeBool(IDataTypeBool *t) = 0;
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) = 0;
 

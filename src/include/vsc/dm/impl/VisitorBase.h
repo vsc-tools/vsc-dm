@@ -8,6 +8,7 @@
 #pragma once
 #include "vsc/dm/IVisitor.h"
 
+#include "vsc/dm/IDataTypeBool.h"
 #include "vsc/dm/IDataTypeEnum.h"
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeStruct.h"
@@ -87,6 +88,8 @@ public:
 	virtual ~VisitorBase() { }
 
 	virtual bool cascade() const { return m_cascade; }
+
+	virtual void visitDataTypeBool(IDataTypeBool *t) override { }
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override { }
 

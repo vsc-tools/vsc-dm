@@ -7,6 +7,7 @@
 
 #pragma once
 #include "dmgr/IDebugMgr.h"
+#include "vsc/dm/IDataTypeBool.h"
 #include "vsc/dm/IDataTypeEnum.h"
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeStruct.h"
@@ -87,6 +88,8 @@ public:
 #ifdef UNDEFINED
 	virtual ICompoundSolver *mkCompoundSolver() = 0;
 #endif
+
+	virtual IDataTypeBool *getDataTypeBool() = 0;
 
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) = 0;
 
