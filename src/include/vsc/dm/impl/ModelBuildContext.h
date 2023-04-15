@@ -40,10 +40,6 @@ public:
 	virtual IContext *ctxt() const override { return m_ctxt; }
 
 	virtual void pushTopDownScope(IModelField *f) override {
-		fprintf(stdout, "ModelBuildContext::pushTopDownScope %s => %d\n", 
-			f->name().c_str(),
-			m_top_down_s.size()+1);
-		fflush(stdout);
 		m_top_down_s.push_back(TopDownScopeT{f});
 	}
 
@@ -53,10 +49,6 @@ public:
 
 	virtual void popTopDownScope() override {
 		if (m_top_down_s.size()) {
-			fprintf(stdout, "ModelBuildContext::popTopDownScope %s => %d\n", 
-				m_top_down_s.back().scope->name().c_str(),
-				m_top_down_s.size()-1);
-		    fflush(stdout);
 			m_top_down_s.pop_back();
 		} else {
 			fprintf(stdout, "ModelBuildContext::Error - pop from empty stack\n");
@@ -65,8 +57,6 @@ public:
 	}
 
 	virtual void pushBottomUpScope(IModelField *f) override {
-		fprintf(stdout, "ModelBuildContext::pushBottomUpScope %s\n", f->name().c_str());
-		fflush(stdout);
 		m_top_down_s.back().bottom_up_s.push_back(f);
 	}
 
@@ -81,9 +71,6 @@ public:
 	}
 
 	virtual void popBottomUpScope() override {
-		fprintf(stdout, "ModelBuildContext::popBottomUpScope %s\n", 
-			m_top_down_s.back().bottom_up_s.back()->name().c_str());
-		fflush(stdout);
 		m_top_down_s.back().bottom_up_s.pop_back();
 	}
 
