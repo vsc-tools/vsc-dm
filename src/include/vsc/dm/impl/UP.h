@@ -25,6 +25,7 @@ template <class T> class UP : public std::unique_ptr<T,UPD<T>> {
 public:
     UP() : std::unique_ptr<T,UPD<T>>() {}
     UP(T *p, bool owned=true) : std::unique_ptr<T,UPD<T>>(p, UPD<T>(owned)) {}
+    bool owned() const { return std::unique_ptr<T,UPD<T>>::get_deleter().m_owned; }
 };
 
 }
