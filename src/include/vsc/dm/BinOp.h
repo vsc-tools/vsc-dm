@@ -24,6 +24,7 @@ enum class BinOp {
 	Mod,
 	BinAnd,
 	BinOr,
+	BinXor,
 	LogAnd,
 	LogOr,
 	Sll,
