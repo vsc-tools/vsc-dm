@@ -299,6 +299,7 @@ private:
 	std::unordered_map<int32_t, IDataTypeInt*>				m_sint_type_m;
 	std::vector<IDataTypeIntUP>								m_sint_type_l;
 
+
 };
 
 }

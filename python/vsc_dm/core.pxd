@@ -435,7 +435,7 @@ cdef class ModelVal(object):
     cpdef set_val_u(self, uint64_t, int32_t bits=*)
     
     @staticmethod 
-    cdef mk(decl.IModelVal *, owned=*)
+    cdef mk(decl.IModelVal *, bool owned=*)
     
 cdef class Task(object):
     cdef decl.ITask             *_hndl

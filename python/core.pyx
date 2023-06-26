@@ -1149,7 +1149,7 @@ cdef class ModelVal(object):
         self._hndl.set_val_u(v, bits)
     
     @staticmethod
-    cdef mk(decl.IModelVal *hndl, owned=False):
+    cdef mk(decl.IModelVal *hndl, bool owned=True):
         ret = ModelVal()
         ret._hndl = hndl
         ret._owned = owned
