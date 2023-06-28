@@ -41,6 +41,14 @@ public:
 
 	virtual int32_t getWidth() override { return 1; }
 
+    virtual void setAssociatedData(IAssociatedData *data) override {
+        m_associated_data = IAssociatedDataUP(data);
+    }
+
+    virtual IAssociatedData *getAssociatedData() const override {
+        return m_associated_data.get();
+    }
+
     virtual void accept(IVisitor *v) override { v->visitDataTypeBool(this); }
 
 	virtual IModelField *mkRootField(
@@ -54,6 +62,7 @@ public:
 
 private:
     ITypeExprRangelistUP                m_domain;
+    IAssociatedDataUP                   m_associated_data;
 
 };
 

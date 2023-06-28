@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/dm/IAccept.h"
+#include "vsc/dm/IAssociatedData.h"
 
 namespace vsc {
 namespace dm {
@@ -46,6 +47,10 @@ public:
 		ITypeField			*type) {
 		return dynamic_cast<T *>(mkTypeField(ctxt, type));
 	}
+
+    virtual void setAssociatedData(IAssociatedData *data) = 0;
+
+    virtual IAssociatedData *getAssociatedData() const = 0;
 
 };
 

@@ -404,8 +404,6 @@ cdef class ObjBase(object):
     def __eq__(self, ObjBase other):
         return self._hndl == other._hndl
         
-            
-    
 cdef class DataType(ObjBase):
 
     cpdef ModelField mkRootField(
@@ -430,6 +428,18 @@ cdef class DataType(ObjBase):
 
     cdef decl.IDataType *asType(self):
         return dynamic_cast[decl.IDataTypeP](self._hndl)
+
+    cpdef void setAssociatedData(self, obj):
+        cdef decl.AssociatedDataClosure *closure = new decl.AssociatedDataClosure(<cpy_ref.PyObject *>(obj))
+        self.asType().setAssociatedData(closure)
+
+    cpdef object getAssociatedData(self):
+        cdef decl.AssociatedDataClosure *closure = dynamic_cast[decl.AssociatedDataClosureP](self.asType().getAssociatedData()) 
+
+        if closure != NULL:
+            return closure.getData()
+        else:
+            return None
 
     @staticmethod
     cdef mk(decl.IDataType *hndl, bool owned=True):

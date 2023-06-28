@@ -105,6 +105,10 @@ cdef class DataType(ObjBase):
 
     cdef decl.IDataType *asType(self)
 
+    cpdef void setAssociatedData(self, obj)
+
+    cpdef object getAssociatedData(self)
+
     @staticmethod
     cdef mk(decl.IDataType *, bool owned=*)
     

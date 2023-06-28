@@ -23,7 +23,16 @@ public:
 
 	virtual ~DataType();
 
+    virtual void setAssociatedData(IAssociatedData *data) override {
+        m_associated_data = IAssociatedDataUP(data);
+    }
+
+    virtual IAssociatedData *getAssociatedData() const override {
+        return m_associated_data.get();
+    }
+
 protected:
+    IAssociatedDataUP           m_associated_data;
 
 };
 

@@ -16,6 +16,7 @@ from libcpp cimport bool
 cimport cpython.ref as cpy_ref
 
 ctypedef IAccept *IAcceptP
+ctypedef AssociatedDataClosure *AssociatedDataClosureP
 ctypedef IDataType *IDataTypeP
 ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
@@ -170,7 +171,17 @@ cdef extern from "vsc/dm/IModelBuildContext.h" namespace "vsc::dm":
 cdef extern from "vsc/dm/IAccept.h" namespace "vsc::dm":
     cdef cppclass IAccept:
         void accept(IVisitor *)
-    
+
+cdef extern from "vsc/dm/IAssociatedData.h" namespace "vsc::dm":
+    cdef cppclass IAssociatedData:
+        pass
+
+cdef extern from "AssociatedDataClosure.h" namespace "vsc::dm":
+    cdef cppclass AssociatedDataClosure(IAssociatedData):
+        AssociatedDataClosure(cpy_ref.PyObject *)
+        object getData()
+    pass
+
 #********************************************************************
 #* IDataType
 #********************************************************************
@@ -184,6 +195,9 @@ cdef extern from "vsc/dm/IDataType.h" namespace "vsc::dm":
         IModelField *mkTypeField(
             IModelBuildContext     *ctxt,
             ITypeField             *type)
+
+        void setAssociatedData(IAssociatedData *data)
+        IAssociatedData *getAssociatedData()
     
 cdef extern from "vsc/dm/IDataTypeEnum.h" namespace "vsc::dm":
     cdef cppclass IDataTypeEnum(IDataType):
