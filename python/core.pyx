@@ -1131,6 +1131,7 @@ cdef class ModelVal(object):
 
     def __dealloc__(self):
         if self._owned and self._hndl != NULL:
+            print("DELETE ModelVal")
             del self._hndl
         pass
 

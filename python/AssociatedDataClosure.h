@@ -38,6 +38,7 @@ public:
     }
 
     PyObject *getData() const {
+        Py_INCREF(m_obj);
         return m_obj;
     }
 
