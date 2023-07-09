@@ -65,6 +65,9 @@ public:
                 f = m_ctxt->getBottomUpScope(*it);
                 it++;
             } break;
+            case ITypeExprFieldRef::RootRefKind::RootExpr: {
+                fprintf(stdout, "TODO: handle RootExpr reference\n");
+            } break;
         }
 
 		for (; it!=e->getPath().end(); it++) {
