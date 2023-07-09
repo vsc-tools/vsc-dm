@@ -388,6 +388,18 @@ public:
         return m_ctxt->mkTypeExprFieldRef(kind, offset, path);
     }
 
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        int32_t                                 path) override {
+        return m_ctxt->mkTypeExprFieldRef(root, path);
+    }
+
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        const std::initializer_list<int32_t>    path) override {
+        return m_ctxt->mkTypeExprFieldRef(root, path);
+    }
+
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,

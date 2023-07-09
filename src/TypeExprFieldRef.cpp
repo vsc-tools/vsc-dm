@@ -10,11 +10,17 @@
 namespace vsc {
 namespace dm {
 
+TypeExprFieldRef::TypeExprFieldRef(ITypeExpr *root) : 
+    m_root_ref_kind(RootRefKind::RootExpr), m_root_expr(root) {
+
+}
+
 TypeExprFieldRef::TypeExprFieldRef(
     ITypeExprFieldRef::RootRefKind      kind,
-    int32_t                             offset) :
-        m_root_ref_kind(kind), m_root_ref_offset(offset) {
-
+    int32_t                             offset) : m_root_ref_kind(kind) {
+    if (offset >= 0) {
+        m_path.push_back(offset);
+    }
 }
 
 TypeExprFieldRef::~TypeExprFieldRef() {

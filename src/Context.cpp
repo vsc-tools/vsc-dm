@@ -556,6 +556,28 @@ ITypeExprFieldRef *Context::mkTypeExprFieldRef(
 	return ret;
 }
 
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        int32_t                                 path) {
+    ITypeExprFieldRef *ret = new TypeExprFieldRef(root);
+    if (path >= 0) {
+        ret->addPathElem(path);
+    }
+    return ret;
+}
+
+ITypeExprFieldRef *Context::mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        const std::initializer_list<int32_t>    path) {
+    ITypeExprFieldRef *ret = new TypeExprFieldRef(root);
+    for (std::initializer_list<int32_t>::iterator
+        it=path.begin();
+        it!=path.end(); it++) {
+        ret->addPathElem(*it);
+    }
+    return ret;
+}
+
 ITypeExprRange *Context::mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,

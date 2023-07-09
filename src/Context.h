@@ -244,6 +244,14 @@ public:
         int32_t                                 offset,
         const std::initializer_list<int32_t>    path) override;
 
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        int32_t                                 offset) override;
+
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        const std::initializer_list<int32_t>    path) override;
+
 	virtual IModelExprIn *mkModelExprIn(
 
 			IModelExpr				*lhs,

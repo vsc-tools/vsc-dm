@@ -55,19 +55,19 @@ public:
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
  		bool references_ref_fields = false;
 		IModelField *f = 0;
+        std::vector<int32_t>::const_iterator it = e->getPath().begin();
+
         switch (e->getRootRefKind()) {
             case ITypeExprFieldRef::RootRefKind::TopDownScope: {
                 f = m_ctxt->getTopDownScope();
             } break;
             case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
-                f = m_ctxt->getBottomUpScope(e->getRootRefOffset());
+                f = m_ctxt->getBottomUpScope(*it);
+                it++;
             } break;
         }
 
-		for (std::vector<int32_t>::const_iterator 
-            it=e->getPath().begin(); 
-            it!=e->getPath().end(); it++) {
-
+		for (; it!=e->getPath().end(); it++) {
 			f = f->getField(*it);
 
 			if (TaskIsModelFieldRef().check(f)) {
@@ -78,19 +78,19 @@ public:
 
 		if (references_ref_fields) {
 			// Rebuild as a relative-reference expression
+            it = e->getPath().begin();
 			IModelExprIndexedFieldRef *ref = m_ctxt->ctxt()->mkModelExprIndexedFieldRef();
             switch (e->getRootRefKind()) {
                 case ITypeExprFieldRef::RootRefKind::TopDownScope: {
 					ref->addField(m_ctxt->getTopDownScope());
                 } break;
                 case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
-					ref->addField(m_ctxt->getBottomUpScope(e->getRootRefOffset()));
+					ref->addField(m_ctxt->getBottomUpScope(*it));
+                    it++;
                 } break;
             }
 			int32_t width = -1;
-			for (std::vector<int32_t>::const_iterator
-                it=e->getPath().begin(); 
-                it!=e->getPath().end(); it++) {
+			for (; it!=e->getPath().end(); it++) {
 				ref->addFieldOffsetRef(*it);
 			}
 

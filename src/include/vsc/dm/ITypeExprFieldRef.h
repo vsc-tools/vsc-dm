@@ -19,16 +19,17 @@ class ITypeExprFieldRef : public ITypeExpr {
 public:
 enum class RootRefKind {
 	TopDownScope,
-	BottomUpScope
+	BottomUpScope,
+    RootExpr
 };
 
 public:
 
 	virtual ~ITypeExprFieldRef() { }
 
-	virtual RootRefKind getRootRefKind() const = 0;
+    virtual ITypeExpr *getRootExpr() const = 0;
 
-	virtual int32_t getRootRefOffset() const = 0;
+	virtual RootRefKind getRootRefKind() const = 0;
 
 	virtual void addPathElem(int32_t idx) = 0;
 

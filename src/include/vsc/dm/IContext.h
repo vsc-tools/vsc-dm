@@ -316,6 +316,14 @@ public:
         int32_t                                 offset,
         const std::initializer_list<int32_t>    path) = 0;
 
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        int32_t                                 path) = 0;
+
+    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
+        ITypeExpr                               *root,
+        const std::initializer_list<int32_t>    path) = 0;
+
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,
 			ITypeExpr			*lower,

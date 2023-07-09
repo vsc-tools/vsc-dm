@@ -13,6 +13,9 @@ namespace dm {
 
 class TypeExprFieldRef : public ITypeExprFieldRef {
 public:
+
+	TypeExprFieldRef(ITypeExpr          *root);
+
 	TypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind  kind,
         int32_t                         offset
@@ -20,12 +23,12 @@ public:
 
 	virtual ~TypeExprFieldRef();
 
-    virtual RootRefKind getRootRefKind() const override {
-        return m_root_ref_kind;
+    virtual ITypeExpr *getRootExpr() const override {
+        return m_root_expr.get();
     }
 
-    virtual int32_t getRootRefOffset() const override {
-        return m_root_ref_offset;
+    virtual RootRefKind getRootRefKind() const override {
+        return m_root_ref_kind;
     }
 
 	virtual void addPathElem(int32_t idx) override;
@@ -44,7 +47,7 @@ public:
 
 private:
     RootRefKind                                 m_root_ref_kind;
-    int32_t                                     m_root_ref_offset;
+    ITypeExprUP                                 m_root_expr;
 	std::vector<int32_t>	      				m_path;
 };
 
