@@ -91,8 +91,11 @@ public:
 					ref->addField(m_ctxt->getBottomUpScope(*it));
                     it++;
                 } break;
+                case ITypeExprFieldRef::RootRefKind::RootExpr: {
+                    fprintf(stdout, "TODO: handle RootExpr reference\n");
+                } break;
             }
-			int32_t width = -1;
+//			int32_t width = -1;
 			for (; it!=e->getPath().end(); it++) {
 				ref->addFieldOffsetRef(*it);
 			}
