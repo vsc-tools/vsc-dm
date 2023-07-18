@@ -26,6 +26,10 @@ public:
 	// will be added.
 //	virtual void finalize() = 0;
 
+    virtual int32_t getByteSize() const = 0;
+
+    virtual void setByteSize(int32_t sz) = 0;
+
 	virtual IModelField *mkRootField(
 		IModelBuildContext	*ctxt,
 		const std::string	&name,

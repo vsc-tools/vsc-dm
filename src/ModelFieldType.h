@@ -30,7 +30,7 @@ namespace dm {
 /**
  * Field instance based on a field-type declaration
  */
-class ModelFieldType : public IModelFieldType {
+class ModelFieldType : public virtual IModelFieldType {
 public:
 	ModelFieldType(ITypeField *type);
 
@@ -111,7 +111,6 @@ protected:
 
 	std::vector<IModelFieldUP>		m_fields;
 	std::vector<IModelConstraintUP>	m_constraints;
-    std::vector<IAcceptUP>          m_owned;
 	ModelFieldFlag					m_flags;
 	IModelFieldDataUP				m_field_data;
 

@@ -1410,9 +1410,6 @@ cdef class TypeExprFieldRef(TypeExpr):
     cpdef getRootRefKind(self):
         pass
 
-    cpdef int32_t getRootRefOffset(self):
-        return self.asFieldRef().getRootRefOffset()
-        
     cpdef addPathElem(self, int32_t idx):
         self.asFieldRef().addPathElem(idx)
         

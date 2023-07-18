@@ -23,6 +23,10 @@ public:
 
 	virtual ~DataType();
 
+    virtual int32_t getByteSize() const { return m_bytesz; }
+
+    virtual void setByteSize(int32_t sz) { m_bytesz = sz; }
+
     virtual void setAssociatedData(IAssociatedData *data) override {
         m_associated_data = IAssociatedDataUP(data);
     }
@@ -32,6 +36,7 @@ public:
     }
 
 protected:
+    int32_t                     m_bytesz;
     IAssociatedDataUP           m_associated_data;
 
 };

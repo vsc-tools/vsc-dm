@@ -23,7 +23,7 @@
 namespace vsc {
 namespace dm {
 
-DataType::DataType() {
+DataType::DataType() : m_bytesz(-1) {
 	// TODO Auto-generated constructor stub
 
 }

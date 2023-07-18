@@ -41,6 +41,13 @@ void DataTypeStruct::addField(
     ITypeField      *f,
     bool            owned) {
 	f->setIndex(m_fields.size());
+    int32_t offset = 0;
+    if (m_fields.size()) {
+        int32_t sz = m_fields.back()->getDataType()->getByteSize();
+        sz = (((sz-1)/8)+1)*8;
+        offset = (m_fields.back()->getOffset()+sz);
+    }
+    f->setOffset(offset);
 	m_fields.push_back(ITypeFieldUP(f, owned));
 }
 

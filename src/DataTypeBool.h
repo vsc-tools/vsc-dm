@@ -19,6 +19,7 @@
  *     Author: 
  */
 #pragma once
+#include "DataType.h"
 #include "vsc/dm/IContext.h"
 #include "vsc/dm/IDataTypeBool.h"
 
@@ -27,7 +28,9 @@ namespace dm {
 
 
 
-class DataTypeBool : public virtual IDataTypeBool {
+class DataTypeBool : 
+    public virtual DataType,
+    public virtual IDataTypeBool {
 public:
     DataTypeBool(IContext *ctxt);
 

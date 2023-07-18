@@ -58,6 +58,10 @@ public:
 
 	virtual TypeFieldAttr getAttr() const override { return m_attr; }
 
+    virtual int32_t getOffset() const override { return m_offset; }
+
+    virtual void setOffset(int32_t off) { m_offset = off; }
+
 	virtual IModelField *mkModelField(
 		IModelBuildContext 			*ctxt) override;
 
@@ -68,6 +72,7 @@ protected:
 	IDataType				*m_type;
 	IDataTypeUP				m_type_owned;
 	TypeFieldAttr			m_attr;
+    int32_t                 m_offset;
 
 };
 

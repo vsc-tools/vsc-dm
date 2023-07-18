@@ -17,6 +17,8 @@ from distutils.file_util import copy_file
 if "-DDEBUG" in sys.argv:
     _DEBUG = True
     sys.argv.remove("-DDEBUG")
+elif "DEBUG" in os.environ.keys() and os.environ["DEBUG"] == "1":
+    _DEBUG = True
 else:
     _DEBUG = False
 

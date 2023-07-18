@@ -563,7 +563,6 @@ cdef class TypeExprBin(TypeExpr):
 
 cdef class TypeExprFieldRef(TypeExpr):
     cpdef getRootRefKind(self)
-    cpdef int32_t getRootRefOffset(self)
     cpdef addPathElem(self, int32_t)
     cpdef uint32_t size(self)
     cpdef int32_t at(self, idx)

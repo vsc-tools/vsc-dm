@@ -539,7 +539,6 @@ cdef extern from "vsc/dm/ITypeExprFieldRef.h" namespace "vsc::dm":
 
     cdef cppclass ITypeExprFieldRef(ITypeExpr):
         TypeExprFieldRef_RootRefKind getRootRefKind() const
-        int32_t getRootRefOffset() const
         void addPathElem(int32_t idx)
         uint32_t size() const
         int32_t at(int32_t) const

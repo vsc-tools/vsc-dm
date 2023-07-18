@@ -54,6 +54,8 @@ public:
 
 	virtual ITypeField *getField(int32_t idx) override;
 
+    virtual int32_t getNumBuiltin() const { return 0; }
+
 	virtual void addConstraint(
         ITypeConstraint     *c,
         bool                owned) override;

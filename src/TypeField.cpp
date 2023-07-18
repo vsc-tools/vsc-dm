@@ -30,7 +30,8 @@ TypeField::TypeField(
 		IDataType				*type,
 		bool					own_type,
 		TypeFieldAttr			attr) :
-				m_parent(0), m_idx(-1), m_name(name), m_type(type), m_attr(attr) {
+				m_parent(0), m_idx(-1), m_name(name), m_type(type), 
+                m_attr(attr), m_offset(-1) {
 	if (own_type) {
 		m_type_owned = vsc::dm::IDataTypeUP(type);
 	}

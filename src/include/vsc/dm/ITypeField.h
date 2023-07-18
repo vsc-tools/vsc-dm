@@ -49,6 +49,10 @@ public:
 
 	virtual void setIndex(int32_t) = 0;
 
+    virtual int32_t getOffset() const = 0;
+
+    virtual void setOffset(int32_t off) = 0;
+
 	virtual const std::string &name() const = 0;
 
 	virtual IDataType *getDataType() const = 0;

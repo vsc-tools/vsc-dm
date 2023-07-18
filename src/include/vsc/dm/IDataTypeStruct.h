@@ -49,6 +49,8 @@ public:
 
 	virtual ITypeField *getField(int32_t idx) = 0;
 
+    virtual int32_t getNumBuiltin() const = 0;
+
 	template <class T> T *getFieldT(int32_t idx) {
 		return dynamic_cast<T *>(getField(idx));
 	}
