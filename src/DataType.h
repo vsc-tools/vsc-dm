@@ -23,6 +23,8 @@ public:
 
 	virtual ~DataType();
 
+    virtual void finalize(IContext *ctxt) override { }
+
     virtual int32_t getByteSize() const { return m_bytesz; }
 
     virtual void setByteSize(int32_t sz) { m_bytesz = sz; }

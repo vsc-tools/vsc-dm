@@ -62,6 +62,7 @@
 #include "vsc/dm/ITypeFieldPhy.h"
 #include "vsc/dm/ITypeFieldRef.h"
 #include "vsc/dm/ITypeFieldVec.h"
+#include "vsc/dm/Val.h"
 
 namespace vsc {
 namespace dm {
@@ -351,6 +352,10 @@ public:
 			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) = 0;
+
+    virtual Val *mkVal(uint32_t nbytes) = 0;
+
+    virtual void freeVal(Val *v) = 0;
 
 };
 }

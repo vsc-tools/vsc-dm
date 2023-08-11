@@ -452,6 +452,14 @@ public:
 			own_dtype, attr, init_sz);
 	}
 
+    virtual Val *mkVal(uint32_t nbytes) override {
+        return m_ctxt->mkVal(nbytes);
+    }
+
+    virtual void freeVal(Val *v) override {
+        return m_ctxt->freeVal(v);
+    }
+
 protected:
     IContext *ctxt() const { return m_ctxt.get(); }
 

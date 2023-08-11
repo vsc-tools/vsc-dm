@@ -626,5 +626,15 @@ ITypeFieldVec *Context::mkTypeFieldVec(
 	return new TypeFieldVec(this, name, dtype, own_dtype, attr, init_sz);
 }
 
+Val *Context::mkVal(uint32_t nbytes) {
+    Val *ret = m_val_alloc.alloc(nbytes);
+    ret->p.cp = this;
+    return ret;
+}
+
+void Context::freeVal(Val *v) {
+    m_val_alloc.free(v);
+}
+
 }
 } /* namespace vsc */
