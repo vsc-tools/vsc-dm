@@ -90,9 +90,12 @@ public:
 
 			fprintf(stdout, "visitTypeFieldPhy: %s\n", f->name().c_str());
 
+            fprintf(stdout, "TODO: Handle initial value\n");
+            /*
 			if (f->getInit()) {
 				field->val()->set(f->getInit());
 			}
+             */
 
 			m_ctxt->pushTopDownScope(field);
 			VisitorBase::visitTypeField(f);

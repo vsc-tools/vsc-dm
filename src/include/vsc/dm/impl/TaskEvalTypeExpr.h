@@ -44,7 +44,9 @@ public:
 	}
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
-		m_val->set(e->val());
+		// TODO:
+		fprintf(stdout, "TODO: handle ValData\n");
+//		m_val->set(e->val());
 	}
 
 protected:
