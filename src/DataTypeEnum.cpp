@@ -108,6 +108,9 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 					TypeExprRange *rng = 0;
 
 					if (start == prev) {
+                        fprintf(stdout, "TODO: enum domain\n");
+                        /*
+                        ValData start_v;
 						ModelVal start_v(*start);
 						start_v.setBits(m_width);
 						// Single-value range
@@ -115,8 +118,11 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 								true,
 								new TypeExprVal(&start_v),
 								0);
+                         */
 
 					} else {
+                        fprintf(stdout, "TODO: enum domain\n");
+                        /*
 						ModelVal start_v(*start);
 						ModelVal prev_v(*prev);
 
@@ -128,6 +134,7 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 								false,
 								new TypeExprVal(&start_v),
 								new TypeExprVal(&prev_v));
+                        */
 					}
 					rl->addRange(rng);
 
@@ -138,6 +145,8 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 
 				// Have from start..prev to stick in a range
 				if (start == prev) {
+                    fprintf(stdout, "TODO: enum domain\n");
+                    /*
 					ModelVal start_v(*start);
 					start_v.setBits(m_width);
 
@@ -146,8 +155,11 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 							true,
 							new TypeExprVal(&start_v),
 							0);
+                    */
 				} else {
 					// Extends start..prev
+                    fprintf(stdout, "TODO: enum domain\n");
+                    /*
 					ModelVal start_v(*start);
 					ModelVal prev_v(*prev);
 
@@ -158,6 +170,7 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 							false,
 							new TypeExprVal(&start_v),
 							new TypeExprVal(&prev_v));
+                    */
 				}
 				rl->addRange(rng);
 			}

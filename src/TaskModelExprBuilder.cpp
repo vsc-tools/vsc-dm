@@ -53,7 +53,9 @@ void TaskModelExprBuilder::visitTypeExprFieldRef(ITypeExprFieldRef *e) {
 }
 
 void TaskModelExprBuilder::visitTypeExprVal(ITypeExprVal *e) {
+    /* TODO:
 	m_expr = m_ctxt->mkModelExprVal(e->val());
+     */
 }
 
 void TaskModelExprBuilder::visitTypeField(ITypeField *f) {

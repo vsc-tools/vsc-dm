@@ -592,8 +592,10 @@ ITypeExprRangelist *Context::mkTypeExprRangelist() {
 	return new TypeExprRangelist();
 }
 
-ITypeExprVal *Context::mkTypeExprVal(const IModelVal *v) {
-	return new TypeExprVal(v);
+ITypeExprVal *Context::mkTypeExprVal(
+    IDataType           *type,
+    ValData              v) {
+	return new TypeExprVal(type, v);
 }
 
 ITypeFieldPhy *Context::mkTypeFieldPhy(
@@ -601,13 +603,15 @@ ITypeFieldPhy *Context::mkTypeFieldPhy(
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-			IModelVal				*init) {
+            ValData                 init,
+            bool                    have_init) {
 	return new TypeFieldPhy(
 			name,
 			dtype,
 			own_dtype,
 			attr,
-			init);
+			init,
+            have_init);
 }
 
 ITypeFieldRef *Context::mkTypeFieldRef(

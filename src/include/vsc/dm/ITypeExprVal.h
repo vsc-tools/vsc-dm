@@ -8,6 +8,7 @@
 #pragma once
 #include "vsc/dm/ITypeExpr.h"
 #include "vsc/dm/IModelVal.h"
+#include "vsc/dm/Val.h"
 
 namespace vsc {
 namespace dm {
@@ -17,7 +18,7 @@ public:
 
 	virtual ~ITypeExprVal() { }
 
-	virtual IModelVal *val() = 0;
+	virtual ValData val() = 0;
 
 };
 

@@ -70,6 +70,9 @@ public:
 
     virtual ~ValRef() { 
         if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
+            if (type()) {
+                type()->finiVal(vp());
+            }
             Val *vp = Val::ValPtr2Val(m_vp);
             vp->p.cp->freeVal(vp);
         }

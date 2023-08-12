@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/dm/ITypeField.h"
+#include "vsc/dm/Val.h"
 
 namespace vsc {
 namespace dm {
@@ -16,7 +17,9 @@ public:
 
 	virtual ~ITypeFieldPhy() { }
 
-	virtual IModelVal *getInit() const = 0;
+    virtual bool haveInit() const = 0;
+
+	virtual ValData getInit() const = 0;
 
 };
 

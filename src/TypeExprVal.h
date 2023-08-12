@@ -15,18 +15,19 @@ namespace dm {
 
 class TypeExprVal : public ITypeExprVal {
 public:
-	TypeExprVal(const IModelVal *v);
+	TypeExprVal(IDataType *type, ValData v);
 
 	virtual ~TypeExprVal();
 
-	virtual IModelVal *val() {
-		return &m_val;
+	virtual ValData val() {
+		return m_val;
 	}
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprVal(this); }
 
 private:
-	ModelVal				m_val;
+    IDataType               *m_type;
+    ValData                 m_val;
 };
 
 }

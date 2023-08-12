@@ -48,7 +48,7 @@ TEST_F(TestVal, int_add) {
 
     ValRefInt::add(v3, v1, v2);
 
-    ASSERT_EQ(v3.val(), 30);
+    ASSERT_EQ(v3.get_val_s(), 30);
 }
 
 TEST_F(TestVal, str_init) {
@@ -85,9 +85,9 @@ TEST_F(TestVal, struct_1) {
     IDataTypeStruct *dt = m_ctxt->mkDataTypeStruct("dt");
     IDataTypeInt *u32_t = m_ctxt->mkDataTypeInt(false, 32);
 
-    dt->addField(m_ctxt->mkTypeFieldPhy("a", u32_t, false, TypeFieldAttr::NoAttr, 0));
-    dt->addField(m_ctxt->mkTypeFieldPhy("b", u32_t, false, TypeFieldAttr::NoAttr, 0));
-    dt->addField(m_ctxt->mkTypeFieldPhy("c", u32_t, false, TypeFieldAttr::NoAttr, 0));
+    dt->addField(m_ctxt->mkTypeFieldPhy("a", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
+    dt->addField(m_ctxt->mkTypeFieldPhy("b", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
+    dt->addField(m_ctxt->mkTypeFieldPhy("c", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
 
     m_ctxt->addDataTypeStruct(dt);
 
@@ -110,9 +110,48 @@ TEST_F(TestVal, struct_1) {
     b_ref.set_val(20);
     c_ref.set_val(30);
 
-    ASSERT_EQ(a_ref.val(), 10);
-    ASSERT_EQ(b_ref.val(), 20);
-    ASSERT_EQ(c_ref.val(), 30);
+    ASSERT_EQ(a_ref.get_val_u(), 10);
+    ASSERT_EQ(b_ref.get_val_u(), 20);
+    ASSERT_EQ(c_ref.get_val_u(), 30);
+}
+
+TEST_F(TestVal, struct_pad_1) {
+    IDataTypeStruct *dt = m_ctxt->mkDataTypeStruct("dt");
+    IDataTypeIntUP u32_t(m_ctxt->mkDataTypeInt(false, 32));
+    IDataTypeIntUP u16_t(m_ctxt->mkDataTypeInt(false, 32));
+
+    dt->addField(m_ctxt->mkTypeFieldPhy("a", u32_t.get(), false, TypeFieldAttr::NoAttr, 0, false));
+    dt->addField(m_ctxt->mkTypeFieldPhy("b", u16_t.get(), false, TypeFieldAttr::NoAttr, 0, false));
+    dt->addField(m_ctxt->mkTypeFieldPhy("c", u32_t.get(), false, TypeFieldAttr::NoAttr, 0, false));
+
+    m_ctxt->addDataTypeStruct(dt);
+
+    ASSERT_EQ(dt->getField(0)->getOffset(), 0);
+    ASSERT_EQ(dt->getField(1)->getOffset(), 4);
+    ASSERT_EQ(dt->getField(2)->getOffset(), 8);
+
+    ValRefStruct v1(
+        m_ctxt.get(),
+        dt);
+
+    ValRef a(v1.getField(0));
+    ASSERT_EQ(a.name(), "a");
+    ValRef b(v1.getField(1));
+    ASSERT_EQ(b.name(), "b");
+    ValRef c(v1.getField(2));
+    ASSERT_EQ(c.name(), "c");
+
+    ValRefInt a_ref(v1.getFieldRef(0));
+    ValRefInt b_ref(v1.getFieldRef(1));
+    ValRefInt c_ref(v1.getFieldRef(2));
+
+    a_ref.set_val(10);
+    b_ref.set_val(20);
+    c_ref.set_val(30);
+
+    ASSERT_EQ(a_ref.get_val_u(), 10);
+    ASSERT_EQ(b_ref.get_val_u(), 20);
+    ASSERT_EQ(c_ref.get_val_u(), 30);
 }
 
 }

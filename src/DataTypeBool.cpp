@@ -29,14 +29,15 @@ namespace dm {
 
 DataTypeBool::DataTypeBool(IContext *ctxt) {
     m_domain = ITypeExprRangelistUP(ctxt->mkTypeExprRangelist());
-    ModelVal v0, v1;
-    v0.set_val_u(0, 1);
-    v1.set_val_u(1, 1);
+    ValData v0, v1;
+
+    v0 = 0;
+    v1 = 1;
 
     m_domain->addRange(ctxt->mkTypeExprRange(
         false,
-        ctxt->mkTypeExprVal(&v0),
-        ctxt->mkTypeExprVal(&v1)
+        ctxt->mkTypeExprVal(this, v0),
+        ctxt->mkTypeExprVal(this, v1)
     ));
 }
 
@@ -69,8 +70,9 @@ IModelField *DataTypeBool::mkTypeField(
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
 		ret = ctxt->ctxt()->mkModelFieldType(type);
-		if (type_p->getInit()) {
-			ret->val()->set(type_p->getInit());
+		if (type_p->haveInit()) {
+            // TODO:
+//			ret->val()->set(type_p->getInit());
 		}
 	}
 

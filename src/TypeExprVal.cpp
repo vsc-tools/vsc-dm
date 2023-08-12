@@ -4,13 +4,15 @@
  *  Created on: Apr 8, 2022
  *      Author: mballance
  */
-
+#include "vsc/dm/IDataType.h"
 #include "TypeExprVal.h"
 
 namespace vsc {
 namespace dm {
 
-TypeExprVal::TypeExprVal(const IModelVal *v) : m_val(v) {
+TypeExprVal::TypeExprVal(
+    IDataType       *type,
+    ValData         v) : m_type(type), m_val(v) {
 	// TODO Auto-generated constructor stub
 
 }

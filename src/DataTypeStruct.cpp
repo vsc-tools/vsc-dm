@@ -21,6 +21,7 @@
 
 #include "vsc/dm/impl/TaskIsTypeFieldRef.h"
 #include "vsc/dm/impl/TaskBuildModelConstraint.h"
+#include "vsc/dm/impl/ValRefInt.h"
 #include "DataTypeStruct.h"
 #include "TypeField.h"
 #include "TypeConstraint.h"
@@ -29,8 +30,7 @@ namespace vsc {
 namespace dm {
 
 DataTypeStruct::DataTypeStruct(const std::string &name) : m_name(name) {
-	// TODO Auto-generated constructor stub
-
+    m_bytesz = 0;
 }
 
 DataTypeStruct::~DataTypeStruct() {
@@ -41,12 +41,24 @@ void DataTypeStruct::addField(
     ITypeField      *f,
     bool            owned) {
 	f->setIndex(m_fields.size());
-    int32_t offset = 0;
+    int32_t offset = m_bytesz;
     if (m_fields.size()) {
-        int32_t sz = m_fields.back()->getDataType()->getByteSize();
-        sz = (((sz-1)/8)+1)*8;
-        offset = (m_fields.back()->getOffset()+sz);
+        int32_t new_sz = f->getDataType()->getByteSize();
+        int32_t align = 1;
+        if (new_sz <= ValRefInt::native_sz()) {
+            align = new_sz;
+        } else {
+            // The new field is larger. Think we might have to inspect...
+        }
+
+        // Required
+        int32_t pad = (m_bytesz%align)?(align - (m_bytesz % align)):0;
+        offset += pad;
+        m_bytesz += pad;
     }
+
+    m_bytesz += f->getDataType()->getByteSize();
+    fprintf(stdout, "offset: %d\n", offset);
     f->setOffset(offset);
 	m_fields.push_back(ITypeFieldUP(f, owned));
 }

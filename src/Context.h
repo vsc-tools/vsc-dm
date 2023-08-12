@@ -281,14 +281,17 @@ public:
 
 	virtual ITypeExprRangelist *mkTypeExprRangelist() override;
 
-	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) override;
+	virtual ITypeExprVal *mkTypeExprVal(
+            IDataType               *type,
+            ValData                 v) override;
 
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-			IModelVal				*init) override;
+            ValData                 init,
+            bool                    have_init) override;
 
 	virtual ITypeFieldRef *mkTypeFieldRef(
 			const std::string		&name,

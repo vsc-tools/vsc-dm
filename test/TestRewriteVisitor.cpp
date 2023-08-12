@@ -45,7 +45,7 @@ TEST_F(TestRewriteVisitor, smoke) {
                 m_ctxt->mkDataTypeInt(true, 16),
                 true,
                 TypeFieldAttr::NoAttr,
-                0);
+                0, false);
             rewrite(fi);
         }
 
@@ -59,7 +59,7 @@ TEST_F(TestRewriteVisitor, smoke) {
         uint32.get(),
         false,
         TypeFieldAttr::NoAttr,
-        0), true);
+        0, false), true);
 
 
     IRewriteContextUP ctxt(m_factory->mkRewriteContext(
@@ -90,7 +90,7 @@ TEST_F(TestRewriteVisitor, add_field) {
                 m_ctxt->mkDataTypeInt(true, 16),
                 true,
                 TypeFieldAttr::NoAttr,
-                0);
+                0, false);
             add(fi);
         }
 
@@ -104,7 +104,7 @@ TEST_F(TestRewriteVisitor, add_field) {
         uint32.get(),
         false,
         TypeFieldAttr::NoAttr,
-        0), true);
+        0, false), true);
 
 
     IRewriteContextUP ctxt(m_factory->mkRewriteContext(

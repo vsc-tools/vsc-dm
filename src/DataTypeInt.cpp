@@ -19,6 +19,7 @@
  */
 
 #include "vsc/dm/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/impl/ValRefInt.h"
 #include "DataTypeInt.h"
 #include "TypeExprRangelist.h"
 
@@ -28,8 +29,11 @@ namespace dm {
 DataTypeInt::DataTypeInt(
 		bool				is_signed,
 		int32_t				width) : m_is_signed(is_signed), m_width(width) {
-	// TODO Auto-generated constructor stub
-
+    if (width <= ValRefInt::native_sz()) {
+        m_bytesz = ((width-1)/8)+1;
+    } else {
+        m_bytesz = ((width-1)/ValRefInt::native_sz())*(ValRefInt::native_sz()/8);
+    }
 }
 
 DataTypeInt::~DataTypeInt() {
@@ -73,8 +77,9 @@ IModelField *DataTypeInt::mkTypeField(
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
 		ret = ctxt->ctxt()->mkModelFieldType(type);
-		if (type_p->getInit()) {
-			ret->val()->set(type_p->getInit());
+		if (type_p->haveInit()) {
+            // TODO:
+//			ret->val()->set(type_p->getInit());
 		}
 	}
 

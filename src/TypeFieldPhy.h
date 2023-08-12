@@ -12,23 +12,33 @@
 namespace vsc {
 namespace dm {
 
-class TypeFieldPhy : public virtual ITypeFieldPhy, public TypeField {
+class TypeFieldPhy : 
+    public virtual ITypeFieldPhy, 
+    public TypeField {
 public:
 	TypeFieldPhy(
 			const std::string	&name,
 			IDataType			*type,
 			bool				own_type,
 			TypeFieldAttr		attr,
-			IModelVal			*init);
+            ValData             init,
+            bool                have_init);
 
 	virtual ~TypeFieldPhy();
 
-	virtual IModelVal *getInit() const override { return m_init.get(); }
+    virtual bool haveInit() const override {
+        return m_haveInit;
+    }
+
+	virtual ValData getInit() const override { 
+        return m_init;
+    }
 
 	virtual void accept(IVisitor *v) { v->visitTypeFieldPhy(this); }
 
 private:
-	IModelValUP				m_init;
+    ValData                 m_init;
+    bool                    m_haveInit;
 
 };
 

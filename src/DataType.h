@@ -23,6 +23,10 @@ public:
 
 	virtual ~DataType();
 
+    virtual void initVal(uintptr_t vp) override;
+
+    virtual void finiVal(uintptr_t vp) override;
+
     virtual void finalize(IContext *ctxt) override { }
 
     virtual int32_t getByteSize() const { return m_bytesz; }

@@ -422,8 +422,10 @@ public:
 		return m_ctxt->mkModelExprRangelist();
 	}
 
-	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *v) override {
-		return m_ctxt->mkTypeExprVal(v);
+	virtual ITypeExprVal *mkTypeExprVal(
+        IDataType       *type,
+        ValData         v) override {
+		return m_ctxt->mkTypeExprVal(type, v);
 	}
 
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
@@ -431,8 +433,9 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-			IModelVal				*init) override {
-		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init);
+            ValData                 init,
+            bool                    have_init) override {
+		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init, have_init);
 	}
 
 	virtual ITypeFieldRef *mkTypeFieldRef(

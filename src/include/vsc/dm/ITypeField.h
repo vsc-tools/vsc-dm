@@ -36,7 +36,9 @@ class IDataTypeStruct;
 
 class ITypeField;
 using ITypeFieldUP=UP<ITypeField>;
-class ITypeField : public IAccept {
+class ITypeField : 
+    public virtual IAccept,
+    public virtual IValOps {
 public:
 
 	virtual ~ITypeField() { }

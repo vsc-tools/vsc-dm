@@ -19,21 +19,21 @@
  *     Author: 
  */
 #pragma once
-#include "vsc/dm/IDataType.h"
+#include "vsc/dm/Val.h"
 
 namespace vsc {
 namespace dm {
 
 
 
-struct IVal {
+class IVal {
 public:
 
     virtual ~IVal() { }
 
-    virtual IDataType *getDataType() const = 0;
+    virtual void initVal(uintptr_t vp) = 0;
 
-    virtual IVal *clone() const = 0;
+    virtual void finiVal(uintptr_t vp) = 0;
 
 };
 

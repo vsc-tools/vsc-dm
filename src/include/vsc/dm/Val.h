@@ -26,6 +26,7 @@ namespace dm {
 
 class IContext;
 
+using ValData=uintptr_t;
 
 struct Val {
     union {
@@ -33,15 +34,15 @@ struct Val {
         Val         *np;
     } p;
     uint32_t    sz;
-    uintptr_t   val[1];
+    ValData     val[1];
 
-    static inline uintptr_t Val2ValPtr(Val *v) {
-        return reinterpret_cast<uintptr_t>(v->val);
+    static inline ValData Val2ValPtr(Val *v) {
+        return reinterpret_cast<ValData>(v->val);
     }
 
-    static Val *ValPtr2Val(uintptr_t vp) {
+    static Val *ValPtr2Val(ValData vp) {
         Val *v = 0;
-        return reinterpret_cast<Val *>(vp - reinterpret_cast<uintptr_t>(v->val));
+        return reinterpret_cast<Val *>(vp - reinterpret_cast<ValData>(v->val));
     }
 };
 
@@ -52,7 +53,7 @@ struct ValDataStr {
 
 struct ValDataVec {
     uint32_t            sz;
-    uintptr_t           data[1];
+    ValData             data[1];
 };
 
 struct ValDataPtr {

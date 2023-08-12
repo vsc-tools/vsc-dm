@@ -11,8 +11,8 @@ TEST_F(TestModelFieldFactory, smoke) {
     IDataTypeInt *ui8_t = m_ctxt->mkDataTypeInt(false, 8);
     m_ctxt->addDataTypeInt(ui8_t);
 
-    my_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
-    my_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
 
     ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
     c->addConstraint(m_ctxt->mkTypeConstraintExpr(
@@ -58,8 +58,8 @@ TEST_F(TestModelFieldFactory, struct_type_subfields) {
 
 
     IDataTypeStruct *my_subfield_t = m_ctxt->mkDataTypeStruct("my_subfield_t");
-    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
-    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
 
     ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
     c->addConstraint(m_ctxt->mkTypeConstraintExpr(
@@ -72,8 +72,8 @@ TEST_F(TestModelFieldFactory, struct_type_subfields) {
 
     m_ctxt->addDataTypeStruct(my_subfield_t);
 
-    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
-    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0, false), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0, false), true);
     m_ctxt->addDataTypeStruct(my_t);
 
     ModelBuildContext build_ctxt(m_ctxt.get());
@@ -117,8 +117,8 @@ TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
 
 
     IDataTypeStruct *my_subfield_t = m_ctxt->mkDataTypeStruct("my_subfield_t");
-    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0), true);
-    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("a", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
+    my_subfield_t->addField(m_ctxt->mkTypeFieldPhy("b", ui8_t, false, TypeFieldAttr::Rand, 0, false), true);
 
     ITypeConstraintBlock *c = m_ctxt->mkTypeConstraintBlock("ab_c");
     c->addConstraint(m_ctxt->mkTypeConstraintExpr(
@@ -135,8 +135,8 @@ TEST_F(TestModelFieldFactory, struct_type_subfields_above_constraint) {
 
     m_ctxt->addDataTypeStruct(my_subfield_t);
 
-    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
-    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("a", my_subfield_t, false, TypeFieldAttr::Rand, 0, false), true);
+    my_t->addField(m_ctxt->mkTypeFieldPhy("b", my_subfield_t, false, TypeFieldAttr::Rand, 0, false), true);
 
     my_t->addConstraint(m_ctxt->mkTypeConstraintExpr(
         m_ctxt->mkTypeExprBin(

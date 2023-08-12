@@ -332,14 +332,17 @@ public:
 
 	virtual ITypeExprRangelist *mkTypeExprRangelist() = 0;
 
-	virtual ITypeExprVal *mkTypeExprVal(const IModelVal *) = 0;
+	virtual ITypeExprVal *mkTypeExprVal(
+        IDataType       *type,
+        ValData         v) = 0;
 
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-			IModelVal				*init) = 0;
+            ValData                 init,
+            bool                    have_init) = 0;
 
 	virtual ITypeFieldRef *mkTypeFieldRef(
 			const std::string		&name,

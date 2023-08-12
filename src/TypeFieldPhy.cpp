@@ -15,7 +15,10 @@ TypeFieldPhy::TypeFieldPhy(
 		IDataType			*type,
 		bool				own_type,
 		TypeFieldAttr		attr,
-		IModelVal			*init) : TypeField(name, type, own_type, attr), m_init(init) {
+        ValData             init,
+        bool                have_init) :
+		    TypeField(name, type, own_type, attr), 
+            m_init(init), m_haveInit(have_init) {
 
 }
 

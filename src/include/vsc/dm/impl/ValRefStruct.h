@@ -39,6 +39,7 @@ public:
                 Val::Val2ValPtr(ctxt->mkVal(type->getByteSize())),
                 type,
                 Flags::Owned) {
+        type->initVal(vp());
     }
 
     virtual ~ValRefStruct() { }
@@ -51,7 +52,7 @@ public:
         char *ptr = reinterpret_cast<char *>(m_vp);
         ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);
         return ValRef(
-            *reinterpret_cast<uintptr_t *>(ptr[field->getOffset()]),
+            *reinterpret_cast<uintptr_t *>(&ptr[field->getOffset()]),
             field,
             Flags::None
         );
@@ -60,6 +61,7 @@ public:
     ValRef getFieldRef(int32_t i) {
         char *ptr = reinterpret_cast<char *>(m_vp);
         ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);
+        fprintf(stdout, "getFieldRef: %d %d\n", i, field->getOffset());
         return ValRef(
             reinterpret_cast<uintptr_t>(&ptr[field->getOffset()]),
             field,

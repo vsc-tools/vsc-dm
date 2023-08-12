@@ -175,7 +175,9 @@ public:
 	}
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
+        /* TODO:
 		m_expr = m_ctxt->ctxt()->mkModelExprVal(e->val());
+         */
 	}
 
 	virtual void visitTypeField(ITypeField *f) override {

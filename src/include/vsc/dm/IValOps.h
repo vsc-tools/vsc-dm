@@ -31,17 +31,9 @@ public:
 
     virtual ~IValOps() { }
 
-/* TODO:
-    virtual void assign(
-        uintptr_t           &lhs,
-        uintptr_t           &rhs
-    ) = 0;
+    virtual void initVal(uintptr_t vp) = 0;
 
-    virtual bool eq(
-        uintptr_t           &lhs,
-        uintptr_t           &rhs
-    ) = 0;
- */
+    virtual void finiVal(uintptr_t vp) = 0;
 
 };
 
