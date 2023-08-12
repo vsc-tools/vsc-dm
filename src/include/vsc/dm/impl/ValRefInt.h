@@ -19,6 +19,7 @@
  *     Author: 
  */
 #pragma once
+#include <stdint.h>
 #include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
@@ -34,7 +35,7 @@ public:
     ValRefInt(
         intptr_t    v,
         bool        is_signed=true,
-        int32_t     bits=INTPTR_WIDTH) : 
+        int32_t     bits=sizeof(void *)*8) : 
             ValRef(v, Flags::None),
             m_isSigned(is_signed), m_bits(bits) { }
 
@@ -42,7 +43,7 @@ public:
 
     // Storage layout changes once we exceed the bit-size
     // of a pointer.
-    static int32_t native_sz() { return INTPTR_WIDTH; }
+    static int32_t native_sz() { return sizeof(void *)*8; }
 
     int32_t bits() const {
         if (type()) {
@@ -150,14 +151,14 @@ protected:
 
 class ValRefUInt : public ValRefInt {
 public:
-    ValRefUInt() : ValRefInt(0, INTPTR_WIDTH) { }
+    ValRefUInt() : ValRefInt(0, native_sz()) { }
 
     ValRefUInt(const ValRefUInt &rhs) : 
         ValRefInt(rhs.m_vp, rhs.m_isSigned, rhs.m_bits) { }
 
     ValRefUInt(
         uintptr_t   v,
-        int32_t     bits=INTPTR_WIDTH) : ValRefInt(v, false, bits) { }
+        int32_t     bits=sizeof(void *)*8) : ValRefInt(v, false, bits) { }
 
     // Math functions assume that all inputs are of the
     // same size / bitwidth
