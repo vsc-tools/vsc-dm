@@ -8,6 +8,7 @@ from libcpp.string cimport string as cpp_string
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
 from libc.stdint cimport intptr_t
+from libc.stdint cimport uintptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t
 from libc.stdint cimport uint64_t
@@ -69,6 +70,7 @@ ctypedef ITypeField *ITypeFieldP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
 ctypedef ITypeFieldRef *ITypeFieldRefP
 ctypedef IVisitor *IVisitorP
+ctypedef uintptr_t ValData
 
 cdef extern from "vsc/dm/impl/UP.h" namespace "vsc::dm":
     cdef cppclass UP[T](unique_ptr[T]):
@@ -148,13 +150,14 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         )
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
         ITypeExprRangelist *mkTypeExprRangelist()
-        ITypeExprVal *mkTypeExprVal(IModelVal *)
+        ITypeExprVal *mkTypeExprVal(IDataType *, ValData)
         ITypeFieldPhy *mkTypeFieldPhy(
             const cpp_string &,
             IDataType *,
             bool,
             TypeFieldAttr,
-            IModelVal *)
+            ValData,
+            bool)
         ITypeFieldRef *mkTypeFieldRef(
             const cpp_string &,
             IDataType *,
@@ -559,7 +562,7 @@ cdef extern from "vsc/dm/ITypeExprVal.h" namespace "vsc::dm":
 
     cdef cppclass ITypeExprVal(ITypeExpr):
         
-        const IModelVal *val() const
+        const ValData val() const
 
 #********************************************************************
 #* ITypeField
@@ -582,7 +585,8 @@ cdef extern from "vsc/dm/ITypeField.h" namespace "vsc::dm":
 cdef extern from "vsc/dm/ITypeFieldPhy.h" namespace "vsc::dm":
 
     cdef cppclass ITypeFieldPhy(ITypeField):
-        IModelVal *getInit() const
+        ValData getInit() const
+        bool haveInit() const
         
 cdef extern from "vsc/dm/ITypeFieldRef.h" namespace "vsc::dm":
     

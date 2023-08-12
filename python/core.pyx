@@ -322,31 +322,36 @@ cdef class Context(object):
             self._hndl.mkTypeExprRangelist(),
             True)
     
-    cpdef TypeExprVal mkTypeExprVal(self, ModelVal v):
-        if v is None:
-            return TypeExprVal.mk(self._hndl.mkTypeExprVal(NULL), True)
-        else:
-            return TypeExprVal.mk(self._hndl.mkTypeExprVal(v._hndl), True)
+    cpdef TypeExprVal mkTypeExprVal(self, ValRef v):
+        print("TODO: implement mkTypeExprVal")
+#        pass
+#        if v is None:
+#            return TypeExprVal.mk(self._hndl.mkTypeExprVal(NULL), True)
+#        else:
+#            return TypeExprVal.mk(self._hndl.mkTypeExprVal(v._hndl), True)
         
     cpdef TypeFieldPhy mkTypeFieldPhy(self, 
                                 name, 
                                 DataType dtype, 
                                 bool own_dtype,
                                 attr,
-                                ModelVal init):
-        cdef decl.IModelVal *init_h = NULL
+                                ValRef init):
+        cdef decl.ValData init_v = 0
+        cdef bool have_init = False
         cdef int attr_i = int(attr)
-        
-        if init is not None:
-            init._owned = False
-            init_h = init._hndl
+
+        print("TODO: mkTypeFieldPhy -- init value") 
+#        if init is not None:
+#            init._owned = False
+#            init_h = init._hndl
             
         return TypeFieldPhy.mk(self._hndl.mkTypeFieldPhy(
             name.encode(), 
             dtype.asType(), 
             own_dtype,
             <decl.TypeFieldAttr>(attr_i),
-            init_h))
+            init_v,
+            have_init))
         
     cpdef TypeFieldRef mkTypeFieldRef(self, 
                                 name, 
@@ -1433,10 +1438,12 @@ cdef class TypeExprFieldRef(TypeExpr):
         return dynamic_cast[decl.ITypeExprFieldRefP](self._hndl)
 
 cdef class TypeExprVal(TypeExpr):
-    cpdef ModelVal val(self):
-        return ModelVal.mk(
-            const_cast[decl.IModelValP](self.asVal().val()), 
-            False)
+    cpdef ValRef val(self):
+        print("TODO: TypeExprVal.val")
+        return None
+#        return ModelVal.mk(
+#            const_cast[decl.IModelValP](self.asVal().val()), 
+#            False)
     
     cdef decl.ITypeExprVal *asVal(self):
         return dynamic_cast[decl.ITypeExprValP](self._hndl)
@@ -1502,13 +1509,14 @@ cdef class TypeField(ObjBase):
     
 cdef class TypeFieldPhy(TypeField):
 
-    cpdef ModelVal getInit(self):
-        cdef decl.IModelVal *i = self.asPhy().getInit()
-        
-        if i != NULL:
-            return ModelVal.mk(i, False)
-        else:
-            return None
+    cpdef ValRef getInit(self):
+        print("TODO: TypeFieldPhy.getInit")
+#        cdef decl.IModelVal *i = self.asPhy().getInit()
+#        
+#        if i != NULL:
+#            return ModelVal.mk(i, False)
+#        else:
+#            return None
         
     cdef decl.ITypeFieldPhy *asPhy(self):
         return dynamic_cast[decl.ITypeFieldPhyP](self._hndl)

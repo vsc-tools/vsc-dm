@@ -67,8 +67,8 @@ cdef class Context(object):
     cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
-    cpdef TypeExprVal mkTypeExprVal(self, ModelVal)
-    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ModelVal)
+    cpdef TypeExprVal mkTypeExprVal(self, ValRef v)
+    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ValRef)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
 
     @staticmethod    
@@ -574,7 +574,7 @@ cdef class TypeExprFieldRef(TypeExpr):
     cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=*)
     
 cdef class TypeExprVal(TypeExpr):
-    cpdef ModelVal val(self)
+    cpdef ValRef val(self)
     
     cdef decl.ITypeExprVal *asVal(self)
     
@@ -599,7 +599,7 @@ cdef class TypeField(ObjBase):
 
 cdef class TypeFieldPhy(TypeField):
 
-    cpdef ModelVal getInit(self)
+    cpdef ValRef getInit(self)
     
     cdef decl.ITypeFieldPhy *asPhy(self)
     
@@ -610,6 +610,9 @@ cdef class TypeFieldRef(TypeField):
 
     @staticmethod
     cdef mk(decl.ITypeFieldRef *, bool owned=*)    
+
+cdef class ValRef(object):
+    pass
     
 cdef class VisitorBase(object):
     cdef cpp_vector[bool]               _visit_s
