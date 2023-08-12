@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "vsc/dm/IDataType.h"
 #include "vsc/dm/ITypeExpr.h"
 #include "vsc/dm/IModelVal.h"
 #include "vsc/dm/Val.h"
@@ -18,7 +19,9 @@ public:
 
 	virtual ~ITypeExprVal() { }
 
-	virtual ValData val() = 0;
+	virtual ValData val() const = 0;
+
+    virtual IDataType *type() const = 0;
 
 };
 

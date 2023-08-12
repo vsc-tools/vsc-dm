@@ -19,9 +19,13 @@ public:
 
 	virtual ~TypeExprVal();
 
-	virtual ValData val() {
+	virtual ValData val() const {
 		return m_val;
 	}
+
+    virtual IDataType *type() const {
+        return m_type;
+    }
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprVal(this); }
 
