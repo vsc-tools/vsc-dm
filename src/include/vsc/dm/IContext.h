@@ -62,7 +62,11 @@
 #include "vsc/dm/ITypeFieldPhy.h"
 #include "vsc/dm/ITypeFieldRef.h"
 #include "vsc/dm/ITypeFieldVec.h"
+#include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/Val.h"
+#include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/ValRefInt.h"
+#include "vsc/dm/impl/ValRefStr.h"
 
 namespace vsc {
 namespace dm {
@@ -73,7 +77,7 @@ enum class TaskE {
 
 class IContext;
 using IContextUP=UP<IContext>;
-class IContext {
+class IContext : public virtual IValAlloc {
 public:
 
 	virtual ~IContext() { }
@@ -336,6 +340,8 @@ public:
         IDataType       *type,
         ValData         v) = 0;
 
+	virtual ITypeExprVal *mkTypeExprVal(const ValRef &v) = 0;
+
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
@@ -356,9 +362,15 @@ public:
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) = 0;
 
-    virtual Val *mkVal(uint32_t nbytes) = 0;
+    virtual ValRefInt mkValRefInt(
+        int64_t     value,
+        bool        is_signed, 
+        int32_t     width) = 0;
 
-    virtual void freeVal(Val *v) = 0;
+    virtual ValRef mkValRefRawPtr(void *ptr) = 0;
+
+    virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) = 0;
+
 
 };
 }

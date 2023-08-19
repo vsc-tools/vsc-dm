@@ -7,6 +7,7 @@
 
 #pragma once
 #include "vsc/dm/ITypeExprVal.h"
+#include "vsc/dm/impl/ValRef.h"
 #include "ModelVal.h"
 
 
@@ -17,21 +18,22 @@ class TypeExprVal : public ITypeExprVal {
 public:
 	TypeExprVal(IDataType *type, ValData v);
 
+	TypeExprVal(const ValRef &v);
+
 	virtual ~TypeExprVal();
 
 	virtual ValData val() const {
-		return m_val;
+		return m_val.vp();
 	}
 
     virtual IDataType *type() const {
-        return m_type;
+        return m_val.type();
     }
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprVal(this); }
 
 private:
-    IDataType               *m_type;
-    ValData                 m_val;
+    ValRef                  m_val;
 };
 
 }

@@ -20,7 +20,9 @@
  */
 #pragma once
 #include <stdint.h>
-#include "vsc/dm/IContext.h"
+#include "vsc/dm/IDataType.h"
+#include "vsc/dm/ITypeField.h"
+#include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/IValOps.h"
 #include "vsc/dm/Val.h"
 
@@ -40,12 +42,24 @@ public:
 
 
 public:
+    ValRef() : m_vp(0), m_type_field(static_cast<IDataType *>(0)), m_flags(Flags::None) { }
+    
+    ValRef(const ValRef &rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
+        // Implement move semantics
+        /*
+        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
+            rhs.m_vp = 0;
+        }
+         */
+    }
+
     ValRef(ValRef &rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
         // Implement move semantics
         if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             rhs.m_vp = 0;
         }
     }
+
     ValRef(ValRef &&rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
         // Implement move semantics
         if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
@@ -74,8 +88,37 @@ public:
                 type()->finiVal(vp());
             }
             Val *vp = Val::ValPtr2Val(m_vp);
-            vp->p.cp->freeVal(vp);
+            vp->p.ap->freeVal(vp);
         }
+    }
+
+    bool valid() const { return m_type_field.m_type; }
+
+    void set(ValRef &rhs) {
+        m_vp = rhs.m_vp;
+        m_flags = rhs.m_flags;
+        m_type_field = rhs.m_type_field;
+        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
+            rhs.m_vp = 0;
+        }
+    }
+
+    void setWeakRef(const ValRef &rhs) {
+        reset(); // Clear out prior value first
+        m_vp = rhs.m_vp;
+        m_flags = rhs.m_flags; // TODO: don't want this to pull along ownership
+        m_type_field = rhs.m_type_field;
+    }
+
+    void reset() {
+        if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
+            if (type()) {
+                type()->finiVal(vp());
+            }
+            Val *vp = Val::ValPtr2Val(m_vp);
+            vp->p.ap->freeVal(vp);
+        }
+        m_type_field.m_type = 0;
     }
 
     std::string name() const {
@@ -96,7 +139,7 @@ public:
         }
     }
 
-    uintptr_t vp() { return m_vp; }
+    uintptr_t vp() const { return m_vp; }
 
 protected:
     uintptr_t           m_vp;

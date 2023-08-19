@@ -21,7 +21,6 @@
 #pragma once
 #include <string.h>
 #include <string>
-#include "vsc/dm/IContext.h"
 #include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
@@ -32,13 +31,43 @@ namespace dm {
 class ValRefStr : public ValRef {
 public:
 
-    ValRefStr(ValRef &rhs) : ValRef(rhs) { }
+    ValRefStr(const ValRef &rhs) {
+        Val *rhs_v = Val::ValPtr2Val(rhs.vp());
+        ValDataStr *rhs_s = reinterpret_cast<ValDataStr *>(rhs_v->val);
+        Val *this_v = rhs_v->p.ap->mkVal(sizeof(ValDataStr)+rhs_s->sz);
+        ValDataStr *this_s = reinterpret_cast<ValDataStr *>(this_v->val);
+        strcpy(this_s->str, rhs_s->str);
+        this_s->sz = rhs_s->sz;
+
+        m_vp = Val::Val2ValPtr(this_v);
+        m_flags = ValRef::Flags::Owned;
+        // Note: this value is no longer associated with a field, even
+        // if the source value was
+        m_type_field.m_type = rhs.type();
+    }
+
+    // Move constructor
+    ValRefStr(ValRef &&rhs) {
+        Val *rhs_v = Val::ValPtr2Val(rhs.vp());
+        ValDataStr *rhs_s = reinterpret_cast<ValDataStr *>(rhs_v->val);
+        Val *this_v = rhs_v->p.ap->mkVal(sizeof(ValDataStr)+rhs_s->sz);
+        ValDataStr *this_s = reinterpret_cast<ValDataStr *>(this_v->val);
+        strcpy(this_s->str, rhs_s->str);
+        this_s->sz = rhs_s->sz;
+
+        m_vp = Val::Val2ValPtr(this_v);
+        m_flags = ValRef::Flags::Owned;
+        // Note: this value is no longer associated with a field, even
+        // if the source value was
+        m_type_field.m_type = rhs.type();
+    }
 
     ValRefStr(
-        IContext            *ctxt,
-        const std::string   &init) : ValRef(
-            Val::Val2ValPtr(ctxt->mkVal(sizeof(ValDataStr)+init.size())),
-            Flags::Owned) { 
+        IValAlloc           *ap,
+        const std::string   &init,
+        int32_t             reserve=0) : ValRef(
+            Val::Val2ValPtr(ap->mkVal(
+                sizeof(ValDataStr)+init.size()+reserve)), Flags::Owned) { 
         ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
         strcpy(data->str, init.c_str());
         data->sz = init.size();
@@ -75,12 +104,12 @@ public:
         } else {
             // Need to increased the string size
             uint32_t new_sz = (2*data->sz)+rhs.size()+1;
-            Val *vp_p = vp->p.cp->mkVal(new_sz);
+            Val *vp_p = vp->p.ap->mkVal(new_sz);
             ValDataStr *data_p = reinterpret_cast<ValDataStr *>(Val::Val2ValPtr(vp_p));
             strcpy(&data_p->str[0], &data->str[0]);
             strcpy(&data_p->str[data->sz], rhs.c_str());
             m_vp = Val::Val2ValPtr(vp_p);
-            vp->p.cp->freeVal(vp);
+            vp->p.ap->freeVal(vp);
         }
     }
 

@@ -12,8 +12,12 @@ namespace dm {
 
 TypeExprVal::TypeExprVal(
     IDataType       *type,
-    ValData         v) : m_type(type), m_val(v) {
+    ValData         v) : m_val(v, type, ValRef::Flags::None) {
 	// TODO Auto-generated constructor stub
+
+}
+
+TypeExprVal::TypeExprVal(const ValRef &v) : m_val(v) {
 
 }
 

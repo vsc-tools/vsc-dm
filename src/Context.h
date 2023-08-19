@@ -285,6 +285,8 @@ public:
             IDataType               *type,
             ValData                 v) override;
 
+	virtual ITypeExprVal *mkTypeExprVal(const ValRef &v) override;
+
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
@@ -304,6 +306,15 @@ public:
 			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) override;
+
+    virtual ValRefInt mkValRefInt(
+        int64_t value,
+        bool    is_signed, 
+        int32_t width) override;
+
+    virtual ValRef mkValRefRawPtr(void *ptr) override;
+
+    virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) override;
 
     virtual Val *mkVal(uint32_t nbytes) override;
 

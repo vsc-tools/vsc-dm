@@ -1,5 +1,5 @@
 /**
- * Val.h
+ * IValAlloc.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,47 +19,20 @@
  *     Author: 
  */
 #pragma once
-#include <stdint.h>
+#include "vsc/dm/Val.h"
 
 namespace vsc {
 namespace dm {
 
-class IValAlloc;
 
-using ValData=uintptr_t;
+class IValAlloc {
+public:
 
-struct Val {
-    union {
-        IValAlloc   *ap;
-        Val         *np;
-    } p;
-    uint32_t    sz;
-    ValData     val[1];
+    virtual ~IValAlloc() { }
 
-    static inline ValData Val2ValPtr(Val *v) {
-        return reinterpret_cast<ValData>(v->val);
-    }
+    virtual Val *mkVal(uint32_t nbytes) = 0;
 
-    static Val *ValPtr2Val(ValData vp) {
-        Val *v = 0;
-        return reinterpret_cast<Val *>(vp - reinterpret_cast<ValData>(v->val));
-    }
-};
-
-struct ValDataStr {
-    uint32_t            sz;
-    char                str[1];
-};
-
-struct ValDataVec {
-    uint32_t            sz;
-    ValData             data[1];
-};
-
-struct ValDataPtr {
-    uintptr_t           prev;
-    uintptr_t           next;
-    uintptr_t           ref;
+    virtual void freeVal(Val *v) = 0;
 };
 
 } /* namespace dm */

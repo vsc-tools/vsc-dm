@@ -20,6 +20,7 @@
  */
 #pragma once
 #include <stdint.h>
+#include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
@@ -30,7 +31,26 @@ namespace dm {
 class ValRefInt : public ValRef {
 public:
 
+    ValRefInt(const ValRef &rhs) : ValRef(rhs) { }
+
     ValRefInt(ValRef &&rhs) : ValRef(rhs) { }
+
+    ValRefInt(
+        uintptr_t            value,
+        IDataTypeInt         *type,
+        Flags                flags) : ValRef(value, type, flags) { }
+
+/*
+    ValRefInt(IValAlloc *ap, intptr_t v) : 
+        ValRef(v, Flags::None) {
+        IDataTypeInt *i32 = ctxt->findDataTypeInt(true, 32);
+        if (!i32) {
+            i32 = ctxt->mkDataTypeInt(true, 32);
+            ctxt->addDataTypeInt(i32);
+        }
+        m_type_field.m_type = i32;
+    }
+ */
 
     ValRefInt(
         intptr_t    v,
@@ -151,7 +171,7 @@ protected:
 
 class ValRefUInt : public ValRefInt {
 public:
-    ValRefUInt() : ValRefInt(0, native_sz()) { }
+    ValRefUInt() : ValRefInt(0, true, native_sz()) { }
 
     ValRefUInt(const ValRefUInt &rhs) : 
         ValRefInt(rhs.m_vp, rhs.m_isSigned, rhs.m_bits) { }

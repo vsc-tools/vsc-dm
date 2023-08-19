@@ -428,6 +428,10 @@ public:
 		return m_ctxt->mkTypeExprVal(type, v);
 	}
 
+    virtual ITypeExprVal *mkTypeExprVal(const ValRef &v) override {
+        return m_ctxt->mkTypeExprVal(v);
+    }
+
 	virtual ITypeFieldPhy *mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
@@ -454,6 +458,21 @@ public:
 		return m_ctxt->mkTypeFieldVec(name, dtype,
 			own_dtype, attr, init_sz);
 	}
+
+    virtual ValRefInt mkValRefInt(
+        int64_t value,
+        bool    is_signed, 
+        int32_t width) {
+        return m_ctxt->mkValRefInt(value, is_signed, width);
+    }
+
+    virtual ValRef mkValRefRawPtr(void *ptr) override {
+        return m_ctxt->mkValRefRawPtr(ptr);
+    }
+
+    virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) override {
+        return m_ctxt->mkValRefStr(str, reserve);
+    }
 
     virtual Val *mkVal(uint32_t nbytes) override {
         return m_ctxt->mkVal(nbytes);

@@ -19,6 +19,9 @@
  */
 
 #include "vsc/dm/impl/ModelBuildContext.h"
+#include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/ValRefInt.h"
+#include "vsc/dm/impl/ValRefStr.h"
 #include "Context.h"
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
@@ -598,6 +601,10 @@ ITypeExprVal *Context::mkTypeExprVal(
 	return new TypeExprVal(type, v);
 }
 
+ITypeExprVal *Context::mkTypeExprVal(const ValRef &v) {
+    return new TypeExprVal(v);
+}
+
 ITypeFieldPhy *Context::mkTypeFieldPhy(
 			const std::string		&name,
 			IDataType				*dtype,
@@ -632,12 +639,41 @@ ITypeFieldVec *Context::mkTypeFieldVec(
 
 Val *Context::mkVal(uint32_t nbytes) {
     Val *ret = m_val_alloc.alloc(nbytes);
-    ret->p.cp = this;
+    ret->p.ap = this;
     return ret;
 }
 
 void Context::freeVal(Val *v) {
     m_val_alloc.free(v);
+}
+
+ValRefInt Context::mkValRefInt(
+    int64_t     value,
+    bool        is_signed, 
+    int32_t     width) {
+    IDataTypeInt *type = findDataTypeInt(is_signed, width);
+    if (!type) {
+        type = mkDataTypeInt(is_signed, width);
+        addDataTypeInt(type);
+    }
+    if (width <= ValRefInt::native_sz()) {
+        return ValRefInt(value, type, ValRef::Flags::None);
+    } else {
+        int32_t byte_sz = ((width-1)/8)+1;
+        Val *vp = mkVal(byte_sz);
+        ValRefInt ret(Val::Val2ValPtr(vp), type, ValRef::Flags::Owned);
+        ret.set_val(value);
+        return ret;
+    }
+}
+
+ValRef Context::mkValRefRawPtr(void *ptr) {
+    IDataType *type = 0;
+    return ValRef(reinterpret_cast<uintptr_t>(ptr), type, ValRef::Flags::None);
+}
+
+ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {
+    return ValRefStr(this, str, reserve);
 }
 
 }
