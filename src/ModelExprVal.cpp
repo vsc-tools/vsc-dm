@@ -14,11 +14,11 @@ ModelExprVal::ModelExprVal() {
 
 }
 
-ModelExprVal::ModelExprVal(const IModelVal *val) : m_val(val) {
+ModelExprVal::ModelExprVal(const IModelVal *val) /*: m_val(val) */ {
 
 }
 
-ModelExprVal::ModelExprVal(const IModelVal &val) : m_val(&val) {
+ModelExprVal::ModelExprVal(const IModelVal &val) /*: m_val(&val) */ {
 
 }
 
@@ -27,7 +27,9 @@ ModelExprVal::~ModelExprVal() {
 }
 
 void ModelExprVal::eval(IModelVal *dst) {
+    /*
 	dst->set(&m_val);
+     */
 }
 
 }

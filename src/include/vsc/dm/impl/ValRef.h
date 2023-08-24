@@ -20,14 +20,22 @@
  */
 #pragma once
 #include <stdint.h>
-#include "vsc/dm/IDataType.h"
-#include "vsc/dm/ITypeField.h"
 #include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/IValOps.h"
+#include "vsc/dm/IDataType.h"
+#include "vsc/dm/ITypeField.h"
 #include "vsc/dm/Val.h"
+
+#define VALREF_FLAGSET(e, flag) ((static_cast<uint32_t>(e) & static_cast<uint32_t>(flag)) != 0)
+#define VALREF_SETFLAG(e, flag) (static_cast<ValRef::Flags>((static_cast<uint32_t>(e) | static_cast<uint32_t>(flag))))
+#define VALREF_CLRFLAG(e, flag) (static_cast<ValRef::Flags>((static_cast<uint32_t>(e) & ~static_cast<uint32_t>(flag))))
 
 namespace vsc {
 namespace dm {
+
+class IDataType;
+class ITypeField;
+class IValOps;
 
 
 class ValRef {
@@ -37,7 +45,8 @@ public:
         Root     = (1 << 0),
         Owned    = (1 << 1),
         IsPtr    = (1 << 2),
-        HasField = (1 << 3)
+        HasField = (1 << 3),
+        Mutable  = (1 << 4)
     };
 
 
@@ -67,9 +76,11 @@ public:
         }
     }
 
+/*
     ValRef(
         uintptr_t       vp,
         Flags           flags) : m_vp(vp), m_flags(flags) { }
+ */
 
     ValRef(
         uintptr_t       vp,
@@ -82,10 +93,10 @@ public:
         Flags           flags) : m_vp(vp), m_type_field(field), 
             m_flags(static_cast<Flags>(static_cast<uint32_t>(flags) | static_cast<uint32_t>(Flags::HasField))) { }
 
-    virtual ~ValRef() { 
+    virtual ~ValRef() {
         if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             if (type()) {
-                type()->finiVal(vp());
+                type()->finiVal(*this);
             }
             Val *vp = Val::ValPtr2Val(m_vp);
             vp->p.ap->freeVal(vp);
@@ -94,14 +105,29 @@ public:
 
     bool valid() const { return m_type_field.m_type; }
 
-    void set(ValRef &rhs) {
+    Flags flags() const { return m_flags; }
+
+    void set(const ValRef &rhs) {
         m_vp = rhs.m_vp;
         m_flags = rhs.m_flags;
         m_type_field = rhs.m_type_field;
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
+    /*
+    if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
+        rhs.m_vp = 0;
+    }
+     */
+    }
+
+    void move(ValRef &rhs) {
+        m_vp = rhs.m_vp;
+        m_flags = rhs.m_flags;
+        m_type_field = rhs.m_type_field;
+        if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             rhs.m_vp = 0;
         }
     }
+
+    bool isMutable() const { return VALREF_FLAGSET(m_flags, Flags::Mutable); }
 
     void setWeakRef(const ValRef &rhs) {
         reset(); // Clear out prior value first
@@ -110,10 +136,34 @@ public:
         m_type_field = rhs.m_type_field;
     }
 
+    ValRef &&copyVal() const {
+//        return ValRef(type()->copyVal(*this));
+        return std::move(ValRef(type()->copyVal(*this)));
+//        return cp;
+//        return type()->copyVal(*this);
+    }
+
+    ValRef &&toMutable() const {
+        if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
+            // This value is already mutable
+            return std::move(ValRef(*this));
+        } else {
+            // Create a copy and make it mutable
+            ValRef cp(copyVal());
+            cp.m_flags = VALREF_SETFLAG(cp.m_flags, Flags::Mutable);
+            return std::move(cp);
+        }
+    }
+
+    ValRef &&toImmutable() const {
+        Flags flags = VALREF_CLRFLAG(m_flags, Flags::Mutable);
+        return std::move(ValRef(m_vp, m_type_field.m_type, flags));
+    }
+
     void reset() {
         if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             if (type()) {
-                type()->finiVal(vp());
+                type()->finiVal(*this);
             }
             Val *vp = Val::ValPtr2Val(m_vp);
             vp->p.ap->freeVal(vp);
@@ -122,7 +172,7 @@ public:
     }
 
     std::string name() const {
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::HasField))) {
+        if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
             return m_type_field.m_field->name();
         } else {
             return "";
@@ -131,8 +181,8 @@ public:
 
     ITypeField *field() const { return m_type_field.m_field; }
 
-    IDataType *type() const { 
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::HasField))) {
+    IDataType *type() const {
+        if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
             return m_type_field.m_field->getDataType();
         } else {
             return m_type_field.m_type; 
@@ -153,6 +203,13 @@ protected:
     Flags               m_flags;
 };
 
+}
+}
+
+
+namespace vsc {
+namespace dm {
+
 static inline ValRef::Flags operator | (const ValRef::Flags lhs, const ValRef::Flags rhs) {
 	return static_cast<ValRef::Flags>(
 			static_cast<uint32_t>(lhs) | static_cast<uint32_t>(rhs));
@@ -163,7 +220,11 @@ static inline ValRef::Flags operator & (const ValRef::Flags lhs, const ValRef::F
 			static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
 }
 
+
 } /* namespace dm */
 } /* namespace vsc */
 
+#undef VALREF_FLAGSET
+#undef VALREF_SETFLAG
+#undef VALREF_CLRFLAG
 

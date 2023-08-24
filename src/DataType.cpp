@@ -32,13 +32,5 @@ DataType::~DataType() {
 	// TODO Auto-generated destructor stub
 }
 
-void DataType::initVal(uintptr_t vp) {
-
-}
-
-void DataType::finiVal(uintptr_t vp) {
-
-}
-
 }
 } /* namespace vsc */

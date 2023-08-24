@@ -32,7 +32,9 @@ namespace dm {
  */
 class ModelFieldType : public virtual IModelFieldType {
 public:
-	ModelFieldType(ITypeField *type);
+	ModelFieldType(
+        ITypeField      *type,
+        const ValRef    &val);
 
 	virtual ~ModelFieldType();
 
@@ -70,13 +72,7 @@ public:
 
 	virtual IModelField *getField(int32_t idx) override;
 
-	virtual const IModelVal *val() const override {
-		return &m_val;
-	}
-
-	virtual IModelVal *val() override {
-		return &m_val;
-	}
+    virtual ValRef &&getVal(bool mut=false) const override;
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }
 
@@ -106,8 +102,8 @@ protected:
 	ITypeField						*m_type;
 	IModelField						*m_parent;
 
-	// Typically only really used for scalar fields
-	ModelVal						m_val;
+    // Reference to value storage for this field
+    ValRef                          m_val;
 
 	std::vector<IModelFieldUP>		m_fields;
 	std::vector<IModelConstraintUP>	m_constraints;

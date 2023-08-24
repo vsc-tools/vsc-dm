@@ -135,6 +135,9 @@ IDataTypeEnum *Context::mkDataTypeEnum(
 
 bool Context::addDataTypeEnum(IDataTypeEnum *e) {
 	std::unordered_map<std::string, IDataTypeEnum *>::const_iterator it;
+
+    e->finalize(this);
+
 	it = m_enum_type_m.find(e->name());
 
 	if (it != m_enum_type_m.end()) {
@@ -248,7 +251,8 @@ IModelCoverpointTarget *Context::mkModelCoverpointTargetExpr(
 
 IDataTypeInt *Context::findDataTypeInt(
 			bool			is_signed,
-			int32_t			width) {
+			int32_t			width,
+            bool            create) {
 	if (is_signed) {
 		auto it = m_sint_type_m.find(width);
 		if (it != m_sint_type_m.end()) {
@@ -260,7 +264,14 @@ IDataTypeInt *Context::findDataTypeInt(
 			return it->second;
 		}
 	}
-	return 0;
+
+    if (create) {
+        IDataTypeInt *t = mkDataTypeInt(is_signed, width);
+        addDataTypeInt(t);
+        return t;
+    } else {
+    	return 0;
+    }
 }
 
 IDataTypeInt *Context::mkDataTypeInt(
@@ -270,6 +281,7 @@ IDataTypeInt *Context::mkDataTypeInt(
 }
 
 bool Context::addDataTypeInt(IDataTypeInt *t) {
+    t->finalize(this);
 	if (t->is_signed()) {
 		auto it = m_sint_type_m.find(t->width());
 		if (it == m_sint_type_m.end()) {
@@ -303,6 +315,8 @@ IDataTypeStruct *Context::mkDataTypeStruct(const std::string &name) {
 }
 
 bool Context::addDataTypeStruct(IDataTypeStruct *t) {
+    t->finalize(this);
+
 	auto it = m_struct_type_m.find(t->name());
 
 	if (it == m_struct_type_m.end()) {
@@ -417,8 +431,9 @@ IModelFieldRoot *Context::mkModelFieldRoot(
 }
 
 IModelFieldType *Context::mkModelFieldType(
-			ITypeField			*type) {
-	return new ModelFieldType(type);
+			ITypeField			*type,
+            const ValRef        &val) {
+	return new ModelFieldType(type, val);
 }
 
 IModelFieldVec *Context::mkModelFieldVecRoot(
@@ -674,6 +689,12 @@ ValRef Context::mkValRefRawPtr(void *ptr) {
 
 ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {
     return ValRefStr(this, str, reserve);
+}
+
+ValRefStruct Context::mkValRefStruct(IDataTypeStruct *t) {
+    Val *v = mkVal(t->getByteSize());
+//    t->initVal(Val::Val2ValPtr(v));
+    return ValRefStruct(Val::Val2ValPtr(v), t, ValRef::Flags::Owned);
 }
 
 }

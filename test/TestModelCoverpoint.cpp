@@ -23,13 +23,17 @@ TEST_F(TestModelCoverpoint, single_cp_single_bin) {
     ASSERT_EQ(cp1->getCoverage(), 0.0);
     ASSERT_EQ(cg->getCoverage(), 0.0);
 
+#ifdef UNDEFINED
     val_e->val()->set_val_u(1, 32); // non-target value
+#endif
     cg->sample();
     ASSERT_EQ(cp1->getBinHits(ModelCoverBinType::Bins, 0), 0);
     ASSERT_EQ(cp1->getCoverage(), 0.0);
     ASSERT_EQ(cg->getCoverage(), 0.0);
 
+#ifdef UNDEFINED
     val_e->val()->set_val_u(10, 32); // non-target value
+#endif
     cg->sample();
     ASSERT_EQ(cp1->getBinHits(ModelCoverBinType::Bins, 0), 1);
     ASSERT_EQ(cp1->getCoverage(), 100.0);

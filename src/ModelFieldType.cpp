@@ -25,18 +25,13 @@
 namespace vsc {
 namespace dm {
 
-ModelFieldType::ModelFieldType(ITypeField *type) :
-		m_type(type), m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
+ModelFieldType::ModelFieldType(
+        ITypeField      *type,
+        const ValRef    &val) :
+		m_type(type), m_parent(0), m_val(val), m_flags(ModelFieldFlag::NoFlags) {
 
 	if ((type->getAttr() & TypeFieldAttr::Rand) != TypeFieldAttr::NoAttr) {
 		m_flags |= ModelFieldFlag::DeclRand;
-	}
-
-	// Obtain the width of scalar fields
-	std::pair<bool,int32_t> width = DataTypeWidthVisitor().width(type->getDataType());
-
-	if (width.second != -1) {
-		m_val.setBits(width.second);
 	}
 }
 
@@ -63,6 +58,10 @@ IModelField *ModelFieldType::getField(int32_t idx) {
 	} else {
 		return 0;
 	}
+}
+
+ValRef &&ModelFieldType::getVal(bool mut) const {
+
 }
 
 void ModelFieldType::setFieldData(IModelFieldData *data) {

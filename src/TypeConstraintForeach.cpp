@@ -1,5 +1,5 @@
-/**
- * TypeConstraintForeach.h
+/*
+ * TypeConstraintForeach.cpp
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -16,43 +16,25 @@
  * limitations under the License.
  *
  * Created on:
- *     Author: 
+ *     Author:
  */
-#pragma once
-#include "vsc/dm/ITypeConstraintForeach.h"
+#include "TypeConstraintForeach.h"
 
 
 namespace vsc {
 namespace dm {
 
 
+TypeConstraintForeach::TypeConstraintForeach(
+    ITypeExpr               *target,
+    ITypeConstraint         *body,
+    bool                    owned) : m_target(target), m_body(body, owned) {
 
-class TypeConstraintForeach : 
-    public virtual ITypeConstraintForeach {
-public:
+}
 
-    TypeConstraintForeach(
-        ITypeExpr           *target,
-        ITypeConstraint     *body,
-        bool                owned);
+TypeConstraintForeach::~TypeConstraintForeach() {
 
-    virtual ~TypeConstraintForeach();
-
-    virtual ITypeExpr *getTarget() const override {
-        return m_target.get();
-    }
-
-    virtual ITypeConstraint *getBody() const {
-        return m_body.get();
-    }
-
-private:
-    ITypeExprUP             m_target;
-    ITypeConstraintUP       m_body;
-
-};
+}
 
 }
 }
-
-

@@ -58,7 +58,8 @@ public:
 
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
-			int32_t			width) override;
+			int32_t			width,
+            bool            create=true) override;
 
 	virtual IDataTypeInt *mkDataTypeInt(
 			bool			is_signed,
@@ -154,8 +155,8 @@ public:
 			const std::string	&name) override;
 
 	virtual IModelFieldType *mkModelFieldType(
-			ITypeField			*type
-			) override;
+			ITypeField			*type,
+            const ValRef        &val) override;
 
 	virtual IModelFieldVec *mkModelFieldVecRoot(
 			IDataType			*type,
@@ -315,6 +316,8 @@ public:
     virtual ValRef mkValRefRawPtr(void *ptr) override;
 
     virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) override;
+
+    virtual ValRefStruct mkValRefStruct(IDataTypeStruct *t) override;
 
     virtual Val *mkVal(uint32_t nbytes) override;
 

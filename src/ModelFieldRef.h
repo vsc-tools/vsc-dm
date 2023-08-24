@@ -61,13 +61,7 @@ public:
 		return (m_ref)?m_ref->getField(idx):0;
 	}
 
-	virtual const IModelVal *val() const override {
-		return m_ref->val();
-	}
-
-	virtual IModelVal *val() override {
-		return m_ref->val();
-	}
+    virtual ValRef &&getVal(bool mut=false) const override;
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }
 

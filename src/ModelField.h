@@ -66,13 +66,13 @@ public:
 
 	virtual IModelField *getField(int32_t idx) override;
 
-	virtual const IModelVal *val() const override {
-		return &m_val;
-	}
-
-	virtual IModelVal *val() override {
-		return &m_val;
-	}
+    virtual ValRef &&getVal(bool m=false) const override {
+        if (m) {
+            return m_val.toMutable();
+        } else {
+            return m_val.toImmutable();
+        }
+    }
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }
 
@@ -99,8 +99,8 @@ public:
 protected:
 	IModelField						*m_parent;
 
-	// Typically only really used for scalar fields
-	ModelVal						m_val;
+    // Handle to the value storage for this field
+	ValRef						    m_val;
 
 	std::vector<IModelFieldUP>		m_fields;
 	std::vector<IModelConstraintUP>	m_constraints;

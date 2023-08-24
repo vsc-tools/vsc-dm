@@ -22,15 +22,19 @@ int32_t ModelExprIndexedFieldRef::width() {
             switch (it->kind) {
                 case ModelExprIndexedFieldRefKind::Field: {
                     f = it->field;
+                    /*
                     if (f && f->val()) {
                         m_width = f->val()->bits();
                     }
+                     */
                 } break;
                 case ModelExprIndexedFieldRefKind::FieldIndex: {
                     f = f->getField(it->offset);
+                    /*
                     if (f) {
                         m_width = f->val()->bits();
                     }
+                     */
                 }
             }
         }

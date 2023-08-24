@@ -75,6 +75,39 @@ ITypeField *DataTypeStruct::getField(int32_t idx) {
 	}
 }
 
+void DataTypeStruct::initVal(ValRef &v) {
+    ValRefStruct vs(v);
+
+    for (uint32_t i=0; i<vs.getNumFields(); i++) {
+        ValRef vs_f(vs.getField(i));
+        vs_f.type()->initVal(vs_f);
+    }
+}
+
+void DataTypeStruct::finiVal(ValRef &v) {
+    ValRefStruct vs(v);
+
+    for (uint32_t i=0; i<vs.getNumFields(); i++) {
+        ValRef vs_f(vs.getField(i));
+        vs_f.type()->finiVal(vs_f);
+    }
+
+    if ((v.flags() & ValRef::Flags::Owned) != ValRef::Flags::None) {
+        Val *val = Val::ValPtr2Val(v.vp());
+        val->p.ap->freeVal(val);
+    }
+}
+
+ValRef &&DataTypeStruct::copyVal(const ValRef &src) {
+    ValRefStruct src_s(src);
+    Val *cpy_v = m_ctxt->mkVal(src_s.type()->getByteSize());
+    ValRefStruct cpy(
+        Val::Val2ValPtr(cpy_v),
+        dynamic_cast<IDataTypeStruct *>(src.type()),
+        ValRef::Flags::Owned);
+
+}
+
 void DataTypeStruct::addConstraint(
     ITypeConstraint     *c,
     bool                owned) {
@@ -89,6 +122,7 @@ IModelField *DataTypeStruct::mkRootField(
 	IModelBuildContext	*ctxt,
 	const std::string	&name,
 	bool				is_ref) {
+    ValRefStruct val(ctxt->ctxt()->mkValRefStruct(this));
 	IModelField *ret;
 
 	if (is_ref) {
@@ -100,10 +134,11 @@ IModelField *DataTypeStruct::mkRootField(
 
 		// Need to build sub-fields and constraints
 
-		for (std::vector<ITypeFieldUP>::const_iterator
-			it=getFields().begin();
-			it!=getFields().end(); it++) {
-			ret->addField((*it)->mkModelField(ctxt), true);
+		for (uint32_t i=0; i<getFields().size(); i++) {
+			ret->addField(
+                getFields().at(i)->mkModelField(
+                    ctxt,
+                    val.getField(i)), true);
 		}
 	
 		for (std::vector<ITypeConstraintUP>::const_iterator
@@ -125,20 +160,23 @@ IModelField *DataTypeStruct::mkRootField(
 
 IModelField *DataTypeStruct::mkTypeField(
 	IModelBuildContext	*ctxt,
-	ITypeField			*type) {
+	ITypeField			*type,
+    const ValRef        &val) {
 	IModelField *ret;
 
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
-		ret = ctxt->ctxt()->mkModelFieldType(type);
+        ValRefStruct val_s(val);
+		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 
         ctxt->pushTopDownScope(ret);
 
-		for (std::vector<ITypeFieldUP>::const_iterator
-			it=getFields().begin();
-			it!=getFields().end(); it++) {
-			ret->addField((*it)->mkModelField(ctxt), true);
+		for (uint32_t i=0; i<getFields().size(); i++) {
+			ret->addField(
+                getFields().at(i)->mkModelField(
+                    ctxt,
+                    val_s.getField(i)), true);
 		}
 	
 		for (std::vector<ITypeConstraintUP>::const_iterator

@@ -52,6 +52,30 @@ ITypeExprRangelist *DataTypeInt::getDomain() {
 	return m_domain.get();
 }
 
+void DataTypeInt::initVal(ValRef &v) {
+    ValRefInt vi(v);
+    vi.clear();
+}
+
+void DataTypeInt::finiVal(ValRef &v) {
+    if ((v.flags() & ValRef::Flags::Owned) != ValRef::Flags::None) {
+        // Return the storage
+        Val *val = Val::ValPtr2Val(v.vp());
+        val->p.ap->freeVal(val);
+    }
+}
+
+ValRef &&DataTypeInt::copyVal(const ValRef &src) {
+    ValRefInt src_i(src);
+    if (src_i.bits() <= ValRefInt::native_sz()) {
+        // Can just copy over
+        ValRefInt cpy();
+    } else {
+        // Need to alloc new storage
+
+    }
+}
+
 IModelField *DataTypeInt::mkRootField(
 	IModelBuildContext	*ctxt,
 	const std::string	&name,
@@ -69,14 +93,15 @@ IModelField *DataTypeInt::mkRootField(
 
 IModelField *DataTypeInt::mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) {
+		ITypeField			*type,
+        const ValRef        &val) {
 	IModelField *ret;
 
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
-		ret = ctxt->ctxt()->mkModelFieldType(type);
+		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 		if (type_p->haveInit()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());

@@ -17,21 +17,26 @@ namespace dm {
 
 class DataType;
 typedef std::unique_ptr<DataType> DataTypeUP;
-class DataType : public virtual IDataType {
+class DataType : 
+    public virtual IDataType {
 public:
 	DataType();
 
 	virtual ~DataType();
 
-    virtual void initVal(uintptr_t vp) override;
-
-    virtual void finiVal(uintptr_t vp) override;
-
-    virtual void finalize(IContext *ctxt) override { }
+    virtual void finalize(IContext *ctxt) override { 
+        m_ctxt = ctxt;
+    }
 
     virtual int32_t getByteSize() const { return m_bytesz; }
 
-    virtual void setByteSize(int32_t sz) { m_bytesz = sz; }
+/*
+    virtual void initVal(ValRef &v) override { }
+
+    virtual void finiVal(ValRef &v) override { }
+
+    virtual ValRef &&copyVal(const ValRef &src) override { }
+ */
 
     virtual void setAssociatedData(IAssociatedData *data) override {
         m_associated_data = IAssociatedDataUP(data);
@@ -42,6 +47,7 @@ public:
     }
 
 protected:
+    IContext                    *m_ctxt;
     int32_t                     m_bytesz;
     IAssociatedDataUP           m_associated_data;
 

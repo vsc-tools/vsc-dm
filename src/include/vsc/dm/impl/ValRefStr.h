@@ -67,7 +67,9 @@ public:
         const std::string   &init,
         int32_t             reserve=0) : ValRef(
             Val::Val2ValPtr(ap->mkVal(
-                sizeof(ValDataStr)+init.size()+reserve)), Flags::Owned) { 
+                sizeof(ValDataStr)+init.size()+reserve)), 
+                static_cast<IDataType *>(0),
+                Flags::Owned) { 
         ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
         strcpy(data->str, init.c_str());
         data->sz = init.size();

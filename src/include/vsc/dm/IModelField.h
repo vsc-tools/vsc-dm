@@ -28,6 +28,7 @@
 #include "vsc/dm/IModelConstraint.h"
 #include "vsc/dm/IModelFieldData.h"
 #include "vsc/dm/IModelVal.h"
+#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
@@ -103,9 +104,13 @@ public:
 		return dynamic_cast<T *>(getField(idx));
 	}
 
-	virtual const IModelVal *val() const = 0;
-
-	virtual IModelVal *val() = 0;
+    /**
+     * @brief Returns a value ref that either allows or prohibits
+     * the caller from mutating the storage used by the field
+     * 
+     * @return ValRef 
+     */
+    virtual ValRef &&getVal(bool m=false) const = 0;
 
 	virtual ModelFieldFlag flags() const = 0;
 

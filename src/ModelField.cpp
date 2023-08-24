@@ -31,13 +31,15 @@ ModelField::ModelField() : m_parent(0), m_flags(ModelFieldFlag::NoFlags) {
 }
 
 ModelField::ModelField(IDataType *type) :
-		m_parent(0), m_val(32), m_flags(ModelFieldFlag::NoFlags) {
+		m_parent(0) /*, m_val(32)*/, m_flags(ModelFieldFlag::NoFlags) {
+    /*
 	if (type) {
 		m_val = ModelVal(DataTypeWidthVisitor().width(type).second);
 	}
 	// TODO: obtain actual width
 	fprintf(stdout, "ModelField::ModelField() bits=%d\n",
 			m_val.bits());
+     */
 }
 
 ModelField::~ModelField() {

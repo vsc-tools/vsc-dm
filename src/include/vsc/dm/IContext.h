@@ -67,6 +67,7 @@
 #include "vsc/dm/impl/ValRef.h"
 #include "vsc/dm/impl/ValRefInt.h"
 #include "vsc/dm/impl/ValRefStr.h"
+#include "vsc/dm/impl/ValRefStruct.h"
 
 namespace vsc {
 namespace dm {
@@ -106,7 +107,8 @@ public:
 
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
-			int32_t			width) = 0;
+			int32_t			width,
+            bool            create=true) = 0;
 
 	/**
 	 * Returns a new datatype. The expectation is that
@@ -247,7 +249,8 @@ public:
 			const std::string	&name) = 0;
 
 	virtual IModelFieldType *mkModelFieldType(
-			ITypeField			*type) = 0;
+			ITypeField			*type,
+            const ValRef        &val) = 0;
 
 	virtual IModelFieldVec *mkModelFieldVecRoot(
 			IDataType			*type,
@@ -370,6 +373,8 @@ public:
     virtual ValRef mkValRefRawPtr(void *ptr) = 0;
 
     virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) = 0;
+
+    virtual ValRefStruct mkValRefStruct(IDataTypeStruct *t) = 0;
 
 
 };

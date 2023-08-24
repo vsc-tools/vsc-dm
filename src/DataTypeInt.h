@@ -33,6 +33,12 @@ public:
 
 	virtual ITypeExprRangelist *getDomain() override;
 
+    virtual void initVal(ValRef &v) override;
+
+    virtual void finiVal(ValRef &v) override;
+
+    virtual ValRef &&copyVal(const ValRef &src) override;
+
 	virtual IModelField *mkRootField(
 		IModelBuildContext	*ctxt,
 		const std::string	&name,
@@ -40,7 +46,8 @@ public:
 
 	virtual IModelField *mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) override;
+		ITypeField			*type,
+        const ValRef        &val) override;
 
 	virtual void accept(IVisitor *v) { v->visitDataTypeInt(this); }
 

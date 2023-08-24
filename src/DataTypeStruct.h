@@ -56,6 +56,12 @@ public:
 
     virtual int32_t getNumBuiltin() const { return 0; }
 
+    virtual void initVal(ValRef &v) override;
+
+    virtual void finiVal(ValRef &v) override;
+
+    virtual ValRef &&copyVal(const ValRef &src) override;
+
 	virtual void addConstraint(
         ITypeConstraint     *c,
         bool                owned) override;
@@ -79,7 +85,8 @@ public:
 
 	virtual IModelField *mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) override;
+		ITypeField			*type,
+        const ValRef        &val) override;
 
 	virtual void accept(IVisitor *v) override { v->visitDataTypeStruct(this); }
 

@@ -20,6 +20,7 @@
  */
 #pragma once
 #include <stdint.h>
+#include <string.h>
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/impl/ValRef.h"
 
@@ -40,23 +41,11 @@ public:
         IDataTypeInt         *type,
         Flags                flags) : ValRef(value, type, flags) { }
 
-/*
-    ValRefInt(IValAlloc *ap, intptr_t v) : 
-        ValRef(v, Flags::None) {
-        IDataTypeInt *i32 = ctxt->findDataTypeInt(true, 32);
-        if (!i32) {
-            i32 = ctxt->mkDataTypeInt(true, 32);
-            ctxt->addDataTypeInt(i32);
-        }
-        m_type_field.m_type = i32;
-    }
- */
-
     ValRefInt(
         intptr_t    v,
         bool        is_signed=true,
         int32_t     bits=sizeof(void *)*8) : 
-            ValRef(v, Flags::None),
+            ValRef(v, static_cast<IDataType *>(0), Flags::None),
             m_isSigned(is_signed), m_bits(bits) { }
 
     virtual ~ValRefInt() { }
@@ -64,6 +53,32 @@ public:
     // Storage layout changes once we exceed the bit-size
     // of a pointer.
     static int32_t native_sz() { return sizeof(void *)*8; }
+
+    void clear() {
+        if (bits() <= native_sz()) {
+            set_val(0);
+        } else {
+            memset(reinterpret_cast<char *>(vp()), 0, bits()/8);
+        }
+    }
+
+    ValRefInt signExt(int32_t bits) {
+        // Sign-extension creates a mutable copy of the data.
+        if (bits <= native_sz()) {
+            // Value fits
+            if (is_signed()) {
+
+            } else {
+
+            }
+        } else {
+            // Need to allocate space for the value
+            if (is_signed()) {
+            } else {
+
+            }
+        }
+    }
 
     int32_t bits() const {
         if (type()) {

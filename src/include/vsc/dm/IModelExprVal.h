@@ -7,6 +7,7 @@
 #pragma once
 #include "vsc/dm/IModelExpr.h"
 #include "vsc/dm/IModelVal.h"
+#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
@@ -16,11 +17,12 @@ public:
 
 	virtual ~IModelExprVal() { }
 
-	virtual int32_t width() = 0;
-
-	virtual const IModelVal *val() const = 0;
-
-	virtual IModelVal  *val() = 0;
+    /**
+     * @brief Returns an immutable ref to the value
+     * 
+     * @return ValRef 
+     */
+    virtual ValRef getVal() const = 0;
 
 };
 

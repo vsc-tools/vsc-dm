@@ -28,6 +28,18 @@ DataTypeEnum::~DataTypeEnum() {
 	// TODO Auto-generated destructor stub
 }
 
+void DataTypeEnum::initVal(ValRef &v) {
+
+}
+
+void DataTypeEnum::finiVal(ValRef &v) {
+
+}
+
+ValRef &&DataTypeEnum::copyVal(const ValRef &src) {
+
+}
+
 bool DataTypeEnum::addEnumerator(
 			const std::string	&name,
 			const IModelVal		*val) {
@@ -205,13 +217,14 @@ IModelField *DataTypeEnum::mkRootField(
 
 IModelField *DataTypeEnum::mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) {
+		ITypeField			*type,
+        const ValRef        &val) {
 	IModelField *ret;
 
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
-		ret = ctxt->ctxt()->mkModelFieldType(type);
+		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 	}
 
 	return ret;

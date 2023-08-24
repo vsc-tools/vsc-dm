@@ -19,6 +19,7 @@
  *     Author:
  */
 #include "vsc/dm/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/impl/ValRefBool.h"
 #include "DataTypeBool.h"
 #include "ModelVal.h"
 
@@ -39,10 +40,24 @@ DataTypeBool::DataTypeBool(IContext *ctxt) {
         ctxt->mkTypeExprVal(this, v0),
         ctxt->mkTypeExprVal(this, v1)
     ));
+
+    m_bytesz = sizeof(bool);
 }
 
 DataTypeBool::~DataTypeBool() {
 
+}
+
+void DataTypeBool::initVal(ValRef &v) {
+    ValRefBool vr(v);
+    vr.set_val(false);
+}
+
+ValRef &&DataTypeBool::copyVal(const ValRef &src) {
+    ValRefBool src_b(src);
+    ValRefBool cpy;
+    cpy.set_val(src_b.get_val());
+    return std::move(cpy);
 }
 
 IModelField *DataTypeBool::mkRootField(
@@ -62,14 +77,15 @@ IModelField *DataTypeBool::mkRootField(
 
 IModelField *DataTypeBool::mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) {
+		ITypeField			*type,
+        const ValRef        &val) {
 	IModelField *ret;
 
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
-		ret = ctxt->ctxt()->mkModelFieldType(type);
+		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 		if (type_p->haveInit()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());

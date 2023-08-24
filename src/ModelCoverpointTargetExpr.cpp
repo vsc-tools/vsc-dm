@@ -16,7 +16,7 @@ ModelCoverpointTargetExpr::~ModelCoverpointTargetExpr() {
 }
 
 void ModelCoverpointTargetExpr::getValue(IModelVal *val) {
-    m_resolver.eval(val, m_expr.get(), m_width);
+//    m_resolver.eval(val, m_expr.get(), m_width);
 }
 
 }

@@ -32,8 +32,6 @@ public:
 
     virtual int32_t getByteSize() const = 0;
 
-    virtual void setByteSize(int32_t sz) = 0;
-
 	virtual IModelField *mkRootField(
 		IModelBuildContext	*ctxt,
 		const std::string	&name,
@@ -41,7 +39,8 @@ public:
 
 	virtual IModelField *mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) = 0;
+		ITypeField			*type,
+        const ValRef        &val) = 0;
 
 	template <class T> T *mkRootFieldT(
 		IModelBuildContext	*ctxt,
@@ -52,8 +51,9 @@ public:
 
 	template <class T> T *mkTypeFieldT(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) {
-		return dynamic_cast<T *>(mkTypeField(ctxt, type));
+		ITypeField			*type,
+        const ValRef        &val) {
+		return dynamic_cast<T *>(mkTypeField(ctxt, type, val));
 	}
 
     virtual void setAssociatedData(IAssociatedData *data) = 0;

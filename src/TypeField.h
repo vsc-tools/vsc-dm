@@ -31,10 +31,6 @@ public:
 
 	virtual ~TypeField();
 
-    virtual void initVal(uintptr_t vp) override { }
-
-    virtual void finiVal(uintptr_t vp) override { }
-
 	virtual ITypeField *getParent() const override { return m_parent; }
 
 	virtual void setParent(ITypeField *p) override { m_parent = p; }
@@ -67,7 +63,8 @@ public:
     virtual void setOffset(int32_t off) { m_offset = off; }
 
 	virtual IModelField *mkModelField(
-		IModelBuildContext 			*ctxt) override;
+		IModelBuildContext 			*ctxt,
+        const ValRef                &val) override;
 
 protected:
 	ITypeField				*m_parent;

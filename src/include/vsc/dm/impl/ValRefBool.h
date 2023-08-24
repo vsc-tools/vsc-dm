@@ -1,5 +1,5 @@
 /**
- * IValOps.h
+ * ValRefBool.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,24 +19,43 @@
  *     Author: 
  */
 #pragma once
-#include <stdint.h>
-//#include "vsc/dm/impl/ValRef.h"
+#include "ValRef.h"
 
 namespace vsc {
 namespace dm {
 
-class ValRef;
 
-class IValOps {
+
+class ValRefBool : public ValRef {
 public:
 
-    virtual ~IValOps() { }
+    ValRefBool() { }
 
-    virtual void initVal(ValRef &v) = 0;
+    ValRefBool(const ValRef &v) : ValRef(v) { }
 
-    virtual void finiVal(ValRef &v) = 0;
+    ValRefBool(ValRef &v) : ValRef(v) { }
 
-    virtual ValRef &&copyVal(const ValRef &src) = 0;
+    virtual ~ValRefBool() { }
+
+    static int32_t size() { return sizeof(bool)*8; }
+
+    bool get_val() const {
+        bool ret;
+        if ((m_flags & Flags::IsPtr) != Flags::None) {
+            ret = *reinterpret_cast<bool *>(m_vp);
+        } else {
+            ret = static_cast<bool>(m_vp);
+        }
+        return ret;
+    }
+
+    void set_val(bool v) {
+        if ((m_flags & Flags::IsPtr) != Flags::None) {
+            *reinterpret_cast<bool *>(m_vp) = v;
+        } else {
+            m_vp = v;
+        }
+    }
 
 };
 

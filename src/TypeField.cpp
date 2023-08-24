@@ -52,8 +52,9 @@ ITypeField *TypeField::getField(int32_t idx) const {
 }
 
 IModelField *TypeField::mkModelField(
-		IModelBuildContext 			*ctxt) {
-	return getDataType()->mkTypeField(ctxt, this);
+		IModelBuildContext 		*ctxt,
+        const ValRef            &val) {
+	return getDataType()->mkTypeField(ctxt, this, val);
 }
 
 }

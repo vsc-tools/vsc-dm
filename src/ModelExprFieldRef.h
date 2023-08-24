@@ -19,7 +19,9 @@ public:
 	virtual ~ModelExprFieldRef();
 
 	virtual int32_t width() override {
-		return m_field->val()->bits();
+        // TODO:
+        return -1;
+//		return m_field->getDataType()->get()->bits();
 	}
 
 	virtual IModelField *field() const override { return m_field; }

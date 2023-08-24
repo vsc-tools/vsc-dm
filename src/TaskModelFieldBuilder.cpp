@@ -43,12 +43,15 @@ IModelFieldRoot *TaskModelFieldBuilder::build(
 
 void TaskModelFieldBuilder::visitTypeField(ITypeField *f) {
 	DEBUG_ENTER("visitTypeField");
+    fprintf(stdout, "TODO: TaskModelFieldBuilder::visitTypeField\n");
+#ifdef UNDEFINED
 	IModelFieldType *field = m_ctxt->mkModelFieldType(f);
 	m_field_s.back()->addField(field, true);
 
 	m_field_s.push_back(field);
 	VisitorBase::visitTypeField(f);
 	m_field_s.pop_back();
+#endif
 	DEBUG_LEAVE("visitTypeField");
 }
 

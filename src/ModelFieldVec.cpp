@@ -33,7 +33,7 @@ ModelFieldVec::ModelFieldVec(IContext *ctxt) {
 	}
 	m_size = IModelFieldUP(ctxt->mkModelFieldRoot(ui32_t, "size"));
 	m_size->setParent(this);
-	m_size->val()->setBits(32);
+//	m_size->val()->setBits(32);
 	m_size->setFlag(ModelFieldFlag::VecSize);
 }
 

@@ -32,6 +32,9 @@ public:
 
     ValRefStruct(ValRef &rhs) : ValRef(rhs) { }
 
+    ValRefStruct(const ValRef &rhs) : ValRef(rhs) { }
+
+#ifdef UNDEFINED
     ValRefStruct(
         IContext            *ctxt,
         IDataTypeStruct     *type) : 
@@ -39,8 +42,14 @@ public:
                 Val::Val2ValPtr(ctxt->mkVal(type->getByteSize())),
                 type,
                 Flags::Owned) {
-        type->initVal(vp());
+        type->getValOps()->initVal(vp());
     }
+#endif
+
+    ValRefStruct(
+        ValData             vp,
+        IDataTypeStruct     *type,
+        ValRef::Flags        flags) : ValRef(vp, type, flags) { }
 
     virtual ~ValRefStruct() { }
 

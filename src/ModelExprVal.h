@@ -22,18 +22,19 @@ public:
 
 	virtual ~ModelExprVal();
 
-	virtual int32_t width() override { return m_val.bits(); }
+	virtual int32_t width() override { 
+        // TODO:
+        return -1;
+    }
 
-	virtual const IModelVal *val() const override { return &m_val; }
-
-	virtual IModelVal *val() { return &m_val; }
+    virtual ValRef getVal() const override { return m_val; }
 
 	virtual void eval(IModelVal *dst) override;
 
 	virtual void accept(IVisitor *v) override { v->visitModelExprVal(this); }
 
 private:
-	ModelVal			m_val;
+    ValRef              m_val;
 };
 
 }

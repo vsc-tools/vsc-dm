@@ -70,8 +70,9 @@ public:
 
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
-			int32_t			width) override {
-		return m_ctxt->findDataTypeInt(is_signed, width);
+			int32_t			width,
+            bool            create=true) override {
+		return m_ctxt->findDataTypeInt(is_signed, width, create);
 	}
 
 	/**
@@ -281,8 +282,9 @@ public:
 	}
 
 	virtual IModelFieldType *mkModelFieldType(
-			ITypeField			*type) override {
-		return m_ctxt->mkModelFieldType(type);
+			ITypeField			*type,
+            const ValRef        &val) override {
+		return m_ctxt->mkModelFieldType(type, val);
 	}
 
 	virtual IModelFieldVec *mkModelFieldVecRoot(
@@ -472,6 +474,10 @@ public:
 
     virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) override {
         return m_ctxt->mkValRefStr(str, reserve);
+    }
+
+    virtual ValRefStruct mkValRefStruct(IDataTypeStruct *t) override {
+        return m_ctxt->mkValRefStruct(t);
     }
 
     virtual Val *mkVal(uint32_t nbytes) override {

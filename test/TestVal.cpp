@@ -91,9 +91,7 @@ TEST_F(TestVal, struct_1) {
 
     m_ctxt->addDataTypeStruct(dt);
 
-    ValRefStruct v1(
-        m_ctxt.get(),
-        dt);
+    ValRefStruct v1(m_ctxt->mkValRefStruct(dt));
 
     ValRef a(v1.getField(0));
     ASSERT_EQ(a.name(), "a");
@@ -130,9 +128,7 @@ TEST_F(TestVal, struct_pad_1) {
     ASSERT_EQ(dt->getField(1)->getOffset(), 4);
     ASSERT_EQ(dt->getField(2)->getOffset(), 8);
 
-    ValRefStruct v1(
-        m_ctxt.get(),
-        dt);
+    ValRefStruct v1(m_ctxt->mkValRefStruct(dt));
 
     ValRef a(v1.getField(0));
     ASSERT_EQ(a.name(), "a");

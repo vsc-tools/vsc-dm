@@ -36,6 +36,12 @@ public:
 
 	virtual int32_t getWidth() override;
 
+    virtual void initVal(ValRef &v) override;
+
+    virtual void finiVal(ValRef &v) override;
+
+    virtual ValRef &&copyVal(const ValRef &src) override;
+
 	virtual bool addEnumerator(
 			const std::string	&name,
 			const IModelVal		*val) override;
@@ -49,7 +55,8 @@ public:
 
 	virtual IModelField *mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) override;
+		ITypeField			*type,
+        const ValRef        &val) override;
 
 	virtual void accept(IVisitor *v) override { v->visitDataTypeEnum(this); }
 

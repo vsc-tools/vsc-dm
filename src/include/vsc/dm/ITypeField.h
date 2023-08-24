@@ -37,8 +37,7 @@ class IDataTypeStruct;
 class ITypeField;
 using ITypeFieldUP=UP<ITypeField>;
 class ITypeField : 
-    public virtual IAccept,
-    public virtual IValOps {
+    public virtual IAccept {
 public:
 
 	virtual ~ITypeField() { }
@@ -76,11 +75,13 @@ public:
 	virtual TypeFieldAttr getAttr() const = 0;
 
 	virtual IModelField *mkModelField(
-		IModelBuildContext 			*ctxt) = 0;
+		IModelBuildContext 			*ctxt,
+        const ValRef                &val) = 0;
 
 	template <class T> T *mkModelFieldT(
-		IModelBuildContext 			*ctxt) {
-		return dynamic_cast<T *>(mkModelField(ctxt));
+		IModelBuildContext 			*ctxt,
+        const ValRef                &val) {
+		return dynamic_cast<T *>(mkModelField(ctxt, val));
 	}
 
 };

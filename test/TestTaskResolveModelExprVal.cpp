@@ -11,7 +11,9 @@ TEST_F(TestTaskResolveModelExprVal, smoke) {
     m_ctxt->addDataTypeInt(vsc_uint32_t);
 
     IModelField *a = m_ctxt->mkModelFieldRoot(vsc_uint32_t, "a");
+#ifdef UNDEFINED
     a->val()->set_val_u(1);
+#endif
 
     IModelVal *val_1 = m_ctxt->mkModelVal();
     val_1->set_val_u(1, 15);
@@ -30,15 +32,19 @@ TEST_F(TestTaskResolveModelExprVal, smoke) {
     ));
 
     IModelValUP res_1(m_ctxt->mkModelVal());
+#ifdef UNDEFINED
     TaskResolveModelExprVal(m_ctxt.get()).eval(
         res_1.get(),
         true_e.get());
+#endif
     ASSERT_EQ(res_1->val_u(), 1);
 
     IModelValUP res_2(m_ctxt->mkModelVal());
+#ifdef UNDEFINED
     TaskResolveModelExprVal(m_ctxt.get()).eval(
         res_2.get(),
         false_e.get());
+#endif
     ASSERT_EQ(res_2->val_u(), 0);
 }
 

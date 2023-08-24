@@ -23,7 +23,7 @@ ModelFieldRefRoot::~ModelFieldRefRoot() {
 
 void ModelFieldRefRoot::setDataType(IDataType *t) {
 	m_type = t;
-	val()->setBits(DataTypeWidthVisitor().width(t).second);
+//	val()->setBits(DataTypeWidthVisitor().width(t).second);
 }
 
 }

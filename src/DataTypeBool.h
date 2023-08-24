@@ -44,13 +44,11 @@ public:
 
 	virtual int32_t getWidth() override { return 1; }
 
-    virtual void setAssociatedData(IAssociatedData *data) override {
-        m_associated_data = IAssociatedDataUP(data);
-    }
+    virtual void initVal(ValRef &v) override;
 
-    virtual IAssociatedData *getAssociatedData() const override {
-        return m_associated_data.get();
-    }
+    virtual void finiVal(ValRef &v) override { }
+
+    virtual ValRef &&copyVal(const ValRef &src) override;
 
     virtual void accept(IVisitor *v) override { v->visitDataTypeBool(this); }
 
@@ -61,11 +59,11 @@ public:
 
 	virtual IModelField *mkTypeField(
 		IModelBuildContext	*ctxt,
-		ITypeField			*type) override;
+		ITypeField			*type,
+        const ValRef        &val) override;
 
 private:
     ITypeExprRangelistUP                m_domain;
-    IAssociatedDataUP                   m_associated_data;
 
 };
 

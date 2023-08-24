@@ -31,7 +31,7 @@ ModelFieldRoot::ModelFieldRoot(
 	if (type) {
 		std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(type);
 		if (width.second > 0) {
-			m_val.setBits(width.second);
+//			m_val.setBits(width.second);
 		}
 	}
 }
@@ -44,7 +44,7 @@ void ModelFieldRoot::setDataType(IDataType *t) {
 	m_type = t; 
 	std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(t);
 	if (width.second > 0) {
-		m_val.setBits(width.second);
+//		m_val.setBits(width.second);
 	}
 }
 
