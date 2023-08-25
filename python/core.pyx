@@ -425,10 +425,12 @@ cdef class DataType(ObjBase):
     cpdef ModelField mkTypeField(
         self,
         ModelBuildContext    ctxt,
-        TypeField            type):
+        TypeField            type,
+        ValRef               val):
         cdef decl.IModelField *ret = self.asType().mkTypeField(
             ctxt._hndl,
-            type.asField())
+            type.asField(),
+            val.val)
         return ModelField.mk(ret, True)
 
     cdef decl.IDataType *asType(self):
@@ -902,7 +904,9 @@ cdef class ModelExprVal(ModelExpr):
         return self.asModelExprVal().width()
         
     cpdef val(self):
-        return ModelVal.mk(self.asModelExprVal().val(), False)
+        # TODO:
+#        return ModelVal.mk(self.asModelExprVal().val(), False)
+        pass
     
     cdef decl.IModelExprVal *asModelExprVal(self):
         return <decl.IModelExprVal *>(self._hndl)
@@ -995,7 +999,9 @@ cdef class ModelField(ObjBase):
             return None
         
     cpdef val(self):
-        return ModelVal.mk(self.asField().val(), False)
+        # TODO:
+#        return ModelVal.mk(self.asField().val(), False)
+        pass
     
     cpdef clearFlag(self, flags):
         cdef int flags_i = flags

@@ -83,6 +83,7 @@ public:
 	}
 
 	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
+#ifdef UNDEFINED
 		if (m_pass == 0) {
 			IModelFieldType *field = m_ctxt->ctxt()->mkModelFieldType(f);
 
@@ -104,6 +105,7 @@ public:
 			// The level above will have populated the field
 			VisitorBase::visitTypeField(f);
 		}
+#endif
 	}
 
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
@@ -113,6 +115,7 @@ public:
 	}
 
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override {
+#ifdef UNDEFINED
 		ITypeExprRangelist *domain = t->getDomain();
 		IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(
 				t,
@@ -131,6 +134,7 @@ public:
 								)), true);
 
 		addField(field);
+#endif / * UNDEFINED */
 	}
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {

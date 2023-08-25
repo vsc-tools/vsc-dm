@@ -101,7 +101,8 @@ cdef class DataType(ObjBase):
     cpdef ModelField mkTypeField(
         self,
         ModelBuildContext   ctxt,
-        TypeField           type)
+        TypeField           type,
+        ValRef              val)
 
     cdef decl.IDataType *asType(self)
 
@@ -612,6 +613,7 @@ cdef class TypeFieldRef(TypeField):
     cdef mk(decl.ITypeFieldRef *, bool owned=*)    
 
 cdef class ValRef(object):
+    cdef decl.ValRef                    val;
     pass
     
 cdef class VisitorBase(object):

@@ -87,6 +87,10 @@ ctypedef UP[ITypeExprRange] ITypeExprRangeUP
 ctypedef UP[ITypeField] ITypeFieldUP
 ctypedef UP[ITypeConstraint] ITypeConstraintUP
 
+cdef extern from "vsc/dm/impl/ValRef.h" namespace "vsc::dm":
+    cdef cppclass ValRef:
+        pass
+
 #********************************************************************
 #* IContext
 #********************************************************************
@@ -197,7 +201,8 @@ cdef extern from "vsc/dm/IDataType.h" namespace "vsc::dm":
             bool                   is_ref)
         IModelField *mkTypeField(
             IModelBuildContext     *ctxt,
-            ITypeField             *type)
+            ITypeField             *type,
+            const ValRef           &val)
 
         void setAssociatedData(IAssociatedData *data)
         IAssociatedData *getAssociatedData()
