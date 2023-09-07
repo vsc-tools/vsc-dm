@@ -277,8 +277,9 @@ public:
 
 	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
-			const std::string	&name) override {
-		return m_ctxt->mkModelFieldRoot(type, name);
+			const std::string	&name,
+            const ValRef        &val) override {
+		return m_ctxt->mkModelFieldRoot(type, name, val);
 	}
 
 	virtual IModelFieldType *mkModelFieldType(
@@ -338,6 +339,16 @@ public:
             bool            owned) override {
 		return m_ctxt->mkTypeConstraintExpr(e, owned);
 	}
+
+    virtual ITypeConstraintForeach *mkTypeConstraintForeach(
+            ITypeExpr           *target,
+            bool                target_owned,
+            const std::string   &iter_name,
+            ITypeConstraint     *body,
+            bool                body_owned) override {
+        return m_ctxt->mkTypeConstraintForeach(
+            target, target_owned, iter_name, body, body_owned);
+    }
 
 	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
@@ -439,9 +450,8 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            ValData                 init,
-            bool                    have_init) override {
-		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init, have_init);
+            ValRef                  &&init) override {
+		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, std::move(init));
 	}
 
 	virtual ITypeFieldRef *mkTypeFieldRef(

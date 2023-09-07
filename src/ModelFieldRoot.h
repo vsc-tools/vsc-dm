@@ -24,7 +24,8 @@ class ModelFieldRoot : public virtual IModelFieldRoot, public virtual ModelField
 public:
 	ModelFieldRoot(
 			IDataType			*type,
-			const std::string	&name);
+			const std::string	&name,
+            const ValRef        &val);
 
 	virtual ~ModelFieldRoot();
 

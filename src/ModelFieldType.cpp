@@ -60,8 +60,12 @@ IModelField *ModelFieldType::getField(int32_t idx) {
 	}
 }
 
-ValRef &&ModelFieldType::getVal(bool mut) const {
+ValRef ModelFieldType::getImmVal() const {
 
+}
+
+ValRef ModelFieldType::getMutVal() const {
+    
 }
 
 void ModelFieldType::setFieldData(IModelFieldData *data) {

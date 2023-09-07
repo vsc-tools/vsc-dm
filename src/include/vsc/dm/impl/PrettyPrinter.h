@@ -199,7 +199,9 @@ public:
     }
 
 	virtual void visitModelExprVal(IModelExprVal *e) override {
+#ifdef UNDEFINED
         print("%lld", e->val()->val_i());
+#endif
     }
 
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override {

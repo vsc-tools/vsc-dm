@@ -19,6 +19,8 @@
  *     Author: 
  */
 #pragma once
+#include <string>
+#include "vsc/dm/IContext.h"
 #include "vsc/dm/ITypeConstraintForeach.h"
 
 
@@ -32,9 +34,12 @@ class TypeConstraintForeach :
 public:
 
     TypeConstraintForeach(
+        IContext            *ctxt,
         ITypeExpr           *target,
+        bool                target_owned,
+        const std::string   &iter_name,
         ITypeConstraint     *body,
-        bool                owned);
+        bool                body_owned);
 
     virtual ~TypeConstraintForeach();
 
@@ -46,9 +51,20 @@ public:
         return m_body.get();
     }
 
+    virtual void addVariable(ITypeField *var, bool owned=true) override {
+        m_variables.push_back(ITypeFieldUP(var, owned));
+    }
+
+    virtual const std::vector<ITypeFieldUP> &getVariables() const override {
+        return m_variables;
+    }
+
+    virtual void accept(IVisitor *v) override { v->visitTypeConstraintForeach(this); }
+
 private:
-    ITypeExprUP             m_target;
-    ITypeConstraintUP       m_body;
+    ITypeExprUP                     m_target;
+    ITypeConstraintUP               m_body;
+    std::vector<ITypeFieldUP>       m_variables;
 
 };
 

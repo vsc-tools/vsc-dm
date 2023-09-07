@@ -69,7 +69,8 @@ IModelField *DataTypeBool::mkRootField(
 	if (is_ref) {
 		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
 	} else {
-		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+        ValRefBool val;
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name, val);
 	}
 
 	return ret;
@@ -86,7 +87,7 @@ IModelField *DataTypeBool::mkTypeField(
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
 		ret = ctxt->ctxt()->mkModelFieldType(type, val);
-		if (type_p->haveInit()) {
+		if (type_p->getInit().isVoid()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());
 		}

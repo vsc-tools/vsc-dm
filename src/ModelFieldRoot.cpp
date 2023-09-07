@@ -27,7 +27,10 @@ namespace dm {
 
 ModelFieldRoot::ModelFieldRoot(
 		IDataType			*type,
-		const std::string	&name) : m_type(type), m_name(name) {
+		const std::string	&name,
+        const ValRef        &val) : m_type(type), m_name(name) {
+    m_val = val;
+
 	if (type) {
 		std::pair<bool, int32_t> width = DataTypeWidthVisitor().width(type);
 		if (width.second > 0) {

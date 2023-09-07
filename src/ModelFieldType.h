@@ -72,7 +72,9 @@ public:
 
 	virtual IModelField *getField(int32_t idx) override;
 
-    virtual ValRef &&getVal(bool mut=false) const override;
+    virtual ValRef getImmVal() const override;
+
+    virtual ValRef getMutVal() const override;
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }
 

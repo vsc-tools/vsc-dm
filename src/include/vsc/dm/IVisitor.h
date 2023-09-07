@@ -80,6 +80,7 @@ class IModelFieldVecRoot;
 class ITypeConstraint;
 class ITypeConstraintBlock;
 class ITypeConstraintExpr;
+class ITypeConstraintForeach;
 class ITypeConstraintIfElse;
 class ITypeConstraintImplies;
 class ITypeConstraintScope;
@@ -194,6 +195,8 @@ public:
 	virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) = 0;
 
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) = 0;
+
+	virtual void visitTypeConstraintForeach(ITypeConstraintForeach *c) = 0;
 
 	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) = 0;
 

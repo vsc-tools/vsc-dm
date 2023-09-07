@@ -25,6 +25,7 @@ namespace vsc {
 namespace dm {
 
 class IValAlloc;
+class ValRef;
 
 using ValData=uintptr_t;
 
@@ -33,6 +34,7 @@ struct Val {
         IValAlloc   *ap;
         Val         *np;
     } p;
+    ValRef      *owner;
     uint32_t    sz;
     ValData     val[1];
 

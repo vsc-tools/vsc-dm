@@ -134,14 +134,16 @@ public:
 								)), true);
 
 		addField(field);
-#endif / * UNDEFINED */
+#endif /* UNDEFINED */
 	}
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override {
+/*
 		IModelFieldRoot *field = m_ctxt->ctxt()->mkModelFieldRoot(
 				t,
 				m_name);
 		addField(field);
+ */
 	}
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {

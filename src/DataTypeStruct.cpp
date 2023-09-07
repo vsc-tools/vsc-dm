@@ -58,7 +58,6 @@ void DataTypeStruct::addField(
     }
 
     m_bytesz += f->getDataType()->getByteSize();
-    fprintf(stdout, "offset: %d\n", offset);
     f->setOffset(offset);
 	m_fields.push_back(ITypeFieldUP(f, owned));
 }
@@ -76,7 +75,7 @@ ITypeField *DataTypeStruct::getField(int32_t idx) {
 }
 
 void DataTypeStruct::initVal(ValRef &v) {
-    ValRefStruct vs(v);
+    ValRefStruct vs(v.toUnowned());
 
     for (uint32_t i=0; i<vs.getNumFields(); i++) {
         ValRef vs_f(vs.getField(i));
@@ -85,7 +84,7 @@ void DataTypeStruct::initVal(ValRef &v) {
 }
 
 void DataTypeStruct::finiVal(ValRef &v) {
-    ValRefStruct vs(v);
+    ValRefStruct vs(v.toUnowned());
 
     for (uint32_t i=0; i<vs.getNumFields(); i++) {
         ValRef vs_f(vs.getField(i));
@@ -99,13 +98,14 @@ void DataTypeStruct::finiVal(ValRef &v) {
 }
 
 ValRef &&DataTypeStruct::copyVal(const ValRef &src) {
-    ValRefStruct src_s(src);
+    ValRefStruct src_s(src.toUnowned());
     Val *cpy_v = m_ctxt->mkVal(src_s.type()->getByteSize());
+    /*
     ValRefStruct cpy(
         Val::Val2ValPtr(cpy_v),
         dynamic_cast<IDataTypeStruct *>(src.type()),
         ValRef::Flags::Owned);
-
+     */
 }
 
 void DataTypeStruct::addConstraint(
@@ -122,13 +122,13 @@ IModelField *DataTypeStruct::mkRootField(
 	IModelBuildContext	*ctxt,
 	const std::string	&name,
 	bool				is_ref) {
-    ValRefStruct val(ctxt->ctxt()->mkValRefStruct(this));
 	IModelField *ret;
 
 	if (is_ref) {
 		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
 	} else {
-		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+        ValRefStruct val(ctxt->ctxt()->mkValRefStruct(this));
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name, val);
 
         ctxt->pushTopDownScope(ret);
 
@@ -138,7 +138,7 @@ IModelField *DataTypeStruct::mkRootField(
 			ret->addField(
                 getFields().at(i)->mkModelField(
                     ctxt,
-                    val.getField(i)), true);
+                    val.getFieldRef(i)), true);
 		}
 	
 		for (std::vector<ITypeConstraintUP>::const_iterator
@@ -167,7 +167,9 @@ IModelField *DataTypeStruct::mkTypeField(
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
-        ValRefStruct val_s(val);
+//        ValRefStruct val_s(val);
+        ValRefStruct val_s(ctxt->ctxt()->mkValRefStruct(
+            type->getDataTypeT<IDataTypeStruct>()));
 		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 
         ctxt->pushTopDownScope(ret);

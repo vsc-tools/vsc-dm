@@ -209,7 +209,8 @@ IModelField *DataTypeEnum::mkRootField(
 	if (is_ref) {
 		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
 	} else {
-		ret = ctxt->ctxt()->mkModelFieldRoot(this, name);
+        ValRefInt val(0, false, 32);
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name, val);
 	}
 
 	return ret;

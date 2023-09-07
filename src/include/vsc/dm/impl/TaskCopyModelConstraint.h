@@ -174,7 +174,9 @@ public:
     }
 
 	virtual void visitModelExprVal(IModelExprVal *e) override {
+#ifdef UNDEFINED
         m_expr = m_ctxt->mkModelExprVal(e->val());
+#endif
     }
 
 	virtual void visitModelExprVecSubscript(IModelExprVecSubscript *e) override {

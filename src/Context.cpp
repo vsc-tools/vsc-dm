@@ -28,7 +28,6 @@
 #include "DataTypeStruct.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
-#include "ModelConstraintForeach.h"
 #include "ModelConstraintIfElse.h"
 #include "ModelConstraintImplies.h"
 #include "ModelConstraintRef.h"
@@ -58,13 +57,11 @@
 #include "ModelFieldRefType.h"
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
-#include "ModelFieldVecRoot.h"
 #include "ModelVal.h"
-#include "RefSelector.h"
-#include "TaskModelFieldBuilder.h"
 #include "vsc/dm/impl/TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
+#include "TypeConstraintForeach.h"
 #include "TypeConstraintIfElse.h"
 #include "TypeConstraintImplies.h"
 #include "TypeConstraintScope.h"
@@ -162,7 +159,8 @@ IModelConstraintExpr *Context::mkModelConstraintExpr(
 IModelConstraintForeach *Context::mkModelConstraintForeach(
 			IModelExpr			*target,
 			const std::string	&index_it_name) {
-	return new ModelConstraintForeach(this, target, index_it_name);
+//	return new ModelConstraintForeach(this, target, index_it_name);
+    return 0;
 }
 
 IModelConstraintIfElse *Context::mkModelConstraintIfElse(
@@ -426,8 +424,9 @@ IModelFieldRef *Context::mkModelFieldRefType(ITypeField *type) {
 
 IModelFieldRoot *Context::mkModelFieldRoot(
 			IDataType 			*type,
-			const std::string	&name) {
-	return new ModelFieldRoot(type, name);
+			const std::string	&name,
+            const ValRef        &val) {
+	return new ModelFieldRoot(type, name, val);
 }
 
 IModelFieldType *Context::mkModelFieldType(
@@ -439,10 +438,13 @@ IModelFieldType *Context::mkModelFieldType(
 IModelFieldVec *Context::mkModelFieldVecRoot(
 			IDataType			*type,
 			const std::string	&name) {
+    /*
 	return new ModelFieldVecRoot(
 			this,
 			type,
 			name);
+     */
+    return 0;
 }
 
 IModelVal *Context::mkModelVal() {
@@ -482,7 +484,8 @@ IRandState *Context::mkRandState(const std::string &seed) {
 IRefSelector *Context::mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) {
-	return new RefSelector(this, ref, candidates);
+//	return new RefSelector(this, ref, candidates);
+    return 0;
 }
 
 ITask *Context::mkTask(TaskE id) {
@@ -504,6 +507,21 @@ ITypeConstraintExpr *Context::mkTypeConstraintExpr(
     ITypeExpr       *expr,
     bool            owned) {
 	return new TypeConstraintExpr(expr, owned);
+}
+
+ITypeConstraintForeach *Context::mkTypeConstraintForeach(
+            ITypeExpr           *target,
+            bool                target_owned,
+            const std::string   &iter_name,
+            ITypeConstraint     *body,
+            bool                body_owned) {
+    return new TypeConstraintForeach(
+        this,
+        target,
+        target_owned,
+        iter_name,
+        body,
+        body_owned);
 }
 
 ITypeConstraintIfElse *Context::mkTypeConstraintIfElse(
@@ -625,15 +643,13 @@ ITypeFieldPhy *Context::mkTypeFieldPhy(
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            ValData                 init,
-            bool                    have_init) {
+            ValRef                  &&init) {
 	return new TypeFieldPhy(
 			name,
 			dtype,
 			own_dtype,
 			attr,
-			init,
-            have_init);
+			std::move(init));
 }
 
 ITypeFieldRef *Context::mkTypeFieldRef(
@@ -694,7 +710,9 @@ ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {
 ValRefStruct Context::mkValRefStruct(IDataTypeStruct *t) {
     Val *v = mkVal(t->getByteSize());
 //    t->initVal(Val::Val2ValPtr(v));
-    return ValRefStruct(Val::Val2ValPtr(v), t, ValRef::Flags::Owned);
+    return ValRefStruct(Val::Val2ValPtr(v), t, 
+        ValRef::Flags::Owned
+        | ValRef::Flags::Mutable);
 }
 
 }

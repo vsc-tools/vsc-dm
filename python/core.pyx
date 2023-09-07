@@ -18,6 +18,7 @@ from libcpp cimport bool
 from libcpp.cast cimport dynamic_cast
 from libcpp.cast cimport static_cast
 from libcpp.cast cimport const_cast
+from libcpp.utility cimport move as std_move
 from libcpp.vector cimport vector as cpp_vector
 from libcpp.memory cimport unique_ptr
 
@@ -212,11 +213,12 @@ cdef class Context(object):
         if type is not None:
             type_h = type.asType()
 
-        return WrapperBuilder().mkObj(
-            self._hndl.mkModelFieldRoot(
-                type_h, 
-                name.encode()),
-            True)
+#        return WrapperBuilder().mkObj(
+#            self._hndl.mkModelFieldRoot(
+#                type_h, 
+#                name.encode()),
+#            True)
+        return None
         
     cpdef mkModelFieldVecRoot(self, DataType type, name):
         cdef decl.IDataType *type_h = NULL
@@ -336,7 +338,7 @@ cdef class Context(object):
                                 bool own_dtype,
                                 attr,
                                 ValRef init):
-        cdef decl.ValData init_v = 0
+        cdef decl.ValRef init_v
         cdef bool have_init = False
         cdef int attr_i = int(attr)
 
@@ -350,8 +352,7 @@ cdef class Context(object):
             dtype.asType(), 
             own_dtype,
             <decl.TypeFieldAttr>(attr_i),
-            init_v,
-            have_init))
+            std_move(init_v)))
         
     cpdef TypeFieldRef mkTypeFieldRef(self, 
                                 name, 

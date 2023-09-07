@@ -160,8 +160,7 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
             IDataType *,
             bool,
             TypeFieldAttr,
-            ValData,
-            bool)
+            ValRef &&)
         ITypeFieldRef *mkTypeFieldRef(
             const cpp_string &,
             IDataType *,

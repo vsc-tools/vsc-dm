@@ -19,9 +19,9 @@ ModelFieldRef::~ModelFieldRef() {
 	// TODO Auto-generated destructor stub
 }
 
-ValRef &&ModelFieldRef::getVal(bool mut) const {
+ValRef ModelFieldRef::getMutVal() const { }
 
-}
+ValRef ModelFieldRef::getImmVal() const { }
 
 }
 } /* namespace vsc */

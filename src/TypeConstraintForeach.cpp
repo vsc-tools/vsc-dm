@@ -26,9 +26,20 @@ namespace dm {
 
 
 TypeConstraintForeach::TypeConstraintForeach(
+    IContext                *ctxt,
     ITypeExpr               *target,
+    bool                    target_owned,
+    const std::string       &iter_name,
     ITypeConstraint         *body,
-    bool                    owned) : m_target(target), m_body(body, owned) {
+    bool                    body_owned) : 
+        m_target(target, target_owned), m_body(body, body_owned) {
+    IDataTypeInt *ui32 = ctxt->findDataTypeInt(true, 32);
+    addVariable(ctxt->mkTypeFieldPhy(
+        iter_name,
+        ui32,
+        false,
+        TypeFieldAttr::NoAttr,
+        ctxt->mkValRefInt(0, false, 32)));
 
 }
 

@@ -34,8 +34,6 @@ public:
 
     ValRefInt(const ValRef &rhs) : ValRef(rhs) { }
 
-    ValRefInt(ValRef &&rhs) : ValRef(rhs) { }
-
     ValRefInt(
         uintptr_t            value,
         IDataTypeInt         *type,

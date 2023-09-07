@@ -97,7 +97,9 @@ public:
         ModelFieldFlag flags = c->getIndexIt()->flags();
         c->getIndexIt()->setFlag(ModelFieldFlag::Resolved);
         for (uint32_t i=0; i<vec->getSize(); i++) {
+#ifdef UNDEFINED
             c->getIndexIt()->val()->set_val_u(i);
+#endif
             for (std::vector<IModelConstraintUP>::const_iterator
                 it=c->getConstraints().begin();
                 it!=c->getConstraints().end(); it++) {
@@ -190,9 +192,11 @@ public:
         if (m_foreach_depth) {
             // For iterative constraints, flatten out any const references
             if (e->field()->isFlagSet(ModelFieldFlag::Resolved)) {
+#ifdef UNDEFINED
                  IModelVal *val = m_ctxt->mkModelVal();
                  val->set(e->field()->val());
                  m_expr = m_ctxt->mkModelExprVal(val);
+#endif
             } else {
                  m_expr = m_ctxt->mkModelExprFieldRef(e->field());
             }

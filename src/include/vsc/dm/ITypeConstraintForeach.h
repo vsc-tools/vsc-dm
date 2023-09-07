@@ -1,12 +1,15 @@
 
 #pragma once
-#include "vsc/dm/ITypeConstraintScope.h"
+#include "vsc/dm/ITypeConstraint.h"
+#include "vsc/dm/ITypeConstraintVarScope.h"
 #include "vsc/dm/ITypeExpr.h"
 
 namespace vsc {
 namespace dm {
 
-class ITypeConstraintForeach : public virtual ITypeConstraint {
+class ITypeConstraintForeach : 
+    public virtual ITypeConstraint,
+    public virtual ITypeConstraintVarScope {
 public:
 
     virtual ~ITypeConstraintForeach() { }

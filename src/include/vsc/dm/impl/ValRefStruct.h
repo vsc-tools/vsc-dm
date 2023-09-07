@@ -29,27 +29,9 @@ namespace dm {
 
 class ValRefStruct : public ValRef {
 public:
-
-    ValRefStruct(ValRef &rhs) : ValRef(rhs) { }
+    friend class Context;
 
     ValRefStruct(const ValRef &rhs) : ValRef(rhs) { }
-
-#ifdef UNDEFINED
-    ValRefStruct(
-        IContext            *ctxt,
-        IDataTypeStruct     *type) : 
-            ValRef(
-                Val::Val2ValPtr(ctxt->mkVal(type->getByteSize())),
-                type,
-                Flags::Owned) {
-        type->getValOps()->initVal(vp());
-    }
-#endif
-
-    ValRefStruct(
-        ValData             vp,
-        IDataTypeStruct     *type,
-        ValRef::Flags        flags) : ValRef(vp, type, flags) { }
 
     virtual ~ValRefStruct() { }
 
@@ -70,14 +52,22 @@ public:
     ValRef getFieldRef(int32_t i) {
         char *ptr = reinterpret_cast<char *>(m_vp);
         ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);
-        fprintf(stdout, "getFieldRef: %d %d\n", i, field->getOffset());
+        ValRef::Flags flags = static_cast<ValRef::Flags>(
+            static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::Owned));
+        flags = flags | ValRef::Flags::IsPtr;
         return ValRef(
             reinterpret_cast<uintptr_t>(&ptr[field->getOffset()]),
             field,
-            Flags::IsPtr
+            flags
         );
     }
 
+protected:
+
+    ValRefStruct(
+        ValData             vp,
+        IDataTypeStruct     *type,
+        ValRef::Flags        flags) : ValRef(vp, type, flags) { }
 
 };
 

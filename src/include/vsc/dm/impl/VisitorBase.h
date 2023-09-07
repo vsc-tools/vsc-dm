@@ -64,6 +64,7 @@
 
 #include "vsc/dm/ITypeConstraintBlock.h"
 #include "vsc/dm/ITypeConstraintExpr.h"
+#include "vsc/dm/ITypeConstraintForeach.h"
 #include "vsc/dm/ITypeConstraintIfElse.h"
 #include "vsc/dm/ITypeConstraintImplies.h"
 #include "vsc/dm/ITypeConstraintScope.h"
@@ -285,6 +286,15 @@ public:
 	
 	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
 		c->expr()->accept(m_this);
+	}
+
+	virtual void visitTypeConstraintForeach(ITypeConstraintForeach *c) override {
+        for (std::vector<ITypeFieldUP>::const_iterator
+            it=c->getVariables().begin();
+            it!=c->getVariables().end(); it++) {
+            (*it)->accept(m_this);
+        }
+        c->getBody()->accept(m_this);
 	}
 
 	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {

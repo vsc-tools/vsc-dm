@@ -69,8 +69,10 @@ public:
                     break;
                 }
 
+#ifdef UNDEFINED
                 TaskResolveModelExprVal(m_ctx).eval(m_val.get(), it->idx_e);
                 field = vec->getField(m_val->val_u());
+#endif
             } break;
 
             }

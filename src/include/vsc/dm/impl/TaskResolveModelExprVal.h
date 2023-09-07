@@ -194,7 +194,7 @@ public:
     }
 
 	virtual void visitModelExprFieldRef(IModelExprFieldRef *e) override {
-        m_result.set(e->field()->getVal(false)); // Get immutable ref to the value
+//        m_result.set(e->field()->getVal(false)); // Get immutable ref to the value
     }
 
 	virtual void visitModelExprIn(IModelExprIn *e) override {

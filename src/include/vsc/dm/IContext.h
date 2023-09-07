@@ -49,6 +49,7 @@
 #include "vsc/dm/ITask.h"
 #include "vsc/dm/ITypeConstraintBlock.h"
 #include "vsc/dm/ITypeConstraintExpr.h"
+#include "vsc/dm/ITypeConstraintForeach.h"
 #include "vsc/dm/ITypeConstraintIfElse.h"
 #include "vsc/dm/ITypeConstraintImplies.h"
 #include "vsc/dm/ITypeConstraintScope.h"
@@ -246,7 +247,8 @@ public:
 
 	virtual IModelFieldRoot *mkModelFieldRoot(
 			IDataType 			*type,
-			const std::string	&name) = 0;
+			const std::string	&name,
+            const ValRef        &val) = 0;
 
 	virtual IModelFieldType *mkModelFieldType(
 			ITypeField			*type,
@@ -292,6 +294,13 @@ public:
 	virtual ITypeConstraintExpr *mkTypeConstraintExpr(
             ITypeExpr       *expr,
             bool            owned=true) = 0;
+
+    virtual ITypeConstraintForeach *mkTypeConstraintForeach(
+            ITypeExpr           *target,
+            bool                target_owned,
+            const std::string   &iter_name,
+            ITypeConstraint     *body,
+            bool                body_owned) = 0;
 
 	virtual ITypeConstraintIfElse *mkTypeConstraintIfElse(
 			ITypeExpr 		*cond,
@@ -350,8 +359,7 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            ValData                 init,
-            bool                    have_init) = 0;
+            ValRef                  &&init) = 0;
 
 	virtual ITypeFieldRef *mkTypeFieldRef(
 			const std::string		&name,

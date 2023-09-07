@@ -110,7 +110,9 @@ public:
      * 
      * @return ValRef 
      */
-    virtual ValRef &&getVal(bool m=false) const = 0;
+    virtual ValRef getImmVal() const = 0;
+
+    virtual ValRef getMutVal() const = 0;
 
 	virtual ModelFieldFlag flags() const = 0;
 

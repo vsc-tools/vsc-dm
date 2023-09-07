@@ -66,12 +66,12 @@ public:
 
 	virtual IModelField *getField(int32_t idx) override;
 
-    virtual ValRef &&getVal(bool m=false) const override {
-        if (m) {
-            return m_val.toMutable();
-        } else {
-            return m_val.toImmutable();
-        }
+    virtual ValRef getImmVal() const override {
+        return m_val.toImmutable();
+    }
+
+    virtual ValRef getMutVal() const override {
+        return m_val.toMutable();
     }
 
 	virtual ModelFieldFlag flags() const override { return m_flags; }

@@ -21,24 +21,18 @@ public:
 			IDataType			*type,
 			bool				own_type,
 			TypeFieldAttr		attr,
-            ValData             init,
-            bool                have_init);
+            ValRef              &&init);
 
 	virtual ~TypeFieldPhy();
 
-    virtual bool haveInit() const override {
-        return m_haveInit;
-    }
-
-	virtual ValData getInit() const override { 
+	virtual const ValRef &getInit() const override { 
         return m_init;
     }
 
 	virtual void accept(IVisitor *v) { v->visitTypeFieldPhy(this); }
 
 private:
-    ValData                 m_init;
-    bool                    m_haveInit;
+    ValRef                 m_init;
 
 };
 

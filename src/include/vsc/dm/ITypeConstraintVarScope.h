@@ -1,5 +1,5 @@
-/*
- * ValAlloc.cpp
+/**
+ * ITypeConstraintVarScope.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -16,36 +16,29 @@
  * limitations under the License.
  *
  * Created on:
- *     Author:
+ *     Author: 
  */
-#include <stdio.h>
-#include "ValAlloc.h"
-
+#pragma once
+#include <vector>
+#include "vsc/dm/ITypeField.h"
 
 namespace vsc {
 namespace dm {
 
 
-ValAlloc::ValAlloc() {
 
-}
+class ITypeConstraintVarScope {
+public:
 
-ValAlloc::~ValAlloc() {
+    virtual ~ITypeConstraintVarScope() { }
 
-}
+    virtual void addVariable(ITypeField *var, bool owned=true) = 0;
 
-Val *ValAlloc::alloc(uint32_t n_bytes) {
-    uint32_t arr_sz = ((n_bytes-1)/sizeof(uintptr_t))+1;
-    uint32_t total_sz = sizeof(Val)+(sizeof(uintptr_t)*(arr_sz-1));
-    Val *v = reinterpret_cast<Val *>(::operator new(total_sz));
-    v->sz = arr_sz*sizeof(uintptr_t);
-    v->owner = 0;
-    return v;
-}
+    virtual const std::vector<ITypeFieldUP> &getVariables() const = 0;
 
-void ValAlloc::free(Val *v) {
+};
 
-}
+} /* namespace dm */
+} /* namespace vsc */
 
-}
-}
+

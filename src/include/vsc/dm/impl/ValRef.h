@@ -42,28 +42,47 @@ class ValRef {
 public:
     enum class Flags {
         None     = 0,
-        Root     = (1 << 0),
-        Owned    = (1 << 1),
-        IsPtr    = (1 << 2),
-        HasField = (1 << 3),
-        Mutable  = (1 << 4)
+        Void     = (1 << 0), // Does not hold a valid value
+        Root     = (1 << 1), // 
+        Owned    = (1 << 2), // Storage is owned by this handle
+        IsPtr    = (1 << 3),
+        HasField = (1 << 4),
+        Mutable  = (1 << 5)
     };
 
 
 public:
-    ValRef() : m_vp(0), m_type_field(static_cast<IDataType *>(0)), m_flags(Flags::None) { }
+    ValRef() : m_vp(0), m_type_field(static_cast<IDataType *>(0)), m_flags(Flags::Void) { }
     
-    ValRef(const ValRef &rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
-        // Implement move semantics
-        /*
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
-            rhs.m_vp = 0;
+    ValRef(const ValRef &rhs) : 
+        m_vp(rhs.m_vp), 
+        m_type_field(rhs.m_type_field), 
+        m_flags(rhs.m_flags) {
+
+        if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
+            // The producer is passing ownership. Accept
+            Val *v = Val::ValPtr2Val(m_vp);
+            v->owner = this;
         }
-         */
     }
 
+    void operator = (const ValRef &rhs) {
+        m_vp = rhs.m_vp;
+        m_type_field = rhs.m_type_field;
+        m_flags = rhs.m_flags;
+
+        if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
+            // The producer is passing ownership. Accept
+            Val *v = Val::ValPtr2Val(m_vp);
+            v->owner = this;
+        }
+    }
+
+/*
     ValRef(ValRef &rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
         // Implement move semantics
+        fprintf(stdout, "ValRef(&) this=%p\n", this);
+        fflush(stdout);
         if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             rhs.m_vp = 0;
         }
@@ -71,10 +90,13 @@ public:
 
     ValRef(ValRef &&rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
         // Implement move semantics
+        fprintf(stdout, "ValRef(&&)\n");
+        fflush(stdout);
         if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             rhs.m_vp = 0;
         }
     }
+ */
 
 /*
     ValRef(
@@ -94,12 +116,14 @@ public:
             m_flags(static_cast<Flags>(static_cast<uint32_t>(flags) | static_cast<uint32_t>(Flags::HasField))) { }
 
     virtual ~ValRef() {
-        if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
-            if (type()) {
-                type()->finiVal(*this);
-            }
+        if (m_vp && VALREF_FLAGSET(m_flags, Flags::Owned)) {
             Val *vp = Val::ValPtr2Val(m_vp);
-            vp->p.ap->freeVal(vp);
+            if (vp->owner == this) {
+                if (type()) {
+                    type()->finiVal(*this);
+                }
+                vp->p.ap->freeVal(vp);
+            }
         }
     }
 
@@ -127,6 +151,8 @@ public:
         }
     }
 
+    bool isVoid() const { return VALREF_FLAGSET(m_flags, Flags::Void); }
+
     bool isMutable() const { return VALREF_FLAGSET(m_flags, Flags::Mutable); }
 
     void setWeakRef(const ValRef &rhs) {
@@ -143,11 +169,16 @@ public:
 //        return type()->copyVal(*this);
     }
 
-    ValRef &&toMutable() const {
+    ValRef toMutable() const {
+        // We want 
         if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
             // This value is already mutable
-            return std::move(ValRef(*this));
+            Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
+            return ValRef(m_vp, m_type_field.m_type, flags);
         } else {
+            // TODO: maybe this is just a failure?
+            fprintf(stdout, "Error: cannot make an immutable field mutable\n");
+
             // Create a copy and make it mutable
             ValRef cp(copyVal());
             cp.m_flags = VALREF_SETFLAG(cp.m_flags, Flags::Mutable);
@@ -155,8 +186,13 @@ public:
         }
     }
 
-    ValRef &&toImmutable() const {
+    ValRef toImmutable() const {
         Flags flags = VALREF_CLRFLAG(m_flags, Flags::Mutable);
+        return ValRef(m_vp, m_type_field.m_type, flags);
+    }
+
+    ValRef &&toUnowned() const {
+        Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
         return std::move(ValRef(m_vp, m_type_field.m_type, flags));
     }
 
