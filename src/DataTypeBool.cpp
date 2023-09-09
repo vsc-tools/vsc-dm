@@ -53,7 +53,7 @@ void DataTypeBool::initVal(ValRef &v) {
     vr.set_val(false);
 }
 
-ValRef &&DataTypeBool::copyVal(const ValRef &src) {
+ValRef DataTypeBool::copyVal(const ValRef &src) {
     ValRefBool src_b(src);
     ValRefBool cpy;
     cpy.set_val(src_b.get_val());

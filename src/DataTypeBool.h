@@ -48,7 +48,7 @@ public:
 
     virtual void finiVal(ValRef &v) override { }
 
-    virtual ValRef &&copyVal(const ValRef &src) override;
+    virtual ValRef copyVal(const ValRef &src) override;
 
     virtual void accept(IVisitor *v) override { v->visitDataTypeBool(this); }
 

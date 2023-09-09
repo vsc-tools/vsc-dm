@@ -450,8 +450,8 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            ValRef                  &&init) override {
-		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, std::move(init));
+            const ValRef            &init) override {
+		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init);
 	}
 
 	virtual ITypeFieldRef *mkTypeFieldRef(

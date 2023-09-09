@@ -40,7 +40,7 @@ public:
 
     virtual void finiVal(ValRef &v) override;
 
-    virtual ValRef &&copyVal(const ValRef &src) override;
+    virtual ValRef copyVal(const ValRef &src) override;
 
 	virtual bool addEnumerator(
 			const std::string	&name,

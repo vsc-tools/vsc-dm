@@ -643,13 +643,13 @@ ITypeFieldPhy *Context::mkTypeFieldPhy(
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            ValRef                  &&init) {
+            const ValRef            &init) {
 	return new TypeFieldPhy(
 			name,
 			dtype,
 			own_dtype,
 			attr,
-			std::move(init));
+			init);
 }
 
 ITypeFieldRef *Context::mkTypeFieldRef(

@@ -15,7 +15,7 @@ TypeFieldPhy::TypeFieldPhy(
 		IDataType			*type,
 		bool				own_type,
 		TypeFieldAttr		attr,
-        ValRef              &&init) :
+        const ValRef        &init) :
 		    TypeField(name, type, own_type, attr), m_init(init) {
 
 }

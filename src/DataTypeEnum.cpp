@@ -36,7 +36,7 @@ void DataTypeEnum::finiVal(ValRef &v) {
 
 }
 
-ValRef &&DataTypeEnum::copyVal(const ValRef &src) {
+ValRef DataTypeEnum::copyVal(const ValRef &src) {
 
 }
 

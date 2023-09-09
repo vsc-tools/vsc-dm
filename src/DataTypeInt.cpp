@@ -65,7 +65,7 @@ void DataTypeInt::finiVal(ValRef &v) {
     }
 }
 
-ValRef &&DataTypeInt::copyVal(const ValRef &src) {
+ValRef DataTypeInt::copyVal(const ValRef &src) {
     ValRefInt src_i(src);
     if (src_i.bits() <= ValRefInt::native_sz()) {
         // Can just copy over
