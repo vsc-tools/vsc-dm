@@ -36,7 +36,7 @@ public:
 
     virtual void finiVal(ValRef &v) = 0;
 
-    virtual ValRef &&copyVal(const ValRef &src) = 0;
+    virtual ValRef copyVal(const ValRef &src) = 0;
 
 };
 

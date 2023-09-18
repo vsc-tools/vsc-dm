@@ -37,7 +37,7 @@ public:
 
     virtual void finiVal(ValRef &v) override;
 
-    virtual ValRef &&copyVal(const ValRef &src) override;
+    virtual ValRef copyVal(const ValRef &src) override;
 
 	virtual IModelField *mkRootField(
 		IModelBuildContext	*ctxt,

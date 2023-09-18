@@ -21,7 +21,7 @@ public:
 			IDataType			*type,
 			bool				own_type,
 			TypeFieldAttr		attr,
-            ValRef              &&init);
+            const ValRef        &init);
 
 	virtual ~TypeFieldPhy();
 

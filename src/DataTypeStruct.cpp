@@ -97,7 +97,7 @@ void DataTypeStruct::finiVal(ValRef &v) {
     }
 }
 
-ValRef &&DataTypeStruct::copyVal(const ValRef &src) {
+ValRef DataTypeStruct::copyVal(const ValRef &src) {
     ValRefStruct src_s(src.toUnowned());
     Val *cpy_v = m_ctxt->mkVal(src_s.type()->getByteSize());
     /*
