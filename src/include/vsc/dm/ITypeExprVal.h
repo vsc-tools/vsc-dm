@@ -14,12 +14,14 @@
 namespace vsc {
 namespace dm {
 
+class ValRef;
+
 class ITypeExprVal : public ITypeExpr {
 public:
 
 	virtual ~ITypeExprVal() { }
 
-	virtual ValData val() const = 0;
+	virtual const ValRef &val() const = 0;
 
     virtual IDataType *type() const = 0;
 

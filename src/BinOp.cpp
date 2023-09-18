@@ -42,7 +42,7 @@ const char *BinOp2Str_s(BinOp op) {
 	case BinOp::LogOr: return "LogOr";
 	case BinOp::Sll: return "Sll";
 	case BinOp::Srl: return "Srl";
-	case BinOp::Xor: return "Xor";
+	case BinOp::BinXor: return "BinXor";
 	case BinOp::Not: return "Not";
 	default: return "BinOp::Unknown";
 	}

@@ -735,7 +735,7 @@ class BinOp(IntEnum):
     LogOr   = decl.BinOp.LogOr
     Sll     = decl.BinOp.Sll
     Srl     = decl.BinOp.Srl
-    Xor     = decl.BinOp.Xor
+    BinXor  = decl.BinOp.BinXor
     Not     = decl.BinOp.Not
     
 cdef class ModelExprBin(ModelExpr):

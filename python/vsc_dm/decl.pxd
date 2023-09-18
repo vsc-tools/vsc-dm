@@ -361,7 +361,7 @@ cdef extern from "vsc/dm/IModelExprBin.h" namespace "vsc::dm":
         LogOr   "vsc::dm::BinOp::LogOr"
         Sll     "vsc::dm::BinOp::Sll"
         Srl     "vsc::dm::BinOp::Srl"
-        Xor     "vsc::dm::BinOp::Xor"
+        BinXor  "vsc::dm::BinOp::BinXor"
         Not     "vsc::dm::BinOp::Not"
         
     cdef cppclass IModelExprBin(IModelExpr):

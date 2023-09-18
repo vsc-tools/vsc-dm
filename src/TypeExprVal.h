@@ -22,8 +22,8 @@ public:
 
 	virtual ~TypeExprVal();
 
-	virtual ValData val() const {
-		return m_val.vp();
+	virtual const ValRef &val() const {
+		return m_val;
 	}
 
     virtual IDataType *type() const {

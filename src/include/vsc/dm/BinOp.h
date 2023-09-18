@@ -27,9 +27,9 @@ enum class BinOp {
 	BinXor,
 	LogAnd,
 	LogOr,
+	LogXor,
 	Sll,
 	Srl,
-	Xor,
 	Not
 };
 
