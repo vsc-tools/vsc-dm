@@ -334,6 +334,7 @@ setup(
 #    ]
 #  },
   install_requires=[
+      'debug-mgr',
   ],
   setup_requires=[
     'setuptools_scm',
