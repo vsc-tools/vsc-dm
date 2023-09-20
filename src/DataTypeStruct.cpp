@@ -78,7 +78,7 @@ void DataTypeStruct::initVal(ValRef &v) {
     ValRefStruct vs(v.toUnowned());
 
     for (uint32_t i=0; i<vs.getNumFields(); i++) {
-        ValRef vs_f(vs.getField(i));
+        ValRef vs_f(vs.getFieldRef(i));
         vs_f.type()->initVal(vs_f);
     }
 }
@@ -87,7 +87,7 @@ void DataTypeStruct::finiVal(ValRef &v) {
     ValRefStruct vs(v.toUnowned());
 
     for (uint32_t i=0; i<vs.getNumFields(); i++) {
-        ValRef vs_f(vs.getField(i));
+        ValRef vs_f(vs.getFieldRef(i));
         vs_f.type()->finiVal(vs_f);
     }
 
@@ -167,18 +167,17 @@ IModelField *DataTypeStruct::mkTypeField(
 	if (TaskIsTypeFieldRef().eval(type)) {
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
-//        ValRefStruct val_s(val);
-        ValRefStruct val_s(ctxt->ctxt()->mkValRefStruct(
-            type->getDataTypeT<IDataTypeStruct>()));
+        ValRefStruct val_s(val);
 		ret = ctxt->ctxt()->mkModelFieldType(type, val);
 
         ctxt->pushTopDownScope(ret);
 
 		for (uint32_t i=0; i<getFields().size(); i++) {
+            ValRef field_r = val_s.getFieldRef(i);
 			ret->addField(
-                getFields().at(i)->mkModelField(
-                    ctxt,
-                    val_s.getField(i)), true);
+                getFields().at(i)->mkModelField(ctxt, field_r),
+                true
+            );
 		}
 	
 		for (std::vector<ITypeConstraintUP>::const_iterator

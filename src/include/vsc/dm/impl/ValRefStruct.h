@@ -39,16 +39,6 @@ public:
         return dynamic_cast<IDataTypeStruct *>(type())->getFields().size();
     }
 
-    ValRef getField(int32_t i) {
-        char *ptr = reinterpret_cast<char *>(m_vp);
-        ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);
-        return ValRef(
-            *reinterpret_cast<uintptr_t *>(&ptr[field->getOffset()]),
-            field,
-            Flags::None
-        );
-    }
-
     ValRef getFieldRef(int32_t i) {
         char *ptr = reinterpret_cast<char *>(m_vp);
         ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);

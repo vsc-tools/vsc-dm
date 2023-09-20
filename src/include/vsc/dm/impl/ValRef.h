@@ -78,32 +78,6 @@ public:
         }
     }
 
-/*
-    ValRef(ValRef &rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
-        // Implement move semantics
-        fprintf(stdout, "ValRef(&) this=%p\n", this);
-        fflush(stdout);
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
-            rhs.m_vp = 0;
-        }
-    }
-
-    ValRef(ValRef &&rhs) : m_vp(rhs.m_vp), m_type_field(rhs.m_type_field), m_flags(rhs.m_flags) {
-        // Implement move semantics
-        fprintf(stdout, "ValRef(&&)\n");
-        fflush(stdout);
-        if ((static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
-            rhs.m_vp = 0;
-        }
-    }
- */
-
-/*
-    ValRef(
-        uintptr_t       vp,
-        Flags           flags) : m_vp(vp), m_flags(flags) { }
- */
-
     ValRef(
         uintptr_t       vp,
         IDataType       *type,
@@ -116,13 +90,15 @@ public:
             m_flags(static_cast<Flags>(static_cast<uint32_t>(flags) | static_cast<uint32_t>(Flags::HasField))) { }
 
     virtual ~ValRef() {
-        if (m_vp && VALREF_FLAGSET(m_flags, Flags::Owned)) {
+        if (m_vp) {
+            if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             Val *vp = Val::ValPtr2Val(m_vp);
             if (vp->owner == this) {
                 if (type()) {
                     type()->finiVal(*this);
                 }
                 vp->p.ap->freeVal(vp);
+            }
             }
         }
     }
@@ -135,11 +111,6 @@ public:
         m_vp = rhs.m_vp;
         m_flags = rhs.m_flags;
         m_type_field = rhs.m_type_field;
-    /*
-    if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
-        rhs.m_vp = 0;
-    }
-     */
     }
 
     void move(ValRef &rhs) {
@@ -162,9 +133,9 @@ public:
         m_type_field = rhs.m_type_field;
     }
 
-    ValRef &&copyVal() const {
+    ValRef copyVal() const {
 //        return ValRef(type()->copyVal(*this));
-        return std::move(ValRef(type()->copyVal(*this)));
+        return ValRef(type()->copyVal(*this));
 //        return cp;
 //        return type()->copyVal(*this);
     }
@@ -182,7 +153,7 @@ public:
             // Create a copy and make it mutable
             ValRef cp(copyVal());
             cp.m_flags = VALREF_SETFLAG(cp.m_flags, Flags::Mutable);
-            return std::move(cp);
+            return cp;
         }
     }
 
@@ -191,9 +162,9 @@ public:
         return ValRef(m_vp, m_type_field.m_type, flags);
     }
 
-    ValRef &&toUnowned() const {
+    ValRef toUnowned() const {
         Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
-        return std::move(ValRef(m_vp, m_type_field.m_type, flags));
+        return ValRef(m_vp, m_type_field.m_type, flags);
     }
 
     void reset() {
