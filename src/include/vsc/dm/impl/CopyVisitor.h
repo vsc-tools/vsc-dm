@@ -206,9 +206,9 @@ public:
 	virtual void visitModelExprVal(IModelExprVal *e) override { 
 		DEBUG_ENTER("visitModelExprVal");
 
-		IModelExprVal *ec = m_ctxt->mkModelExprVal(e->val());
+//		IModelExprVal *ec = m_ctxt->mkModelExprVal(e->getVal());
 		
-		ret(ec);
+//		ret(ec);
 
 		DEBUG_LEAVE("visitModelExprVal");
 	}
@@ -217,6 +217,7 @@ public:
 
 	virtual void visitModelField(IModelField *f) override { 
 		DEBUG_ENTER("visitModelField %s", f->name().c_str());
+#ifdef UNDEFINED
 		IModelField *fc = m_ctxt->mkModelFieldRoot(f->getDataType(), f->name());
 
 		add_copy(f, fc);
@@ -234,6 +235,7 @@ public:
 		}
 
 		ret(fc);
+#endif /* UNDEFINED */
 
 		DEBUG_LEAVE("visitModelField %s", f->name().c_str());
 	}
@@ -261,6 +263,7 @@ public:
 
 	virtual void visitModelFieldType(IModelFieldType *f) override { 
 		DEBUG_ENTER("visitModelFieldType %s", f->name().c_str());
+#ifdef UNDEFINED
 		vsc::dm::IModelField *fc = m_ctxt->mkModelFieldType(f->getTypeField());
 
 		add_copy(f, fc);
@@ -268,6 +271,7 @@ public:
 		// TODO: build out sub-fields, constraints, etc
 
 		ret(fc);
+#endif /* UNDEFINED */
 		DEBUG_LEAVE("visitModelFieldType %s", f->name().c_str());
 	}
 

@@ -38,7 +38,9 @@ public:
     IModelConstraint *getValidSoftC() const { return m_valid_soft_c.get(); }
 
     IModelField *getSelected() const { 
-        return m_candidates.at(m_selector->val()->val_u()); 
+// TODO:
+//        return m_candidates.at(m_selector->val()->val_u()); 
+        return 0;
     }
 
     void addFieldsConstraints(
