@@ -46,8 +46,10 @@ RefSelector::RefSelector(
         ctxt->addDataTypeInt(selector_t);
     }
 
+    /*
     m_selector = IModelFieldUP(
         ctxt->mkModelFieldRoot(selector_t, name));
+     */
 }
 
 RefSelector::~RefSelector() {
@@ -55,7 +57,7 @@ RefSelector::~RefSelector() {
 }
 
 void RefSelector::init(IContext *ctxt) {
-    DEBUG_ENTER("init %s", m_selector->name().c_str());
+    DEBUG_ENTER("init %s", (m_selector)?m_selector->name().c_str():"null");
     int32_t bits = 0, value = m_candidates->size();
 
     // Determine how many bits are needed
@@ -73,6 +75,10 @@ void RefSelector::init(IContext *ctxt) {
     if (!selector_t) {
         selector_t = ctxt->mkDataTypeInt(true, bits);
         ctxt->addDataTypeInt(selector_t);
+    }
+
+    if (!m_selector) {
+        return;
     }
 
     m_selector->setDataType(selector_t);
@@ -181,7 +187,7 @@ void RefSelector::init(IContext *ctxt) {
                 BinOp::Ne,
                 ctxt->mkModelExprVal(tmp_v1.get())))));
 
-    DEBUG_LEAVE("init %s", m_selector->name().c_str());
+    DEBUG_LEAVE("init %s", (m_selector)?m_selector->name().c_str():"null");
 }
 
 void RefSelector::addIncludeRange(int32_t l, int32_t h, IModelExpr *cond) {

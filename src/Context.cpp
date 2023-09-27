@@ -58,6 +58,7 @@
 #include "ModelFieldRoot.h"
 #include "ModelFieldType.h"
 #include "ModelVal.h"
+#include "RefSelector.h"
 #include "vsc/dm/impl/TaskSetUsedRand.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
@@ -484,8 +485,7 @@ IRandState *Context::mkRandState(const std::string &seed) {
 IRefSelector *Context::mkRefSelector(
 			IModelFieldRef						*ref,
 			const std::vector<IModelField *>	&candidates) {
-//	return new RefSelector(this, ref, candidates);
-    return 0;
+	return new RefSelector(this, ref, candidates);
 }
 
 ITask *Context::mkTask(TaskE id) {
