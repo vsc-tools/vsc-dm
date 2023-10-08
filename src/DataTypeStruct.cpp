@@ -43,7 +43,7 @@ void DataTypeStruct::addField(
 	f->setIndex(m_fields.size());
     int32_t offset = m_bytesz;
     if (m_fields.size()) {
-        int32_t new_sz = f->getDataType()->getByteSize();
+        int32_t new_sz = f->getByteSize();
         int32_t align = 1;
         if (new_sz <= ValRefInt::native_sz()) {
             align = new_sz;
@@ -57,7 +57,7 @@ void DataTypeStruct::addField(
         m_bytesz += pad;
     }
 
-    m_bytesz += f->getDataType()->getByteSize();
+    m_bytesz += f->getByteSize();
     f->setOffset(offset);
 	m_fields.push_back(ITypeFieldUP(f, owned));
 }

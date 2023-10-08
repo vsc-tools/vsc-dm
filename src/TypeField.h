@@ -62,6 +62,8 @@ public:
 
     virtual void setOffset(int32_t off) { m_offset = off; }
 
+    virtual int32_t getByteSize() const override { return m_type->getByteSize(); }
+
 	virtual IModelField *mkModelField(
 		IModelBuildContext 			*ctxt,
         const ValRef                &val) override;
