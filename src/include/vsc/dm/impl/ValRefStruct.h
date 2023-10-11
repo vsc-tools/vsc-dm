@@ -41,7 +41,8 @@ public:
 
     ValRef getFieldRef(int32_t i) {
         char *ptr = reinterpret_cast<char *>(m_vp);
-        ITypeField *field = dynamic_cast<IDataTypeStruct *>(type())->getField(i);
+        IDataTypeStruct *dt_s = typeT<IDataTypeStruct>();
+        ITypeField *field = dt_s->getField(i);
         ValRef::Flags flags = static_cast<ValRef::Flags>(
             static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::Owned));
         flags = flags | ValRef::Flags::IsPtr;

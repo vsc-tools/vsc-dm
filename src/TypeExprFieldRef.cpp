@@ -12,15 +12,13 @@ namespace dm {
 
 TypeExprFieldRef::TypeExprFieldRef(ITypeExpr *root) : 
     m_root_ref_kind(RootRefKind::RootExpr), m_root_expr(root) {
-
+    m_root_ref_offset = -1;
 }
 
 TypeExprFieldRef::TypeExprFieldRef(
     ITypeExprFieldRef::RootRefKind      kind,
     int32_t                             offset) : m_root_ref_kind(kind) {
-    if (offset >= 0) {
-        m_path.push_back(offset);
-    }
+    m_root_ref_offset = offset;
 }
 
 TypeExprFieldRef::~TypeExprFieldRef() {

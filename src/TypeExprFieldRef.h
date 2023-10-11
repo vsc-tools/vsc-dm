@@ -31,6 +31,10 @@ public:
         return m_root_ref_kind;
     }
 
+    virtual int32_t getRootRefOffset() const override {
+        return m_root_ref_offset;
+    }
+
 	virtual void addPathElem(int32_t idx) override;
 
 	virtual uint32_t size() const override { return m_path.size(); }
@@ -47,6 +51,7 @@ public:
 
 private:
     RootRefKind                                 m_root_ref_kind;
+    int32_t                                     m_root_ref_offset;
     ITypeExprUP                                 m_root_expr;
 	std::vector<int32_t>	      				m_path;
 };

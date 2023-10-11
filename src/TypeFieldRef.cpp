@@ -21,6 +21,10 @@ TypeFieldRef::~TypeFieldRef() {
 	// TODO Auto-generated destructor stub
 }
 
+int32_t TypeFieldRef::getByteSize() const {
+    return ValRefInt::native_sz();
+}
+
 }
 } /* namespace vsc */
 

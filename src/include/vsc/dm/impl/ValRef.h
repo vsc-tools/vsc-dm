@@ -186,7 +186,13 @@ public:
         }
     }
 
-    ITypeField *field() const { return m_type_field.m_field; }
+    ITypeField *field() const { 
+        if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
+            return m_type_field.m_field; 
+        } else {
+            return 0;
+        }
+    }
 
     IDataType *type() const {
         if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
@@ -194,6 +200,10 @@ public:
         } else {
             return m_type_field.m_type; 
         }
+    }
+
+    template <class T> T *typeT() const {
+        return dynamic_cast<T *>(type());
     }
 
     uintptr_t vp() const { return m_vp; }

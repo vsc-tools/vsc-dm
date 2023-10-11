@@ -21,6 +21,8 @@ public:
 
 	virtual ~TypeFieldRef();
 
+    virtual int32_t getByteSize() const override;
+
 	virtual void accept(IVisitor *v) override { v->visitTypeFieldRef(this); }
 
 };

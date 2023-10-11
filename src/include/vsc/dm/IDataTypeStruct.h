@@ -47,6 +47,9 @@ public:
 
 	virtual const std::vector<ITypeFieldUP> &getFields() const = 0;
 
+    /**
+     * @brief Returns a 'user' field with a >= idx. Returns a 'impl' field with <0 idx.
+     */
 	virtual ITypeField *getField(int32_t idx) = 0;
 
     virtual int32_t getNumBuiltin() const = 0;

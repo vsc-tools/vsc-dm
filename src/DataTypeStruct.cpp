@@ -29,7 +29,10 @@
 namespace vsc {
 namespace dm {
 
-DataTypeStruct::DataTypeStruct(const std::string &name) : m_name(name) {
+DataTypeStruct::DataTypeStruct(
+    const std::string   &name,
+    int32_t             num_builtin) : 
+        m_name(name), m_num_builtin(num_builtin) {
     m_bytesz = 0;
 }
 
@@ -67,10 +70,11 @@ const std::vector<ITypeFieldUP> &DataTypeStruct::getFields() const {
 }
 
 ITypeField *DataTypeStruct::getField(int32_t idx) {
-	if (idx < 0 || idx >= m_fields.size()) {
+    int32_t field_idx = m_num_builtin + idx;
+	if (field_idx < 0 || field_idx >= m_fields.size()) {
 		return 0;
 	} else {
-		return m_fields.at(idx).get();
+		return m_fields.at(field_idx).get();
 	}
 }
 

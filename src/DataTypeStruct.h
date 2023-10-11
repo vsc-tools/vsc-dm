@@ -38,7 +38,9 @@ class DataTypeStruct;
 using DataTypeStructUP=std::unique_ptr<DataTypeStruct>;
 class DataTypeStruct : public IDataTypeStruct, public virtual DataType {
 public:
-	DataTypeStruct(const std::string &name);
+	DataTypeStruct(
+        const std::string   &name,
+        int32_t             num_builtin=0);
 
 	virtual ~DataTypeStruct();
 
@@ -54,7 +56,9 @@ public:
 
 	virtual ITypeField *getField(int32_t idx) override;
 
-    virtual int32_t getNumBuiltin() const { return 0; }
+    virtual int32_t getNumBuiltin() const { 
+        return m_num_builtin; 
+    }
 
     virtual void initVal(ValRef &v) override;
 
@@ -93,6 +97,7 @@ public:
 private:
 	std::string							m_name;
 	std::vector<ITypeFieldUP>			m_fields;
+    int32_t                             m_num_builtin;    
 	std::vector<ITypeConstraintUP>		m_constraints;
 	IModelStructCreateHookUP			m_create_hook;
 

@@ -31,6 +31,8 @@ public:
 
 	virtual RootRefKind getRootRefKind() const = 0;
 
+    virtual int32_t getRootRefOffset() const = 0;
+
 	virtual void addPathElem(int32_t idx) = 0;
 
 	virtual uint32_t size() const = 0;
