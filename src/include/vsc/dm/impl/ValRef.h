@@ -81,13 +81,14 @@ public:
     ValRef(
         uintptr_t       vp,
         IDataType       *type,
-        Flags           flags) : m_vp(vp), m_type_field(type), m_flags(flags) { }
+        Flags           flags) : m_vp(vp), m_type_field(type), 
+        m_flags(VALREF_CLRFLAG(flags, Flags::HasField)) { }
 
     ValRef(
         uintptr_t       vp,
         ITypeField      *field,
         Flags           flags) : m_vp(vp), m_type_field(field), 
-            m_flags(static_cast<Flags>(static_cast<uint32_t>(flags) | static_cast<uint32_t>(Flags::HasField))) { }
+            m_flags(VALREF_SETFLAG(flags, Flags::HasField)) { }
 
     virtual ~ValRef() {
         if (m_vp) {
@@ -145,7 +146,13 @@ public:
         if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
             // This value is already mutable
             Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
-            return ValRef(m_vp, m_type_field.m_type, flags);
+            if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
+                return ValRef(m_vp, m_type_field.m_field, 
+                    VALREF_CLRFLAG(m_flags, Flags::Owned));
+            } else {
+                return ValRef(m_vp, m_type_field.m_type, 
+                    VALREF_CLRFLAG(m_flags, Flags::Owned));
+            }
         } else {
             // TODO: maybe this is just a failure?
             fprintf(stdout, "Error: cannot make an immutable field mutable\n");
@@ -158,8 +165,13 @@ public:
     }
 
     ValRef toImmutable() const {
-        Flags flags = VALREF_CLRFLAG(m_flags, Flags::Mutable);
-        return ValRef(m_vp, m_type_field.m_type, flags);
+        if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
+            return ValRef(m_vp, m_type_field.m_field, 
+                VALREF_CLRFLAG(m_flags, Flags::Mutable));
+        } else {
+            return ValRef(m_vp, m_type_field.m_type, 
+                VALREF_CLRFLAG(m_flags, Flags::Mutable));
+        }
     }
 
     ValRef toUnowned() const {
