@@ -32,6 +32,8 @@ namespace dm {
 class ValRefInt : public ValRef {
 public:
 
+    ValRefInt() : ValRef() { }
+
     ValRefInt(const ValRef &rhs) : ValRef(rhs) { }
 
     ValRefInt(

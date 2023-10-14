@@ -70,6 +70,7 @@ cdef class Context(object):
     cpdef TypeExprVal mkTypeExprVal(self, ValRef v)
     cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ValRef)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
+    cpdef ValRefInt mkValRefInt(self, int value, bool is_signed, int width)
 
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
@@ -614,7 +615,16 @@ cdef class TypeFieldRef(TypeField):
 
 cdef class ValRef(object):
     cdef decl.ValRef                    val;
-    pass
+
+    cpdef bool valid(self)
+
+cdef class ValRefInt(ValRef):
+
+    cpdef int get_val_s(self)
+
+    cpdef int get_val_u(self)
+
+    cpdef set_val(self, int v)
     
 cdef class VisitorBase(object):
     cdef cpp_vector[bool]               _visit_s

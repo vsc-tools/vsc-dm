@@ -366,6 +366,12 @@ cdef class Context(object):
             dtype.asType(), 
             <decl.TypeFieldAttr>(attr_i)))
 
+    cpdef ValRefInt mkValRefInt(self, int value, bool is_signed, int width):
+        ret = ValRefInt()
+        ret.val = self._hndl.mkValRefInt(value, is_signed, width)
+
+        return ret
+
     @staticmethod
     cdef mk(decl.IContext *hndl, bool owned=True):
         ret = Context()
@@ -1550,6 +1556,24 @@ cdef class TypeFieldRef(TypeField):
 cdef class Task(object):
     cpdef apply(self, Accept it):
         pass
+
+cdef class ValRef(object):
+    cpdef bool valid(self):
+        return self.val.valid()
+
+cdef class ValRefInt(ValRef):
+
+    cpdef int get_val_s(self):
+        cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
+        return vi.get_val_s()
+
+    cpdef int get_val_u(self):
+        cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
+        return vi.get_val_u()
+
+    cpdef set_val(self, int v):
+        cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
+        vi.set_val(v)
     
 
 #********************************************************************

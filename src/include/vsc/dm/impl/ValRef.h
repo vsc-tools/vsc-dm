@@ -187,6 +187,7 @@ public:
             Val *vp = Val::ValPtr2Val(m_vp);
             vp->p.ap->freeVal(vp);
         }
+        m_flags = VALREF_SETFLAG(m_flags, Flags::Void);
         m_type_field.m_type = 0;
     }
 
