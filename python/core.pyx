@@ -201,12 +201,6 @@ cdef class Context(object):
         return ModelExprRangelist.mk(
             self._hndl.mkModelExprRangelist(), True)
         
-    cpdef mkModelExprVal(self, ModelVal v):
-        if v is not None:
-            return ModelExprVal.mk(self._hndl.mkModelExprVal(v._hndl))
-        else:
-            return ModelExprVal.mk(self._hndl.mkModelExprVal(NULL))
-    
     cpdef mkModelFieldRoot(self, DataType type, name):
         cdef decl.IDataType *type_h = NULL
         
@@ -229,9 +223,6 @@ cdef class Context(object):
         return ModelFieldVecRoot.mk(self._hndl.mkModelFieldVecRoot(
             type_h,
             name.encode()))
-        
-    cpdef mkModelVal(self):
-        return ModelVal.mk(self._hndl.mkModelVal(), True)
         
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name):
         return TypeConstraintBlock.mk(self._hndl.mkTypeConstraintBlock(
@@ -466,10 +457,10 @@ cdef class DataTypeEnum(DataType):
     cpdef isSigned(self):
         return self.asEnum().isSigned()
     
-    cpdef addEnumerator(self, name, ModelVal val):
-        return self.asEnum().addEnumerator(
-            name.encode(),
-            val._hndl)
+#    cpdef addEnumerator(self, name, ModelVal val):
+#        return self.asEnum().addEnumerator(
+#            name.encode(),
+#            val._hndl)
     
     
     cpdef getDomain(self):
@@ -905,26 +896,6 @@ cdef class ModelExprUnary(ModelExpr):
         ret._owned = owned
         return ret
     
-cdef class ModelExprVal(ModelExpr):
-    
-    cpdef width(self):
-        return self.asModelExprVal().width()
-        
-    cpdef val(self):
-        # TODO:
-#        return ModelVal.mk(self.asModelExprVal().val(), False)
-        pass
-    
-    cdef decl.IModelExprVal *asModelExprVal(self):
-        return <decl.IModelExprVal *>(self._hndl)
-    
-    @staticmethod
-    cdef mk(decl.IModelExprVal *hndl, bool owned=True):
-        ret = ModelExprVal()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-
 cdef class ModelExprVecSubscript(ModelExpr):
 
     cpdef expr(self):
@@ -1145,45 +1116,6 @@ cdef class ModelFieldDataClosure(object):
         ret._hndl = hndl
         return ret
 
-cdef class ModelVal(object):
-
-    def __dealloc__(self):
-        if self._owned and self._hndl != NULL:
-            print("DELETE ModelVal")
-            del self._hndl
-        pass
-
-    cpdef bits(self):
-        return self._hndl.bits()
-    
-    cpdef setBits(self, b):
-        self._hndl.setBits(b)
-    
-    cpdef val_u(self):
-        if self._hndl.bits() <= 64:
-            return self._hndl.val_u()
-        else:
-            raise Exception("TODO: handle >64 size")
-    
-    cpdef val_i(self):
-        if self._hndl.bits() <= 64:
-            return self._hndl.val_i()
-        else:
-            raise Exception("TODO: handle >64 size")
-        
-    cpdef set_val_i(self, int64_t v, int32_t bits=-1):
-        self._hndl.set_val_i(v, bits)
-        
-    cpdef set_val_u(self, uint64_t v, int32_t bits=-1):
-        self._hndl.set_val_u(v, bits)
-    
-    @staticmethod
-    cdef mk(decl.IModelVal *hndl, bool owned=True):
-        ret = ModelVal()
-        ret._hndl = hndl
-        ret._owned = owned
-        return ret
-    
 cdef class TypeConstraint(ObjBase):
 
     cdef decl.ITypeConstraint *asConstraint(self):
@@ -1560,8 +1492,26 @@ cdef class Task(object):
 cdef class ValRef(object):
     cpdef bool valid(self):
         return self.val.valid()
+    
+    cpdef DataType type(self):
+        cdef decl.IDataType *t = self.val.type()
+
+        if t == NULL:
+            return None
+        else:
+            return DataType.mk(t, False)
+
+    @staticmethod
+    cdef mk(const decl.ValRef &v, bool owned=False):
+        ret = ValRef()
+        ret.val = v
+        return ret
 
 cdef class ValRefInt(ValRef):
+
+    cpdef bool is_signed(self):
+        cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
+        return vi.is_signed()
 
     cpdef int get_val_s(self):
         cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
@@ -1574,6 +1524,12 @@ cdef class ValRefInt(ValRef):
     cpdef set_val(self, int v):
         cdef decl.ValRefInt vi = decl.ValRefInt(self.val)
         vi.set_val(v)
+
+    @staticmethod
+    def fromValRef(ValRef v):
+        cdef ValRefInt ret = ValRefInt()
+        ret.val = v.val
+        return ret
     
 
 #********************************************************************
@@ -1613,15 +1569,18 @@ cdef class VisitorBase(object):
 
     cpdef leave(self):
         self._visit_s.pop_back()
+
+    cpdef visitDataType(self, DataType t):
+        pass
         
     cpdef visitDataTypeEnum(self, DataTypeEnum t):
-        pass
+        self.visitDataType(t)
     
     cpdef visitDataTypeInt(self, DataTypeInt t):
-        pass
+        self.visitDataType(t)
     
     cpdef visitDataTypeStruct(self, DataTypeStruct t):
-        pass
+        self.visitDataType(t)
 
     cpdef visitModelConstraintBlock(self, ModelConstraintBlock c):
         pass
@@ -1660,9 +1619,6 @@ cdef class VisitorBase(object):
         pass
 
     cpdef visitModelExprUnary(self, ModelExprUnary e):
-        pass
-
-    cpdef visitModelExprVal(self, ModelExprVal e):
         pass
 
     cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e):
@@ -1712,7 +1668,6 @@ cdef class VisitorBase(object):
 
     cpdef void visitTypeExprVal(self, TypeExprVal e):
         pass
-
         
 cdef public void VisitorProxy_visitDataTypeEnum(obj, decl.IDataTypeEnum *t) with gil:
     obj.enter()
@@ -1720,10 +1675,14 @@ cdef public void VisitorProxy_visitDataTypeEnum(obj, decl.IDataTypeEnum *t) with
     obj.leave()
 
 cdef public void VisitorProxy_visitDataTypeInt(obj, decl.IDataTypeInt *t) with gil:
+    obj.enter()
     obj.visitDataTypeInt(DataTypeInt.mk(t, False))
+    obj.leave()
 
 cdef public void VisitorProxy_visitDataTypeStruct(obj, decl.IDataTypeStruct *t) with gil:
+    obj.enter()
     obj.visitDataTypeStruct(DataTypeStruct.mk(t, False))
+    obj.leave()
 
 cdef public void VisitorProxy_visitModelConstraintBlock(obj, decl.IModelConstraintBlock *c) with gil:
     obj.visitModelConstraintBlock(ModelConstraintBlock.mk(c, False))
@@ -1766,9 +1725,6 @@ cdef public void VisitorProxy_visitModelExprRef(obj, decl.IModelExprRef *e) with
 
 cdef public void VisitorProxy_visitModelExprUnary(obj, decl.IModelExprUnary *e) with gil:
     obj.visitModelExprUnary(ModelExprUnary.mk(e, False))
-
-cdef public void VisitorProxy_visitModelExprVal(obj, decl.IModelExprVal *e) with gil:
-    obj.visitModelExprVal(ModelExprVal.mk(e, False))
 
 cdef public void VisitorProxy_visitModelExprVecSubscript(obj, decl.IModelExprVecSubscript *e) with gil:
     obj.visitModelExprVecSubscript(ModelExprVecSubscript.mk(e, False))
@@ -1941,9 +1897,6 @@ cdef class WrapperBuilder(VisitorBase):
         self._set_obj(e)
 
     cpdef visitModelExprUnary(self, ModelExprUnary e):
-        self._set_obj(e)
-
-    cpdef visitModelExprVal(self, ModelExprVal e):
         self._set_obj(e)
 
     cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e):

@@ -90,12 +90,14 @@ ctypedef UP[ITypeConstraint] ITypeConstraintUP
 cdef extern from "vsc/dm/impl/ValRef.h" namespace "vsc::dm":
     cdef cppclass ValRef:
         bool valid() const
+        IDataType *type() const
         pass
 
 cdef extern from "vsc/dm/impl/ValRefInt.h" namespace "vsc::dm":
     cdef cppclass ValRefInt(ValRef):
         ValRefInt()
         ValRefInt(const ValRef &rhs)
+        bool is_signed()
         intptr_t get_val_s()
         uintptr_t get_val_u()
         void set_val(intptr_t v)
