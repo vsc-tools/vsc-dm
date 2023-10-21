@@ -83,7 +83,8 @@ result = subprocess.run(
 #     "-DCMAKE_BUILD_TYPE=%s" % "Debug" if _DEBUG else "Release",
      BUILD_TYPE,
      "-DPACKAGES_DIR=%s" % packages_dir,
-     "-DCMAKE_INSTALL_PREFIX=%s" % os.path.join(cwd,"build")
+     "-DCMAKE_INSTALL_PREFIX=%s" % os.path.join(cwd,"build"),
+     "-DCMAKE_OSX_ARCHITECTURES='x86_64;arm64'",
      ],
     cwd=os.path.join(cwd, "build"),
     env=env)
