@@ -479,6 +479,12 @@ cdef class DataTypeEnum(DataType):
         return ret
 
 cdef class DataTypeInt(DataType):
+
+    cpdef bool is_signed(self):
+        return self.asTypeInt().is_signed()
+
+    cpdef int width(self):
+        return self.asTypeInt().width()
     
     @staticmethod
     cdef mk(decl.IDataTypeInt *hndl, bool owned=True):
@@ -1845,6 +1851,10 @@ cdef class WrapperBuilder(VisitorBase):
                     break
         else:
             ret._owned = owned
+
+        if ret is None and obj != NULL:
+            print("mkObj: Failed")
+            raise Exception("Failed to wrap object")
 
         return ret
 

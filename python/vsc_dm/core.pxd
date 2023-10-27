@@ -129,6 +129,10 @@ cdef class DataTypeEnum(DataType):
 
 cdef class DataTypeInt(DataType):
 
+    cpdef bool is_signed(self)
+
+    cpdef int width(self)
+
     @staticmethod
     cdef mk(decl.IDataTypeInt *, bool owned=*)
     

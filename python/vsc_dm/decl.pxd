@@ -231,6 +231,8 @@ cdef extern from "vsc/dm/IDataTypeEnum.h" namespace "vsc::dm":
     
 cdef extern from "vsc/dm/IDataTypeInt.h" namespace "vsc::dm":
     cdef cppclass IDataTypeInt(IDataType):
+        bool is_signed() const
+        int32_t width() const
         pass
     
 cdef extern from "vsc/dm/IDataTypeStruct.h" namespace "vsc::dm":
