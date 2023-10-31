@@ -65,8 +65,6 @@ public:
 
 	virtual void visitModelExprUnary(vsc::dm::IModelExprUnary *e) override;
 
-	virtual void visitModelExprVal(vsc::dm::IModelExprVal *e) override;
-
 	virtual void visitModelExprVecSubscript(vsc::dm::IModelExprVecSubscript *e) override;
 
 #ifdef UNDEFINED

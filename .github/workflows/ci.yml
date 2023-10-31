@@ -5,82 +5,124 @@ on:
   - workflow_dispatch
 
 jobs:
-  ci-linux:
+  linux:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2014_x86_64
     steps:
       - uses: actions/checkout@v1
       - name: Fetch source dependencies
+        env:
+          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
+          BUILD_NUM: ${{ github.run_id }}
         run: |
-          export IVPM_PYTHON=/opt/python/cp37-cp37m/bin/python
           ${IVPM_PYTHON} -m pip install ivpm twine auditwheel
           ${IVPM_PYTHON} -m ivpm update -a
       - name: Fetch python build dependencies
         run: |
           yum install -y glibc-static
-          for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
+          for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311; do
             /opt/python/${py}/bin/python -m pip install ninja wheel cython
           done
       - name: Build packages
+        env:
+          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
+          BUILD_NUM: ${{ github.run_id }}
         run: |
-          export BUILD_NUM=$GITHUB_RUN_ID
           for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
             /opt/python/${py}/bin/python setup.py bdist_wheel
           done
       - name: Audit Wheels
+        env:
+          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
+          BUILD_NUM: ${{ github.run_id }}
         run: |
           for whl in dist/*.whl; do
-              /opt/python/cp37-cp37m/bin/auditwheel repair $whl
+              ${IVPM_PYTHON} -m auditwheel repair $whl
               rm $whl
           done
-          cp wheelhouse/*.whl dist
 
       - name: Publish to PyPi
         if: startsWith(github.ref, 'refs/heads/master')
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
-#  ci-macos-arm64:
-#    runs-on: [self-hosted, macOS, ARM64]
-#    steps:
-#      - uses: actions/checkout@v1
-#      - name: Fetch source dependencies
-#        run: |
-#          export IVPM_PYTHON=python3
-#          ${IVPM_PYTHON} -m pip install ivpm 
-#          ${IVPM_PYTHON} -m ivpm update -a
-#          ./packages/python/bin/python3 -m pip install twine
-#      - name: Build packages
-#        run: |
-#          export BUILD_NUM=$GITHUB_RUN_ID
-#          ./packages/python/bin/python3 setup.py bdist_wheel
-#      - name: Publish to PyPi
-#        if: startsWith(github.ref, 'refs/heads/master')
-#        run: |
-#          python3 -m twine upload dist/*
-#        env:
-#          TWINE_USERNAME: __token__
-#          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-#  ci-macos-x86_64:
-#    runs-on: [self-hosted, macOS, ARM64]
-#    steps:
-#      - uses: actions/checkout@v1
-#      - name: Fetch source dependencies
-#        run: |
-#          export IVPM_PYTHON=/usr/local/bin/python3
-#          arch -x86_64 ${IVPM_PYTHON} -m pip install ivpm 
-#          arch -x86_64 ${IVPM_PYTHON} -m ivpm update -a
-#          arch -x86_64 ./packages/python/bin/python3 -m pip install twine
-#      - name: Build packages
-#        run: |
-#          export BUILD_NUM=$GITHUB_RUN_ID
-#          arch -x86_64 ./packages/python/bin/python3 setup.py bdist_wheel --plat-name macosx_10_9_x86_64
-#      - name: Publish to PyPi
-#        if: startsWith(github.ref, 'refs/heads/master')
-#        run: |
-#          arch -x86_64 ./packages/python/bin/python3 -m twine upload dist/*_x86_64.whl
-#        env:
-#          TWINE_USERNAME: __token__
-#          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-#
+        env:
+          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
+          BUILD_NUM: ${{ github.run_id }}
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          ${IVPM_PYTHON} -m twine upload wheelhouse/*.whl          
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Fetch dependencies
+        run: |
+          python3 --version
+          python3 -m pip install ivpm
+          python3 -m ivpm update -a
+          ./packages/python/bin/python3 -m pip install cython setuptools wheel build twine
+      - name: Build wheel
+        env:
+          BUILD_NUM: ${{ github.run_id }}
+        run: |
+          ./packages/python/bin/python3 setup.py bdist_wheel
+      - name: Publish to PyPi
+        if: startsWith(github.ref, 'refs/heads/main')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          ./packages/python/bin/python3 -m twine  upload dist/*.whl
+
+  windows:
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      matrix:
+        include:
+        - platform: windows-latest
+          build_arch: x64
+          python_arch: x64
+          spec: '3.8'
+        - platform: windows-latest
+          build_arch: x64
+          python_arch: x64
+          spec: '3.9'
+        - platform: windows-latest
+          build_arch: x64
+          python_arch: x64
+          spec: '3.10'
+        - platform: windows-latest
+          build_arch: x64
+          python_arch: x64
+          spec: '3.11'
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+
+    - name: Install python ${{ matrix.spec }}
+      uses: actions/setup-python@v2
+      with:
+        architecture: ${{ matrix.python_arch }}
+        python-version: ${{ matrix.spec }}
+
+    - name: Build/Test Package
+      shell: bash
+      env:
+        BUILD_NUM: ${{ github.run_id }}
+      run: |
+        python -V
+        python -m pip install ivpm
+        python -m ivpm update -a
+        ./packages/python/Scripts/python -m pip install cython setuptools wheel build twine
+        ./packages/python/Scripts/python setup.py build bdist_wheel
+        ls dist
+
+    - name: Publish to PyPi
+      if: startsWith(github.ref, 'refs/heads/main')
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      shell: bash
+      run: |
+          ./packages/python/Scripts/python -m twine upload dist/*.whl
+

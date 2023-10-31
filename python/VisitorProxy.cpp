@@ -85,10 +85,6 @@ void VisitorProxy::visitModelExprUnary(vsc::dm::IModelExprUnary *e) {
 	VisitorProxy_visitModelExprUnary(m_obj, e);
 }
 
-void VisitorProxy::visitModelExprVal(vsc::dm::IModelExprVal *e) {
-	VisitorProxy_visitModelExprVal(m_obj, e);
-}
-
 void VisitorProxy::visitModelExprVecSubscript(vsc::dm::IModelExprVecSubscript *e) {
 	VisitorProxy_visitModelExprVecSubscript(m_obj, e);
 }

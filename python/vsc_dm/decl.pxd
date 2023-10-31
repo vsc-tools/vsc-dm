@@ -89,6 +89,19 @@ ctypedef UP[ITypeConstraint] ITypeConstraintUP
 
 cdef extern from "vsc/dm/impl/ValRef.h" namespace "vsc::dm":
     cdef cppclass ValRef:
+        bool valid() const
+        IDataType *type() const
+        pass
+
+cdef extern from "vsc/dm/impl/ValRefInt.h" namespace "vsc::dm":
+    cdef cppclass ValRefInt(ValRef):
+        ValRefInt()
+        ValRefInt(const ValRef &rhs)
+        bool is_signed()
+        intptr_t get_val_s()
+        uintptr_t get_val_u()
+        void set_val(intptr_t v)
+
         pass
 
 #********************************************************************
@@ -165,6 +178,7 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
             const cpp_string &,
             IDataType *,
             TypeFieldAttr)
+        ValRefInt mkValRefInt(int64_t value, bool is_signed, int32_t width)
 
 cdef extern from "vsc/dm/IModelBuildContext.h" namespace "vsc::dm":
     cdef cppclass IModelBuildContext:
@@ -217,6 +231,8 @@ cdef extern from "vsc/dm/IDataTypeEnum.h" namespace "vsc::dm":
     
 cdef extern from "vsc/dm/IDataTypeInt.h" namespace "vsc::dm":
     cdef cppclass IDataTypeInt(IDataType):
+        bool is_signed() const
+        int32_t width() const
         pass
     
 cdef extern from "vsc/dm/IDataTypeStruct.h" namespace "vsc::dm":

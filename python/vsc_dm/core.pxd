@@ -47,10 +47,8 @@ cdef class Context(object):
     cpdef mkModelExprPartSelect(self, ModelExpr lhs, int32_t lower, int32_t upper)
     cpdef mkModelExprRange(self, bool, ModelExpr, ModelExpr)
     cpdef mkModelExprRangelist(self)
-    cpdef mkModelExprVal(self, ModelVal)
     cpdef mkModelFieldRoot(self, DataType type, name)
     cpdef mkModelFieldVecRoot(self, DataType type, name)
-    cpdef mkModelVal(self)
     cpdef TypeConstraintBlock mkTypeConstraintBlock(self, name)
     cpdef TypeConstraintExpr mkTypeConstraintExpr(self, TypeExpr)
     cpdef TypeConstraintIfElse mkTypeConstraintIfElse(self, 
@@ -70,6 +68,7 @@ cdef class Context(object):
     cpdef TypeExprVal mkTypeExprVal(self, ValRef v)
     cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ValRef)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
+    cpdef ValRefInt mkValRefInt(self, int value, bool is_signed, int width)
 
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
@@ -119,7 +118,7 @@ cdef class DataTypeEnum(DataType):
     
     cpdef isSigned(self)
     
-    cpdef addEnumerator(self, name, ModelVal val)
+#    cpdef addEnumerator(self, name, ModelVal val)
     
     cpdef getDomain(self)
     
@@ -129,6 +128,10 @@ cdef class DataTypeEnum(DataType):
     cdef mk(decl.IDataTypeEnum *, bool owned=*)
 
 cdef class DataTypeInt(DataType):
+
+    cpdef bool is_signed(self)
+
+    cpdef int width(self)
 
     @staticmethod
     cdef mk(decl.IDataTypeInt *, bool owned=*)
@@ -323,17 +326,6 @@ cdef class ModelExprUnary(ModelExpr):
     @staticmethod
     cdef mk(decl.IModelExprUnary *, bool owned=*)
         
-    
-cdef class ModelExprVal(ModelExpr):
-
-    cpdef width(self)
-    cpdef val(self)
-    
-    cdef decl.IModelExprVal *asModelExprVal(self)
-    
-    @staticmethod
-    cdef mk(decl.IModelExprVal *, bool owned=*)
-
 cdef class ModelExprVecSubscript(ModelExpr):
 
     cpdef expr(self)
@@ -428,20 +420,6 @@ cdef class ModelFieldDataClosure(object):
     @staticmethod
     cdef mk(decl.IModelFieldData *)
 
-cdef class ModelVal(object):
-    cdef decl.IModelVal         *_hndl
-    cdef bool                   _owned
-
-    cpdef bits(self)
-    cpdef setBits(self, b)
-    cpdef val_u(self)
-    cpdef val_i(self)
-    cpdef set_val_i(self, int64_t v, int32_t bits=*)
-    cpdef set_val_u(self, uint64_t, int32_t bits=*)
-    
-    @staticmethod 
-    cdef mk(decl.IModelVal *, bool owned=*)
-    
 cdef class Task(object):
     cdef decl.ITask             *_hndl
     
@@ -614,8 +592,24 @@ cdef class TypeFieldRef(TypeField):
 
 cdef class ValRef(object):
     cdef decl.ValRef                    val;
-    pass
-    
+
+    cpdef bool valid(self)
+
+    cpdef DataType type(self)
+
+    @staticmethod
+    cdef mk(const decl.ValRef &, bool owned=*)
+
+cdef class ValRefInt(ValRef):
+
+    cpdef bool is_signed(self)
+
+    cpdef int get_val_s(self)
+
+    cpdef int get_val_u(self)
+
+    cpdef set_val(self, int v)
+
 cdef class VisitorBase(object):
     cdef cpp_vector[bool]               _visit_s
     cdef cpp_vector[decl.IVisitorP]     proxy_l
@@ -627,6 +621,8 @@ cdef class VisitorBase(object):
     cpdef enter(self)
 
     cpdef leave(self)
+
+    cpdef visitDataType(self, DataType t)
     
     cpdef visitDataTypeEnum(self, DataTypeEnum t)
     
@@ -659,8 +655,6 @@ cdef class VisitorBase(object):
     cpdef visitModelExprRef(self, ModelExprRef e)
 
     cpdef visitModelExprUnary(self, ModelExprUnary e)
-
-    cpdef visitModelExprVal(self, ModelExprVal e)
 
     cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e)
     
@@ -732,8 +726,6 @@ cdef class WrapperBuilder(VisitorBase):
     cpdef visitModelExprRef(self, ModelExprRef e)
 
     cpdef visitModelExprUnary(self, ModelExprUnary e)
-
-    cpdef visitModelExprVal(self, ModelExprVal e)
 
     cpdef visitModelExprVecSubscript(self, ModelExprVecSubscript e)
 
