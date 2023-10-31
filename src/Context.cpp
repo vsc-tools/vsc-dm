@@ -26,6 +26,7 @@
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
 #include "DataTypeStruct.h"
+#include "DataTypeWrapper.h"
 #include "ModelConstraintBlock.h"
 #include "ModelConstraintExpr.h"
 #include "ModelConstraintIfElse.h"
@@ -335,6 +336,66 @@ IDataTypeVec *Context::findDataTypeVec(IDataType *t) {
 	} else {
 		return 0;
 	}
+}
+
+IDataTypeWrapper *Context::findDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt,
+        bool            create) {
+    std::unordered_map<IDataType *, DataTypeWrapperM *>::iterator it;
+
+    it = m_wrapper_type_phy_m.find(type_phy);
+
+    if (it == m_wrapper_type_phy_m.end()) {
+        if (create) {
+            DataTypeWrapperM *wm = new DataTypeWrapperM();
+            it = m_wrapper_type_phy_m.insert({type_phy, wm}).first;
+            m_wrapper_m_l.push_back(DataTypeWrapperMUP(wm));
+        } else {
+            return 0;
+        }
+    }
+    std::unordered_map<IDataType *, IDataTypeWrapper *>::iterator itw;
+
+    itw = it->second->m_wrapper_type_virt_m.find(type_virt);
+    if (itw == it->second->m_wrapper_type_virt_m.end()) {
+        if (create) {
+            DataTypeWrapper *w = new DataTypeWrapper(type_phy, type_virt);
+            itw = it->second->m_wrapper_type_virt_m.insert({type_virt, w}).first;
+            m_wrapper_l.push_back(IDataTypeWrapperUP(w));
+        } else {
+            return 0;
+        }
+    }
+    return itw->second;
+}
+
+IDataTypeWrapper *Context::mkDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt) {
+    return new DataTypeWrapper(type_phy, type_virt);
+}
+
+bool Context::addDataTypeWrapper(IDataTypeWrapper *t) {
+    std::unordered_map<IDataType *, DataTypeWrapperM *>::iterator it;
+
+    it = m_wrapper_type_phy_m.find(t->getDataTypePhy());
+
+    if (it == m_wrapper_type_phy_m.end()) {
+        DataTypeWrapperM *wm = new DataTypeWrapperM();
+        it = m_wrapper_type_phy_m.insert({t->getDataTypePhy(), wm}).first;
+        m_wrapper_m_l.push_back(DataTypeWrapperMUP(wm));
+    }
+    std::unordered_map<IDataType *, IDataTypeWrapper *>::iterator itw;
+
+    itw = it->second->m_wrapper_type_virt_m.find(t->getDataTypeVirt());
+    if (itw == it->second->m_wrapper_type_virt_m.end()) {
+        it->second->m_wrapper_type_virt_m.insert({t->getDataTypeVirt(), t});
+        m_wrapper_l.push_back(IDataTypeWrapperUP(t));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 IDataTypeVec *Context::mkDataTypeVec(IDataType *t) {

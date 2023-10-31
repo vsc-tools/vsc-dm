@@ -39,6 +39,10 @@ public:
 		m_delegate->visitDataTypeTypeRef(t);
 	}
 
+    virtual void visitDataTypeWrapper(IDataTypeWrapper *t) override {
+        m_delegate->visitDataTypeWrapper(t);
+    }
+
 	virtual void visitModelConstraint(IModelConstraint *c) override {
 		m_delegate->visitModelConstraint(c);
 	}

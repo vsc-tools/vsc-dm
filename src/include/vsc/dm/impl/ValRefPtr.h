@@ -43,6 +43,10 @@ public:
         return reinterpret_cast<T *>(get_val());
     }
 
+    static uint32_t size() {
+        return sizeof(void *);
+    }
+
     void set_val(uintptr_t v) {
         if ((m_flags & Flags::IsPtr) != Flags::None) {
             *reinterpret_cast<uintptr_t *>(m_vp) = v;

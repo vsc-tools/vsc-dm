@@ -30,14 +30,6 @@ public:
 
     virtual int32_t getByteSize() const { return m_bytesz; }
 
-/*
-    virtual void initVal(ValRef &v) override { }
-
-    virtual void finiVal(ValRef &v) override { }
-
-    virtual ValRef &&copyVal(const ValRef &src) override { }
- */
-
     virtual void setAssociatedData(IAssociatedData *data) override {
         m_associated_data = IAssociatedDataUP(data);
     }

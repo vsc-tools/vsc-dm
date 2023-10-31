@@ -113,6 +113,23 @@ public:
 		return m_ctxt->addDataTypeVec(t);
 	}
 
+	virtual IDataTypeWrapper *findDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt,
+        bool            create) override {
+        return m_ctxt->findDataTypeWrapper(type_phy, type_virt, create);
+    }
+
+	virtual IDataTypeWrapper *mkDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt) override {
+        return m_ctxt->mkDataTypeWrapper(type_phy, type_virt);
+    }
+
+    virtual bool addDataTypeWrapper(IDataTypeWrapper *t) override {
+        return m_ctxt->addDataTypeWrapper(t);
+    }
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override {
 		return m_ctxt->mkModelConstraintBlock(name);

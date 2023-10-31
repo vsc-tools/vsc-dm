@@ -12,6 +12,7 @@
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeStruct.h"
 #include "vsc/dm/IDataTypeVec.h"
+#include "vsc/dm/IDataTypeWrapper.h"
 #include "vsc/dm/IModelConstraintBlock.h"
 #include "vsc/dm/IModelConstraintExpr.h"
 #include "vsc/dm/IModelConstraintForeach.h"
@@ -132,6 +133,17 @@ public:
 	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) = 0;
 
 	virtual bool *addDataTypeVec(IDataTypeVec *t) = 0;
+
+	virtual IDataTypeWrapper *findDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt,
+        bool            create=true) = 0;
+
+	virtual IDataTypeWrapper *mkDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt) = 0;
+
+    virtual bool addDataTypeWrapper(IDataTypeWrapper *t) = 0;
 
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) = 0;

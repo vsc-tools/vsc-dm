@@ -82,6 +82,17 @@ public:
 
 	virtual bool *addDataTypeVec(IDataTypeVec *t) override;
 
+	virtual IDataTypeWrapper *findDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt,
+        bool            create) override;
+
+	virtual IDataTypeWrapper *mkDataTypeWrapper(
+        IDataType       *type_phy,
+        IDataType       *type_virt) override;
+
+    virtual bool addDataTypeWrapper(IDataTypeWrapper *t) override;
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override;
 
@@ -330,6 +341,12 @@ public:
 
     virtual void freeVal(Val *v) override;
 
+private:
+    struct DataTypeWrapperM {
+        std::unordered_map<IDataType *, IDataTypeWrapper *>     m_wrapper_type_virt_m;
+    };
+    using DataTypeWrapperMUP=std::unique_ptr<DataTypeWrapperM>;
+
 
 private:
     dmgr::IDebugMgr                                         *m_dbg_mgr;
@@ -350,6 +367,10 @@ private:
 
 	std::unordered_map<int32_t, IDataTypeInt*>				m_sint_type_m;
 	std::vector<IDataTypeIntUP>								m_sint_type_l;
+
+    std::unordered_map<IDataType *, DataTypeWrapperM *>     m_wrapper_type_phy_m;
+    std::vector<DataTypeWrapperMUP>                         m_wrapper_m_l;
+    std::vector<IDataTypeWrapperUP>                         m_wrapper_l;
 
 
 };

@@ -34,6 +34,7 @@ class IDataTypeEnum;
 class IDataTypeInt;
 class IDataTypeStruct;
 class IDataTypeTypeRef;
+class IDataTypeWrapper;
 
 class IModelConstraint;
 class IModelConstraintBlock;
@@ -113,6 +114,8 @@ public:
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) = 0;
 
 	virtual void visitDataTypeTypeRef(IDataTypeTypeRef *t) = 0;
+
+	virtual void visitDataTypeWrapper(IDataTypeWrapper *t) = 0;
 
 	virtual void visitModelConstraint(IModelConstraint *c) = 0;
 

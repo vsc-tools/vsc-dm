@@ -27,6 +27,7 @@
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeStruct.h"
 #include "vsc/dm/IDataTypeTypeRef.h"
+#include "vsc/dm/IDataTypeWrapper.h"
 
 #include "vsc/dm/IModelConstraintBlock.h"
 #include "vsc/dm/IModelConstraintExpr.h"
@@ -123,6 +124,11 @@ public:
 	virtual void visitDataTypeTypeRef(IDataTypeTypeRef *t) override {
 		// Don't propagate by default
 	}
+
+    virtual void visitDataTypeWrapper(IDataTypeWrapper *t) override {
+        t->getDataTypePhy()->accept(m_this);
+        t->getDataTypeVirt()->accept(m_this);
+    }
 
 	virtual void visitModelConstraint(IModelConstraint *c) override { }
 
