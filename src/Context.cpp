@@ -25,6 +25,7 @@
 #include "Context.h"
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
+#include "DataTypeString.h"
 #include "DataTypeStruct.h"
 #include "DataTypeWrapper.h"
 #include "ModelConstraintBlock.h"
@@ -84,6 +85,7 @@ namespace dm {
 
 Context::Context(dmgr::IDebugMgr *dm) : m_dbg_mgr(dm) {
 	// TODO Auto-generated constructor stub
+    m_type_bool = IDataTypeBoolUP(new DataTypeBool(this));
 
 }
 
@@ -108,11 +110,10 @@ ICompoundSolver *Context::mkCompoundSolver() {
 }
 #endif
 
-IDataTypeBool *Context::getDataTypeBool() {
-    if (!m_type_bool) {
-        m_type_bool = IDataTypeBoolUP(new DataTypeBool(this));
+IDataType *Context::getDataTypeCore(DataTypeCoreE t) {
+    switch (t) {
+        case DataTypeCoreE::Bool: return m_type_bool.get();
     }
-    return m_type_bool.get();
 }
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {

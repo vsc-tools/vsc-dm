@@ -62,6 +62,7 @@ public:
         }
     }
 
+#ifdef UNDEFINED
     ValRefInt signExt(int32_t bits) {
         // Sign-extension creates a mutable copy of the data.
         if (bits <= native_sz()) {
@@ -79,6 +80,7 @@ public:
             }
         }
     }
+#endif
 
     int32_t bits() const {
         if (type()) {

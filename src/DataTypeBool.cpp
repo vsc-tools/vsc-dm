@@ -28,7 +28,7 @@ namespace vsc {
 namespace dm {
 
 
-DataTypeBool::DataTypeBool(IContext *ctxt) {
+DataTypeBool::DataTypeBool(IContext *ctxt) : DataType(ctxt) {
     m_domain = ITypeExprRangelistUP(ctxt->mkTypeExprRangelist());
     ValData v0, v1;
 
@@ -57,7 +57,7 @@ ValRef DataTypeBool::copyVal(const ValRef &src) {
     ValRefBool src_b(src);
     ValRefBool cpy;
     cpy.set_val(src_b.get_val());
-    return std::move(cpy);
+    return cpy;
 }
 
 IModelField *DataTypeBool::mkRootField(

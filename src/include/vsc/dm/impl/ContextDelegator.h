@@ -50,8 +50,8 @@ public:
 		return m_ctxt->getModelValOp();
 	}
 
-	virtual IDataTypeBool *getDataTypeBool() override {
-        return m_ctxt->getDataTypeBool();
+    virtual IDataType *getDataTypeCore(DataTypeCoreE t) override {
+        return m_ctxt->getDataTypeCore(t);
     }
 
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override {

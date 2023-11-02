@@ -46,7 +46,7 @@ public:
 
 	virtual IModelValOp *getModelValOp() override { return &m_model_val_op; }
 
-	virtual IDataTypeBool *getDataTypeBool() override;
+    virtual IDataType *getDataTypeCore(DataTypeCoreE t) override;
 
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override;
 
@@ -352,6 +352,7 @@ private:
     dmgr::IDebugMgr                                         *m_dbg_mgr;
     ValAlloc                                                m_val_alloc;
     IDataTypeBoolUP                                         m_type_bool;
+    IDataTypeStringUP                                       m_type_string;
 	ModelValOp												m_model_val_op;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;

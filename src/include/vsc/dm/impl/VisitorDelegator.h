@@ -31,6 +31,10 @@ public:
 		m_delegate->visitDataTypeInt(t);
 	}
 
+	virtual void visitDataTypeString(IDataTypeString *t) override {
+		m_delegate->visitDataTypeString(t);
+	}
+
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
 		m_delegate->visitDataTypeStruct(t);
 	}

@@ -20,7 +20,7 @@ typedef std::unique_ptr<DataType> DataTypeUP;
 class DataType : 
     public virtual IDataType {
 public:
-	DataType();
+	DataType(IContext *ctxt=0);
 
 	virtual ~DataType();
 

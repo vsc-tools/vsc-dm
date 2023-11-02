@@ -32,6 +32,7 @@ namespace dm {
 class IDataTypeBool;
 class IDataTypeEnum;
 class IDataTypeInt;
+class IDataTypeString;
 class IDataTypeStruct;
 class IDataTypeTypeRef;
 class IDataTypeWrapper;
@@ -110,6 +111,8 @@ public:
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) = 0;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;
+
+	virtual void visitDataTypeString(IDataTypeString *t) = 0;
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) = 0;
 
