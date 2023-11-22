@@ -113,7 +113,9 @@ ICompoundSolver *Context::mkCompoundSolver() {
 IDataType *Context::getDataTypeCore(DataTypeCoreE t) {
     switch (t) {
         case DataTypeCoreE::Bool: return m_type_bool.get();
+        case DataTypeCoreE::String: return m_type_string.get();
     }
+    return 0;
 }
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
