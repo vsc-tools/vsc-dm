@@ -41,6 +41,16 @@ public:
 
     virtual ValRef copyVal(const ValRef &src) override;
 
+	virtual IModelField *mkRootField(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) override;
+
+	virtual IModelField *mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type,
+        const ValRef        &val) override;
+
     virtual void accept(IVisitor *v) override;
 
 };

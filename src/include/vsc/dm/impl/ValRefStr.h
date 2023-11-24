@@ -31,23 +31,7 @@ namespace dm {
 class ValRefStr : public ValRef {
 public:
 
-    ValRefStr(const ValRef &rhs) {
-        Val *rhs_v = Val::ValPtr2Val(rhs.vp());
-        ValDataStr *rhs_s = reinterpret_cast<ValDataStr *>(rhs_v->val);
-        Val *this_v = rhs_v->p.ap->mkVal(sizeof(ValDataStr)+rhs_s->sz);
-        ValDataStr *this_s = reinterpret_cast<ValDataStr *>(this_v->val);
-        strcpy(this_s->str, rhs_s->str);
-        this_s->sz = rhs_s->sz;
-
-        m_vp = Val::Val2ValPtr(this_v);
-        m_flags = ValRef::Flags::Owned;
-        // Note: this value is no longer associated with a field, even
-        // if the source value was
-        m_type_field.m_type = rhs.type();
-    }
-
-    // Move constructor
-    ValRefStr(ValRef &&rhs) {
+    ValRefStr(const ValRef &rhs) : ValRef(rhs) {
         Val *rhs_v = Val::ValPtr2Val(rhs.vp());
         ValDataStr *rhs_s = reinterpret_cast<ValDataStr *>(rhs_v->val);
         Val *this_v = rhs_v->p.ap->mkVal(sizeof(ValDataStr)+rhs_s->sz);
@@ -64,11 +48,12 @@ public:
 
     ValRefStr(
         IValAlloc           *ap,
+        IDataType           *type,
         const std::string   &init,
         int32_t             reserve=0) : ValRef(
             Val::Val2ValPtr(ap->mkVal(
                 sizeof(ValDataStr)+init.size()+reserve)), 
-                static_cast<IDataType *>(0),
+                type,
                 Flags::Owned) { 
         ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
         strcpy(data->str, init.c_str());
@@ -85,8 +70,16 @@ public:
     }
 
     const char *val() const {
-        ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
-        return data->str;
+        ValDataStr *data = 0;
+        if ((m_flags & Flags::IsPtr) != Flags::None) {
+            // We have a field that points at a string
+            if (m_vp) {
+                data = *reinterpret_cast<ValDataStr **>(m_vp);
+            }
+        } else {
+            data = reinterpret_cast<ValDataStr *>(m_vp);
+        }
+        return (data)?data->str:"";
     }
 
     std::string val_s() const {

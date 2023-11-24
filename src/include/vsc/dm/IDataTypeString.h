@@ -27,7 +27,7 @@ namespace dm {
 
 class IDataTypeString;
 using IDataTypeStringUP=UP<IDataTypeString>;
-class IDataTypeString : public IDataType {
+class IDataTypeString : public virtual IDataType {
 public:
 
     virtual ~IDataTypeString() { }

@@ -19,7 +19,8 @@
  *     Author:
  */
 #include "DataTypeString.h"
-#include "vsc/dm/impl/ValRefInt.h"
+#include "vsc/dm/impl/ValRefStr.h"
+#include "vsc/dm/impl/TaskIsTypeFieldRef.h"
 
 
 namespace vsc {
@@ -48,6 +49,43 @@ void DataTypeString::finiVal(ValRef &v) {
 ValRef DataTypeString::copyVal(const ValRef &src) {
     ValRefStr src_v(src);
     return m_ctxt->mkValRefStr(src_v.val_s());
+}
+
+IModelField *DataTypeString::mkRootField(
+		IModelBuildContext	*ctxt,
+		const std::string	&name,
+		bool				is_ref) {
+	IModelField *ret;
+	
+	if (is_ref) {
+		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
+	} else {
+//        ValRefStr val(vsc::dm::ValRef());
+        ValRef val;
+		ret = ctxt->ctxt()->mkModelFieldRoot(this, name, val);
+	}
+
+	return ret;
+}
+
+IModelField *DataTypeString::mkTypeField(
+		IModelBuildContext	*ctxt,
+		ITypeField			*type,
+        const ValRef        &val) {
+	IModelField *ret;
+
+	if (TaskIsTypeFieldRef().eval(type)) {
+		ret = ctxt->ctxt()->mkModelFieldRefType(type);
+	} else {
+		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
+		ret = ctxt->ctxt()->mkModelFieldType(type, val);
+		if (type_p->getInit().isVoid()) {
+            // TODO:
+//			ret->val()->set(type_p->getInit());
+		}
+	}
+
+	return ret;
 }
 
 void DataTypeString::accept(IVisitor *v) {

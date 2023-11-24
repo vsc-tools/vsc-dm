@@ -9,8 +9,6 @@
 #include <memory>
 #include "vsc/dm/IContext.h"
 #include "vsc/dm/IDataType.h"
-#include "vsc/dm/IModelBuildContext.h"
-#include "ModelVal.h"
 
 namespace vsc {
 namespace dm {

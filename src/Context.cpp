@@ -86,6 +86,7 @@ namespace dm {
 Context::Context(dmgr::IDebugMgr *dm) : m_dbg_mgr(dm) {
 	// TODO Auto-generated constructor stub
     m_type_bool = IDataTypeBoolUP(new DataTypeBool(this));
+    m_type_string = IDataTypeStringUP(new DataTypeString(this));
 
 }
 
@@ -768,7 +769,11 @@ ValRef Context::mkValRefRawPtr(void *ptr) {
 }
 
 ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {
-    return ValRefStr(this, str, reserve);
+    return ValRefStr(
+        this, 
+        getDataTypeCore(DataTypeCoreE::String),
+        str, 
+        reserve);
 }
 
 ValRefStruct Context::mkValRefStruct(IDataTypeStruct *t) {
