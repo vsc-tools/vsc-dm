@@ -151,6 +151,11 @@ public:
 
     virtual bool addDataTypeWrapper(IDataTypeWrapper *t) = 0;
 
+    virtual ValRefInt evalBinOpInt(
+        const vsc::dm::ValRefInt        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefInt        &rhs) = 0;
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) = 0;
 

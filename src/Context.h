@@ -28,6 +28,7 @@
 #include "DataTypeStruct.h"
 #include "ModelValOp.h"
 #include "ValAlloc.h"
+#include "TaskEvalBinOpInt.h"
 
 namespace vsc {
 namespace dm {
@@ -92,6 +93,11 @@ public:
         IDataType       *type_virt) override;
 
     virtual bool addDataTypeWrapper(IDataTypeWrapper *t) override;
+    
+    virtual ValRefInt evalBinOpInt(
+        const vsc::dm::ValRefInt        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefInt        &rhs) override;
 
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override;

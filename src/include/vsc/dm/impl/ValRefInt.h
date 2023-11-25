@@ -50,6 +50,10 @@ public:
 
     virtual ~ValRefInt() { }
 
+    void operator = (const ValRefInt &rhs) {
+        ValRef::operator=(rhs);
+    }
+
     // Storage layout changes once we exceed the bit-size
     // of a pointer.
     static int32_t native_sz() { return sizeof(void *)*8; }
@@ -90,7 +94,7 @@ public:
         }
     }
 
-    bool is_signed() {
+    bool is_signed() const {
         if (type()) {
             return dynamic_cast<IDataTypeInt *>(type())->isSigned();
         } else {

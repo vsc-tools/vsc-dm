@@ -130,6 +130,13 @@ public:
         return m_ctxt->addDataTypeWrapper(t);
     }
 
+    virtual ValRefInt evalBinOpInt(
+        const vsc::dm::ValRefInt        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefInt        &rhs) override {
+        return m_ctxt->evalBinOpInt(lhs, op, rhs);
+    }
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override {
 		return m_ctxt->mkModelConstraintBlock(name);

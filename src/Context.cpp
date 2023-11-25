@@ -62,6 +62,7 @@
 #include "ModelVal.h"
 #include "RefSelector.h"
 #include "vsc/dm/impl/TaskSetUsedRand.h"
+#include "TaskEvalBinOpInt.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintForeach.h"
@@ -150,6 +151,13 @@ bool Context::addDataTypeEnum(IDataTypeEnum *e) {
 	} else {
 		return false;
 	}
+}
+
+ValRefInt Context::evalBinOpInt(
+        const vsc::dm::ValRefInt        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefInt        &rhs) {
+    return TaskEvalBinOpInt(this).eval(lhs, op, rhs);
 }
 
 IModelConstraintBlock *Context::mkModelConstraintBlock(
