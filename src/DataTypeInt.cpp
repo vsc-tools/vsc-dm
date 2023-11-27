@@ -85,8 +85,10 @@ IModelField *DataTypeInt::mkRootField(
 	if (is_ref) {
 		ret = ctxt->ctxt()->mkModelFieldRefRoot(this, name);
 	} else {
-        ValRefInt val(0, this, ValRef::Flags::None);
-		ret = ctxt->ctxt()->mkModelFieldRoot(this, name, val);
+		ret = ctxt->ctxt()->mkModelFieldRoot(
+            this, 
+            name, 
+            m_ctxt->mkValRefInt(0, isSigned(), getWidth()));
 	}
 
 	return ret;

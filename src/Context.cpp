@@ -761,11 +761,17 @@ ValRefInt Context::mkValRefInt(
         addDataTypeInt(type);
     }
     if (width <= ValRefInt::native_sz()) {
-        return ValRefInt(value, type, ValRef::Flags::None);
+        return ValRefInt(
+            value, 
+            type, 
+            ValRef::Flags::Mutable);
     } else {
         int32_t byte_sz = ((width-1)/8)+1;
         Val *vp = mkVal(byte_sz);
-        ValRefInt ret(Val::Val2ValPtr(vp), type, ValRef::Flags::Owned);
+        ValRefInt ret(
+            Val::Val2ValPtr(vp), 
+            type, 
+            (ValRef::Flags::Owned|ValRef::Flags::Mutable));
         ret.set_val(value);
         return ret;
     }

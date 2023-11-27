@@ -146,16 +146,25 @@ public:
         if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
             // This value is already mutable
             Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
-            if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
-                return ValRef(m_vp, m_type_field.m_field, 
-                    VALREF_CLRFLAG(m_flags, Flags::Owned));
+            // A mutable ref must change its source. In order for that
+            // to happen, we need to convert a non-pointer reference
+            // to a pointer reference
+            uintptr_t vp;
+            if (!VALREF_FLAGSET(m_flags, Flags::IsPtr)) {
+                vp = reinterpret_cast<uintptr_t>(&m_vp);
+                flags = VALREF_SETFLAG(flags, Flags::IsPtr);
             } else {
-                return ValRef(m_vp, m_type_field.m_type, 
-                    VALREF_CLRFLAG(m_flags, Flags::Owned));
+                vp = m_vp;
+            }
+            if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
+                return ValRef(vp, m_type_field.m_field, flags);
+            } else {
+                return ValRef(vp, m_type_field.m_type, flags);
             }
         } else {
             // TODO: maybe this is just a failure?
             fprintf(stdout, "Error: cannot make an immutable field mutable\n");
+            throw std::runtime_error("Error: cannot make an immutable field mutable");
 
             // Create a copy and make it mutable
             ValRef cp(copyVal());
