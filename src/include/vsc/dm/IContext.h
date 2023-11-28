@@ -68,6 +68,7 @@
 #include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/Val.h"
 #include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/ValRefBool.h"
 #include "vsc/dm/impl/ValRefInt.h"
 #include "vsc/dm/impl/ValRefStr.h"
 #include "vsc/dm/impl/ValRefStruct.h"
@@ -155,6 +156,11 @@ public:
         const vsc::dm::ValRefInt        &lhs,
         BinOp                           op,
         const vsc::dm::ValRefInt        &rhs) = 0;
+
+    virtual ValRef evalBinOpStr(
+        const vsc::dm::ValRefStr        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefStr        &rhs) = 0;
 
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) = 0;
@@ -395,6 +401,9 @@ public:
 			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) = 0;
+
+    virtual ValRefBool mkValRefBool(
+        bool        value) = 0;
 
     virtual ValRefInt mkValRefInt(
         int64_t     value,

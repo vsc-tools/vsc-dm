@@ -63,6 +63,7 @@
 #include "RefSelector.h"
 #include "vsc/dm/impl/TaskSetUsedRand.h"
 #include "TaskEvalBinOpInt.h"
+#include "TaskEvalBinOpStr.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintForeach.h"
@@ -158,6 +159,13 @@ ValRefInt Context::evalBinOpInt(
         BinOp                           op,
         const vsc::dm::ValRefInt        &rhs) {
     return TaskEvalBinOpInt(this).eval(lhs, op, rhs);
+}
+
+ValRef Context::evalBinOpStr(
+        const vsc::dm::ValRefStr        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefStr        &rhs) {
+    return TaskEvalBinOpStr(this).eval(lhs, op, rhs);
 }
 
 IModelConstraintBlock *Context::mkModelConstraintBlock(
@@ -749,6 +757,10 @@ Val *Context::mkVal(uint32_t nbytes) {
 
 void Context::freeVal(Val *v) {
     m_val_alloc.free(v);
+}
+
+ValRefBool Context::mkValRefBool(bool value) {
+    return ValRefBool(ValRef(value, m_type_bool.get(), ValRef::Flags::Mutable));
 }
 
 ValRefInt Context::mkValRefInt(

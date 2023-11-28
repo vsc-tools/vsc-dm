@@ -99,6 +99,11 @@ public:
         BinOp                           op,
         const vsc::dm::ValRefInt        &rhs) override;
 
+    virtual ValRef evalBinOpStr(
+        const vsc::dm::ValRefStr        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefStr        &rhs) override;
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override;
 
@@ -331,6 +336,8 @@ public:
 			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) override;
+
+    virtual ValRefBool mkValRefBool(bool value) override;
 
     virtual ValRefInt mkValRefInt(
         int64_t value,

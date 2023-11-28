@@ -137,6 +137,13 @@ public:
         return m_ctxt->evalBinOpInt(lhs, op, rhs);
     }
 
+    virtual ValRef evalBinOpStr(
+        const vsc::dm::ValRefStr        &lhs,
+        BinOp                           op,
+        const vsc::dm::ValRefStr        &rhs) override {
+        return m_ctxt->evalBinOpStr(lhs, op, rhs);
+    }
+
 	virtual IModelConstraintBlock *mkModelConstraintBlock(
 			const std::string &name) override {
 		return m_ctxt->mkModelConstraintBlock(name);
@@ -494,6 +501,11 @@ public:
 		return m_ctxt->mkTypeFieldVec(name, dtype,
 			own_dtype, attr, init_sz);
 	}
+
+    virtual ValRefBool mkValRefBool(
+        bool        value) override {
+        return m_ctxt->mkValRefBool(value);
+    }
 
     virtual ValRefInt mkValRefInt(
         int64_t value,
