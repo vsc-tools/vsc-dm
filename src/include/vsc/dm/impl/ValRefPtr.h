@@ -47,6 +47,19 @@ public:
         return sizeof(void *);
     }
 
+    ValRef deref() const {
+        uintptr_t vp = m_vp;
+        if ((m_flags & Flags::IsPtr) != Flags::None) {
+            vp = *reinterpret_cast<uintptr_t *>(m_vp);
+                uintptr_t vp = *reinterpret_cast<uintptr_t *>(m_vp);
+        }
+
+        return ValRef(
+            *reinterpret_cast<uintptr_t *>(vp),
+            type(),
+            (m_flags & ~Flags::IsPtr));
+    }
+
     void set_val(uintptr_t v) {
         if ((m_flags & Flags::IsPtr) != Flags::None) {
             *reinterpret_cast<uintptr_t *>(m_vp) = v;

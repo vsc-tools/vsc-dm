@@ -104,11 +104,13 @@ IModelField *DataTypeInt::mkTypeField(
 		ret = ctxt->ctxt()->mkModelFieldRefType(type);
 	} else {
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
-		ret = ctxt->ctxt()->mkModelFieldType(type, val);
-		if (type_p->getInit().isVoid()) {
+        if (type_p) {
+    		ret = ctxt->ctxt()->mkModelFieldType(type, val);
+		    if (type_p->getInit().isVoid()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());
-		}
+		    }
+        }
 	}
 
 	return ret;

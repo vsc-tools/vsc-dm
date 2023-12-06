@@ -259,6 +259,9 @@ static inline ValRef::Flags operator & (const ValRef::Flags lhs, const ValRef::F
 			static_cast<uint32_t>(lhs) & static_cast<uint32_t>(rhs));
 }
 
+static inline ValRef::Flags operator ~ (const ValRef::Flags lhs) {
+	return static_cast<ValRef::Flags>(~static_cast<uint32_t>(lhs));
+}
 
 } /* namespace dm */
 } /* namespace vsc */
