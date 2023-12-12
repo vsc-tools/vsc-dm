@@ -55,7 +55,10 @@ void DataTypeStruct::addField(
         }
 
         // Required
-        int32_t pad = (m_bytesz%align)?(align - (m_bytesz % align)):0;
+        int32_t pad = 0;
+        if (align) {
+            pad = (m_bytesz%align)?(align - (m_bytesz % align)):0;
+        }
         offset += pad;
         m_bytesz += pad;
     }

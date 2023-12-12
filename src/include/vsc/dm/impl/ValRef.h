@@ -185,7 +185,9 @@ public:
 
     ValRef toUnowned() const {
         Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
-        return ValRef(m_vp, m_type_field.m_type, flags);
+        return (VALREF_FLAGSET(m_flags, Flags::HasField))?
+            ValRef(m_vp, m_type_field.m_field, flags):
+            ValRef(m_vp, m_type_field.m_type, flags);
     }
 
     void reset() {

@@ -40,7 +40,13 @@ public:
     }
 
     ValRef getFieldRef(int32_t i) {
-        char *ptr = reinterpret_cast<char *>(m_vp);
+        char *ptr;
+        if ((m_flags & Flags::IsPtr) != Flags::None) {
+            ptr = reinterpret_cast<char *>(
+                *reinterpret_cast<uintptr_t *>(m_vp));
+        } else {
+            ptr = reinterpret_cast<char *>(m_vp);
+        }
         IDataTypeStruct *dt_s = typeT<IDataTypeStruct>();
         ITypeField *field = dt_s->getField(i);
         ValRef::Flags flags = static_cast<ValRef::Flags>(
