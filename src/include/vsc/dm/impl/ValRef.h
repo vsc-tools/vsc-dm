@@ -19,6 +19,7 @@
  *     Author: 
  */
 #pragma once
+#include <stdexcept>
 #include <stdint.h>
 #include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/IValOps.h"
