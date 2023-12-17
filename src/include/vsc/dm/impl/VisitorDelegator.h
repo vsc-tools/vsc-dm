@@ -247,6 +247,10 @@ public:
 		m_delegate->visitTypeExprRangelist(e);
 	}
 
+	virtual void visitTypeExprRef(ITypeExprRef *e) override {
+        m_delegate->visitTypeExprRef(e);
+    }
+
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
 		m_delegate->visitTypeExprVal(e);
 	}

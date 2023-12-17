@@ -361,6 +361,12 @@ public:
 		return m_ctxt->mkTypeExprBin(lhs, op, rhs, lhs_owned, rhs_owned);
 	}
 
+	virtual ITypeExprRef *mkTypeExprRef(
+            ITypeExpr       *target,
+            bool            owned) override {
+        return m_ctxt->mkTypeExprRef(target, owned);
+    }
+
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override {
 		return m_ctxt->mkTypeConstraintBlock(name);
 	}

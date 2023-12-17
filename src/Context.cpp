@@ -76,6 +76,7 @@
 #include "TypeExprFieldRef.h"
 #include "TypeExprRange.h"
 #include "TypeExprRangelist.h"
+#include "TypeExprRef.h"
 #include "TypeExprVal.h"
 #include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
@@ -707,6 +708,12 @@ ITypeExprRange *Context::mkTypeExprRange(
 
 ITypeExprRangelist *Context::mkTypeExprRangelist() {
 	return new TypeExprRangelist();
+}
+
+ITypeExprRef *Context::mkTypeExprRef(
+            ITypeExpr       *target,
+            bool            owned) {
+    return new TypeExprRef(target, owned);
 }
 
 ITypeExprVal *Context::mkTypeExprVal(

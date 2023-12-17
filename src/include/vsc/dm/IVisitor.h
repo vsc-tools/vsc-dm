@@ -93,6 +93,7 @@ class ITypeExprBin;
 class ITypeExprFieldRef;
 class ITypeExprRange;
 class ITypeExprRangelist;
+class ITypeExprRef;
 class ITypeExprVal;
 class ITypeField;
 class ITypeFieldPhy;
@@ -221,6 +222,8 @@ public:
 	virtual void visitTypeExprRange(ITypeExprRange *e) = 0;
 
 	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) = 0;
+
+	virtual void visitTypeExprRef(ITypeExprRef *e) = 0;
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
 

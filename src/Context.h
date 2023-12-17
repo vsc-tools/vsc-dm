@@ -312,6 +312,10 @@ public:
 
 	virtual ITypeExprRangelist *mkTypeExprRangelist() override;
 
+	virtual ITypeExprRef *mkTypeExprRef(
+            ITypeExpr       *target,
+            bool            owned) override;
+
 	virtual ITypeExprVal *mkTypeExprVal(
             IDataType               *type,
             ValData                 v) override;

@@ -61,6 +61,7 @@
 #include "vsc/dm/ITypeExprFieldRef.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
+#include "vsc/dm/ITypeExprRef.h"
 #include "vsc/dm/ITypeExprVal.h"
 #include "vsc/dm/ITypeFieldPhy.h"
 #include "vsc/dm/ITypeFieldRef.h"
@@ -317,6 +318,10 @@ public:
 			ITypeExpr		*rhs,
             bool            lhs_owned=true,
             bool            rhs_owned=true) = 0;
+
+	virtual ITypeExprRef *mkTypeExprRef(
+            ITypeExpr       *target,
+            bool            owned) = 0;
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
 

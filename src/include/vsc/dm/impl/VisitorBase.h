@@ -77,6 +77,7 @@
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
+#include "vsc/dm/ITypeExprRef.h"
 
 #include "vsc/dm/ITypeConstraintBlock.h"
 #include "vsc/dm/ITypeConstraintExpr.h"
@@ -376,6 +377,10 @@ public:
 			(*it)->accept(m_this);
 		}
 	}
+
+	virtual void visitTypeExprRef(ITypeExprRef *e) override {
+        e->getTarget()->accept(m_this);
+    }
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) override { }
 
