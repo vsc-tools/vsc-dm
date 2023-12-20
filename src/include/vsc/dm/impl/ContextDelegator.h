@@ -472,6 +472,13 @@ public:
 		return m_ctxt->mkModelExprRangelist();
 	}
 
+    virtual ITypeExprUnary *mkTypeExprUnary(
+        ITypeExpr       *target,
+        bool            owned,
+        UnaryOp         op) {
+        return m_ctxt->mkTypeExprUnary(target, owned, op);
+    }
+
 	virtual ITypeExprVal *mkTypeExprVal(
         IDataType       *type,
         ValData         v) override {

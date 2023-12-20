@@ -62,6 +62,7 @@
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
+#include "vsc/dm/ITypeExprUnary.h"
 #include "vsc/dm/ITypeExprVal.h"
 #include "vsc/dm/ITypeFieldPhy.h"
 #include "vsc/dm/ITypeFieldRef.h"
@@ -381,6 +382,11 @@ public:
 			ITypeExpr			*upper) = 0;
 
 	virtual ITypeExprRangelist *mkTypeExprRangelist() = 0;
+
+	virtual ITypeExprUnary *mkTypeExprUnary(
+        ITypeExpr       *target,
+        bool            owned,
+        UnaryOp         op) = 0;
 
 	virtual ITypeExprVal *mkTypeExprVal(
         IDataType       *type,

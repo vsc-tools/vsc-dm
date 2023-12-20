@@ -316,6 +316,11 @@ public:
             ITypeExpr       *target,
             bool            owned) override;
 
+	virtual ITypeExprUnary *mkTypeExprUnary(
+        ITypeExpr       *target,
+        bool            owned,
+        UnaryOp         op) override;
+
 	virtual ITypeExprVal *mkTypeExprVal(
             IDataType               *type,
             ValData                 v) override;

@@ -78,6 +78,7 @@
 #include "TypeExprRangelist.h"
 #include "TypeExprRef.h"
 #include "TypeExprVal.h"
+#include "TypeExprUnary.h"
 #include "TypeFieldPhy.h"
 #include "TypeFieldRef.h"
 #include "TypeFieldVec.h"
@@ -714,6 +715,13 @@ ITypeExprRef *Context::mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) {
     return new TypeExprRef(target, owned);
+}
+
+ITypeExprUnary *Context::mkTypeExprUnary(
+        ITypeExpr       *target,
+        bool            owned,
+        UnaryOp         op) {
+    return new TypeExprUnary(target, owned, op);
 }
 
 ITypeExprVal *Context::mkTypeExprVal(

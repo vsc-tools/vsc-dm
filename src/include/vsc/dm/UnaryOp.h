@@ -11,7 +11,8 @@ namespace vsc {
 namespace dm {
 
 enum class UnaryOp {
-	Not
+	Not,
+    Ptr // Convert the argument to a pointer
 };
 
 }

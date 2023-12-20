@@ -94,6 +94,7 @@ class ITypeExprFieldRef;
 class ITypeExprRange;
 class ITypeExprRangelist;
 class ITypeExprRef;
+class ITypeExprUnary;
 class ITypeExprVal;
 class ITypeField;
 class ITypeFieldPhy;
@@ -224,6 +225,8 @@ public:
 	virtual void visitTypeExprRangelist(ITypeExprRangelist *e) = 0;
 
 	virtual void visitTypeExprRef(ITypeExprRef *e) = 0;
+
+	virtual void visitTypeExprUnary(ITypeExprUnary *e) = 0;
 
 	virtual void visitTypeExprVal(ITypeExprVal *e) = 0;
 

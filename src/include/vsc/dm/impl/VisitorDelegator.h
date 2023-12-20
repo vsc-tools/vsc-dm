@@ -251,6 +251,10 @@ public:
         m_delegate->visitTypeExprRef(e);
     }
 
+	virtual void visitTypeExprUnary(ITypeExprUnary *e) override {
+        m_delegate->visitTypeExprUnary(e);
+    }
+
 	virtual void visitTypeExprVal(ITypeExprVal *e) override {
 		m_delegate->visitTypeExprVal(e);
 	}

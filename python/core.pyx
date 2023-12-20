@@ -514,15 +514,14 @@ cdef class DataTypeStruct(DataType):
     cpdef getFields(self):
         ret = []
         for i in range(self.asTypeStruct().getFields().size()):
-            ret.append(TypeField.mk(
-                self.asTypeStruct().getField(i), False))
+            ret.append(WrapperBuilder().mkObj(self.asTypeStruct().getField(i), False))
         return ret
     
     cpdef TypeField getField(self, int32_t idx):
         cdef decl.ITypeField *ret_h = self.asTypeStruct().getField(idx)
         
         if ret_h != NULL:
-            return TypeField.mk(ret_h, False)
+            return WrapperBuilder().mkObj(ret_h, False)
         else:
             return None
     
@@ -1419,7 +1418,7 @@ cdef class TypeField(ObjBase):
     cpdef TypeField getParent(self):
         cdef decl.ITypeField *p = self.asField().getParent()
         if p != NULL:
-            return TypeField.mk(p, False)
+            return WrapperBuilder().mkObj(p, False)
         else:
             return None
 
@@ -1443,7 +1442,7 @@ cdef class TypeField(ObjBase):
             return None
         
     cpdef TypeField getField(self, idx):
-        return TypeField.mk(self.asField().getField(idx), False)
+        return WrapperBuilder().mkObj(self.asField().getField(idx), False)
         
     cpdef getAttr(self):
         return 0
