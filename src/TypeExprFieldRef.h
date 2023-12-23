@@ -35,6 +35,10 @@ public:
         return m_root_ref_offset;
     }
 
+    virtual void setRootRefOffset(int32_t off) override {
+        m_root_ref_offset = off;
+    }
+
 	virtual void addPathElem(int32_t idx) override;
 
 	virtual uint32_t size() const override { return m_path.size(); }
@@ -46,6 +50,10 @@ public:
 	virtual const std::vector<int32_t> &getPath() const override {
 		return m_path;
 	}
+
+	virtual std::vector<int32_t> &getPath() override {
+        return m_path;
+    }
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprFieldRef(this); }
 
