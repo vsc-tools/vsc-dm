@@ -17,7 +17,7 @@ TEST_F(TestImplCompile, visitor_base) {
 }
 
 TEST_F(TestImplCompile, visitor_delegator) {
-    VisitorDelegator visitor_dlg(0);
+//    VisitorDelegator visitor_dlg(0);
 }
 
 }

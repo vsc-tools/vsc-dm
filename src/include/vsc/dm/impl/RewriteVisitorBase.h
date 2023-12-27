@@ -19,18 +19,26 @@
  *     Author: 
  */
 #pragma once
+#include <map>
 #include <vector>
-#include "vsc/dm/IRewriteVisitor.h"
 #include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
 namespace dm {
 
+class RewriteVisitorContext {
+public:
+    RewriteVisitorContext(IContext *ctxt) : m_ctxt(ctxt) {
+
+    }
+
+    IContext                                *m_ctxt;
+    std::map<IDataType *, IDataType *>      m_type_m;
+};
 
 
-class RewriteVisitorBase : 
-    public virtual IRewriteVisitor,
-    public virtual VisitorBase {
+
+class RewriteVisitorBase : public virtual VisitorBase {
 public:
     using Res=std::pair<IAccept *, bool>;
     template <class T> struct ResT : public std::pair<T *, bool> {
@@ -40,101 +48,67 @@ public:
     };
 
 public:
-    RewriteVisitorBase() { }
+    RewriteVisitorBase(RewriteVisitorContext *ctxt) : m_ctxt(ctxt) { }
+
+    RewriteVisitorBase(IContext *ctxt) : m_ctxt(&m_ctxt_impl), m_ctxt_impl(ctxt) { }
 
     virtual ~RewriteVisitorBase() { }
 
-    virtual void rewrite(IRewriteContext *ctxt) override {
-        std::vector<IAccept *> new_roots;
-        m_ctxt = ctxt;
-        m_initContextDepth = ctxt->contextDepth();
-
-        uint32_t i;
-        for (i=0; i<ctxt->getRoots().size(); i++) {
-            IAccept *it = ctxt->getRoots().at(i).get();
-            m_res = 0;
-            m_owned = false;
-            m_new.clear();
-
-            it->accept(m_this);
-
-            if (m_new.size()) {
-                new_roots.insert(
-                    new_roots.end(),
-                    m_new.begin(),
-                    m_new.end());
-                m_new.clear();
-            }
-
-            if (m_res != it) {
-                // Change to a root elem.
-                if (m_initContextDepth == ctxt->contextDepth()) {
-                    // Ensure we've pushed a new context
-                    ctxt->pushContext();
-                }
-
-                ctxt->setRoot(i, m_res, m_owned);
-            }
-        }
-
-        if (new_roots.size()) {
-            if (m_initContextDepth == ctxt->contextDepth()) {
-                // Ensure we've pushed a new context
-                ctxt->pushContext();
-            }
-
-            for (std::vector<IAccept *>::const_iterator
-                it=new_roots.begin();
-                it!=new_roots.end(); it++) {
-                ctxt->addRoot(*it, true);
-            }
-        }
+    virtual std::pair<bool, IAccept *> rewrite(IAccept *t) {
+        m_res = {false, t};
+        t->accept(m_this);
+        return m_res;
     }
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
-        std::vector<ITypeField *> new_fields;
-        std::vector<ITypeConstraint *> new_constraints;
-        IDataTypeStruct *new_t = 0;
+        std::map<IDataType *, IDataType *>::const_iterator it = m_ctxt->m_type_m.find(t);
 
-        uint32_t i;
-		for (i=0; !new_t && i<t->getFields().size(); i++) {
-            ITypeField *f = t->getFields().at(i).get();
+        if (it != m_ctxt->m_type_m.end()) {
+            m_res = {false, it->second};
+        } else {
+            std::vector<ITypeField *> new_fields;
+            std::vector<ITypeConstraint *> new_constraints;
 
-            m_res = 0;
-            m_owned = false;
-            m_new.clear();
-            f->accept(m_this);
+            // First, determine whether we've already been replaced
+            IDataTypeStruct *new_t = 0;
 
-            if (m_res != f || m_new.size()) {
-                new_t = m_ctxt->mkDataTypeStruct(t->name());
+            uint32_t i;
+		    for (i=0; !new_t && i<t->getFields().size(); i++) {
+                ITypeField *f = t->getFields().at(i).get();
 
-                // Add fields up to i-1
-                for (uint32_t j=0; j<i; j++) {
-                    new_t->addField(t->getFields().at(j).get(), false);
-                }
-                new_t->addField(dynamic_cast<ITypeField *>(m_res), m_owned);
+                m_res = {false, 0};
+                m_new.clear();
+                f->accept(m_this);
 
-                if (m_new.size()) {
-                    for (std::vector<IAccept *>::const_iterator
-                        it=m_new.begin();
-                        it!=m_new.end(); it++) {
-                        new_fields.push_back(dynamic_cast<ITypeField *>(*it));
+                if (m_res != f || m_new.size()) {
+                    new_t = m_ctxt->mkDataTypeStruct(t->name());
+
+                    // Add fields up to i-1
+                    for (uint32_t j=0; j<i; j++) {
+                        new_t->addField(t->getFields().at(j).get(), false);
                     }
-                    m_new.clear();
+//                    new_t->addField(dynamic_cast<ITypeField *>(m_res), m_owned);
+
+                    if (m_new.size()) {
+                        for (std::vector<IAccept *>::const_iterator
+                            it=m_new.begin();
+                            it!=m_new.end(); it++) {
+                            new_fields.push_back(dynamic_cast<ITypeField *>(*it));
+                        }
+                        m_new.clear();
+                    }
                 }
             }
-        }
 
-        // Finish propagating fields (if we cloned the type)
-        for (; i<t->getFields().size(); i++) {
-            ITypeField *f = t->getFields().at(i).get();
+            // Finish propagating fields (if we cloned the type)
+            for (; i<t->getFields().size(); i++) {
+                ITypeField *f = t->getFields().at(i).get();
 
             m_res = 0;
-            m_owned = false;
             m_new.clear();
             f->accept(m_this);
 
-            new_t->addField(dynamic_cast<ITypeField *>(m_res), m_owned);
+//            new_t->addField(dynamic_cast<ITypeField *>(m_res), m_owned);
 
             if (m_new.size()) {
                 for (std::vector<IAccept *>::const_iterator
@@ -214,118 +188,118 @@ public:
         }
 	}
 
-    virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override {
-        m_res = 0;
-        m_owned = false;
-        m_new.clear();
-		m_this->visitTypeConstraintScope(c);
-        m_new.clear();
-	}
+    // virtual void visitTypeConstraintBlock(ITypeConstraintBlock *c) override {
+    //     m_res = 0;
+    //     m_owned = false;
+    //     m_new.clear();
+	// 	m_this->visitTypeConstraintScope(c);
+    //     m_new.clear();
+	// }
 	
-	virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
-		ResT<ITypeExpr> res = visit(c->expr());
-        if (c->expr() != res.first) {
-            // Clone constraint and propagate up
-            ITypeConstraintExpr *ci = m_ctxt->mkTypeConstraintExpr(res.first, res.second);
+	// virtual void visitTypeConstraintExpr(ITypeConstraintExpr *c) override {
+	// 	ResT<ITypeExpr> res = visit(c->expr());
+    //     if (c->expr() != res.first) {
+    //         // Clone constraint and propagate up
+    //         ITypeConstraintExpr *ci = m_ctxt->mkTypeConstraintExpr(res.first, res.second);
 
-            m_res = ci;
-            m_owned = true;
-        } else {
-            m_res = c;
-        }
-	}
+    //         m_res = ci;
+    //         m_owned = true;
+    //     } else {
+    //         m_res = c;
+    //     }
+	// }
 
-	virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
-        ResT<ITypeExpr> cond_r = visit(c->getCond());
-        ResT<ITypeConstraint> true_r = visit(c->getTrue());
-        ResT<ITypeConstraint> false_r = visit(c->getFalse());
+	// virtual void visitTypeConstraintIfElse(ITypeConstraintIfElse *c) override {
+    //     ResT<ITypeExpr> cond_r = visit(c->getCond());
+    //     ResT<ITypeConstraint> true_r = visit(c->getTrue());
+    //     ResT<ITypeConstraint> false_r = visit(c->getFalse());
 
-        if (cond_r.first != c->getCond() || 
-            true_r.first != c->getTrue() ||
-            false_r.first != c->getFalse()) {
-            ITypeConstraintIfElse *ci = m_ctxt->mkTypeConstraintIfElse(
-                cond_r.first,
-                true_r.first,
-                false_r.first,
-                cond_r.second,
-                true_r.second,
-                false_r.second);
-        } else {
-            m_res = c;
-            m_owned = false;
-        }
-	}
+    //     if (cond_r.first != c->getCond() || 
+    //         true_r.first != c->getTrue() ||
+    //         false_r.first != c->getFalse()) {
+    //         ITypeConstraintIfElse *ci = m_ctxt->mkTypeConstraintIfElse(
+    //             cond_r.first,
+    //             true_r.first,
+    //             false_r.first,
+    //             cond_r.second,
+    //             true_r.second,
+    //             false_r.second);
+    //     } else {
+    //         m_res = c;
+    //         m_owned = false;
+    //     }
+	// }
 
-	virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
-		c->getCond()->accept(m_this);
-		c->getBody()->accept(m_this);
-	}
+	// virtual void visitTypeConstraintImplies(ITypeConstraintImplies *c) override {
+	// 	c->getCond()->accept(m_this);
+	// 	c->getBody()->accept(m_this);
+	// }
 
-	virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
-        ITypeConstraintScope *ci = 0;
-        std::vector<ITypeConstraint *> new_c;
-        uint32_t i;
-		for (i=0; !ci && i<c->getConstraints().size(); i++) {
-            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
+	// virtual void visitTypeConstraintScope(ITypeConstraintScope *c) override {
+    //     ITypeConstraintScope *ci = 0;
+    //     std::vector<ITypeConstraint *> new_c;
+    //     uint32_t i;
+	// 	for (i=0; !ci && i<c->getConstraints().size(); i++) {
+    //         ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
 
-            if (c->getConstraints().at(i).get() != res.first || m_new.size()) {
-                ci = m_ctxt->mkTypeConstraintScope();
-                for (uint32_t j=0; j<i; j++) {
-                    ci->addConstraint(c->getConstraints().at(j).get(), false);
-                }
-                ci->addConstraint(res.first, res.second);
-            }
-        }
+    //         if (c->getConstraints().at(i).get() != res.first || m_new.size()) {
+    //             ci = m_ctxt->mkTypeConstraintScope();
+    //             for (uint32_t j=0; j<i; j++) {
+    //                 ci->addConstraint(c->getConstraints().at(j).get(), false);
+    //             }
+    //             ci->addConstraint(res.first, res.second);
+    //         }
+    //     }
 
-        for (; i<c->getConstraints().size(); i++) {
-            ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
-            ci->addConstraint(res.first, res.second);
-        }
+    //     for (; i<c->getConstraints().size(); i++) {
+    //         ResT<ITypeConstraint> res = visit(c->getConstraints().at(i).get());
+    //         ci->addConstraint(res.first, res.second);
+    //     }
 
-        // Finally, add new constraints
-        for (std::vector<ITypeConstraint *>::const_iterator
-            it=new_c.begin();
-            it!=new_c.end(); it++) {
-            ci->addConstraint(*it, true);
-        }
+    //     // Finally, add new constraints
+    //     for (std::vector<ITypeConstraint *>::const_iterator
+    //         it=new_c.begin();
+    //         it!=new_c.end(); it++) {
+    //         ci->addConstraint(*it, true);
+    //     }
 
-        if (ci) {
-            m_res = ci;
-            m_owned = true;
-        }
-	}
+    //     if (ci) {
+    //         m_res = ci;
+    //         m_owned = true;
+    //     }
+	// }
 
-	virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
-		c->constraint()->accept(m_this);
-	}
+	// virtual void visitTypeConstraintSoft(ITypeConstraintSoft *c) override {
+	// 	c->constraint()->accept(m_this);
+	// }
 
-	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
-		for (std::vector<ITypeExprUP>::const_iterator
-			it=c->getExprs().begin();
-			it!=c->getExprs().end(); it++) {
-			(*it)->accept(m_this);
-		}
-	}
+	// virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) override {
+	// 	for (std::vector<ITypeExprUP>::const_iterator
+	// 		it=c->getExprs().begin();
+	// 		it!=c->getExprs().end(); it++) {
+	// 		(*it)->accept(m_this);
+	// 	}
+	// }
 
-	virtual void visitTypeField(ITypeField *f) override {
-        m_res = f;
-        m_owned = false;
-	}
+	// virtual void visitTypeField(ITypeField *f) override {
+    //     m_res = f;
+    //     m_owned = false;
+	// }
 
-	virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
-		m_this->visitTypeField(f);
-	}
+	// virtual void visitTypeFieldPhy(ITypeFieldPhy *f) override {
+	// 	m_this->visitTypeField(f);
+	// }
 
-	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
-		m_this->visitTypeField(f);
-	}
+	// virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
+	// 	m_this->visitTypeField(f);
+	// }
 
-	virtual void visitTypeFieldVec(ITypeFieldVec *f) override {
-		m_this->visitTypeField(f);
-	}
+	// virtual void visitTypeFieldVec(ITypeFieldVec *f) override {
+	// 	m_this->visitTypeField(f);
+	// }
 
 protected:
-    Res visit(IAccept *i) {
+    template <class T> Res<T> visit(T *i) {
         m_res = 0;
         m_owned = false;
         m_new.clear();
@@ -356,11 +330,11 @@ protected:
     }
 
 protected:
-    IRewriteContext             *m_ctxt;
-    int32_t                     m_initContextDepth;
-    IAccept                     *m_res;
-    bool                        m_owned;
-    std::vector<IAccept *>      m_new;
+    RewriteVisitorContext           *m_ctxt;
+    RewriteVisitorContext           m_ctxt_impl;
+    int32_t                         m_initContextDepth;
+    std::pair<bool, IAccept *>      m_res;
+    std::vector<IAccept *>          m_new;
 
 };
 
