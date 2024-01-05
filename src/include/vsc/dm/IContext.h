@@ -137,6 +137,8 @@ public:
 
 	virtual bool addDataTypeStruct(IDataTypeStruct *t) = 0;
 
+    virtual const std::vector<IDataTypeStructUP> &getDataTypeStructs() const = 0;
+
 	virtual IDataTypeVec *findDataTypeVec(IDataType *t) = 0;
 
 	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) = 0;

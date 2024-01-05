@@ -1,5 +1,5 @@
 /**
- * IValOps.h
+ * IValOpsDelegator.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,26 +19,21 @@
  *     Author: 
  */
 #pragma once
-#include <stdint.h>
-#include "vsc/dm/impl/UP.h"
-//#include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/IValOps.h"
 
 namespace vsc {
 namespace dm {
 
-class ValRef;
-class IValOps;
-using IValOpsUP=UP<IValOps>;
-class IValOps {
+
+
+class IValOpsDelegator {
 public:
 
-    virtual ~IValOps() { }
+    virtual ~IValOpsDelegator() { }
 
-    virtual void initVal(ValRef &v) = 0;
+    virtual void setValOps(IValOps *ops) = 0;
 
-    virtual void finiVal(ValRef &v) = 0;
-
-    virtual ValRef copyVal(const ValRef &src) = 0;
+    virtual IValOps *getValOps() const = 0;
 
 };
 

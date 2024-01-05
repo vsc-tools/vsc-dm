@@ -101,6 +101,10 @@ public:
 		return m_ctxt->mkDataTypeStruct(name);
 	}
 
+    virtual const std::vector<IDataTypeStructUP> &getDataTypeStructs() const override {
+        return m_ctxt->getDataTypeStructs();
+    }
+
 	virtual IDataTypeVec *findDataTypeVec(IDataType *t) override {
 		return m_ctxt->findDataTypeVec(t);
 	}

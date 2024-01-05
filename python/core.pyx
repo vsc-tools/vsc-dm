@@ -78,7 +78,7 @@ cdef class Context(object):
         cdef decl.IDataTypeStruct *t = self._hndl.findDataTypeStruct(name.encode())
         
         if t != NULL:
-            return DataTypeStruct.mk(t, False)
+            return WrapperBuilder().mkObj(t, False)
         else:
             return None
             

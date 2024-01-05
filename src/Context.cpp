@@ -350,6 +350,10 @@ bool Context::addDataTypeStruct(IDataTypeStruct *t) {
 	}
 }
 
+const std::vector<IDataTypeStructUP> &Context::getDataTypeStructs() const {
+    return m_struct_type_l;
+}
+
 IDataTypeVec *Context::findDataTypeVec(IDataType *t) {
 	std::unordered_map<IDataType*,IDataTypeVec*>::const_iterator it;
 

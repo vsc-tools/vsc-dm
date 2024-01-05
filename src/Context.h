@@ -77,6 +77,8 @@ public:
 	virtual bool addDataTypeStruct(
 			IDataTypeStruct *t) override;
 
+    virtual const std::vector<IDataTypeStructUP> &getDataTypeStructs() const override;
+
 	virtual IDataTypeVec *findDataTypeVec(IDataType *t) override;
 
 	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) override;
