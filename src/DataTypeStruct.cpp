@@ -99,8 +99,11 @@ void DataTypeStruct::finiVal(ValRef &v) {
     }
 
     if ((v.flags() & ValRef::Flags::Owned) != ValRef::Flags::None) {
+        fprintf(stdout, "TODO: free\n");
+        /*
         Val *val = Val::ValPtr2Val(v.vp());
         val->p.ap->freeVal(val);
+         */
     }
 }
 

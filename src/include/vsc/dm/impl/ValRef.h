@@ -59,6 +59,8 @@ public:
         m_vp(rhs.m_vp), 
         m_type_field(rhs.m_type_field), 
         m_flags(rhs.m_flags) {
+        fprintf(stdout, "ValRef(rhs): vp=0x%08llx\n", m_vp);
+        fflush(stdout);
 
         if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             // The producer is passing ownership. Accept
@@ -72,6 +74,9 @@ public:
         m_type_field = rhs.m_type_field;
         m_flags = rhs.m_flags;
 
+        fprintf(stdout, "ValRef == : vp=0x%08llx\n", m_vp);
+        fflush(stdout);
+
         if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             // The producer is passing ownership. Accept
             Val *v = Val::ValPtr2Val(m_vp);
@@ -83,24 +88,32 @@ public:
         uintptr_t       vp,
         IDataType       *type,
         Flags           flags) : m_vp(vp), m_type_field(type), 
-        m_flags(VALREF_CLRFLAG(flags, Flags::HasField)) { }
+        m_flags(VALREF_CLRFLAG(flags, Flags::HasField)) { 
+
+        fprintf(stdout, "ValRef(type): vp=0x%08llx\n", m_vp);
+        fflush(stdout);
+    }
 
     ValRef(
         uintptr_t       vp,
         ITypeField      *field,
         Flags           flags) : m_vp(vp), m_type_field(field), 
-            m_flags(VALREF_SETFLAG(flags, Flags::HasField)) { }
+            m_flags(VALREF_SETFLAG(flags, Flags::HasField)) { 
+        fprintf(stdout, "ValRef(field): vp=0x%08llx\n", m_vp);
+        fflush(stdout);
+    }
 
     virtual ~ValRef() {
-        if (m_vp) {
-            if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
+        if (VALREF_FLAGSET(m_flags, Flags::Owned) && m_vp) {
+           fprintf(stdout, "~ValRef: vp=0x%08llx\n", m_vp);
+           fflush(stdout);
             Val *vp = Val::ValPtr2Val(m_vp);
             if (vp->owner == this) {
                 if (type()) {
                     type()->finiVal(*this);
                 }
-                vp->p.ap->freeVal(vp);
-            }
+//                vp->p.ap->freeVal(vp);
+                m_vp = 0;
             }
         }
     }
@@ -150,17 +163,21 @@ public:
             // A mutable ref must change its source. In order for that
             // to happen, we need to convert a non-pointer reference
             // to a pointer reference
+#ifdef UNDEFINED
             uintptr_t vp;
             if (!VALREF_FLAGSET(m_flags, Flags::IsPtr)) {
+                fprintf(stdout, "Transform to pointer\n");
+                fflush(stdout);
                 vp = reinterpret_cast<uintptr_t>(&m_vp);
                 flags = VALREF_SETFLAG(flags, Flags::IsPtr);
             } else {
                 vp = m_vp;
             }
+#endif /* UNDEFINED */
             if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
-                return ValRef(vp, m_type_field.m_field, flags);
+                return ValRef(m_vp, m_type_field.m_field, flags);
             } else {
-                return ValRef(vp, m_type_field.m_type, flags);
+                return ValRef(m_vp, m_type_field.m_type, flags);
             }
         } else {
             // TODO: maybe this is just a failure?

@@ -19,8 +19,9 @@
  *     Author: 
  */
 #pragma once
-#include "vsc/dm/impl/ValRef.h"
 #include "vsc/dm/IDataTypeStruct.h"
+#include "vsc/dm/impl/TaskIsFieldValPtr.h"
+#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
@@ -39,7 +40,7 @@ public:
         return dynamic_cast<IDataTypeStruct *>(type())->getFields().size();
     }
 
-    ValRef getFieldRef(int32_t i) {
+    ValRef getFieldRef(int32_t i) const {
         char *ptr;
         if ((m_flags & Flags::IsPtr) != Flags::None) {
             ptr = reinterpret_cast<char *>(
@@ -51,7 +52,16 @@ public:
         ITypeField *field = dt_s->getField(i);
         ValRef::Flags flags = static_cast<ValRef::Flags>(
             static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::Owned));
-        flags = flags | ValRef::Flags::IsPtr;
+
+        if (TaskIsFieldValPtr().check(field)) {
+            fprintf(stdout, "Field %s is a pointer\n", field->name().c_str());
+            flags = flags | ValRef::Flags::IsPtr;
+        } else {
+            fprintf(stdout, "Field %s is NOT a pointer\n", field->name().c_str());
+            flags = static_cast<ValRef::Flags>(
+                static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::IsPtr));
+        }
+        fflush(stdout);
         return ValRef(
             reinterpret_cast<uintptr_t>(&ptr[field->getOffset()]),
             field,

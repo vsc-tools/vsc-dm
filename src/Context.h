@@ -376,6 +376,7 @@ private:
     dmgr::IDebugMgr                                         *m_dbg_mgr;
     ValAlloc                                                m_val_alloc;
     IDataTypeBoolUP                                         m_type_bool;
+    IDataTypeUP                                             m_type_vptr;
     IDataTypeStringUP                                       m_type_string;
 	ModelValOp												m_model_val_op;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;

@@ -25,6 +25,7 @@
 #include "Context.h"
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
+#include "DataTypePtr.h"
 #include "DataTypeString.h"
 #include "DataTypeStruct.h"
 #include "DataTypeWrapper.h"
@@ -90,6 +91,7 @@ namespace dm {
 Context::Context(dmgr::IDebugMgr *dm) : m_dbg_mgr(dm) {
 	// TODO Auto-generated constructor stub
     m_type_bool = IDataTypeBoolUP(new DataTypeBool(this));
+    m_type_vptr = IDataTypeUP(new DataTypePtr(this));
     m_type_string = IDataTypeStringUP(new DataTypeString(this));
 
 }
@@ -118,6 +120,7 @@ ICompoundSolver *Context::mkCompoundSolver() {
 IDataType *Context::getDataTypeCore(DataTypeCoreE t) {
     switch (t) {
         case DataTypeCoreE::Bool: return m_type_bool.get();
+        case DataTypeCoreE::Ptr: return m_type_vptr.get();
         case DataTypeCoreE::String: return m_type_string.get();
     }
     return 0;
@@ -809,8 +812,10 @@ ValRefInt Context::mkValRefInt(
 }
 
 ValRef Context::mkValRefRawPtr(void *ptr) {
-    IDataType *type = 0;
-    return ValRef(reinterpret_cast<uintptr_t>(ptr), type, ValRef::Flags::None);
+    return ValRef(
+        reinterpret_cast<uintptr_t>(ptr), 
+        getDataTypeCore(DataTypeCoreE::Ptr), 
+        ValRef::Flags::None);
 }
 
 ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {

@@ -84,6 +84,7 @@ enum class TaskE {
 
 enum class DataTypeCoreE {
     Bool,
+    Ptr,
     String
 };
 
