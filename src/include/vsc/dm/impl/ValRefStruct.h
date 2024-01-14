@@ -54,14 +54,11 @@ public:
             static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::Owned));
 
         if (TaskIsFieldValPtr().check(field)) {
-            fprintf(stdout, "Field %s is a pointer\n", field->name().c_str());
             flags = flags | ValRef::Flags::IsPtr;
         } else {
-            fprintf(stdout, "Field %s is NOT a pointer\n", field->name().c_str());
             flags = static_cast<ValRef::Flags>(
                 static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::IsPtr));
         }
-        fflush(stdout);
         return ValRef(
             reinterpret_cast<uintptr_t>(&ptr[field->getOffset()]),
             field,

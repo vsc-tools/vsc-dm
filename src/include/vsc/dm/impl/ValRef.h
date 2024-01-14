@@ -24,12 +24,21 @@
 #include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/IValOps.h"
 #include "vsc/dm/IDataType.h"
+#include "vsc/dm/IDataTypeWrapper.h"
 #include "vsc/dm/ITypeField.h"
 #include "vsc/dm/Val.h"
 
 #define VALREF_FLAGSET(e, flag) ((static_cast<uint32_t>(e) & static_cast<uint32_t>(flag)) != 0)
 #define VALREF_SETFLAG(e, flag) (static_cast<ValRef::Flags>((static_cast<uint32_t>(e) | static_cast<uint32_t>(flag))))
 #define VALREF_CLRFLAG(e, flag) (static_cast<ValRef::Flags>((static_cast<uint32_t>(e) & ~static_cast<uint32_t>(flag))))
+
+#undef VALREF_DEBUG_EN
+
+#ifdef VALREF_DEBUG_EN
+#define VALREF_DEBUG(...) 
+#else
+#define VALREF_DEBUG(...) 
+#endif
 
 namespace vsc {
 namespace dm {
@@ -46,9 +55,10 @@ public:
         Void     = (1 << 0), // Does not hold a valid value
         Root     = (1 << 1), // 
         Owned    = (1 << 2), // Storage is owned by this handle
-        IsPtr    = (1 << 3),
-        HasField = (1 << 4),
-        Mutable  = (1 << 5)
+        Scalar   = (1 << 3), // The data type is a scalar type
+        IsPtr    = (1 << 4),
+        HasField = (1 << 5), // has a 'field' pointer, not a 'type' pointer
+        Mutable  = (1 << 6)
     };
 
 
@@ -59,8 +69,7 @@ public:
         m_vp(rhs.m_vp), 
         m_type_field(rhs.m_type_field), 
         m_flags(rhs.m_flags) {
-        fprintf(stdout, "ValRef(rhs): vp=0x%08llx\n", m_vp);
-        fflush(stdout);
+        VALREF_DEBUG("ValRef(rhs): vp=0x%08llx flags=0x%08x\n", m_vp, m_flags);
 
         if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             // The producer is passing ownership. Accept
@@ -74,8 +83,7 @@ public:
         m_type_field = rhs.m_type_field;
         m_flags = rhs.m_flags;
 
-        fprintf(stdout, "ValRef == : vp=0x%08llx\n", m_vp);
-        fflush(stdout);
+        VALREF_DEBUG("ValRef == : vp=0x%08llx\n", m_vp);
 
         if (VALREF_FLAGSET(m_flags, Flags::Owned)) {
             // The producer is passing ownership. Accept
@@ -90,8 +98,7 @@ public:
         Flags           flags) : m_vp(vp), m_type_field(type), 
         m_flags(VALREF_CLRFLAG(flags, Flags::HasField)) { 
 
-        fprintf(stdout, "ValRef(type): vp=0x%08llx\n", m_vp);
-        fflush(stdout);
+        VALREF_DEBUG("ValRef(type): vp=0x%08llx\n", m_vp);
     }
 
     ValRef(
@@ -99,14 +106,12 @@ public:
         ITypeField      *field,
         Flags           flags) : m_vp(vp), m_type_field(field), 
             m_flags(VALREF_SETFLAG(flags, Flags::HasField)) { 
-        fprintf(stdout, "ValRef(field): vp=0x%08llx\n", m_vp);
-        fflush(stdout);
+        VALREF_DEBUG("ValRef(field): vp=0x%08llx flags=0x%08x m_flags=0x%08x\n", m_vp, flags, m_flags);
     }
 
     virtual ~ValRef() {
         if (VALREF_FLAGSET(m_flags, Flags::Owned) && m_vp) {
-           fprintf(stdout, "~ValRef: vp=0x%08llx\n", m_vp);
-           fflush(stdout);
+           VALREF_DEBUG("~ValRef: vp=0x%08llx\n", m_vp);
             Val *vp = Val::ValPtr2Val(m_vp);
             if (vp->owner == this) {
                 if (type()) {
@@ -159,26 +164,31 @@ public:
         // We want 
         if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
             // This value is already mutable
+            // It might be a value with locally-held storage (eg simple int).
+            // It might be a reference to a field within an aggregate. If it
+            // is the former (locally-held scalar storage), we must convert
+            // to a pointer
+
+            // Either way, the referent will not hold ownership of any
+            // allocated storage
             Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
+
             // A mutable ref must change its source. In order for that
             // to happen, we need to convert a non-pointer reference
             // to a pointer reference
-#ifdef UNDEFINED
-            uintptr_t vp;
-            if (!VALREF_FLAGSET(m_flags, Flags::IsPtr)) {
-                fprintf(stdout, "Transform to pointer\n");
-                fflush(stdout);
+
+            // Must convert to pointer of the datatype requires
+            // pointer semantics
+
+            uintptr_t vp = m_vp;
+            if (VALREF_FLAGSET(m_flags, Flags::Scalar) && !VALREF_FLAGSET(m_flags, Flags::IsPtr)) {
+                VALREF_DEBUG(stdout, "Transform to pointer\n");
                 vp = reinterpret_cast<uintptr_t>(&m_vp);
                 flags = VALREF_SETFLAG(flags, Flags::IsPtr);
-            } else {
-                vp = m_vp;
             }
-#endif /* UNDEFINED */
-            if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
-                return ValRef(m_vp, m_type_field.m_field, flags);
-            } else {
-                return ValRef(m_vp, m_type_field.m_type, flags);
-            }
+
+            return (VALREF_FLAGSET(m_flags, Flags::HasField))?
+                ValRef(vp, m_type_field.m_field, flags):ValRef(vp, m_type_field.m_type, flags);
         } else {
             // TODO: maybe this is just a failure?
             fprintf(stdout, "Error: cannot make an immutable field mutable\n");
@@ -237,11 +247,17 @@ public:
     }
 
     IDataType *type() const {
+        IDataType *ret = 0;
         if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
-            return m_type_field.m_field->getDataType();
+            ret = m_type_field.m_field->getDataType();
         } else {
-            return m_type_field.m_type; 
+            ret = m_type_field.m_type; 
         }
+
+//        if (dynamic_cast<IDataTypeWrapper *>(ret)) {
+//            ret = dynamic_cast<IDataTypeWrapper *>(ret)->getDataTypePhy();
+//        }
+        return ret;
     }
 
     template <class T> T *typeT() const {

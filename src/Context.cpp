@@ -782,7 +782,8 @@ void Context::freeVal(Val *v) {
 }
 
 ValRefBool Context::mkValRefBool(bool value) {
-    return ValRefBool(ValRef(value, m_type_bool.get(), ValRef::Flags::Mutable));
+    return ValRefBool(ValRef(value, m_type_bool.get(), 
+        ValRef::Flags::Mutable|ValRef::Flags::Scalar));
 }
 
 ValRefInt Context::mkValRefInt(
@@ -798,14 +799,14 @@ ValRefInt Context::mkValRefInt(
         return ValRefInt(
             value, 
             type, 
-            ValRef::Flags::Mutable);
+            ValRef::Flags::Mutable|ValRef::Flags::Scalar);
     } else {
         int32_t byte_sz = ((width-1)/8)+1;
         Val *vp = mkVal(byte_sz);
         ValRefInt ret(
             Val::Val2ValPtr(vp), 
             type, 
-            (ValRef::Flags::Owned|ValRef::Flags::Mutable));
+            (ValRef::Flags::Owned|ValRef::Flags::Mutable|ValRef::Flags::Scalar));
         ret.set_val(value);
         return ret;
     }
@@ -815,7 +816,7 @@ ValRef Context::mkValRefRawPtr(void *ptr) {
     return ValRef(
         reinterpret_cast<uintptr_t>(ptr), 
         getDataTypeCore(DataTypeCoreE::Ptr), 
-        ValRef::Flags::None);
+        ValRef::Flags::None|ValRef::Flags::Scalar);
 }
 
 ValRefStr Context::mkValRefStr(const std::string &str, int32_t reserve) {

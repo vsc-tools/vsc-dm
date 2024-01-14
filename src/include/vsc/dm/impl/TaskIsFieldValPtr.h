@@ -63,6 +63,10 @@ public:
         m_ret = false;
     }
 
+	virtual void visitDataTypeWrapper(IDataTypeWrapper *t) override {
+        t->getDataTypePhy()->accept(m_this);
+    }
+
 	virtual void visitTypeFieldRef(ITypeFieldRef *f) override {
         m_ret = true;
     }
