@@ -32,6 +32,8 @@ class ValRefStruct : public ValRef {
 public:
     friend class Context;
 
+    ValRefStruct() {}
+
     ValRefStruct(const ValRef &rhs) : ValRef(rhs) { }
 
     virtual ~ValRefStruct() { }
@@ -57,7 +59,7 @@ public:
             flags = flags | ValRef::Flags::IsPtr;
         } else {
             flags = static_cast<ValRef::Flags>(
-                static_cast<uint32_t>(m_flags) & ~static_cast<uint32_t>(ValRef::Flags::IsPtr));
+                static_cast<uint32_t>(flags) & ~static_cast<uint32_t>(ValRef::Flags::IsPtr));
         }
         return ValRef(
             reinterpret_cast<uintptr_t>(&ptr[field->getOffset()]),

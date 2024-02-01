@@ -1506,6 +1506,9 @@ cdef class ValRef(object):
         else:
             return DataType.mk(t, False)
 
+    cpdef int vp(self):
+        return self.val.vp()
+
     @staticmethod
     cdef mk(const decl.ValRef &v, bool owned=False):
         ret = ValRef()
@@ -1535,7 +1538,37 @@ cdef class ValRefInt(ValRef):
         cdef ValRefInt ret = ValRefInt()
         ret.val = v.val
         return ret
-    
+
+cdef class ValRefPtr(ValRef):
+    cpdef uintptr_t get_val(self):
+        cdef decl.ValRefPtr vp = decl.ValRefPtr(self.val)
+        return vp.get_val()
+
+    cpdef void set_val(self, uintptr_t v):
+        cdef decl.ValRefPtr vp = decl.ValRefPtr(self.val)
+        vp.set_val(v)
+
+    @staticmethod
+    def fromValRef(ValRef v):
+        cdef ValRefPtr ret = ValRefPtr()
+        ret.val = v.val
+        return ret
+
+cdef class ValRefStruct(ValRef):
+
+    cpdef int getNumFields(self):
+        cdef decl.ValRefStruct vs = decl.ValRefStruct(self.val)
+        return vs.getNumFields()
+
+    cpdef ValRef getFieldRef(self, int i):
+        cdef decl.ValRefStruct vs = decl.ValRefStruct(self.val)
+        return ValRef.mk(vs.getFieldRef(i))
+
+    @staticmethod
+    def fromValRef(ValRef v):
+        cdef ValRefStruct ret = ValRefStruct()
+        ret.val = v.val
+        return ret
 
 #********************************************************************
 #* VisitorBase

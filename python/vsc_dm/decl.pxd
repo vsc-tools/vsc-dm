@@ -91,6 +91,7 @@ cdef extern from "vsc/dm/impl/ValRef.h" namespace "vsc::dm":
     cdef cppclass ValRef:
         bool valid() const
         IDataType *type() const
+        uintptr_t vp() const
         pass
 
 cdef extern from "vsc/dm/impl/ValRefInt.h" namespace "vsc::dm":
@@ -102,6 +103,20 @@ cdef extern from "vsc/dm/impl/ValRefInt.h" namespace "vsc::dm":
         uintptr_t get_val_u()
         void set_val(intptr_t v)
 
+cdef extern from "vsc/dm/impl/ValRefPtr.h" namespace "vsc::dm":
+    cdef cppclass ValRefPtr(ValRef):
+        ValRefPtr()
+        ValRefPtr(const ValRef &rhs)
+        uintptr_t get_val() const
+        void set_val(uintptr_t v)
+
+
+cdef extern from "vsc/dm/impl/ValRefStruct.h" namespace "vsc::dm":
+    cdef cppclass ValRefStruct(ValRef):
+        ValRefStruct()
+        ValRefStruct(const ValRef &rhs)
+        int32_t getNumFields() const
+        ValRef getFieldRef(int32_t i)
         pass
 
 #********************************************************************

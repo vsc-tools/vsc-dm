@@ -2,6 +2,7 @@
 cimport debug_mgr.core as dm_core
 from vsc_dm cimport decl
 from libc.stdint cimport intptr_t
+from libc.stdint cimport uintptr_t
 from libc.stdint cimport int32_t
 from libc.stdint cimport uint32_t
 from libc.stdint cimport uint64_t
@@ -597,6 +598,8 @@ cdef class ValRef(object):
 
     cpdef DataType type(self)
 
+    cpdef int vp(self)
+
     @staticmethod
     cdef mk(const decl.ValRef &, bool owned=*)
 
@@ -609,6 +612,16 @@ cdef class ValRefInt(ValRef):
     cpdef int get_val_u(self)
 
     cpdef set_val(self, int v)
+
+cdef class ValRefPtr(ValRef):
+    cpdef uintptr_t get_val(self)
+    cpdef void set_val(self, uintptr_t v)
+
+cdef class ValRefStruct(ValRef):
+
+    cpdef int getNumFields(self)
+
+    cpdef ValRef getFieldRef(self, int i)
 
 cdef class VisitorBase(object):
     cdef cpp_vector[bool]               _visit_s

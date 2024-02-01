@@ -27,6 +27,8 @@ namespace dm {
 
 class ValRefPtr : public ValRef {
 public:
+    ValRefPtr() { }
+
     ValRefPtr(const ValRef &rhs) : ValRef(rhs) { }
 
     virtual ~ValRefPtr() { }
