@@ -54,6 +54,24 @@ public:
         return m_ctxt->getDataTypeCore(t);
     }
 
+    virtual IDataTypeArray *findDataTypeArray(
+        IDataType               *type,
+        uint32_t                size,
+        bool                    create=true) override {
+        return m_ctxt->findDataTypeArray(type, size, create);
+    }
+
+    virtual IDataTypeArray *mkDataTypeArray(
+        IDataType               *type,
+        bool                    owned,
+        uint32_t                size) override {
+        return m_ctxt->mkDataTypeArray(type, owned, size);
+    }
+
+    virtual bool addDataTypeArray(IDataTypeArray *t) override {
+        return m_ctxt->addDataTypeArray(t);
+    }
+
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override {
 		return m_ctxt->findDataTypeEnum(name);
 	}
@@ -518,6 +536,10 @@ public:
 		return m_ctxt->mkTypeFieldVec(name, dtype,
 			own_dtype, attr, init_sz);
 	}
+    
+    virtual ValRefArr mkValRefArr(IDataTypeArray *t) override {
+        return m_ctxt->mkValRefArr(t);
+    }
 
     virtual ValRefBool mkValRefBool(
         bool        value) override {

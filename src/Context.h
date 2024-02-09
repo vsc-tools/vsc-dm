@@ -49,6 +49,18 @@ public:
 
     virtual IDataType *getDataTypeCore(DataTypeCoreE t) override;
 
+    virtual IDataTypeArray *findDataTypeArray(
+        IDataType               *type,
+        uint32_t                size,
+        bool                    create=true) override;
+
+    virtual IDataTypeArray *mkDataTypeArray(
+        IDataType               *type,
+        bool                    owned,
+        uint32_t                size) override;
+
+    virtual bool addDataTypeArray(IDataTypeArray *t) override;
+
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) override;
 
 	virtual IDataTypeEnum *mkDataTypeEnum(
@@ -348,6 +360,8 @@ public:
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) override;
 
+    virtual ValRefArr mkValRefArr(IDataTypeArray *t) override;
+
     virtual ValRefBool mkValRefBool(bool value) override;
 
     virtual ValRefInt mkValRefInt(
@@ -371,6 +385,7 @@ private:
     };
     using DataTypeWrapperMUP=std::unique_ptr<DataTypeWrapperM>;
 
+    using ArrayTypeInfo=std::unordered_map<uint32_t, IDataTypeArray *>;
 
 private:
     dmgr::IDebugMgr                                         *m_dbg_mgr;
@@ -379,6 +394,8 @@ private:
     IDataTypeUP                                             m_type_vptr;
     IDataTypeStringUP                                       m_type_string;
 	ModelValOp												m_model_val_op;
+    std::unordered_map<IDataType *, ArrayTypeInfo>          m_array_type_m;
+    std::vector<IDataTypeArrayUP>                           m_array_type_l;
 	std::unordered_map<std::string,IDataTypeEnum *>			m_enum_type_m;
 	std::vector<IDataTypeEnumUP>							m_enum_type_l;
 

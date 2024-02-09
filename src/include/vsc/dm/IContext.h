@@ -7,9 +7,11 @@
 
 #pragma once
 #include "dmgr/IDebugMgr.h"
+#include "vsc/dm/IDataTypeArray.h"
 #include "vsc/dm/IDataTypeBool.h"
 #include "vsc/dm/IDataTypeEnum.h"
 #include "vsc/dm/IDataTypeInt.h"
+#include "vsc/dm/IDataTypeRef.h"
 #include "vsc/dm/IDataTypeString.h"
 #include "vsc/dm/IDataTypeStruct.h"
 #include "vsc/dm/IDataTypeVec.h"
@@ -70,6 +72,7 @@
 #include "vsc/dm/IValAlloc.h"
 #include "vsc/dm/Val.h"
 #include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/ValRefArr.h"
 #include "vsc/dm/impl/ValRefBool.h"
 #include "vsc/dm/impl/ValRefInt.h"
 #include "vsc/dm/impl/ValRefStr.h"
@@ -108,6 +111,18 @@ public:
 #endif
 
     virtual IDataType *getDataTypeCore(DataTypeCoreE t) = 0;
+
+    virtual IDataTypeArray *findDataTypeArray(
+        IDataType               *type,
+        uint32_t                size,
+        bool                    create=true) = 0;
+
+    virtual IDataTypeArray *mkDataTypeArray(
+        IDataType               *type,
+        bool                    owned,
+        uint32_t                size) = 0;
+
+    virtual bool addDataTypeArray(IDataTypeArray *t) = 0;
 
 	virtual IDataTypeEnum *findDataTypeEnum(const std::string &name) = 0;
 
@@ -415,6 +430,8 @@ public:
 			bool					own_dtype,
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) = 0;
+
+    virtual ValRefArr mkValRefArr(IDataTypeArray *t) = 0;
 
     virtual ValRefBool mkValRefBool(
         bool        value) = 0;

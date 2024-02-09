@@ -19,6 +19,10 @@ public:
 
 	virtual bool cascade() const override { return m_cascade; }
 
+	virtual void visitDataTypeArray(IDataTypeArray *t) override {
+        m_delegate->visitDataTypeArray(t);
+    }
+
 	virtual void visitDataTypeBool(IDataTypeBool *t) override {
         m_delegate->visitDataTypeBool(t);
     }

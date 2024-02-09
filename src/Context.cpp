@@ -20,9 +20,11 @@
 
 #include "vsc/dm/impl/ModelBuildContext.h"
 #include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/ValRefArr.h"
 #include "vsc/dm/impl/ValRefInt.h"
 #include "vsc/dm/impl/ValRefStr.h"
 #include "Context.h"
+#include "DataTypeArray.h"
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
 #include "DataTypePtr.h"
@@ -124,6 +126,65 @@ IDataType *Context::getDataTypeCore(DataTypeCoreE t) {
         case DataTypeCoreE::String: return m_type_string.get();
     }
     return 0;
+}
+
+IDataTypeArray *Context::findDataTypeArray(
+        IDataType               *type,
+        uint32_t                size,
+        bool                    create) {
+    IDataTypeArray *ret = 0;
+    std::unordered_map<IDataType *, ArrayTypeInfo>::iterator it_t;
+
+    if ((it_t=m_array_type_m.find(type)) == m_array_type_m.end()) {
+        if (create) {
+            it_t = m_array_type_m.insert({type, ArrayTypeInfo()}).first;
+        }
+    }
+
+    if (it_t != m_array_type_m.end()) {
+        ArrayTypeInfo::iterator it_s;
+        
+        if ((it_s=it_t->second.find(size)) == it_t->second.end()) {
+            if (create) {
+
+            }
+        }
+
+        if (it_s != it_t->second.end()) {
+            ret = it_s->second;
+        } else if (create) {
+            ret = mkDataTypeArray(type, false, size);
+            it_t->second.insert({size, ret});
+            m_array_type_l.push_back(IDataTypeArrayUP(ret));
+        }
+    }
+
+    return ret;
+}
+
+IDataTypeArray *Context::mkDataTypeArray(
+        IDataType               *type,
+        bool                    owned,
+        uint32_t                size) {
+    return new DataTypeArray(type, owned, size);
+}
+
+bool Context::addDataTypeArray(IDataTypeArray *t) {
+    std::unordered_map<IDataType *, ArrayTypeInfo>::iterator it_t;
+
+    if ((it_t=m_array_type_m.find(t->getElemType())) == m_array_type_m.end()) {
+        it_t = m_array_type_m.insert({t->getElemType(), ArrayTypeInfo()}).first;
+    }
+
+    ArrayTypeInfo::iterator it_s;
+        
+    if ((it_s=it_t->second.find(t->getSize())) == it_t->second.end()) {
+        it_t->second.insert({t->getSize(), t});
+        m_array_type_l.push_back(IDataTypeArrayUP(t));
+        return true;
+    } else {
+        return false;
+    }
 }
 
 IDataTypeEnum *Context::findDataTypeEnum(const std::string &name) {
@@ -779,6 +840,14 @@ Val *Context::mkVal(uint32_t nbytes) {
 
 void Context::freeVal(Val *v) {
     m_val_alloc.free(v);
+}
+
+ValRefArr Context::mkValRefArr(IDataTypeArray *t) {
+    Val *v = mkVal(t->getByteSize());
+    return ValRefArr(ValRef(
+        Val::Val2ValPtr(v), 
+        t, 
+        ValRef::Flags::Owned | ValRef::Flags::Mutable));
 }
 
 ValRefBool Context::mkValRefBool(bool value) {
