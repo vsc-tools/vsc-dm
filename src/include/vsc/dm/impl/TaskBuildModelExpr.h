@@ -55,21 +55,20 @@ public:
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
  		bool references_ref_fields = false;
 		IModelField *f = 0;
-        std::vector<int32_t>::const_iterator it = e->getPath().begin();
 
         switch (e->getRootRefKind()) {
             case ITypeExprFieldRef::RootRefKind::TopDownScope: {
                 f = m_ctxt->getTopDownScope();
             } break;
             case ITypeExprFieldRef::RootRefKind::BottomUpScope: {
-                f = m_ctxt->getBottomUpScope(*it);
-                it++;
+                f = m_ctxt->getBottomUpScope(e->getRootRefOffset());
             } break;
             case ITypeExprFieldRef::RootRefKind::RootExpr: {
                 fprintf(stdout, "TODO: handle RootExpr reference\n");
             } break;
         }
 
+#ifdef UNDEFINED
 		for (; it!=e->getPath().end(); it++) {
 			f = f->getField(*it);
 
@@ -105,6 +104,7 @@ public:
 			// Good to go:
 			m_expr = m_ctxt->ctxt()->mkModelExprFieldRef(f);
 		}
+#endif // UNDEFINED
 
 
 // 		IModelExprIndexedFieldRef *ref = m_ctxt->ctxt()->mkModelExprIndexedFieldRef();

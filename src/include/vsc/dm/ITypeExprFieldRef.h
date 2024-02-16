@@ -27,23 +27,11 @@ public:
 
 	virtual ~ITypeExprFieldRef() { }
 
-    virtual ITypeExpr *getRootExpr() const = 0;
-
 	virtual RootRefKind getRootRefKind() const = 0;
 
     virtual int32_t getRootRefOffset() const = 0;
 
-    virtual void setRootRefOffset(int32_t off) = 0;
-
-	virtual void addPathElem(int32_t idx) = 0;
-
-	virtual uint32_t size() const = 0;
-
-	virtual int32_t at(int32_t idx) const = 0;
-
-	virtual const std::vector<int32_t> &getPath() const = 0;
-
-	virtual std::vector<int32_t> &getPath() = 0;
+    virtual int32_t getSubFieldIndex() const = 0;
 
 };
 

@@ -63,7 +63,7 @@ cdef class Context(object):
     cpdef TypeConstraintSoft mkTypeConstraintSoft(self, TypeConstraintExpr c)
     cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
-    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
+#    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
     cpdef TypeExprVal mkTypeExprVal(self, ValRef v)
@@ -542,11 +542,11 @@ cdef class TypeExprBin(TypeExpr):
     cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=*)    
 
 cdef class TypeExprFieldRef(TypeExpr):
-    cpdef getRootRefKind(self)
-    cpdef addPathElem(self, int32_t)
-    cpdef uint32_t size(self)
-    cpdef int32_t at(self, idx)
-    cpdef getPath(self)
+    # cpdef getRootRefKind(self)
+    # cpdef addPathElem(self, int32_t)
+    # cpdef uint32_t size(self)
+    # cpdef int32_t at(self, idx)
+    # cpdef getPath(self)
     
     cdef decl.ITypeExprFieldRef *asFieldRef(self)
     
@@ -693,7 +693,7 @@ cdef class VisitorBase(object):
 
     cpdef void visitTypeExprBin(self, TypeExprBin e)
 
-    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
+#    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
 
     cpdef void visitTypeExprRange(self, TypeExprRange e)
 
@@ -754,7 +754,7 @@ cdef class WrapperBuilder(VisitorBase):
 
     cpdef void visitTypeExprBin(self, TypeExprBin e)
 
-    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
+#    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
 
     cpdef void visitTypeExprRange(self, TypeExprRange e)
  

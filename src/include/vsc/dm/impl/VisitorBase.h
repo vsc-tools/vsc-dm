@@ -76,10 +76,14 @@
 
 #include "vsc/dm/IModelVal.h"
 
+#include "vsc/dm/ITypeExprArrIndex.h"
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
+#include "vsc/dm/ITypeExprRefBottomUp.h"
+#include "vsc/dm/ITypeExprRefTopDown.h"
+#include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
 
 #include "vsc/dm/ITypeConstraintBlock.h"
@@ -361,6 +365,11 @@ public:
 		}
 	}
 
+	virtual void visitTypeExprArrIndex(ITypeExprArrIndex *e) override {
+        e->getRootExpr()->accept(m_this);
+        e->getIndexExpr()->accept(m_this);
+    }
+
 	virtual void visitTypeExprBin(ITypeExprBin *e) override {
 		e->lhs()->accept(m_this);
 		e->rhs()->accept(m_this);
@@ -387,6 +396,14 @@ public:
 
 	virtual void visitTypeExprRef(ITypeExprRef *e) override {
         e->getTarget()->accept(m_this);
+    }
+    
+	virtual void visitTypeExprRefBottomUp(ITypeExprRefBottomUp *e) override { }
+
+	virtual void visitTypeExprRefTopDown(ITypeExprRefTopDown *e) override { }
+
+	virtual void visitTypeExprSubField(ITypeExprSubField *e) override {
+        e->getRootExpr()->accept(m_this);
     }
 
 	virtual void visitTypeExprUnary(ITypeExprUnary *e) override { 

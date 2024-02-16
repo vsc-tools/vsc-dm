@@ -14,18 +14,12 @@ namespace dm {
 class TypeExprFieldRef : public ITypeExprFieldRef {
 public:
 
-	TypeExprFieldRef(ITypeExpr          *root);
-
 	TypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind  kind,
-        int32_t                         offset
-    );
+        int32_t                         offset,
+        int32_t                         index);
 
 	virtual ~TypeExprFieldRef();
-
-    virtual ITypeExpr *getRootExpr() const override {
-        return m_root_expr.get();
-    }
 
     virtual RootRefKind getRootRefKind() const override {
         return m_root_ref_kind;
@@ -35,24 +29,8 @@ public:
         return m_root_ref_offset;
     }
 
-    virtual void setRootRefOffset(int32_t off) override {
-        m_root_ref_offset = off;
-    }
-
-	virtual void addPathElem(int32_t idx) override;
-
-	virtual uint32_t size() const override { return m_path.size(); }
-
-	virtual int32_t at(int32_t idx) const override {
-		return m_path.at(idx);
-	}
-
-	virtual const std::vector<int32_t> &getPath() const override {
-		return m_path;
-	}
-
-	virtual std::vector<int32_t> &getPath() override {
-        return m_path;
+    virtual int32_t getSubFieldIndex() const override {
+        return m_subfield_index;
     }
 
 	virtual void accept(IVisitor *v) override { v->visitTypeExprFieldRef(this); }
@@ -60,8 +38,7 @@ public:
 private:
     RootRefKind                                 m_root_ref_kind;
     int32_t                                     m_root_ref_offset;
-    ITypeExprUP                                 m_root_expr;
-	std::vector<int32_t>	      				m_path;
+    int32_t                                     m_subfield_index;
 };
 
 }

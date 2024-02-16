@@ -288,6 +288,12 @@ public:
 		IModelExpr					*expr,
 		int32_t						width) override;
 
+    virtual ITypeExprArrIndex *mkTypeExprArrIndex(
+            ITypeExpr       *root,
+            bool            root_owned,
+            ITypeExpr       *index,
+            bool            index_owned) override;
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
@@ -297,20 +303,8 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,
-        int32_t                             offset) override;
-
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExprFieldRef::RootRefKind          kind,
-        int32_t                                 offset,
-        const std::initializer_list<int32_t>    path) override;
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        int32_t                                 offset) override;
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        const std::initializer_list<int32_t>    path) override;
+        int32_t                             offset,
+        int32_t                             index) override;
 
 	virtual IModelExprIn *mkModelExprIn(
 
@@ -329,6 +323,17 @@ public:
 	virtual ITypeExprRef *mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) override;
+
+	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
+            int32_t         scope_offset,
+            int32_t         field_index) override;
+
+	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() override;
+
+    virtual ITypeExprSubField *mkTypeExprSubField(
+            ITypeExpr       *root,
+            bool            owned,
+            int32_t         index) override;
 
 	virtual ITypeExprUnary *mkTypeExprUnary(
         ITypeExpr       *target,

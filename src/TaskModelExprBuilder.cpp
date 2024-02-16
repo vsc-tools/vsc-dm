@@ -43,11 +43,13 @@ void TaskModelExprBuilder::visitTypeExprFieldRef(ITypeExprFieldRef *e) {
         } break;
     }
 
+#ifdef UNDEFINED
 	for (std::vector<int32_t>::const_iterator
         it=e->getPath().begin(); 
         it!=e->getPath().end(); it++) {
 		f = m_scope->getField(*it);
 	}
+#endif // UNDEFINED
 
 	m_expr = m_ctxt->mkModelExprFieldRef(f);
 }

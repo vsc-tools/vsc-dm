@@ -59,11 +59,15 @@
 #include "vsc/dm/ITypeConstraintScope.h"
 #include "vsc/dm/ITypeConstraintSoft.h"
 #include "vsc/dm/ITypeConstraintUnique.h"
+#include "vsc/dm/ITypeExprArrIndex.h"
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprFieldRef.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
+#include "vsc/dm/ITypeExprRefBottomUp.h"
+#include "vsc/dm/ITypeExprRefTopDown.h"
+#include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
 #include "vsc/dm/ITypeExprVal.h"
 #include "vsc/dm/ITypeFieldPhy.h"
@@ -331,6 +335,12 @@ public:
 
 	virtual ITask *mkTask(TaskE id) = 0;
 
+    virtual ITypeExprArrIndex *mkTypeExprArrIndex(
+            ITypeExpr       *root,
+            bool            root_owned,
+            ITypeExpr       *index,
+            bool            index_owned) = 0;
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
@@ -341,6 +351,17 @@ public:
 	virtual ITypeExprRef *mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) = 0;
+
+	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
+            int32_t         scope_offset,
+            int32_t         field_index) = 0;
+
+	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() = 0;
+
+    virtual ITypeExprSubField *mkTypeExprSubField(
+            ITypeExpr       *root,
+            bool            owned,
+            int32_t         index) = 0;
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) = 0;
 
@@ -379,20 +400,8 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,
-        int32_t                             offset) = 0;
-
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExprFieldRef::RootRefKind          kind,
-        int32_t                                 offset,
-        const std::initializer_list<int32_t>    path) = 0;
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        int32_t                                 path) = 0;
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        const std::initializer_list<int32_t>    path) = 0;
+        int32_t                             offset,
+        int32_t                             index) = 0;
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

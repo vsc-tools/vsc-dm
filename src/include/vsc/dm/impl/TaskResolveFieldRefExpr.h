@@ -43,11 +43,7 @@ public:
 				m_field = m_ctxt->getScope();
                 break;
         }
-		for (std::vector<int32_t>::const_iterator
-			it=e->getPath().begin(); 
-            it!=e->getPath().end(); it++) {
-			m_field = m_field->getField(*it);
-		}
+        m_field = m_field->getField(e->getSubFieldIndex());
 	}
 
 protected:

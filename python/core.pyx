@@ -287,12 +287,12 @@ cdef class Context(object):
             <decl.BinOp>(op_i),
             rhs.asExpr()))
         
-    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx):
-        cdef int root_kind_i = int(root_kind)
-        return TypeExprFieldRef.mk(
-            self._hndl.mkTypeExprFieldRef(
-                <decl.TypeExprFieldRef_RootRefKind>(root_kind_i),
-                root_idx), True)
+    # cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx):
+    #     cdef int root_kind_i = int(root_kind)
+    #     return TypeExprFieldRef.mk(
+    #         self._hndl.mkTypeExprFieldRef(
+    #             <decl.TypeExprFieldRef_RootRefKind>(root_kind_i),
+    #             root_idx), True)
     
     cpdef TypeExprRange mkTypeExprRange(self,
                                         bool is_single,
@@ -1362,20 +1362,20 @@ class TypeExprFieldRef_RootRefKind(IntEnum):
 
 cdef class TypeExprFieldRef(TypeExpr):
 
-    cpdef getRootRefKind(self):
-        pass
+    # cpdef getRootRefKind(self):
+    #     pass
 
-    cpdef addPathElem(self, int32_t idx):
-        self.asFieldRef().addPathElem(idx)
+    # cpdef addPathElem(self, int32_t idx):
+    #     self.asFieldRef().addPathElem(idx)
         
-    cpdef uint32_t size(self):
-        return self.asFieldRef().size()
+    # cpdef uint32_t size(self):
+    #     return self.asFieldRef().size()
     
-    cpdef int32_t at(self, idx):
-        return self.asFieldRef().getPath().at(idx)
+    # cpdef int32_t at(self, idx):
+    #     return self.asFieldRef().getPath().at(idx)
 
-    cpdef getPath(self):
-        pass
+    # cpdef getPath(self):
+    #     pass
     
     @staticmethod
     cdef TypeExprFieldRef mk(decl.ITypeExprFieldRef *hndl, bool owned=True):
@@ -1695,8 +1695,8 @@ cdef class VisitorBase(object):
     cpdef void visitTypeExprBin(self, TypeExprBin e):
         pass
 
-    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
-        pass
+#    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
+#        pass
 
     cpdef void visitTypeExprRange(self, TypeExprRange e):
         pass
@@ -1801,7 +1801,8 @@ cdef public void VisitorProxy_visitTypeExprBin(obj, decl.ITypeExprBin *c) with g
     obj.visitTypeExprBin(TypeExprBin.mk(c, False))
 
 cdef public void VisitorProxy_visitTypeExprFieldRef(obj, decl.ITypeExprFieldRef *c) with gil:
-    obj.visitTypeExprFieldRef(TypeExprFieldRef.mk(c, False))
+#    obj.visitTypeExprFieldRef(TypeExprFieldRef.mk(c, False))
+    pass
 
 cdef public void VisitorProxy_visitTypeExprRange(obj, decl.ITypeExprRange *c) with gil:
     obj.visitTypeExprRange(TypeExprRange.mk(c, False))
@@ -1977,8 +1978,8 @@ cdef class WrapperBuilder(VisitorBase):
     cpdef void visitTypeExprBin(self, TypeExprBin e):
         self._type_expr = e
 
-    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
-        self._type_expr = e
+#    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
+#        self._type_expr = e
 
     cpdef void visitTypeExprRange(self, TypeExprRange e):
         self._type_expr = e

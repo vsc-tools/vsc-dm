@@ -374,6 +374,14 @@ public:
 		return m_ctxt->mkTask(id);
 	}
 
+    virtual ITypeExprArrIndex *mkTypeExprArrIndex(
+            ITypeExpr       *root,
+            bool            root_owned,
+            ITypeExpr       *index,
+            bool            index_owned) override {
+        return m_ctxt->mkTypeExprArrIndex(root, root_owned, index, index_owned);
+    }
+
 	virtual ITypeExprBin *mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
@@ -387,6 +395,23 @@ public:
             ITypeExpr       *target,
             bool            owned) override {
         return m_ctxt->mkTypeExprRef(target, owned);
+    }
+
+	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
+            int32_t         scope_offset,
+            int32_t         field_index) override {
+        return m_ctxt->mkTypeExprRefBottomUp(scope_offset, field_index);
+    }
+
+	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() {
+        return m_ctxt->mkTypeExprRefTopDown();
+    }
+
+    virtual ITypeExprSubField *mkTypeExprSubField(
+            ITypeExpr       *root,
+            bool            owned,
+            int32_t         index) override {
+        return m_ctxt->mkTypeExprSubField(root, owned, index);
     }
 
 	virtual ITypeConstraintBlock *mkTypeConstraintBlock(const std::string &name) override {
@@ -449,28 +474,10 @@ public:
 
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,
-        int32_t                             offset) override {
-		return m_ctxt->mkTypeExprFieldRef(kind, offset);
+        int32_t                             offset,
+        int32_t                             index) override {
+		return m_ctxt->mkTypeExprFieldRef(kind, offset, index);
 	}
-
-	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExprFieldRef::RootRefKind          kind,
-        int32_t                                 offset,
-		const std::initializer_list<int32_t>    path) override {
-        return m_ctxt->mkTypeExprFieldRef(kind, offset, path);
-    }
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        int32_t                                 path) override {
-        return m_ctxt->mkTypeExprFieldRef(root, path);
-    }
-
-    virtual ITypeExprFieldRef *mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        const std::initializer_list<int32_t>    path) override {
-        return m_ctxt->mkTypeExprFieldRef(root, path);
-    }
 
 	virtual ITypeExprRange *mkTypeExprRange(
 			bool				is_single,

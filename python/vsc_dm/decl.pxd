@@ -176,10 +176,6 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         ITypeConstraintUnique *mkTypeConstraintUnique(
             const cpp_vector[ITypeExprP]    &exprs)
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
-        ITypeExprFieldRef *mkTypeExprFieldRef(
-            TypeExprFieldRef_RootRefKind root_kind,
-            int32_t                      root_idx
-        )
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
         ITypeExprRangelist *mkTypeExprRangelist()
         ITypeExprVal *mkTypeExprVal(IDataType *, ValData)

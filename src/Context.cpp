@@ -75,11 +75,15 @@
 #include "TypeConstraintScope.h"
 #include "TypeConstraintSoft.h"
 #include "TypeConstraintUnique.h"
+#include "TypeExprArrIndex.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
 #include "TypeExprRange.h"
 #include "TypeExprRangelist.h"
 #include "TypeExprRef.h"
+#include "TypeExprRefBottomUp.h"
+#include "TypeExprRefTopDown.h"
+#include "TypeExprSubField.h"
 #include "TypeExprVal.h"
 #include "TypeExprUnary.h"
 #include "TypeFieldPhy.h"
@@ -713,6 +717,14 @@ ITypeConstraintUnique *Context::mkTypeConstraintUnique(
 	return new TypeConstraintUnique(exprs);
 }
 
+ITypeExprArrIndex *Context::mkTypeExprArrIndex(
+            ITypeExpr       *root,
+            bool            root_owned,
+            ITypeExpr       *index,
+            bool            index_owned) {
+    return new TypeExprArrIndex(root, root_owned, index, index_owned);
+}
+
 ITypeExprBin *Context::mkTypeExprBin(
 			ITypeExpr		*lhs,
 			BinOp			op,
@@ -724,45 +736,9 @@ ITypeExprBin *Context::mkTypeExprBin(
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,
-        int32_t                             offset) {
-	return new TypeExprFieldRef(kind, offset);
-}
-
-ITypeExprFieldRef *Context::mkTypeExprFieldRef(
-        ITypeExprFieldRef::RootRefKind          kind,
-        int32_t                                 offset,
-		const std::initializer_list<int32_t>    path) {
-	ITypeExprFieldRef *ret = new TypeExprFieldRef(kind, offset);
-
-	for (std::initializer_list<int32_t>::iterator
-		it=path.begin();
-		it!=path.end(); it++) {
-		ret->addPathElem(*it);
-	}
-
-	return ret;
-}
-
-ITypeExprFieldRef *Context::mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        int32_t                                 path) {
-    ITypeExprFieldRef *ret = new TypeExprFieldRef(root);
-    if (path >= 0) {
-        ret->addPathElem(path);
-    }
-    return ret;
-}
-
-ITypeExprFieldRef *Context::mkTypeExprFieldRef(
-        ITypeExpr                               *root,
-        const std::initializer_list<int32_t>    path) {
-    ITypeExprFieldRef *ret = new TypeExprFieldRef(root);
-    for (std::initializer_list<int32_t>::iterator
-        it=path.begin();
-        it!=path.end(); it++) {
-        ret->addPathElem(*it);
-    }
-    return ret;
+        int32_t                             offset,
+        int32_t                             index) {
+	return new TypeExprFieldRef(kind, offset, index);
 }
 
 ITypeExprRange *Context::mkTypeExprRange(
@@ -783,6 +759,23 @@ ITypeExprRef *Context::mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) {
     return new TypeExprRef(target, owned);
+}
+
+ITypeExprRefBottomUp *Context::mkTypeExprRefBottomUp(
+            int32_t         scope_offset,
+            int32_t         field_index) {
+    return new TypeExprRefBottomUp(scope_offset, field_index);
+}
+
+ITypeExprRefTopDown *Context::mkTypeExprRefTopDown() {
+    return new TypeExprRefTopDown();
+}
+
+ITypeExprSubField *Context::mkTypeExprSubField(
+            ITypeExpr       *root,
+            bool            owned,
+            int32_t         index) {
+    return new TypeExprSubField(root, owned, index);
 }
 
 ITypeExprUnary *Context::mkTypeExprUnary(
