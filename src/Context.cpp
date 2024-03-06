@@ -493,11 +493,11 @@ bool Context::addDataTypeWrapper(IDataTypeWrapper *t) {
 }
 
 IDataTypeVec *Context::mkDataTypeVec(IDataType *t) {
-
+	return 0;
 }
 
 bool *Context::addDataTypeVec(IDataTypeVec *t) {
-
+	return false;
 }
 
 IModelExprBin *Context::mkModelExprBin(
