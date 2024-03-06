@@ -11,11 +11,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - spec '3.8'
-          - spec '3.9'
-          - spec '3.10'
-          - spec '3.11'
-          - spec '3.12'
+          - spec: '3.8'
+          - spec: '3.9'
+          - spec: '3.10'
+          - spec: '3.11'
+          - spec: '3.12'
     steps:
     - name: checkout
       uses: actions/checkout@v2
