@@ -8,48 +8,47 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2014_x86_64
+    strategy:
+      matrix:
+        include:
+          - spec '3.8'
+          - spec '3.9'
+          - spec '3.10'
+          - spec '3.11'
+          - spec '3.12'
     steps:
-      - uses: actions/checkout@v1
-      - name: Fetch source dependencies
-        env:
-          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
-          BUILD_NUM: ${{ github.run_id }}
-        run: |
-          ${IVPM_PYTHON} -m pip install ivpm twine auditwheel
-          ${IVPM_PYTHON} -m ivpm update -a
-      - name: Fetch python build dependencies
-        run: |
-          yum install -y glibc-static
-          for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311; do
-            /opt/python/${py}/bin/python -m pip install ninja wheel cython
-          done
-      - name: Build packages
-        env:
-          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
-          BUILD_NUM: ${{ github.run_id }}
-        run: |
-          for py in cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310; do
-            /opt/python/${py}/bin/python setup.py bdist_wheel
-          done
-      - name: Audit Wheels
-        env:
-          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
-          BUILD_NUM: ${{ github.run_id }}
-        run: |
-          for whl in dist/*.whl; do
-              ${IVPM_PYTHON} -m auditwheel repair $whl
-              rm $whl
-          done
-
-      - name: Publish to PyPi
-        if: startsWith(github.ref, 'refs/heads/master')
-        env:
-          IVPM_PYTHON: /opt/python/cp310-cp310/bin/python
-          BUILD_NUM: ${{ github.run_id }}
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          ${IVPM_PYTHON} -m twine upload wheelhouse/*.whl          
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: Fetch source dependencies
+      env:
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec }}/bin/python
+        BUILD_NUM: ${{ github.run_id }}
+      run: |
+        echo "BUILD_NUM=${BUILD_NUM}" >> python/vsc_dm/__build_num__.py
+        ${IVPM_PYTHON} -m pip install ivpm twine auditwheel ninja wheel cython
+        ${IVPM_PYTHON} -m ivpm update -a
+    - name: Build packages
+      env:
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+      run: |
+        ${IVPM_PYTHON} setup.py bdist_wheel
+    - name: Audit Wheels
+      env:
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+      run: |
+        for whl in dist/*.whl; do
+          ${IVPM_PYTHON} -m auditwheel repair $whl
+          rm $whl
+        done
+    - name: Publish to PyPi
+      if: startsWith(github.ref, 'refs/heads/master')
+      env:
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+        BUILD_NUM: ${{ github.run_id }}
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        ${IVPM_PYTHON} -m twine upload wheelhouse/*.whl          
 
   macos:
     runs-on: macos-latest
@@ -65,6 +64,7 @@ jobs:
         env:
           BUILD_NUM: ${{ github.run_id }}
         run: |
+          echo "BUILD_NUM=${BUILD_NUM}" >> python/vsc_dm/__build_num__.py
           ./packages/python/bin/python3 setup.py bdist_wheel
       - name: Publish to PyPi
         if: startsWith(github.ref, 'refs/heads/main')
@@ -104,16 +104,18 @@ jobs:
       with:
         architecture: ${{ matrix.python_arch }}
         python-version: ${{ matrix.spec }}
+    - uses: ilammy/msvc-dev-cmd@v1.13.0
+      with:
+        arch: ${{ matrix.build_arch }}
 
     - name: Build/Test Package
-      shell: bash
       env:
         BUILD_NUM: ${{ github.run_id }}
       run: |
-        python -V
         python -m pip install ivpm
         python -m ivpm update -a
-        ./packages/python/Scripts/python -m pip install cython setuptools wheel build twine
+        ./packages/python/Scripts/python -m pip install ninja cython setuptools wheel build twine
+        echo "BUILD_NUM=$env:BUILD_NUM" > python/vsc_dm/__build_num__.py
         ./packages/python/Scripts/python setup.py build bdist_wheel
         ls dist
 
