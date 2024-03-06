@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <string>
 #include "vsc/dm/IAccept.h"
 #include "vsc/dm/IAssociatedData.h"
 #include "vsc/dm/IValOps.h"
