@@ -116,6 +116,7 @@ ValRef DataTypeStruct::copyVal(const ValRef &src) {
         dynamic_cast<IDataTypeStruct *>(src.type()),
         ValRef::Flags::Owned);
      */
+    return ValRef();
 }
 
 void DataTypeStruct::addConstraint(
