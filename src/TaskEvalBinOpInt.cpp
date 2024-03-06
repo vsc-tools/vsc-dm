@@ -343,7 +343,7 @@ ValRefInt TaskEvalBinOpInt::eval(
 }
 
 ValRefInt TaskEvalBinOpInt::Add(const ValRefInt &lhs, const ValRefInt &rhs) {
-
+    return ValRefInt(ValRef());
 }
 
 }
