@@ -46,7 +46,7 @@ void DataTypePtr::finiVal(ValRef &v) {
 }
 
 ValRef DataTypePtr::copyVal(const ValRef &src) {
-
+	return ValRef();
 }
 
 void DataTypePtr::accept(IVisitor *v) {

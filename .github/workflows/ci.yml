@@ -44,7 +44,7 @@ jobs:
     - name: Publish to PyPi
       if: startsWith(github.ref, 'refs/heads/master')
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
+        IVPM_PYTHON: ./packages/python/bin/python
         BUILD_NUM: ${{ github.run_id }}
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
