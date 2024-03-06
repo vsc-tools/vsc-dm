@@ -72,8 +72,8 @@ ValRef DataTypeInt::copyVal(const ValRef &src) {
         ValRefInt cpy();
     } else {
         // Need to alloc new storage
-
     }
+	return ValRef();
 }
 
 IModelField *DataTypeInt::mkRootField(
