@@ -25,16 +25,17 @@ jobs:
         BUILD_NUM: ${{ github.run_id }}
       run: |
         echo "BUILD_NUM=${BUILD_NUM}" >> python/vsc_dm/__build_num__.py
-        ${IVPM_PYTHON} -m pip install ivpm twine auditwheel ninja wheel cython
+        ${IVPM_PYTHON} -m pip install ivpm cython
         ${IVPM_PYTHON} -m ivpm update -a
     - name: Build packages
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
+        IVPM_PYTHON: ./packages/python/bin/python
       run: |
+        ${IVPM_PYTHON} -m pip install twine auditwheel ninja wheel cython
         ${IVPM_PYTHON} setup.py bdist_wheel
     - name: Audit Wheels
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
+        IVPM_PYTHON: ./packages/python/bin/python
       run: |
         for whl in dist/*.whl; do
           ${IVPM_PYTHON} -m auditwheel repair $whl
