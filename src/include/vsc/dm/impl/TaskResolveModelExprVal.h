@@ -85,6 +85,7 @@ public:
         } else if (lhs.kind == Kind_Struct) {
 
         }
+        return ValInfo();
     }
 
     virtual ValInfo evalExprBinIntNative(
@@ -93,7 +94,7 @@ public:
         const ValRefInt         &rhs) {
 
 //        bool is_signed = (lhs.is_signed() || rhs.is_signed());
-
+        return ValInfo();
     }
 
     virtual void foo() {
@@ -259,6 +260,7 @@ protected:
         m_result = result_t;
         return m_signed;
 #endif /* UNDEFINED */
+        return ValInfo();
     }
 
 protected:
