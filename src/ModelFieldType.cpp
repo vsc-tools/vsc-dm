@@ -61,11 +61,11 @@ IModelField *ModelFieldType::getField(int32_t idx) {
 }
 
 ValRef ModelFieldType::getImmVal() const {
-
+	return ValRef();
 }
 
 ValRef ModelFieldType::getMutVal() const {
-    
+	return ValRef();
 }
 
 void ModelFieldType::setFieldData(IModelFieldData *data) {

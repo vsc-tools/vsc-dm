@@ -538,7 +538,7 @@ void ModelValOp::log_xor_s(
 			const IModelVal	*op1,
 			const IModelVal	*op2) {
     if (op1->bits() <= 64 && op2->bits() <= 64) {
-		dst->set_val_u(op1->val_u() != 0 ^ op2->val_u() != 0);
+		dst->set_val_u((op1->val_u() != 0) ^ (op2->val_u() != 0));
 	} else {
 		// TODO:
 	}
@@ -554,7 +554,7 @@ bool ModelValOp::log_xor_s(
 			const IModelVal	*op1,
 			const IModelVal	*op2) {
     if (op1->bits() <= 64 && op2->bits() <= 64) {
-		return (op1->val_u() != 0 ^ op2->val_u() != 0);
+		return ((op1->val_u() != 0) ^ (op2->val_u() != 0));
 	}
 }
 
