@@ -163,7 +163,7 @@ public:
 
 	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) = 0;
 
-	virtual bool *addDataTypeVec(IDataTypeVec *t) = 0;
+	virtual bool addDataTypeVec(IDataTypeVec *t) = 0;
 
 	virtual IDataTypeWrapper *findDataTypeWrapper(
         IDataType       *type_phy,

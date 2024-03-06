@@ -131,7 +131,7 @@ public:
 		return m_ctxt->mkDataTypeVec(t);
 	}
 
-	virtual bool *addDataTypeVec(IDataTypeVec *t) override {
+	virtual bool addDataTypeVec(IDataTypeVec *t) override {
 		return m_ctxt->addDataTypeVec(t);
 	}
 

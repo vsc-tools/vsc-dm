@@ -95,7 +95,7 @@ public:
 
 	virtual IDataTypeVec *mkDataTypeVec(IDataType *t) override;
 
-	virtual bool *addDataTypeVec(IDataTypeVec *t) override;
+	virtual bool addDataTypeVec(IDataTypeVec *t) override;
 
 	virtual IDataTypeWrapper *findDataTypeWrapper(
         IDataType       *type_phy,
