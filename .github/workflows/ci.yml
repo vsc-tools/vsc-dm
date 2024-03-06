@@ -11,17 +11,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - spec: '3.8'
-          - spec: '3.9'
-          - spec: '3.10'
-          - spec: '3.11'
-          - spec: '3.12'
+          - spec: 'cp38-cp38'
+          - spec: 'cp39-cp39'
+          - spec: 'cp310-cp310'
+          - spec: 'cp311-cp311'
+          - spec: 'cp312-cp312'
     steps:
     - name: checkout
       uses: actions/checkout@v2
     - name: Fetch source dependencies
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec }}/bin/python
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
         BUILD_NUM: ${{ github.run_id }}
       run: |
         echo "BUILD_NUM=${BUILD_NUM}" >> python/vsc_dm/__build_num__.py
@@ -29,12 +29,12 @@ jobs:
         ${IVPM_PYTHON} -m ivpm update -a
     - name: Build packages
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
       run: |
         ${IVPM_PYTHON} setup.py bdist_wheel
     - name: Audit Wheels
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
       run: |
         for whl in dist/*.whl; do
           ${IVPM_PYTHON} -m auditwheel repair $whl
@@ -43,7 +43,7 @@ jobs:
     - name: Publish to PyPi
       if: startsWith(github.ref, 'refs/heads/master')
       env:
-        IVPM_PYTHON: /opt/python/${{ matrix.spec }}-${{ matrix.spec}}/bin/python
+        IVPM_PYTHON: /opt/python/${{ matrix.spec }}/bin/python
         BUILD_NUM: ${{ github.run_id }}
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
