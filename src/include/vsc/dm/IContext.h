@@ -66,6 +66,7 @@
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
 #include "vsc/dm/ITypeExprRefBottomUp.h"
+#include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
 #include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
@@ -355,6 +356,11 @@ public:
 	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
             int32_t         scope_offset,
             int32_t         field_index) = 0;
+
+	virtual ITypeExprRefPath *mkTypeExprRefPath(
+        ITypeExpr       			*root,
+        bool            			owned,
+		const std::vector<int32_t>	&path) = 0;
 
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() = 0;
 

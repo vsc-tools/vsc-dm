@@ -82,6 +82,7 @@
 #include "TypeExprRangelist.h"
 #include "TypeExprRef.h"
 #include "TypeExprRefBottomUp.h"
+#include "TypeExprRefPath.h"
 #include "TypeExprRefTopDown.h"
 #include "TypeExprSubField.h"
 #include "TypeExprVal.h"
@@ -765,6 +766,13 @@ ITypeExprRefBottomUp *Context::mkTypeExprRefBottomUp(
             int32_t         scope_offset,
             int32_t         field_index) {
     return new TypeExprRefBottomUp(scope_offset, field_index);
+}
+
+ITypeExprRefPath *Context::mkTypeExprRefPath(
+        ITypeExpr       			*root,
+        bool            			owned,
+		const std::vector<int32_t>	&path) {
+	return new TypeExprRefPath(root, owned, path);
 }
 
 ITypeExprRefTopDown *Context::mkTypeExprRefTopDown() {

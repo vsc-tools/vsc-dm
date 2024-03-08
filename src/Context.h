@@ -328,6 +328,11 @@ public:
             int32_t         scope_offset,
             int32_t         field_index) override;
 
+	virtual ITypeExprRefPath *mkTypeExprRefPath(
+        ITypeExpr       			*root,
+        bool            			owned,
+		const std::vector<int32_t>	&path) override;
+
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() override;
 
     virtual ITypeExprSubField *mkTypeExprSubField(

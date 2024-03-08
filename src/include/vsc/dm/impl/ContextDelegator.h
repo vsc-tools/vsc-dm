@@ -403,6 +403,13 @@ public:
         return m_ctxt->mkTypeExprRefBottomUp(scope_offset, field_index);
     }
 
+	virtual ITypeExprRefPath *mkTypeExprRefPath(
+        ITypeExpr       			*target,
+        bool            			owned,
+		const std::vector<int32_t>	&path) override {
+		return m_ctxt->mkTypeExprRefPath(target, owned, path);
+	}
+
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() {
         return m_ctxt->mkTypeExprRefTopDown();
     }

@@ -82,6 +82,7 @@
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
 #include "vsc/dm/ITypeExprRefBottomUp.h"
+#include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
 #include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
@@ -399,6 +400,8 @@ public:
     }
     
 	virtual void visitTypeExprRefBottomUp(ITypeExprRefBottomUp *e) override { }
+
+	virtual void visitTypeExprRefPath(ITypeExprRefPath *e) override { }
 
 	virtual void visitTypeExprRefTopDown(ITypeExprRefTopDown *e) override { }
 

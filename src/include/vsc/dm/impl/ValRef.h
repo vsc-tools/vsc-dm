@@ -160,9 +160,10 @@ public:
 //        return type()->copyVal(*this);
     }
 
-    ValRef toMutable() const {
+    ValRef toMutable(bool move=false) const {
+        Flags flags = (move)?m_flags:VALREF_CLRFLAG(m_flags, Flags::Owned);
         // We want 
-        if (VALREF_FLAGSET(m_flags, Flags::Mutable)) {
+        if (VALREF_FLAGSET(flags, Flags::Mutable)) {
             // This value is already mutable
             // It might be a value with locally-held storage (eg simple int).
             // It might be a reference to a field within an aggregate. If it
@@ -171,7 +172,7 @@ public:
 
             // Either way, the referent will not hold ownership of any
             // allocated storage
-            Flags flags = VALREF_CLRFLAG(m_flags, Flags::Owned);
+            flags = VALREF_CLRFLAG(flags, Flags::Owned);
 
             // A mutable ref must change its source. In order for that
             // to happen, we need to convert a non-pointer reference
@@ -181,13 +182,13 @@ public:
             // pointer semantics
 
             uintptr_t vp = m_vp;
-            if (VALREF_FLAGSET(m_flags, Flags::Scalar) && !VALREF_FLAGSET(m_flags, Flags::IsPtr)) {
+            if (VALREF_FLAGSET(flags, Flags::Scalar) && !VALREF_FLAGSET(flags, Flags::IsPtr)) {
                 VALREF_DEBUG(stdout, "Transform to pointer\n");
                 vp = reinterpret_cast<uintptr_t>(&m_vp);
                 flags = VALREF_SETFLAG(flags, Flags::IsPtr);
             }
 
-            return (VALREF_FLAGSET(m_flags, Flags::HasField))?
+            return (VALREF_FLAGSET(flags, Flags::HasField))?
                 ValRef(vp, m_type_field.m_field, flags):ValRef(vp, m_type_field.m_type, flags);
         } else {
             // TODO: maybe this is just a failure?
@@ -201,13 +202,14 @@ public:
         }
     }
 
-    ValRef toImmutable() const {
+    ValRef toImmutable(bool move=false) const {
+        Flags flags = (move)?m_flags:VALREF_CLRFLAG(m_flags, Flags::Owned);
         if (VALREF_FLAGSET(m_flags, Flags::HasField)) {
             return ValRef(m_vp, m_type_field.m_field, 
-                VALREF_CLRFLAG(m_flags, Flags::Mutable));
+                VALREF_CLRFLAG(flags, Flags::Mutable));
         } else {
             return ValRef(m_vp, m_type_field.m_type, 
-                VALREF_CLRFLAG(m_flags, Flags::Mutable));
+                VALREF_CLRFLAG(flags, Flags::Mutable));
         }
     }
 
