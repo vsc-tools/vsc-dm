@@ -80,7 +80,8 @@ if isSrcBuild:
     setup_args["ivpm_extdep_pkgs"] = ["debug-mgr"]
     setup_args["ivpm_extra_data"] = {
         "debug_mgr": [
-            ("src/include", "share")
+            ("src/include", "share"),
+            ("build/{libdir}/{libpref}vsc-dm{dllext}", ""),
         ]
     }
 
