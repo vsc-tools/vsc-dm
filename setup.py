@@ -24,7 +24,7 @@ try:
     print("vsc-dm: running IVPM SrcBuild")
 except ImportError as e:
     from setuptools import setup
-    print("vsc-dm: running non-src build")
+    print("vsc-dm: running non-src build (%s)" % str(e))
 
 if isSrcBuild:
     incdir = os.path.join(proj_dir, "src", "include")
@@ -67,6 +67,7 @@ setup_args = dict(
     ]
   },
   install_requires=[
+      'ivpm',
       'debug-mgr',
   ],
   setup_requires=[
