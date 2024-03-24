@@ -2,7 +2,14 @@
 #* setup.py for vsc-dm
 #****************************************************************************
 import os
+import sys
+import platform
 from setuptools import Extension, find_namespace_packages
+
+if "IVPM_PYTHONPATH" in os.environ.keys():
+    ps = ";" if platform.system() == "Windows" else ":"
+    for i,p in enumerate(os.environ["IVPM_PYTHONPATH"].split(ps)):
+        sys.path.insert(i, p)
 
 version="0.0.1"
 
@@ -67,7 +74,6 @@ setup_args = dict(
     ]
   },
   install_requires=[
-      'ivpm',
       'debug-mgr',
   ],
   setup_requires=[
