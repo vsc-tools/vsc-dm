@@ -49,8 +49,9 @@ jobs:
       - name: Fetch dependencies
         run: |
           python3 --version
-          python3 -m pip install ivpm --user
-          python3 -m ivpm update -a
+          python3 -m venv trampoline
+          ./trampoline/bin/python3 -m pip install ivpm
+          ./trampoline/bin/python3 -m ivpm update -a
           ./packages/python/bin/python3 -m pip install cython setuptools wheel build twine
       - name: Build wheel
         env:
