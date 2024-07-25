@@ -60,7 +60,7 @@ jobs:
           echo "BUILD_NUM=${BUILD_NUM}" >> python/vsc_dm/__build_num__.py
           ./packages/python/bin/python3 setup.py bdist_wheel
       - name: Publish to PyPi
-        if: startsWith(github.ref, 'refs/heads/main')
+        if: startsWith(github.ref, 'refs/heads/master')
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
@@ -113,7 +113,7 @@ jobs:
         ls dist
 
     - name: Publish to PyPi
-      if: startsWith(github.ref, 'refs/heads/main')
+      if: startsWith(github.ref, 'refs/heads/master')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
