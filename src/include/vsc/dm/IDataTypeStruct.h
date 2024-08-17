@@ -54,6 +54,17 @@ public:
 
     virtual int32_t getNumBuiltin() const = 0;
 
+    /**
+     * The 'super' type provides meta-data about the type. It is used 
+     * by downstream tools to change processing based on inheritance
+     * relationships. Each type definition is fully independent such 
+     * that the inheritance relationships need not be present to
+     * reconstruct the content of a given type.
+     */
+    virtual IDataTypeStruct *getSuper() = 0;
+
+    virtual void setSuper(IDataTypeStruct *t, bool owned=false) = 0;
+
 	template <class T> T *getFieldT(int32_t idx) {
 		return dynamic_cast<T *>(getField(idx));
 	}

@@ -60,6 +60,14 @@ public:
         return m_num_builtin; 
     }
 
+    virtual vsc::dm::IDataTypeStruct *getSuper() override {
+        return m_super.get();
+    }
+
+    virtual void setSuper(vsc::dm::IDataTypeStruct *t, bool owned=false) override {
+        m_super  = IDataTypeStructUP(t, owned);
+    }
+
     virtual void initVal(ValRef &v) override;
 
     virtual void finiVal(ValRef &v) override;
@@ -97,6 +105,7 @@ public:
 private:
 	std::string							m_name;
 	std::vector<ITypeFieldUP>			m_fields;
+    vsc::dm::IDataTypeStructUP          m_super;
     int32_t                             m_num_builtin;    
 	std::vector<ITypeConstraintUP>		m_constraints;
 	IModelStructCreateHookUP			m_create_hook;
