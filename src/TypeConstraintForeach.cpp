@@ -38,9 +38,7 @@ TypeConstraintForeach::TypeConstraintForeach(
         iter_name,
         ui32,
         false,
-        TypeFieldAttr::NoAttr,
-        ctxt->mkValRefInt(0, false, 32)));
-
+        TypeFieldAttr::NoAttr, 0));
 }
 
 TypeConstraintForeach::~TypeConstraintForeach() {

@@ -328,22 +328,23 @@ cdef class Context(object):
                                 DataType dtype, 
                                 bool own_dtype,
                                 attr,
-                                ValRef init):
+                                TypeExpr init):
         cdef decl.ValRef init_v
         cdef bool have_init = False
         cdef int attr_i = int(attr)
+        cdef decl.ITypeExpr *init_h = NULL
 
         print("TODO: mkTypeFieldPhy -- init value") 
-#        if init is not None:
-#            init._owned = False
-#            init_h = init._hndl
+        if init is not None:
+            init._owned = False
+            init_h = init.asExpr()
             
         return TypeFieldPhy.mk(self._hndl.mkTypeFieldPhy(
             name.encode(), 
             dtype.asType(), 
             own_dtype,
             <decl.TypeFieldAttr>(attr_i),
-            std_move(init_v)))
+            init_h))
         
     cpdef TypeFieldRef mkTypeFieldRef(self, 
                                 name, 

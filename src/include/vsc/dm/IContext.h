@@ -432,7 +432,7 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            const ValRef            &init) = 0;
+			ITypeExpr				*init) = 0;
 
 	virtual ITypeFieldRef *mkTypeFieldRef(
 			const std::string		&name,

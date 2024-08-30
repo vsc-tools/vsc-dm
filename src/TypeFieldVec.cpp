@@ -27,7 +27,7 @@ TypeFieldVec::TypeFieldVec(
 			"size",
 			ui32_t,
 			false,
-			TypeFieldAttr::VecSize, ValRef()));
+			TypeFieldAttr::VecSize, 0));
 }
 
 TypeFieldVec::~TypeFieldVec() {

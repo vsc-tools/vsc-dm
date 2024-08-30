@@ -67,7 +67,7 @@ cdef class Context(object):
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
     cpdef TypeExprVal mkTypeExprVal(self, ValRef v)
-    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, ValRef)
+    cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, TypeExpr)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
     cpdef ValRefInt mkValRefInt(self, int value, bool is_signed, int width)
 

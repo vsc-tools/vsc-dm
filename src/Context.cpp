@@ -808,7 +808,7 @@ ITypeFieldPhy *Context::mkTypeFieldPhy(
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            const ValRef            &init) {
+            ITypeExpr				*init) {
 	return new TypeFieldPhy(
 			name,
 			dtype,

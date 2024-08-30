@@ -79,7 +79,7 @@ IModelField *DataTypeArray::mkTypeField(
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
         if (type_p) {
     		ret = ctxt->ctxt()->mkModelFieldType(type, val);
-		    if (type_p->getInit().isVoid()) {
+		    if (type_p->getInit()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());
 		    }

@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "vsc/dm/ITypeExpr.h"
 #include "vsc/dm/ITypeField.h"
 #include "vsc/dm/impl/ValRef.h"
 
@@ -17,7 +18,7 @@ public:
 
 	virtual ~ITypeFieldPhy() { }
 
-	virtual const ValRef &getInit() const = 0;
+	virtual ITypeExpr *getInit() = 0;
 
 };
 

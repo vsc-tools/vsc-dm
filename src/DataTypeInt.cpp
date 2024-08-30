@@ -69,7 +69,7 @@ ValRef DataTypeInt::copyVal(const ValRef &src) {
     ValRefInt src_i(src);
     if (src_i.bits() <= ValRefInt::native_sz()) {
         // Can just copy over
-        ValRefInt cpy();
+        ValRefInt cpy;
     } else {
         // Need to alloc new storage
     }
@@ -106,7 +106,7 @@ IModelField *DataTypeInt::mkTypeField(
 		ITypeFieldPhy *type_p = dynamic_cast<ITypeFieldPhy *>(type);
         if (type_p) {
     		ret = ctxt->ctxt()->mkModelFieldType(type, val);
-		    if (type_p->getInit().isVoid()) {
+		    if (type_p->getInit()) {
             // TODO:
 //			ret->val()->set(type_p->getInit());
 		    }

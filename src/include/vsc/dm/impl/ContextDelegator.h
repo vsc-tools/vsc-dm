@@ -530,7 +530,7 @@ public:
 			IDataType				*dtype,
 			bool					own_dtype,
 			TypeFieldAttr			attr,
-            const ValRef            &init) override {
+            ITypeExpr				*init) override {
 		return m_ctxt->mkTypeFieldPhy(name, dtype, own_dtype, attr, init);
 	}
 
