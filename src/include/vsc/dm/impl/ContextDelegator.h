@@ -397,6 +397,10 @@ public:
         return m_ctxt->mkTypeExprRef(target, owned);
     }
 
+	virtual ITypeExprRefInline *mkTypeExprRefInline() override {
+        return m_ctxt->mkTypeExprRefInline();
+    }
+
 	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
             int32_t         scope_offset,
             int32_t         field_index) override {

@@ -98,6 +98,7 @@ class ITypeExprRange;
 class ITypeExprRangelist;
 class ITypeExprRef;
 class ITypeExprRefBottomUp;
+class ITypeExprRefInline;
 class ITypeExprRefPath;
 class ITypeExprRefTopDown;
 class ITypeExprSubField;
@@ -240,6 +241,8 @@ public:
 	virtual void visitTypeExprRef(ITypeExprRef *e) = 0;
 
 	virtual void visitTypeExprRefBottomUp(ITypeExprRefBottomUp *e) = 0;
+
+	virtual void visitTypeExprRefInline(ITypeExprRefInline *e) = 0;
 
 	virtual void visitTypeExprRefPath(ITypeExprRefPath *e) = 0;
 

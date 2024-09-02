@@ -81,6 +81,7 @@
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
+#include "vsc/dm/ITypeExprRefInline.h"
 #include "vsc/dm/ITypeExprRefBottomUp.h"
 #include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
@@ -398,6 +399,8 @@ public:
 	virtual void visitTypeExprRef(ITypeExprRef *e) override {
         e->getTarget()->accept(m_this);
     }
+
+	virtual void visitTypeExprRefInline(ITypeExprRefInline *e) override { }
     
 	virtual void visitTypeExprRefBottomUp(ITypeExprRefBottomUp *e) override { }
 

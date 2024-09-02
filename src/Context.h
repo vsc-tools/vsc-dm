@@ -324,6 +324,8 @@ public:
             ITypeExpr       *target,
             bool            owned) override;
 
+	virtual ITypeExprRefInline *mkTypeExprRefInline() override;
+
 	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
             int32_t         scope_offset,
             int32_t         field_index) override;

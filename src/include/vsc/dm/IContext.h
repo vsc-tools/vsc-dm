@@ -66,6 +66,7 @@
 #include "vsc/dm/ITypeExprRangelist.h"
 #include "vsc/dm/ITypeExprRef.h"
 #include "vsc/dm/ITypeExprRefBottomUp.h"
+#include "vsc/dm/ITypeExprRefInline.h"
 #include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
 #include "vsc/dm/ITypeExprSubField.h"
@@ -352,6 +353,8 @@ public:
 	virtual ITypeExprRef *mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) = 0;
+
+	virtual ITypeExprRefInline *mkTypeExprRefInline() = 0;
 
 	virtual ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
             int32_t         scope_offset,

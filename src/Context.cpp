@@ -81,6 +81,7 @@
 #include "TypeExprRange.h"
 #include "TypeExprRangelist.h"
 #include "TypeExprRef.h"
+#include "TypeExprRefInline.h"
 #include "TypeExprRefBottomUp.h"
 #include "TypeExprRefPath.h"
 #include "TypeExprRefTopDown.h"
@@ -760,6 +761,10 @@ ITypeExprRef *Context::mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) {
     return new TypeExprRef(target, owned);
+}
+
+ITypeExprRefInline *Context::mkTypeExprRefInline() {
+    return new TypeExprRefInline();
 }
 
 ITypeExprRefBottomUp *Context::mkTypeExprRefBottomUp(
