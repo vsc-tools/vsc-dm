@@ -16,9 +16,6 @@ package:
        src: pypi
      - name: debug-mgr
        url: https://github.com/mballance/debug-mgr.git
-     - name: ivpm
-       src: pypi
-       #url: https://github.com/fvutils/ivpm.git
 
    deps:
      - name: cython
