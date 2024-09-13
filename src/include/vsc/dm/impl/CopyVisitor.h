@@ -37,7 +37,7 @@ public:
 		IContext 				*ctxt,
 		IModelBuildContext		*build_ctxt=0,
 		IVisitor 				*this_p=0) : 
-		VisitorBase(true, this_p), m_ctxt(ctxt),
+		VisitorBase(true, this_p), m_dbg(0), m_ctxt(ctxt),
 		m_build_ctxt(build_ctxt?build_ctxt:&m_build_ctxt_l), m_build_ctxt_l(ctxt) {
 		DEBUG_INIT("CopyVisitor", ctxt->getDebugMgr());
 	}
@@ -316,7 +316,7 @@ public:
 	}
 
 protected:
-	static dmgr::IDebug									*m_dbg;
+	dmgr::IDebug									    *m_dbg;
     IContext                    						*m_ctxt;
 	IModelBuildContext									*m_build_ctxt;
 	ModelBuildContext									m_build_ctxt_l;
@@ -328,7 +328,6 @@ protected:
 	std::unordered_map<vsc::dm::IAccept *,vsc::dm::IModelValUP>	m_field_val_m;
 };
 
-dmgr::IDebug *CopyVisitor::m_dbg = 0;
 
 }
 }
