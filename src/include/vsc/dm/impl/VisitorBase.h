@@ -76,6 +76,7 @@
 
 #include "vsc/dm/IModelVal.h"
 
+#include "vsc/dm/ITypeExprArrayLiteral.h"
 #include "vsc/dm/ITypeExprArrIndex.h"
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprRange.h"
@@ -85,6 +86,7 @@
 #include "vsc/dm/ITypeExprRefBottomUp.h"
 #include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
+#include "vsc/dm/ITypeExprStructLiteral.h"
 #include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
 
@@ -367,6 +369,10 @@ public:
 		}
 	}
 
+	virtual void visitTypeExprArrayLiteral(ITypeExprArrayLiteral *e) override {
+        e->getDataType()->accept(m_this);
+    }
+
 	virtual void visitTypeExprArrIndex(ITypeExprArrIndex *e) override {
         e->getRootExpr()->accept(m_this);
         e->getIndexExpr()->accept(m_this);
@@ -407,6 +413,10 @@ public:
 	virtual void visitTypeExprRefPath(ITypeExprRefPath *e) override { }
 
 	virtual void visitTypeExprRefTopDown(ITypeExprRefTopDown *e) override { }
+    
+    virtual void visitTypeExprStructLiteral(ITypeExprStructLiteral *e) override {
+        e->getDataType()->accept(m_this);
+    }
 
 	virtual void visitTypeExprSubField(ITypeExprSubField *e) override {
         e->getRootExpr()->accept(m_this);

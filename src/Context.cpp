@@ -75,6 +75,7 @@
 #include "TypeConstraintScope.h"
 #include "TypeConstraintSoft.h"
 #include "TypeConstraintUnique.h"
+#include "TypeExprArrayLiteral.h"
 #include "TypeExprArrIndex.h"
 #include "TypeExprBin.h"
 #include "TypeExprFieldRef.h"
@@ -85,6 +86,7 @@
 #include "TypeExprRefBottomUp.h"
 #include "TypeExprRefPath.h"
 #include "TypeExprRefTopDown.h"
+#include "TypeExprStructLiteral.h"
 #include "TypeExprSubField.h"
 #include "TypeExprVal.h"
 #include "TypeExprUnary.h"
@@ -719,6 +721,13 @@ ITypeConstraintUnique *Context::mkTypeConstraintUnique(
 	return new TypeConstraintUnique(exprs);
 }
 
+ITypeExprArrayLiteral *Context::mkTypeExprArrayLiteral(
+            IDataTypeArray                  *arr_t,
+            bool                            arr_t_owned,
+            const std::vector<ITypeExpr *>  &vals) {
+    return new TypeExprArrayLiteral(arr_t, arr_t_owned, vals);
+}
+
 ITypeExprArrIndex *Context::mkTypeExprArrIndex(
             ITypeExpr       *root,
             bool            root_owned,
@@ -782,6 +791,13 @@ ITypeExprRefPath *Context::mkTypeExprRefPath(
 
 ITypeExprRefTopDown *Context::mkTypeExprRefTopDown() {
     return new TypeExprRefTopDown();
+}
+
+ITypeExprStructLiteral *Context::mkTypeExprStructLiteral(
+            IDataTypeStruct                             *type,
+            bool                                        owned,
+            const std::vector<vsc::dm::ITypeExpr *>     &elems) {
+    return new TypeExprStructLiteral(type, owned, elems);
 }
 
 ITypeExprSubField *Context::mkTypeExprSubField(

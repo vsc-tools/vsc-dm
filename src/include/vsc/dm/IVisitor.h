@@ -92,6 +92,7 @@ class ITypeConstraintSoft;
 class ITypeConstraintUnique;
 class ITypeExpr;
 class ITypeExprArrIndex;
+class ITypeExprArrayLiteral;
 class ITypeExprBin;
 class ITypeExprFieldRef;
 class ITypeExprRange;
@@ -101,6 +102,7 @@ class ITypeExprRefBottomUp;
 class ITypeExprRefInline;
 class ITypeExprRefPath;
 class ITypeExprRefTopDown;
+class ITypeExprStructLiteral;
 class ITypeExprSubField;
 class ITypeExprUnary;
 class ITypeExprVal;
@@ -228,6 +230,8 @@ public:
 
 	virtual void visitTypeConstraintUnique(ITypeConstraintUnique *c) = 0;
 
+	virtual void visitTypeExprArrayLiteral(ITypeExprArrayLiteral *e) = 0;
+
 	virtual void visitTypeExprArrIndex(ITypeExprArrIndex *e) = 0;
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
@@ -247,6 +251,8 @@ public:
 	virtual void visitTypeExprRefPath(ITypeExprRefPath *e) = 0;
 
 	virtual void visitTypeExprRefTopDown(ITypeExprRefTopDown *e) = 0;
+
+    virtual void visitTypeExprStructLiteral(ITypeExprStructLiteral *e) = 0;
 
 	virtual void visitTypeExprSubField(ITypeExprSubField *e) = 0;
 

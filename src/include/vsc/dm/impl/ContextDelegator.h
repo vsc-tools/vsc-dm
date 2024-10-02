@@ -374,6 +374,13 @@ public:
 		return m_ctxt->mkTask(id);
 	}
 
+    virtual ITypeExprArrayLiteral *mkTypeExprArrayLiteral(
+            IDataTypeArray                  *arr_t,
+            bool                            arr_t_owned,
+            const std::vector<ITypeExpr *>  &vals) override {
+        return m_ctxt->mkTypeExprArrayLiteral(arr_t, arr_t_owned, vals);
+    }
+
     virtual ITypeExprArrIndex *mkTypeExprArrIndex(
             ITypeExpr       *root,
             bool            root_owned,
@@ -416,6 +423,13 @@ public:
 
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() {
         return m_ctxt->mkTypeExprRefTopDown();
+    }
+
+    virtual ITypeExprStructLiteral *mkTypeExprStructLiteral(
+            IDataTypeStruct                             *type,
+            bool                                        owned,
+            const std::vector<vsc::dm::ITypeExpr *>     &elems) override {
+        return m_ctxt->mkTypeExprStructLiteral(type, owned, elems);
     }
 
     virtual ITypeExprSubField *mkTypeExprSubField(

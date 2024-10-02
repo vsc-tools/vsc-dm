@@ -59,6 +59,7 @@
 #include "vsc/dm/ITypeConstraintScope.h"
 #include "vsc/dm/ITypeConstraintSoft.h"
 #include "vsc/dm/ITypeConstraintUnique.h"
+#include "vsc/dm/ITypeExprArrayLiteral.h"
 #include "vsc/dm/ITypeExprArrIndex.h"
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprFieldRef.h"
@@ -69,6 +70,7 @@
 #include "vsc/dm/ITypeExprRefInline.h"
 #include "vsc/dm/ITypeExprRefPath.h"
 #include "vsc/dm/ITypeExprRefTopDown.h"
+#include "vsc/dm/ITypeExprStructLiteral.h"
 #include "vsc/dm/ITypeExprSubField.h"
 #include "vsc/dm/ITypeExprUnary.h"
 #include "vsc/dm/ITypeExprVal.h"
@@ -337,6 +339,11 @@ public:
 
 	virtual ITask *mkTask(TaskE id) = 0;
 
+    virtual ITypeExprArrayLiteral *mkTypeExprArrayLiteral(
+            IDataTypeArray                  *arr_t,
+            bool                            arr_t_owned,
+            const std::vector<ITypeExpr *>  &vals) = 0;
+
     virtual ITypeExprArrIndex *mkTypeExprArrIndex(
             ITypeExpr       *root,
             bool            root_owned,
@@ -366,6 +373,11 @@ public:
 		const std::vector<int32_t>	&path) = 0;
 
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() = 0;
+
+    virtual ITypeExprStructLiteral *mkTypeExprStructLiteral(
+            IDataTypeStruct                             *type,
+            bool                                        owned,
+            const std::vector<vsc::dm::ITypeExpr *>     &elems) = 0;
 
     virtual ITypeExprSubField *mkTypeExprSubField(
             ITypeExpr       *root,

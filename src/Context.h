@@ -288,6 +288,11 @@ public:
 		IModelExpr					*expr,
 		int32_t						width) override;
 
+    virtual ITypeExprArrayLiteral *mkTypeExprArrayLiteral(
+            IDataTypeArray                  *arr_t,
+            bool                            arr_t_owned,
+            const std::vector<ITypeExpr *>  &vals) override;
+
     virtual ITypeExprArrIndex *mkTypeExprArrIndex(
             ITypeExpr       *root,
             bool            root_owned,
@@ -336,6 +341,11 @@ public:
 		const std::vector<int32_t>	&path) override;
 
 	virtual ITypeExprRefTopDown *mkTypeExprRefTopDown() override;
+
+    virtual ITypeExprStructLiteral *mkTypeExprStructLiteral(
+            IDataTypeStruct                             *type,
+            bool                                        owned,
+            const std::vector<vsc::dm::ITypeExpr *>     &elems) override;
 
     virtual ITypeExprSubField *mkTypeExprSubField(
             ITypeExpr       *root,
