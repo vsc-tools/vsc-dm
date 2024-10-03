@@ -107,6 +107,12 @@ public:
 		return m_ctxt->addDataTypeInt(t);
 	}
 
+    virtual IDataTypeList *findDataTypeList(
+        IDataType               *elem_t,
+        bool                    create=true) override {
+        return m_ctxt->findDataTypeList(elem_t, create);
+    }
+
 	virtual IDataTypeStruct *findDataTypeStruct(const std::string &name) override {
 		return m_ctxt->findDataTypeStruct(name);
 	}

@@ -10,6 +10,7 @@
 #include "vsc/dm/IDataTypeArray.h"
 #include "vsc/dm/IDataTypeBool.h"
 #include "vsc/dm/IDataTypeEnum.h"
+#include "vsc/dm/IDataTypeList.h"
 #include "vsc/dm/IDataTypeInt.h"
 #include "vsc/dm/IDataTypeRef.h"
 #include "vsc/dm/IDataTypeString.h"
@@ -140,6 +141,7 @@ public:
 
 	virtual bool addDataTypeEnum(IDataTypeEnum *e) = 0;
 
+
 	virtual IDataTypeInt *findDataTypeInt(
 			bool			is_signed,
 			int32_t			width,
@@ -154,6 +156,10 @@ public:
 			int32_t			width) = 0;
 
 	virtual bool addDataTypeInt(IDataTypeInt *t) = 0;
+
+    virtual IDataTypeList *findDataTypeList(
+        IDataType               *elem_t,
+        bool                    create=true) = 0;
 
 	virtual IDataTypeStruct *findDataTypeStruct(const std::string &name) = 0;
 

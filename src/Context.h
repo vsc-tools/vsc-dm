@@ -80,6 +80,10 @@ public:
 
 	virtual bool addDataTypeInt(IDataTypeInt *t) override;
 
+    virtual IDataTypeList *findDataTypeList(
+        IDataType               *elem_t,
+        bool                    create=true) override;
+
 	virtual IDataTypeStruct *findDataTypeStruct(
 			const std::string &name) override;
 
@@ -432,6 +436,9 @@ private:
 
 	std::unordered_map<int32_t, IDataTypeInt*>				m_sint_type_m;
 	std::vector<IDataTypeIntUP>								m_sint_type_l;
+
+    std::unordered_map<IDataType *, IDataTypeList *>        m_list_type_m;
+    std::vector<IDataTypeListUP>                            m_list_type_l;
 
     std::unordered_map<IDataType *, DataTypeWrapperM *>     m_wrapper_type_phy_m;
     std::vector<DataTypeWrapperMUP>                         m_wrapper_m_l;

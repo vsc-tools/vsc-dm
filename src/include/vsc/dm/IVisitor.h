@@ -33,6 +33,7 @@ class IDataTypeArray;
 class IDataTypeBool;
 class IDataTypeEnum;
 class IDataTypeInt;
+class IDataTypeList;
 class IDataTypePtr;
 class IDataTypeString;
 class IDataTypeStruct;
@@ -125,6 +126,8 @@ public:
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) = 0;
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) = 0;
+
+	virtual void visitDataTypeList(IDataTypeList *t) = 0;
 
 	virtual void visitDataTypePtr(IDataTypePtr *t) = 0;
 

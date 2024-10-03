@@ -27,6 +27,7 @@
 #include "DataTypeArray.h"
 #include "DataTypeBool.h"
 #include "DataTypeEnum.h"
+#include "DataTypeList.h"
 #include "DataTypePtr.h"
 #include "DataTypeString.h"
 #include "DataTypeStruct.h"
@@ -392,6 +393,20 @@ bool Context::addDataTypeInt(IDataTypeInt *t) {
 		}
 	}
 	return false;
+}
+
+IDataTypeList *Context::findDataTypeList(
+        IDataType               *elem_t,
+        bool                    create) {
+    IDataTypeList *ret = 0;
+    std::unordered_map<IDataType *, IDataTypeList *>::const_iterator it;
+
+    if ((it=m_list_type_m.find(elem_t)) != m_list_type_m.end()) {
+        ret = it->second;
+    } else if (create) {
+        ret = new DataTypeList(elem_t);
+    }
+    return ret;
 }
 
 IDataTypeStruct *Context::findDataTypeStruct(const std::string &name) {

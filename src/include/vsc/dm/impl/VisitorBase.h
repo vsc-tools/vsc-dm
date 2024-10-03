@@ -26,6 +26,7 @@
 #include "vsc/dm/IDataTypeBool.h"
 #include "vsc/dm/IDataTypeEnum.h"
 #include "vsc/dm/IDataTypeInt.h"
+#include "vsc/dm/IDataTypeList.h"
 #include "vsc/dm/IDataTypePtr.h"
 #include "vsc/dm/IDataTypeString.h"
 #include "vsc/dm/IDataTypeStruct.h"
@@ -125,6 +126,8 @@ public:
 	virtual void visitDataTypeEnum(IDataTypeEnum *t) override { }
 
 	virtual void visitDataTypeInt(IDataTypeInt *t) override { }
+
+	virtual void visitDataTypeList(IDataTypeList *t) override { }
 
 	virtual void visitDataTypePtr(IDataTypePtr *t) override { }
 
