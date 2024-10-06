@@ -44,7 +44,7 @@ void DataTypeList::finiVal(ValRef &v) {
 }
 
 ValRef DataTypeList::copyVal(const ValRef &src) {
-
+    return ValRef();
 }
 
 IModelField *DataTypeList::mkRootField(
