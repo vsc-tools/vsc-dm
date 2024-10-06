@@ -25,6 +25,8 @@ void TypeConstraintBlock::addConstraint(
 	m_constraints.push_back(ITypeConstraintUP(c, owned));
 }
 
+std::vector<ITypeVarUP> TypeConstraintBlock::m_null;
+
 }
 } /* namespace vsc */
 

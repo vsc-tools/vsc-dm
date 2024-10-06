@@ -1,5 +1,5 @@
 /**
- * ITypeConstraintVarScope.h
+ * ITypeVarScope.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -20,21 +20,23 @@
  */
 #pragma once
 #include <vector>
-#include "vsc/dm/ITypeField.h"
+#include "vsc/dm/ITypeVar.h"
 
 namespace vsc {
 namespace dm {
 
 
 
-class ITypeConstraintVarScope {
+class ITypeVarScope {
 public:
 
-    virtual ~ITypeConstraintVarScope() { }
+    virtual ~ITypeVarScope() { }
 
-    virtual void addVariable(ITypeField *var, bool owned=true) = 0;
+    virtual int32_t addVariable(ITypeVar *var, bool owned=true) = 0;
 
-    virtual const std::vector<ITypeFieldUP> &getVariables() const = 0;
+    virtual int32_t getNumVariables() = 0;
+
+    virtual const std::vector<ITypeVarUP> &getVariables() const = 0;
 
 };
 

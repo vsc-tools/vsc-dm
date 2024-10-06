@@ -11,7 +11,8 @@
 namespace vsc {
 namespace dm {
 
-class TypeConstraintBlock : public ITypeConstraintBlock {
+class TypeConstraintBlock : 
+    public virtual ITypeConstraintBlock {
 public:
 	TypeConstraintBlock(const std::string &name);
 
@@ -29,9 +30,20 @@ public:
 		return m_constraints;
 	}
 
+    virtual int32_t addVariable(ITypeVar *var, bool owned=true) override {
+        return -1;
+    }
+
+    virtual int32_t getNumVariables() override { return 0; }
+
+    virtual const std::vector<ITypeVarUP> &getVariables() const override {
+        return m_null;
+    }
+
 	virtual void accept(IVisitor *v) override { v->visitTypeConstraintBlock(this); }
 
 private:
+    static std::vector<ITypeVarUP>          m_null;
 	std::string							m_name;
 	std::vector<ITypeConstraintUP>		m_constraints;
 };

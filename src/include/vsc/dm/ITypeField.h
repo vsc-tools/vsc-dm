@@ -26,6 +26,7 @@
 #include "vsc/dm/IAccept.h"
 #include "vsc/dm/IDataType.h"
 #include "vsc/dm/TypeFieldAttr.h"
+#include "vsc/dm/ITypeVar.h"
 #include "vsc/dm/IModelVal.h"
 #include "vsc/dm/IModelBuildContext.h"
 
@@ -37,6 +38,7 @@ class IDataTypeStruct;
 class ITypeField;
 using ITypeFieldUP=UP<ITypeField>;
 class ITypeField : 
+    public virtual ITypeVar,
     public virtual IAccept {
 public:
 
@@ -55,14 +57,6 @@ public:
     virtual void setOffset(int32_t off) = 0;
 
     virtual int32_t getByteSize() const = 0;
-
-	virtual const std::string &name() const = 0;
-
-	virtual IDataType *getDataType() const = 0;
-
-	template <class T> T *getDataTypeT() const {
-		return dynamic_cast<T *>(getDataType());
-	}
 
     virtual bool isDataTypeOwned() const = 0;
 

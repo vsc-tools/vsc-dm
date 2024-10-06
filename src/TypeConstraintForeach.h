@@ -51,11 +51,17 @@ public:
         return m_body.get();
     }
 
-    virtual void addVariable(ITypeField *var, bool owned=true) override {
-        m_variables.push_back(ITypeFieldUP(var, owned));
+    virtual int32_t addVariable(ITypeVar *var, bool owned=true) override {
+        int32_t ret = m_variables.size();
+        m_variables.push_back(ITypeVarUP(var, owned));
+        return ret;
     }
 
-    virtual const std::vector<ITypeFieldUP> &getVariables() const override {
+    virtual int32_t getNumVariables() override {
+        return m_variables.size();
+    }
+
+    virtual const std::vector<ITypeVarUP> &getVariables() const override {
         return m_variables;
     }
 
@@ -64,7 +70,7 @@ public:
 private:
     ITypeExprUP                     m_target;
     ITypeConstraintUP               m_body;
-    std::vector<ITypeFieldUP>       m_variables;
+    std::vector<ITypeVarUP>       m_variables;
 
 };
 

@@ -23,13 +23,16 @@
 #pragma once
 #include <vector>
 #include "vsc/dm/ITypeConstraint.h"
+#include "vsc/dm/ITypeVarScope.h"
 
 namespace vsc {
 namespace dm {
 
 class ITypeConstraintScope;
 using ITypeConstraintScopeUP=UP<ITypeConstraintScope>;
-class ITypeConstraintScope : public ITypeConstraint {
+class ITypeConstraintScope : 
+    public virtual ITypeVarScope,
+    public virtual ITypeConstraint {
 public:
 
 	virtual ~ITypeConstraintScope() { }

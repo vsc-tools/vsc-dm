@@ -331,7 +331,7 @@ public:
 	}
 
 	virtual void visitTypeConstraintForeach(ITypeConstraintForeach *c) override {
-        for (std::vector<ITypeFieldUP>::const_iterator
+        for (std::vector<ITypeVarUP>::const_iterator
             it=c->getVariables().begin();
             it!=c->getVariables().end(); it++) {
             (*it)->accept(m_this);
