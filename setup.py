@@ -59,6 +59,10 @@ setup_args = dict(
   version=version,
   packages=find_namespace_packages(where='python'),
   package_dir = {'' : 'python'},
+  package_data = {'vsc_dm': [
+      'core.pxd',
+      'decl.pxd'
+      ]},
   author = "Matthew Ballance",
   author_email = "matt.ballance@gmail.com",
   description = ("Core Verification Stimulus and Coverage library"),
@@ -86,7 +90,7 @@ setup_args = dict(
 if isSrcBuild:
     setup_args["ivpm_extdep_pkgs"] = ["debug-mgr"]
     setup_args["ivpm_extra_data"] = {
-        "debug_mgr": [
+        "vsc-dm": [
             ("src/include", "share"),
             ("build/{libdir}/{libpref}vsc-dm{dllext}", ""),
         ]

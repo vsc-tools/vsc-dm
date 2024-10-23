@@ -1,6 +1,6 @@
 
 package:
-   name: libvsc-dm
+   name: vsc-dm
    version: 0.0.1
 
    setup-deps:
