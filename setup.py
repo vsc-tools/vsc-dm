@@ -90,7 +90,7 @@ setup_args = dict(
 if isSrcBuild:
     setup_args["ivpm_extdep_pkgs"] = ["debug-mgr"]
     setup_args["ivpm_extra_data"] = {
-        "vsc-dm": [
+        "vsc_dm": [
             ("src/include", "share"),
             ("build/{libdir}/{libpref}vsc-dm{dllext}", ""),
         ]
