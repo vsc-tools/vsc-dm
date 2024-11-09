@@ -41,14 +41,14 @@ public:
     virtual IDataType *getDataType() = 0;
 
     // Gets the value of the current field
-    virtual const ValRef &getVal() = 0;
+    virtual ValRef getVal() = 0;
 
     // Returns the number of fields in the current scope
     virtual int32_t numFields() = 0;
 
     virtual IDataType *getFieldType(int32_t f) = 0;
 
-    virtual const ValRef &getFieldVal(int32_t f) = 0;
+    virtual ValRef getFieldVal(int32_t f) = 0;
 
     virtual std::string getFieldName(int32_t f) = 0;
 

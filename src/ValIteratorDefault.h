@@ -44,14 +44,14 @@ public:
     virtual IDataType *getDataType() override;
 
     // Gets the value of the current field
-    virtual const ValRef &getVal() override;
+    virtual ValRef getVal() override;
 
     // Returns the number of fields in the current scope
     virtual int32_t numFields() override;
 
     virtual IDataType *getFieldType(int32_t f) override;
 
-    virtual const ValRef &getFieldVal(int32_t f) override;
+    virtual ValRef getFieldVal(int32_t f) override;
 
     virtual std::string getFieldName(int32_t f) override;
 

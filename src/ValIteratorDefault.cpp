@@ -45,11 +45,11 @@ void ValIteratorDefault::reset() {
 
     // Gets the data type of the current value
 IDataType *ValIteratorDefault::getDataType() {
-
+    return m_path.back().type();
 }
 
     // Gets the value of the current field
-const ValRef &ValIteratorDefault::getVal() {
+ValRef ValIteratorDefault::getVal() {
     return m_path.back();
 }
 
@@ -85,7 +85,7 @@ std::string ValIteratorDefault::getFieldName(int32_t idx) {
     }
 }
 
-const ValRef &ValIteratorDefault::getFieldVal(int32_t idx) {
+ValRef ValIteratorDefault::getFieldVal(int32_t idx) {
     if (m_numFields == -1) {
         updateNumFields();
     }
@@ -93,7 +93,7 @@ const ValRef &ValIteratorDefault::getFieldVal(int32_t idx) {
         ValRefStruct sv(m_path.back());
         return sv.getFieldRef(idx);
     } else {
-        return m_empty_val;
+        return ValRef();
     }
 }
 
