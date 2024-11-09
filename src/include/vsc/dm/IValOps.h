@@ -21,10 +21,12 @@
 #pragma once
 #include <stdint.h>
 #include "vsc/dm/impl/UP.h"
-//#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
+
+class IValIterator;
+class IValMutIterator;
 
 class ValRef;
 class IValOps;
@@ -39,6 +41,10 @@ public:
     virtual void finiVal(ValRef &v) = 0;
 
     virtual ValRef copyVal(const ValRef &src) = 0;
+
+    virtual IValIterator *mkValIterator(const ValRef &src) = 0;
+
+    virtual IValMutIterator *mkValMutIterator(const ValRef &src) = 0;
 
 };
 

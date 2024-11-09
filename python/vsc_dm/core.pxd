@@ -70,6 +70,7 @@ cdef class Context(object):
     cpdef TypeFieldPhy mkTypeFieldPhy(self, name, DataType, bool, attr, TypeExpr)
     cpdef TypeFieldRef mkTypeFieldRef(self, name, DataType, attr)
     cpdef ValRefInt mkValRefInt(self, int value, bool is_signed, int width)
+    cpdef ValRefStruct mkValRefStruct(self, DataTypeStruct t)
 
     @staticmethod    
     cdef mk(decl.IContext *hndl, bool owned=*)
@@ -600,6 +601,8 @@ cdef class ValRef(object):
 
     cpdef int vp(self)
 
+    cpdef ValIterator iterator(self)
+
     @staticmethod
     cdef mk(const decl.ValRef &, bool owned=*)
 
@@ -622,6 +625,21 @@ cdef class ValRefStruct(ValRef):
     cpdef int getNumFields(self)
 
     cpdef ValRef getFieldRef(self, int i)
+
+cdef class ValIterator(object):
+    cdef decl.IValIterator      *_hndl
+    cdef bool                   _owned
+    cpdef void reset(self)
+    cpdef DataType getDataType(self)
+    cpdef ValRef getVal(self)
+    cpdef int32_t numFields(self)
+    cpdef DataType getFieldType(self, int32_t idx)
+    cpdef str getFieldName(self, int32_t idx)
+    cpdef bool push(self, int32_t idx)
+    cpdef bool pop(self)
+
+    @staticmethod
+    cdef ValIterator mk(decl.IValIterator *hndl, bool owned=*)
 
 cdef class VisitorBase(object):
     cdef cpp_vector[bool]               _visit_s

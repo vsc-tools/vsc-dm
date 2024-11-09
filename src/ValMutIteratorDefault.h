@@ -1,5 +1,5 @@
 /**
- * IDataTypeWrapper.h
+ * ValMutIteratorDefault.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,28 +19,30 @@
  *     Author: 
  */
 #pragma once
-#include <memory>
-#include "vsc/dm/IDataType.h"
+#include "vsc/dm/IValMutIterator.h"
+#include "ValIteratorDefault.h"
 
 namespace vsc {
 namespace dm {
 
-class IDataType;
 
-class IDataTypeWrapper;
-using IDataTypeWrapperUP=std::unique_ptr<IDataTypeWrapper>;
-class IDataTypeWrapper : public virtual IDataType {
+
+class ValMutIteratorDefault :
+    public virtual IValMutIterator,
+    public virtual ValIteratorDefault {
 public:
+    ValMutIteratorDefault(const ValRef &src);
 
-    virtual ~IDataTypeWrapper() { }
+    virtual ~ValMutIteratorDefault();
 
-    virtual IDataType *getDataTypePhy() = 0;
+    // Gets the value of the current field
+    virtual void setVal(const ValRef &v) override;
 
-    virtual IDataType *getDataTypeVirt() = 0;
+    virtual void setFieldVal(int32_t f, const ValRef &v) override;
 
 };
 
-} /* namespace dm */
-} /* namespace vsc */
+}
+}
 
 

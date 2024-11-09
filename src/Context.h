@@ -395,6 +395,8 @@ public:
         bool    is_signed, 
         int32_t width) override;
 
+    virtual ValRef mkValRef(IDataType *t) override;
+
     virtual ValRef mkValRefRawPtr(void *ptr) override;
 
     virtual ValRefStr mkValRefStr(const std::string &str, int32_t reserve=0) override;

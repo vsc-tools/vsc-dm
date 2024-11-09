@@ -1,5 +1,5 @@
 /**
- * IDataTypeWrapper.h
+ * TaskAssignValRef.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,28 +19,39 @@
  *     Author: 
  */
 #pragma once
-#include <memory>
-#include "vsc/dm/IDataType.h"
+#include "vsc/dm/impl/ValRef.h"
+#include "vsc/dm/impl/VisitorBase.h"
 
 namespace vsc {
 namespace dm {
 
-class IDataType;
 
-class IDataTypeWrapper;
-using IDataTypeWrapperUP=std::unique_ptr<IDataTypeWrapper>;
-class IDataTypeWrapper : public virtual IDataType {
+
+class TaskAssignValRef :
+    public virtual VisitorBase {
 public:
+    TaskAssignValRef(
+        const ValRef    &lhs,
+        const ValRef    &rhs);
 
-    virtual ~IDataTypeWrapper() { }
+    virtual ~TaskAssignValRef();
 
-    virtual IDataType *getDataTypePhy() = 0;
+    bool assign();
 
-    virtual IDataType *getDataTypeVirt() = 0;
+    virtual void visitDataTypeInt(IDataTypeInt *t) override;
+
+    virtual void visitDataTypeString(IDataTypeString *t) override;
+
+//    virtual void visitDataTypeStruct(IDataTypeStruct *t) override;
+
+private:
+    bool                m_ret;
+    ValRef              m_lhs;
+    ValRef              m_rhs;
 
 };
 
-} /* namespace dm */
-} /* namespace vsc */
+}
+}
 
 

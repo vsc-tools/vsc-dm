@@ -220,6 +220,10 @@ public:
             ValRef(m_vp, m_type_field.m_type, flags);
     }
 
+    IValIterator *iterator() {
+        return type()->mkValIterator(*this);
+    }
+
     void reset() {
         if (m_vp && (static_cast<uint32_t>(m_flags) & static_cast<uint32_t>(Flags::Owned))) {
             if (type()) {

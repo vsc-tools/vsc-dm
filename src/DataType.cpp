@@ -19,6 +19,8 @@
  */
 
 #include "DataType.h"
+#include "ValIteratorDefault.h"
+#include "ValMutIteratorDefault.h"
 
 namespace vsc {
 namespace dm {
@@ -31,6 +33,14 @@ DataType::DataType(IContext *ctxt) :
 
 DataType::~DataType() {
 	// TODO Auto-generated destructor stub
+}
+
+IValIterator *DataType::mkValIterator(const ValRef &src) {
+    return new ValIteratorDefault(src);
+}
+
+IValMutIterator *DataType::mkValMutIterator(const ValRef &src) {
+    return new ValMutIteratorDefault(src);
 }
 
 }

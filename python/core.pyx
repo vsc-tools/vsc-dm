@@ -364,6 +364,11 @@ cdef class Context(object):
 
         return ret
 
+    cpdef ValRefStruct mkValRefStruct(self, DataTypeStruct t):
+        ret = ValRefStruct()
+        ret.val = self._hndl.mkValRefStruct(t.asTypeStruct())
+        return ret
+
     @staticmethod
     cdef mk(decl.IContext *hndl, bool owned=True):
         ret = Context()
@@ -1510,6 +1515,9 @@ cdef class ValRef(object):
     cpdef int vp(self):
         return self.val.vp()
 
+    cpdef ValIterator iterator(self):
+        return ValIterator.mk(self.val.iterator(), True)
+
     @staticmethod
     cdef mk(const decl.ValRef &v, bool owned=False):
         ret = ValRef()
@@ -1569,6 +1577,40 @@ cdef class ValRefStruct(ValRef):
     def fromValRef(ValRef v):
         cdef ValRefStruct ret = ValRefStruct()
         ret.val = v.val
+        return ret
+
+cdef class ValIterator(object):
+    cpdef void reset(self):
+        self._hndl.reset()
+
+    cpdef DataType getDataType(self):
+        cdef decl.IDataType *t = self._hndl.getDataType()
+        return DataType.mk(t, False)
+
+    cpdef ValRef getVal(self):
+        pass
+
+    cpdef int32_t numFields(self):
+        return self._hndl.numFields()
+
+    cpdef DataType getFieldType(self, int32_t idx):
+        cdef decl.IDataType *t = self._hndl.getFieldType(idx)
+        return DataType.mk(t, False)
+
+    cpdef str getFieldName(self, int32_t idx):
+        return self._hndl.getFieldName(idx).decode()
+
+    cpdef bool push(self, int32_t idx):
+        return self._hndl.push(idx)
+
+    cpdef bool pop(self):
+        return self._hndl.pop()
+
+    @staticmethod
+    cdef ValIterator mk(decl.IValIterator *hndl, bool owned=True):
+        ret = ValIterator()
+        ret._hndl = hndl
+        ret._owned = owned
         return ret
 
 #********************************************************************

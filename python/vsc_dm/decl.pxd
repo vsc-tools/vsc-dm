@@ -69,6 +69,7 @@ ctypedef ITypeExprVal *ITypeExprValP
 ctypedef ITypeField *ITypeFieldP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
 ctypedef ITypeFieldRef *ITypeFieldRefP
+ctypedef IValIterator *IValIteratorP
 ctypedef IVisitor *IVisitorP
 ctypedef uintptr_t ValData
 
@@ -92,6 +93,7 @@ cdef extern from "vsc/dm/impl/ValRef.h" namespace "vsc::dm":
         bool valid() const
         IDataType *type() const
         uintptr_t vp() const
+        IValIterator *iterator()
         pass
 
 cdef extern from "vsc/dm/impl/ValRefInt.h" namespace "vsc::dm":
@@ -190,6 +192,7 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
             IDataType *,
             TypeFieldAttr)
         ValRefInt mkValRefInt(int64_t value, bool is_signed, int32_t width)
+        ValRefStruct mkValRefStruct(IDataTypeStruct *)
 
 cdef extern from "vsc/dm/IModelBuildContext.h" namespace "vsc::dm":
     cdef cppclass IModelBuildContext:
@@ -623,6 +626,18 @@ cdef extern from "vsc/dm/ITypeFieldRef.h" namespace "vsc::dm":
     
     cdef cppclass ITypeFieldRef(ITypeField):
         pass
+
+cdef extern from "vsc/dm/IValIterator.h" namespace "vsc::dm":
+    cdef cppclass IValIterator:
+        void reset()
+        IDataType *getDataType()
+        const ValRef &getVal()
+        int32_t numFields()
+        IDataType *getFieldType(int32_t idx)
+        const ValRef &getFieldVal(int32_t idx)
+        const cpp_string &getFieldName(int32_t idx)
+        bool push(int32_t idx)
+        bool pop()
 
 #********************************************************************
 #* IVisitor

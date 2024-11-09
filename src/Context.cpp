@@ -879,6 +879,10 @@ void Context::freeVal(Val *v) {
     m_val_alloc.free(v);
 }
 
+ValRef Context::mkValRef(IDataType *t) {
+
+}
+
 ValRefArr Context::mkValRefArr(IDataTypeArray *t) {
     Val *v = mkVal(t->getByteSize());
     return ValRefArr(ValRef(

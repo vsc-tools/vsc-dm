@@ -1,5 +1,5 @@
 /**
- * IDataTypeWrapper.h
+ * ValUtil.h
  *
  * Copyright 2023 Matthew Ballance and Contributors
  *
@@ -19,25 +19,24 @@
  *     Author: 
  */
 #pragma once
-#include <memory>
-#include "vsc/dm/IDataType.h"
+#include "vsc/dm/IValIterator.h"
+#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
 
-class IDataType;
 
-class IDataTypeWrapper;
-using IDataTypeWrapperUP=std::unique_ptr<IDataTypeWrapper>;
-class IDataTypeWrapper : public virtual IDataType {
+
+class ValUtil {
 public:
+    ValUtil(const ValRef &val) :
+        m_it(val.type()->mkValIterator(val)) {
+    }
 
-    virtual ~IDataTypeWrapper() { }
+    virtual ~ValUtil() { }
 
-    virtual IDataType *getDataTypePhy() = 0;
-
-    virtual IDataType *getDataTypeVirt() = 0;
-
+protected:
+    IValIteratorUP          m_it;
 };
 
 } /* namespace dm */

@@ -574,6 +574,10 @@ public:
 		return m_ctxt->mkTypeFieldVec(name, dtype,
 			own_dtype, attr, init_sz);
 	}
+
+    virtual ValRef mkValRef(IDataType *t) override {
+        return m_ctxt->mkValRef(t);
+    }
     
     virtual ValRefArr mkValRefArr(IDataTypeArray *t) override {
         return m_ctxt->mkValRefArr(t);

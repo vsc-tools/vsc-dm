@@ -467,6 +467,8 @@ public:
 			TypeFieldAttr			attr,
 			IModelVal				*init_sz) = 0;
 
+    virtual ValRef mkValRef(IDataType *t) = 0;
+
     virtual ValRefArr mkValRefArr(IDataTypeArray *t) = 0;
 
     virtual ValRefBool mkValRefBool(

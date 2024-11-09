@@ -28,6 +28,10 @@ public:
 
     virtual int32_t getByteSize() const { return m_bytesz; }
 
+    virtual IValIterator *mkValIterator(const ValRef &src) override;
+
+    virtual IValMutIterator *mkValMutIterator(const ValRef &src) override;
+
     virtual void setAssociatedData(IAssociatedData *data) override {
         m_associated_data = IAssociatedDataUP(data);
     }
