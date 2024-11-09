@@ -64,7 +64,6 @@ public:
     }
 
     int32_t size() const {
-        Val *vp = Val::ValPtr2Val(m_vp);
         ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
         return data->sz;
     }
@@ -109,7 +108,6 @@ public:
     }
 
     void clear() {
-        Val *vp = Val::ValPtr2Val(m_vp);
         ValDataStr *data = reinterpret_cast<ValDataStr *>(m_vp);
         data->str[0] = 0;
         data->sz = 0;

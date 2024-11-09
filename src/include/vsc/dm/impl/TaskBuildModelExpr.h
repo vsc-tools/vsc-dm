@@ -55,6 +55,7 @@ public:
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override {
  		bool references_ref_fields = false;
 		IModelField *f = 0;
+        (void)f;
 
         switch (e->getRootRefKind()) {
             case ITypeExprFieldRef::RootRefKind::TopDownScope: {

@@ -89,7 +89,7 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 			max_v >>= 1;
 			m_width += 1;
 		} while (max_v);
-		fprintf(stdout, "max=%lld width=%d\n", values.back()->val_u(), m_width);
+		fprintf(stdout, "max=%lld width=%d\n", (long long int)values.back()->val_u(), m_width);
 
 		// Ensure we avoid the accidental sign
 		if (!m_is_signed) {

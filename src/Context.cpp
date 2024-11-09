@@ -68,6 +68,7 @@
 #include "vsc/dm/impl/TaskSetUsedRand.h"
 #include "TaskEvalBinOpInt.h"
 #include "TaskEvalBinOpStr.h"
+#include "TaskMkValRef.h"
 #include "TypeConstraintBlock.h"
 #include "TypeConstraintExpr.h"
 #include "TypeConstraintForeach.h"
@@ -880,7 +881,7 @@ void Context::freeVal(Val *v) {
 }
 
 ValRef Context::mkValRef(IDataType *t) {
-
+    return TaskMkValRef(this).mk(t);
 }
 
 ValRefArr Context::mkValRefArr(IDataTypeArray *t) {

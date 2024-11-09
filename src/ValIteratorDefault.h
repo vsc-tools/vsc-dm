@@ -68,6 +68,7 @@ protected:
 
 protected:
     static std::string      m_empty;
+    static ValRef           m_empty_val;
     ValRef                  m_root;
     std::vector<ValRef>     m_path;
     int32_t                 m_numFields;

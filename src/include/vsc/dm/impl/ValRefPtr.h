@@ -54,7 +54,6 @@ public:
         Flags flags = m_flags;
         if ((m_flags & Flags::IsPtr) != Flags::None) {
             vp = *reinterpret_cast<uintptr_t *>(m_vp);
-                uintptr_t vp = *reinterpret_cast<uintptr_t *>(m_vp);
             flags = (flags & ~Flags::IsPtr);
         }
 

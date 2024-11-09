@@ -93,7 +93,7 @@ const ValRef &ValIteratorDefault::getFieldVal(int32_t idx) {
         ValRefStruct sv(m_path.back());
         return sv.getFieldRef(idx);
     } else {
-        return ValRef();
+        return m_empty_val;
     }
 }
 
@@ -133,6 +133,7 @@ void ValIteratorDefault::updateNumFields() {
 }
 
 std::string ValIteratorDefault::m_empty;
+ValRef ValIteratorDefault::m_empty_val;
 
 }
 }
