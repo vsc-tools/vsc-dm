@@ -52,13 +52,13 @@ TEST_F(TestVal, int_add) {
 }
 
 TEST_F(TestVal, str_init) {
-    ValRefStr s1(m_ctxt.get(), "Hello World!");
+    ValRefStr s1(m_ctxt.get(), m_ctxt->getDataTypeCore(vsc::dm::DataTypeCoreE::String), "Hello World!");
 
     ASSERT_EQ(s1.val_s(), "Hello World!");
 }
 
 TEST_F(TestVal, str_move) {
-    ValRefStr s1(m_ctxt.get(), "Hello World!");
+    ValRefStr s1 = m_ctxt->mkValRefStr("Hello World!");
     ASSERT_EQ(s1.val_s(), "Hello World!");
     ValRefStr s2(s1);
 
@@ -67,7 +67,7 @@ TEST_F(TestVal, str_move) {
 }
 
 TEST_F(TestVal, str_append_1) {
-    ValRefStr s1(m_ctxt.get(), "Hello World!");
+    ValRefStr s1 = m_ctxt->mkValRefStr("Hello World!");
     ASSERT_EQ(s1.size(), 12);
     ASSERT_EQ(s1.val_s(), "Hello World!");
 
@@ -85,19 +85,19 @@ TEST_F(TestVal, struct_1) {
     IDataTypeStruct *dt = m_ctxt->mkDataTypeStruct("dt");
     IDataTypeInt *u32_t = m_ctxt->mkDataTypeInt(false, 32);
 
-    dt->addField(m_ctxt->mkTypeFieldPhy("a", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
-    dt->addField(m_ctxt->mkTypeFieldPhy("b", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
-    dt->addField(m_ctxt->mkTypeFieldPhy("c", u32_t, false, TypeFieldAttr::NoAttr, 0, false));
+    dt->addField(m_ctxt->mkTypeFieldPhy("a", u32_t, false, TypeFieldAttr::NoAttr, 0));
+    dt->addField(m_ctxt->mkTypeFieldPhy("b", u32_t, false, TypeFieldAttr::NoAttr, 0));
+    dt->addField(m_ctxt->mkTypeFieldPhy("c", u32_t, false, TypeFieldAttr::NoAttr, 0));
 
     m_ctxt->addDataTypeStruct(dt);
 
     ValRefStruct v1(m_ctxt->mkValRefStruct(dt));
 
-    ValRef a(v1.getField(0));
+    ValRef a(v1.getFieldRef(0));
     ASSERT_EQ(a.name(), "a");
-    ValRef b(v1.getField(1));
+    ValRef b(v1.getFieldRef(1));
     ASSERT_EQ(b.name(), "b");
-    ValRef c(v1.getField(2));
+    ValRef c(v1.getFieldRef(2));
     ASSERT_EQ(c.name(), "c");
 
     ValRefInt a_ref(v1.getFieldRef(0));

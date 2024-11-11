@@ -56,6 +56,7 @@ public:
  		bool references_ref_fields = false;
 		IModelField *f = 0;
         (void)f;
+        (void)references_ref_fields;
 
         switch (e->getRootRefKind()) {
             case ITypeExprFieldRef::RootRefKind::TopDownScope: {

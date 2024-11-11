@@ -130,7 +130,7 @@ public:
     }
 
     uintptr_t get_val_u() const {
-        uintptr_t ret;
+        uintptr_t ret = 0;
         int32_t nb = bits();
         if ((m_flags & Flags::IsPtr) != Flags::None) {
             if (nb <= 8) {
