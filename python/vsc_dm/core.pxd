@@ -40,6 +40,7 @@ cdef class Context(object):
     cpdef DataTypeInt findDataTypeInt(self, bool is_signed, int width)
     cpdef DataTypeInt mkDataTypeInt(self, bool is_signed, int width)
     cpdef bool addDataTypeStruct(self, DataTypeStruct)
+    cpdef getDataTypeStructs(self)
     cpdef DataTypeStruct findDataTypeStruct(self, name)
     cpdef DataTypeStruct mkDataTypeStruct(self, name)
     cpdef mkModelExprBin(self, ModelExpr, op, ModelExpr)

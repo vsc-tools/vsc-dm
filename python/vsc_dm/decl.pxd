@@ -79,6 +79,7 @@ cdef extern from "vsc/dm/impl/UP.h" namespace "vsc::dm":
         UP(T *, bool owned=True)
         T *get()
 
+ctypedef UP[IDataTypeStruct] IDataTypeStructUP
 ctypedef UP[IModelConstraint] IModelConstraintUP
 ctypedef UP[IModelExpr] IModelExprUP
 ctypedef UP[IModelExprRange] IModelExprRangeUP
@@ -152,6 +153,7 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         IDataTypeStruct *findDataTypeStruct(const cpp_string &)
         IDataTypeStruct *mkDataTypeStruct(const cpp_string &)
         bool addDataTypeStruct(IDataTypeStruct *)
+        const cpp_vector[IDataTypeStructUP] &getDataTypeStructs()
         IModelExprBin *mkModelExprBin(IModelExpr *, BinOp, IModelExpr *)
         IModelExprFieldRef *mkModelExprFieldRef(IModelField *field)
         IModelExprIn *mkModelExprIn(IModelExpr *, IModelExprRangelist *)

@@ -84,6 +84,14 @@ cdef class Context(object):
             
     cpdef DataTypeStruct mkDataTypeStruct(self, name):
         return DataTypeStruct.mk(self._hndl.mkDataTypeStruct(name.encode()), True)
+
+    cpdef getDataTypeStructs(self):
+        cdef const cpp_vector[decl.IDataTypeStructUP] *structs = &self._hndl.getDataTypeStructs()
+        ret = []
+        for i in range(structs.size()):
+            ret.append(WrapperBuilder().mkObj(structs.at(i).get(), False))
+
+        return ret
     
     cpdef mkModelConstraintBlock(self, name):
         return ModelConstraintBlock.mk(self._hndl.mkModelConstraintBlock(name.encode()))

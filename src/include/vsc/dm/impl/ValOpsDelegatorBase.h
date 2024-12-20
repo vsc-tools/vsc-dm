@@ -54,6 +54,14 @@ public:
         return m_ops->copyVal(src);
     }
 
+    virtual vsc::dm::IValIterator *mkValIterator(const vsc::dm::ValRef &src) override {
+        return m_ops->mkValIterator(src);
+    }
+
+    virtual vsc::dm::IValMutIterator *mkValMutIterator(const vsc::dm::ValRef &src) override {
+        return m_ops->mkValMutIterator(src);
+    }
+
 protected:
     IValOps                 *m_ops;
 };

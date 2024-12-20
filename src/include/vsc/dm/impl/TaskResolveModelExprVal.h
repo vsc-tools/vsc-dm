@@ -243,6 +243,7 @@ protected:
         val->setBits(width);
         return val;
          */
+        return 0;
     }
 
     void free_v(IModelVal *v) {
