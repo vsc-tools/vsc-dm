@@ -100,6 +100,8 @@ public:
 
 	virtual void visitTypeExprBin(vsc::dm::ITypeExprBin *e) override;
 
+	virtual void visitTypeExprEnumRef(vsc::dm::ITypeExprEnumRef *e) override;
+
 	virtual void visitTypeExprFieldRef(vsc::dm::ITypeExprFieldRef *e) override;
 
 	virtual void visitTypeExprRange(vsc::dm::ITypeExprRange *e) override;

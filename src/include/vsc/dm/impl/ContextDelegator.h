@@ -404,6 +404,12 @@ public:
 		return m_ctxt->mkTypeExprBin(lhs, op, rhs, lhs_owned, rhs_owned);
 	}
 
+    virtual ITypeExprEnumRef *mkTypeExprEnumRef(
+        IDataTypeEnum       *enum_t,
+        int32_t             enum_id) override {
+        return m_ctxt->mkTypeExprEnumRef(enum_t, enum_id);
+    }
+
 	virtual ITypeExprRef *mkTypeExprRef(
             ITypeExpr       *target,
             bool            owned) override {

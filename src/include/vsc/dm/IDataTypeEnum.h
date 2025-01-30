@@ -9,6 +9,7 @@
 #include "vsc/dm/IDataType.h"
 #include "vsc/dm/IDataTypeScalar.h"
 #include "vsc/dm/IModelVal.h"
+#include "vsc/dm/impl/ValRef.h"
 
 namespace vsc {
 namespace dm {
@@ -22,9 +23,15 @@ public:
 
 	virtual const std::string &name() const = 0;
 
-	virtual bool addEnumerator(
+	virtual int32_t addEnumerator(
 			const std::string	&name,
-			const IModelVal		*val) = 0;
+			const ValRef		&val) = 0;
+
+    virtual int32_t numEnumerators() = 0;
+
+    virtual std::pair<std::string,ValRef> getEnumerator(int32_t idx) = 0;
+
+    virtual int32_t getEnumeratorId(const std::string &name) = 0;
 
 };
 

@@ -310,6 +310,10 @@ public:
             bool            lhs_owned,
             bool            rhs_owned) override;
 
+    virtual ITypeExprEnumRef *mkTypeExprEnumRef(
+        IDataTypeEnum       *enum_t,
+        int32_t             enum_id) override;
+
 	virtual ITypeExprFieldRef *mkTypeExprFieldRef(
         ITypeExprFieldRef::RootRefKind      kind,
         int32_t                             offset,

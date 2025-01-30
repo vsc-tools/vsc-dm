@@ -134,6 +134,10 @@ void VisitorProxy::visitTypeExprBin(vsc::dm::ITypeExprBin *e) {
 	VisitorProxy_visitTypeExprBin(m_obj, e);
 }
 
+void VisitorProxy::visitTypeExprEnumRef(vsc::dm::ITypeExprEnumRef *e) {
+	VisitorProxy_visitTypeExprEnumRef(m_obj, e);
+}
+
 void VisitorProxy::visitTypeExprFieldRef(vsc::dm::ITypeExprFieldRef *e) {
 	VisitorProxy_visitTypeExprFieldRef(m_obj, e);
 }

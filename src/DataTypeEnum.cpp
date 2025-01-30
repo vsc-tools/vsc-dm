@@ -8,6 +8,7 @@
 #include <algorithm>
 #include "vsc/dm/IContext.h"
 #include "vsc/dm/impl/TaskIsTypeFieldRef.h"
+#include "vsc/dm/impl/ValRefInt.h"
 #include "DataTypeEnum.h"
 #include "ModelValOp.h"
 #include "TypeExprRange.h"
@@ -20,7 +21,7 @@ namespace dm {
 DataTypeEnum::DataTypeEnum(
 		const std::string	&name,
 		bool 				is_signed) :
-				m_name(name), m_is_signed(is_signed), m_width(-1) {
+	m_name(name), m_is_signed(is_signed), m_width(-1) {
 
 }
 
@@ -40,19 +41,30 @@ ValRef DataTypeEnum::copyVal(const ValRef &src) {
 	return ValRef();
 }
 
-bool DataTypeEnum::addEnumerator(
+int32_t DataTypeEnum::addEnumerator(
 			const std::string	&name,
-			const IModelVal		*val) {
-	std::unordered_map<std::string,ModelVal>::const_iterator it;
+			const ValRef		&val) {
+    int32_t ret = -1;
+	std::unordered_map<std::string,int32_t>::const_iterator it;
 
-	if ((it=m_enum_val_m.find(name)) == m_enum_val_m.end()) {
-		m_enum_val_m.insert({name, ModelVal(val)});
-
-		return true;
-	} else{
-		// Already have an entry
-		return false;
+	if ((it=m_enum_id_m.find(name)) == m_enum_id_m.end()) {
+        ret = m_enumerators.size();
+		m_enum_id_m.insert({name, ret});
+        m_enumerators.push_back({name, val});
 	}
+
+    return ret;
+}
+
+int32_t DataTypeEnum::getEnumeratorId(const std::string &name) {
+    std::unordered_map<std::string,int32_t>::const_iterator it;
+    int32_t ret = -1;
+
+    if ((it=m_enum_id_m.find(name)) != m_enum_id_m.end()) {
+        ret = it->second;
+    }
+
+    return ret;
 }
 
 ITypeExprRangelist *DataTypeEnum::getDomain() {
@@ -60,36 +72,35 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 		TypeExprRangelist *rl = new TypeExprRangelist();
 		m_width = 32; // TODO: should adjust dynamically later
 
-		std::vector<const ModelVal *> values;
+		std::vector<ValRefInt> values;
 
-		for (std::unordered_map<std::string,ModelVal>::const_iterator
-				it=m_enum_val_m.begin();
-				it!=m_enum_val_m.end(); it++) {
-			values.push_back(&it->second);
-		}
+		// for (std::unordered_map<std::string,ValRef>::const_iterator
+		// 		it=m_enum_val_m.begin();
+		// 		it!=m_enum_val_m.end(); it++) {
+		// 	values.push_back(ValRefInt(it->second));
+		// }
 
 		// Sort the values
 		if (m_is_signed) {
 			std::sort(
 				values.begin(),
-				values.end(), [](const ModelVal *v1, const ModelVal *v2) {
-					return ModelValOp::slt_s(v1, v2);
+				values.end(), [](const ValRefInt &v1, const ValRefInt &v2) {
+					return v1.get_val_s() < v2.get_val_s();
 				});
 		} else {
 			std::sort(
 				values.begin(),
-				values.end(), [](const ModelVal *v1, const ModelVal *v2) {
-					return ModelValOp::ult_s(v1, v2);
+				values.end(), [](const ValRefInt &v1, const ValRefInt &v2) {
+					return v1.get_val_u() < v2.get_val_u();
 				});
 		}
 
-		uint64_t max_v = values.back()->val_u();
+		uint64_t max_v = values.back().get_val_u();
 		m_width = 0;
 		do {
 			max_v >>= 1;
 			m_width += 1;
 		} while (max_v);
-		fprintf(stdout, "max=%lld width=%d\n", (long long int)values.back()->val_u(), m_width);
 
 		// Ensure we avoid the accidental sign
 		if (!m_is_signed) {
@@ -97,14 +108,15 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 		}
 
 		// Now, collapse the values into compact ranges
-		std::vector<const ModelVal *>::const_iterator it=values.begin();
-		std::vector<const ModelVal *>::const_iterator start = it;
+		std::vector<ValRefInt>::const_iterator it=values.begin();
+		std::vector<ValRefInt>::const_iterator start = it;
 		ModelVal exp_n;
 
+#ifdef UNDEFINED
 		while (it!=values.end()) {
 
 			// Move ahead until next != prev+1
-			std::vector<const ModelVal *>::const_iterator prev = it;
+			std::vector<ValRefInt>::const_iterator prev = it;
 			it++;
 
 			if (it != values.end()) {
@@ -187,6 +199,8 @@ ITypeExprRangelist *DataTypeEnum::getDomain() {
 				rl->addRange(rng);
 			}
 		}
+
+#endif // UNDEFINED
 		m_domain = ITypeExprRangelistUP(rl);
 	}
 

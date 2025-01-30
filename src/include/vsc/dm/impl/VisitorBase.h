@@ -79,6 +79,7 @@
 
 #include "vsc/dm/ITypeExprArrayLiteral.h"
 #include "vsc/dm/ITypeExprArrIndex.h"
+#include "vsc/dm/ITypeExprEnumRef.h"
 #include "vsc/dm/ITypeExprBin.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
@@ -385,6 +386,8 @@ public:
 		e->lhs()->accept(m_this);
 		e->rhs()->accept(m_this);
 	}
+
+    virtual void visitTypeExprEnumRef(ITypeExprEnumRef *e) override { }
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) override { }
 

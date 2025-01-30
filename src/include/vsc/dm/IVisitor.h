@@ -95,6 +95,7 @@ class ITypeExpr;
 class ITypeExprArrIndex;
 class ITypeExprArrayLiteral;
 class ITypeExprBin;
+class ITypeExprEnumRef;
 class ITypeExprFieldRef;
 class ITypeExprRange;
 class ITypeExprRangelist;
@@ -238,6 +239,8 @@ public:
 	virtual void visitTypeExprArrIndex(ITypeExprArrIndex *e) = 0;
 
 	virtual void visitTypeExprBin(ITypeExprBin *e) = 0;
+
+    virtual void visitTypeExprEnumRef(ITypeExprEnumRef *e) = 0;
 
 	virtual void visitTypeExprFieldRef(ITypeExprFieldRef *e) = 0;
 

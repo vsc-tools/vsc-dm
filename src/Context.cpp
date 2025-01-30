@@ -80,6 +80,7 @@
 #include "TypeExprArrayLiteral.h"
 #include "TypeExprArrIndex.h"
 #include "TypeExprBin.h"
+#include "TypeExprEnumRef.h"
 #include "TypeExprFieldRef.h"
 #include "TypeExprRange.h"
 #include "TypeExprRangelist.h"
@@ -759,6 +760,12 @@ ITypeExprBin *Context::mkTypeExprBin(
             bool            lhs_owned,
             bool            rhs_owned) {
 	return new TypeExprBin(lhs, op, rhs, lhs_owned, rhs_owned);
+}
+
+ITypeExprEnumRef *Context::mkTypeExprEnumRef(
+        IDataTypeEnum       *enum_t,
+        int32_t             enum_id) {
+    return new TypeExprEnumRef(enum_t, enum_id);
 }
 
 ITypeExprFieldRef *Context::mkTypeExprFieldRef(

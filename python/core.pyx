@@ -294,6 +294,12 @@ cdef class Context(object):
             lhs.asExpr(),
             <decl.BinOp>(op_i),
             rhs.asExpr()))
+
+    cpdef TypeExprEnumRef mkTypeExprEnumRef(self, DataTypeEnum enum_t, int32_t enum_id):
+        return TypeExprEnumRef.mk(
+            self._hndl.mkTypeExprEnumRef(
+                enum_t.asEnum(),
+                enum_id))
         
     # cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx):
     #     cdef int root_kind_i = int(root_kind)
@@ -1369,6 +1375,24 @@ cdef class TypeExprBin(TypeExpr):
         ret._hndl = hndl
         ret._owned = owned
         return ret    
+
+cdef class TypeExprEnumRef(TypeExpr):
+
+    cpdef DataTypeEnum getEnumType(self):
+        return DataTypeEnum.mk(self.asEnumRef().getEnumType(), False)
+
+    cpdef int32_t getEnumeratorId(self):
+        return self.asEnumRef().getEnumeratorId()
+
+    cdef decl.ITypeExprEnumRef *asEnumRef(self):
+        return dynamic_cast[decl.ITypeExprEnumRefP](self._hndl)
+
+    @staticmethod
+    cdef TypeExprEnumRef mk(decl.ITypeExprEnumRef *hndl, bool owned=True):
+        ret = TypeExprEnumRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
     
 class TypeExprFieldRef_RootRefKind(IntEnum):
     TopDownScope  = decl.TypeExprFieldRef_RootRefKind.TypeExprFieldRef_TopDownScope
@@ -1746,6 +1770,9 @@ cdef class VisitorBase(object):
     cpdef void visitTypeExprBin(self, TypeExprBin e):
         pass
 
+    cpdef void visitTypeExprEnumRef(self, TypeExprEnumRef e):
+        pass
+
 #    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):
 #        pass
 
@@ -1850,6 +1877,9 @@ cdef public void VisitorProxy_visitTypeConstraintScope(obj, decl.ITypeConstraint
 
 cdef public void VisitorProxy_visitTypeExprBin(obj, decl.ITypeExprBin *c) with gil:
     obj.visitTypeExprBin(TypeExprBin.mk(c, False))
+
+cdef public void VisitorProxy_visitTypeExprEnumRef(obj, decl.ITypeExprEnumRef *c) with gil:
+    obj.visitTypeExprEnumRef(TypeExprEnumRef.mk(c, False))
 
 cdef public void VisitorProxy_visitTypeExprFieldRef(obj, decl.ITypeExprFieldRef *c) with gil:
 #    obj.visitTypeExprFieldRef(TypeExprFieldRef.mk(c, False))
@@ -2038,6 +2068,9 @@ cdef class WrapperBuilder(VisitorBase):
         self._type_constraint = c
 
     cpdef void visitTypeExprBin(self, TypeExprBin e):
+        self._type_expr = e
+
+    cpdef void visitTypeExprEnumRef(self, TypeExprEnumRef e):
         self._type_expr = e
 
 #    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e):

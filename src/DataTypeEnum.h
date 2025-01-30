@@ -42,9 +42,19 @@ public:
 
     virtual ValRef copyVal(const ValRef &src) override;
 
-	virtual bool addEnumerator(
+	virtual int32_t addEnumerator(
 			const std::string	&name,
-			const IModelVal		*val) override;
+            const ValRef        &val) override;
+
+    virtual int32_t numEnumerators() override {
+        return m_enumerators.size();
+    }
+
+    virtual std::pair<std::string,ValRef> getEnumerator(int32_t idx) override {
+        return m_enumerators.at(idx);
+    }
+
+    virtual int32_t getEnumeratorId(const std::string &name) override;
 
 	virtual ITypeExprRangelist *getDomain() override;
 
@@ -63,8 +73,9 @@ public:
 private:
 	std::string										m_name;
 	bool											m_is_signed;
-	std::unordered_map<std::string,ModelVal>		m_enum_val_m;
+	std::unordered_map<std::string,int32_t>		    m_enum_id_m;
 	std::unordered_map<ModelVal,std::string>		m_val_enum_m;
+    std::vector<std::pair<std::string,ValRef>>      m_enumerators;
 	ITypeExprRangelistUP							m_domain;
 	int32_t											m_width;
 

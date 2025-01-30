@@ -62,6 +62,7 @@ ctypedef ITypeConstraintSoft *ITypeConstraintSoftP
 ctypedef ITypeConstraintUnique *ITypeConstraintUniqueP
 ctypedef ITypeExpr *ITypeExprP
 ctypedef ITypeExprBin *ITypeExprBinP
+ctypedef ITypeExprEnumRef *ITypeExprEnumRefP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeExprRange *ITypeExprRangeP
 ctypedef ITypeExprRangelist *ITypeExprRangelistP
@@ -180,6 +181,7 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
         ITypeConstraintUnique *mkTypeConstraintUnique(
             const cpp_vector[ITypeExprP]    &exprs)
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
+        ITypeExprEnumRef *mkTypeExprEnumRef(IDataTypeEnum *, int32_t)
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
         ITypeExprRangelist *mkTypeExprRangelist()
         ITypeExprVal *mkTypeExprVal(IDataType *, ValData)
@@ -569,6 +571,11 @@ cdef extern from "vsc/dm/ITypeExprBin.h" namespace "vsc::dm":
         ITypeExpr *lhs() const
         BinOp op() const
         ITypeExpr *rhs() const
+
+cdef extern from "vsc/dm/ITypeExprEnumRef.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprEnumRef(ITypeExpr):
+        IDataTypeEnum *getEnumType()
+        int32_t getEnumeratorId()
     
 cdef extern from "vsc/dm/ITypeExprFieldRef.h" namespace "vsc::dm":
         

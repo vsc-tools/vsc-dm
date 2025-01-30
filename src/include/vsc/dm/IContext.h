@@ -63,6 +63,7 @@
 #include "vsc/dm/ITypeExprArrayLiteral.h"
 #include "vsc/dm/ITypeExprArrIndex.h"
 #include "vsc/dm/ITypeExprBin.h"
+#include "vsc/dm/ITypeExprEnumRef.h"
 #include "vsc/dm/ITypeExprFieldRef.h"
 #include "vsc/dm/ITypeExprRange.h"
 #include "vsc/dm/ITypeExprRangelist.h"
@@ -362,6 +363,10 @@ public:
 			ITypeExpr		*rhs,
             bool            lhs_owned=true,
             bool            rhs_owned=true) = 0;
+
+    virtual ITypeExprEnumRef *mkTypeExprEnumRef(
+        IDataTypeEnum       *enum_t,
+        int32_t             enum_id) = 0;
 
 	virtual ITypeExprRef *mkTypeExprRef(
             ITypeExpr       *target,

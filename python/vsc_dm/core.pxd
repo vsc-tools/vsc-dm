@@ -64,6 +64,7 @@ cdef class Context(object):
     cpdef TypeConstraintSoft mkTypeConstraintSoft(self, TypeConstraintExpr c)
     cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
+    cpdef TypeExprEnumRef mkTypeExprEnumRef(self, DataTypeEnum, int32_t)
 #    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
@@ -543,6 +544,15 @@ cdef class TypeExprBin(TypeExpr):
     @staticmethod
     cdef TypeExprBin mk(decl.ITypeExprBin *hndl, bool owned=*)    
 
+cdef class TypeExprEnumRef(TypeExpr):
+    cpdef DataTypeEnum getEnumType(self)
+    cpdef int32_t getEnumeratorId(self)
+
+    cdef decl.ITypeExprEnumRef *asEnumRef(self)
+
+    @staticmethod
+    cdef TypeExprEnumRef mk(decl.ITypeExprEnumRef *hndl, bool owned=*)
+
 cdef class TypeExprFieldRef(TypeExpr):
     # cpdef getRootRefKind(self)
     # cpdef addPathElem(self, int32_t)
@@ -711,6 +721,8 @@ cdef class VisitorBase(object):
     cpdef void visitTypeConstraintScope(self, TypeConstraintScope c)
 
     cpdef void visitTypeExprBin(self, TypeExprBin e)
+
+    cpdef void visitTypeExprEnumRef(self, TypeExprEnumRef e)
 
 #    cpdef void visitTypeExprFieldRef(self, TypeExprFieldRef e)
 
