@@ -1,28 +1,31 @@
 
 package:
-   name: vsc-dm
-   version: 0.0.1
+  name: vsc-dm
+  version: 0.0.1
 
-   setup-deps:
-     - cython
-     - ninja
-   
-   dev-deps:
-     - name: cython
-       src: pypi
-     - name: gtest
-       url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-     - name: ninja
-       src: pypi
-     - name: debug-mgr
-       url: https://github.com/mballance/debug-mgr.git
+#   setup-deps:
+#     - cython
+#     - ninja
 
-   deps:
-     - name: cython
-       src: pypi
-     - name: gtest
-       url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
-     - name: debug-mgr
-       url: https://github.com/mballance/debug-mgr.git
+  dep-sets:
+  - name: default-dev
+    deps:
+    - name: cython
+      src: pypi
+    - name: gtest
+      url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
+    - name: ninja
+      src: pypi
+    - name: debug-mgr
+      url: https://github.com/mballance/debug-mgr.git
+
+  - name: default
+    deps:
+    - name: cython
+      src: pypi
+    - name: gtest
+      url: https://github.com/google/googletest/archive/refs/tags/release-1.11.0.tar.gz
+    - name: debug-mgr
+      url: https://github.com/mballance/debug-mgr.git
        
 
