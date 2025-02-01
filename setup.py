@@ -88,6 +88,11 @@ if isSrcBuild:
         "vsc_dm": [
             ("src/include", "share"),
             ("build/{libdir}/{libpref}vsc-dm{dllext}", ""),
+            ("python/AssociatedDataClosure.h", "share/include"),
+            ("python/ModelFieldDataClosure.h", "share/include"),
+            ("python/ModelStructCreateHookClosure.h", "share/include"),
+            ("python/VisitorProxy.h", "share/include"),
+            ("python/VscTasks.h", "share/include"),
         ]
     }
 
