@@ -443,7 +443,7 @@ cdef class TypeConstraintExpr(TypeConstraint):
     cdef decl.ITypeConstraintExpr *asExpr(self)
 
     @staticmethod
-    cdef TypeConstraintExpr mk(decl.ITypeConstraint *, bool owned=*)
+    cdef TypeConstraintExpr mk(decl.ITypeConstraintExpr *, bool owned=*)
 
 cdef class TypeConstraintIfElse(TypeConstraint):
     cpdef getCond(self)
