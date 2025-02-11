@@ -12,12 +12,8 @@ jobs:
 #    container: quay.io/pypa/manylinux2014_x86_64
     strategy:
       matrix:
-        include:
-          - spec: 'cp38-cp38'
-          - spec: 'cp39-cp39'
-          - spec: 'cp310-cp310'
-          - spec: 'cp311-cp311'
-          - spec: 'cp312-cp312'
+        spec: ['cp38-cp38', 'cp39-cp39', 'cp310-cp310', 'cp311-cp311', 'cp312-cp312']
+        image: [manylinux2014_x86_64, manylinux_2_34]
     steps:
     - name: checkout
       uses: actions/checkout@v4
@@ -31,7 +27,7 @@ jobs:
         --env IVPM_PYTHON
         --env BUILD_NUM
         --workdir /io
-        quay.io/pypa/manylinux2014_x86_64
+        quay.io/pypa/${{ matrix.image }}
         /io/scripts/build_linux.sh
 
     - name: Publish to PyPi
