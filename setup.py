@@ -77,6 +77,7 @@ setup_args = dict(
   ],
   setup_requires=[
     'debug-mgr',
+    'ivpm',
     'setuptools_scm',
     'cython'
   ],
