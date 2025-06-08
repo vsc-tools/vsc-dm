@@ -135,6 +135,9 @@ public:
 	virtual void visitDataTypeString(IDataTypeString *t) override { }
 
 	virtual void visitDataTypeStruct(IDataTypeStruct *t) override {
+        if (t->getSuper()) {
+            t->getSuper()->accept(m_this);
+        }
 		for (auto it=t->getFields().begin(); it!=t->getFields().end(); it++) {
 			(*it)->accept(m_this);
 		}
