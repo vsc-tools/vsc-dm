@@ -65,12 +65,21 @@ public:
         return m_variables;
     }
 
+    virtual void setAssociatedData(IAssociatedData *data, bool owned=true) override {
+        m_assoc_data = IAssociatedDataUP(data, owned);
+    }
+
+    virtual IAssociatedData *getAssociatedData() const override {
+        return m_assoc_data.get();
+    }
+
     virtual void accept(IVisitor *v) override { v->visitTypeConstraintForeach(this); }
 
 private:
     ITypeExprUP                     m_target;
     ITypeConstraintUP               m_body;
-    std::vector<ITypeVarUP>       m_variables;
+    std::vector<ITypeVarUP>         m_variables;
+    IAssociatedDataUP               m_assoc_data;
 
 };
 

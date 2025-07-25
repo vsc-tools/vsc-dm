@@ -9,6 +9,7 @@
 #include <string>
 #include "vsc/dm/IAccept.h"
 #include "vsc/dm/IAssociatedData.h"
+#include "vsc/dm/IAssociatedDataAcc.h"
 #include "vsc/dm/IValOps.h"
 
 namespace vsc {
@@ -22,6 +23,7 @@ using IDataTypeUP=UP<IDataType>;
 using IDataTypeSP=std::shared_ptr<IDataType>;
 class IDataType : 
     public virtual IAccept,
+    public virtual IAssociatedDataAcc,
     public virtual IValOps {
 public:
 
@@ -56,10 +58,6 @@ public:
         const ValRef        &val) {
 		return dynamic_cast<T *>(mkTypeField(ctxt, type, val));
 	}
-
-    virtual void setAssociatedData(IAssociatedData *data) = 0;
-
-    virtual IAssociatedData *getAssociatedData() const = 0;
 
 };
 

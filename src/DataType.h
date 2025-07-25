@@ -32,8 +32,8 @@ public:
 
     virtual IValMutIterator *mkValMutIterator(const ValRef &src) override;
 
-    virtual void setAssociatedData(IAssociatedData *data) override {
-        m_associated_data = IAssociatedDataUP(data);
+    virtual void setAssociatedData(IAssociatedData *data, bool owned=true) override {
+        m_associated_data = IAssociatedDataUP(data, owned);
     }
 
     virtual IAssociatedData *getAssociatedData() const override {

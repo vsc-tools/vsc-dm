@@ -20,6 +20,8 @@
  */
 #pragma once
 #include <vector>
+#include "vsc/dm/IAssociatedData.h"
+#include "vsc/dm/IAssociatedDataAcc.h"
 #include "vsc/dm/ITypeVar.h"
 
 namespace vsc {
@@ -27,7 +29,8 @@ namespace dm {
 
 
 
-class ITypeVarScope {
+class ITypeVarScope :
+    public virtual IAssociatedDataAcc {
 public:
 
     virtual ~ITypeVarScope() { }

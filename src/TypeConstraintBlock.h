@@ -40,12 +40,21 @@ public:
         return m_null;
     }
 
+    virtual void setAssociatedData(IAssociatedData *data, bool owned=true) override {
+        m_assoc_data = IAssociatedDataUP(data, owned);
+    }
+
+    virtual IAssociatedData *getAssociatedData() const override {
+        return m_assoc_data.get();
+    }
+
 	virtual void accept(IVisitor *v) override { v->visitTypeConstraintBlock(this); }
 
 private:
     static std::vector<ITypeVarUP>          m_null;
-	std::string							m_name;
-	std::vector<ITypeConstraintUP>		m_constraints;
+	std::string							    m_name;
+	std::vector<ITypeConstraintUP>		    m_constraints;
+    IAssociatedDataUP                       m_assoc_data;
 };
 
 }

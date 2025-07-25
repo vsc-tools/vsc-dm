@@ -13,6 +13,8 @@
 namespace vsc {
 namespace dm {
 
+class ITypeFieldPhy;
+using ITypeFieldPhyUP=vsc::dm::UP<ITypeFieldPhy>;
 class ITypeFieldPhy : public virtual ITypeField {
 public:
 
