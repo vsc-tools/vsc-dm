@@ -1,6 +1,13 @@
 #****************************************************************************
 #* vsc_dm.core
 #****************************************************************************
+#
+# Ownership Safety Note:
+# When registering handles with the Context or transferring ownership,
+# always check that the object is currently owned by Python before setting
+# _owned = False. This prevents double-free or invalid ownership transfer.
+# See addDataTypeStruct and similar methods for the required pattern.
+#
 import os
 import sys
 import ctypes
@@ -27,7 +34,7 @@ cdef Context _Context_inst = None
 cdef class Context(object):
 
     def __dealloc__(self):
-        if self._owned:
+        if self._owned and self._hndl != NULL:
             del self._hndl
         pass
 
@@ -56,6 +63,8 @@ cdef class Context(object):
         return self._hndl.addDataTypeEnum(e.asEnum())
     
     cpdef bool addDataTypeInt(self, DataTypeInt t):
+        if not t._owned:
+            raise Exception("The type handle must be owned to add it to the context")
         t._owned = False
         return self._hndl.addDataTypeInt(t.asTypeInt())
 
@@ -71,6 +80,8 @@ cdef class Context(object):
         return DataTypeInt.mk(self._hndl.mkDataTypeInt(is_signed, width), True)
 
     cpdef bool addDataTypeStruct(self, DataTypeStruct t):
+        if not t._owned:
+            raise Exception("The type handle (%s) must be owned to add it to the context")
         t._owned = False
         return self._hndl.addDataTypeStruct(t.asTypeStruct())
         
@@ -528,6 +539,8 @@ cdef class DataTypeStruct(DataType):
     cpdef addField(self, TypeField f):
         if f is None:
             raise Exception("Cannot add field==None")
+        if not f._owned:
+            raise Exception("The field handle must be owned to add it to the context")
         f._owned = False
         self.asTypeStruct().addField(f.asField())
         
@@ -546,6 +559,8 @@ cdef class DataTypeStruct(DataType):
             return None
     
     cpdef addConstraint(self, TypeConstraint c):
+        if not c._owned:
+            raise Exception("The constraint handle must be owned to add it to the context")
         c._owned = False
         self.asTypeStruct().addConstraint(c.asConstraint())
         pass
@@ -600,6 +615,8 @@ cdef class ModelConstraintScope(ModelConstraint):
         return ret
     
     cpdef addConstraint(self, ModelConstraint c):
+        if not c._owned:
+            raise Exception("The constraint handle must be owned to add it to the context")
         c._owned = False
         self.asScope().addConstraint(c.asConstraint())
     
@@ -975,6 +992,8 @@ cdef class ModelField(ObjBase):
         return ret
         
     cpdef addConstraint(self, ModelConstraint c):
+        if not c._owned:
+            raise Exception("The constraint handle must be owned to add it to the context")
         c._owned = False
         self.asField().addConstraint(c.asConstraint())
 
@@ -988,7 +1007,6 @@ cdef class ModelField(ObjBase):
     cpdef addField(self, ModelField f):
         if not f._owned:
             raise Exception("Cannot add a field already owned by another composite")
-        
         # We're taking ownership of the field
         f._owned = False
         self.asField().addField(f.asField())
@@ -2106,4 +2124,3 @@ cpdef ModelField Task_ModelBuildField(Context ctxt, DataType dt, name):
 cpdef enableDebug(bool en):
     factory = Factory.inst()
     factory.getDebugMgr().enable(en)
-
