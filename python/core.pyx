@@ -311,6 +311,100 @@ cdef class Context(object):
             self._hndl.mkTypeExprEnumRef(
                 enum_t.asEnum(),
                 enum_id))
+
+    cpdef TypeExprArrayLiteral mkTypeExprArrayLiteral(self, DataTypeArray arr_t, bint arr_t_owned, vals):
+        """
+        arr_t: DataTypeArray
+        arr_t_owned: bool
+        vals: list of TypeExpr
+        """
+        cdef cpp_vector[decl.ITypeExprP] vals_vec
+        raise Exception("Handle vals")
+        # for v in vals:
+        #     v._owned = False
+        #     vals_vec.push_back(v.asExpr())
+        return TypeExprArrayLiteral.mk(
+            self._hndl.mkTypeExprArrayLiteral(arr_t.asArray(), arr_t_owned, vals_vec),
+            True)
+
+    cpdef TypeExprArrIndex mkTypeExprArrIndex(self, TypeExpr root, bint root_owned, TypeExpr index, bint index_owned):
+        root._owned = False
+        index._owned = False
+        return TypeExprArrIndex.mk(
+            self._hndl.mkTypeExprArrIndex(root.asExpr(), root_owned, index.asExpr(), index_owned),
+            True)
+
+    cpdef TypeExprRefBottomUp mkTypeExprRefBottomUp(self, int32_t scope_offset, int32_t field_index):
+        return TypeExprRefBottomUp.mk(
+            self._hndl.mkTypeExprRefBottomUp(scope_offset, field_index),
+            True)
+
+    cpdef TypeExprRefInline mkTypeExprRefInline(self):
+        return TypeExprRefInline.mk(
+            self._hndl.mkTypeExprRefInline(),
+            True)
+
+    cpdef TypeExprRefPath mkTypeExprRefPath(self, TypeExpr root, bint owned, path):
+        """
+        root: TypeExpr
+        owned: bool
+        path: list of int32_t
+        """
+        cdef cpp_vector[int32_t] path_vec
+        for idx in path:
+            path_vec.push_back(idx)
+        root._owned = False
+        return TypeExprRefPath.mk(
+            self._hndl.mkTypeExprRefPath(root.asExpr(), owned, path_vec),
+            True)
+
+    cpdef TypeExprRefTopDown mkTypeExprRefTopDown(self):
+        return TypeExprRefTopDown.mk(
+            self._hndl.mkTypeExprRefTopDown(),
+            True)
+
+    cpdef TypeExprStructLiteral mkTypeExprStructLiteral(self, DataTypeStruct type, bint type_owned, field_values):
+        """
+        type: DataTypeStruct
+        type_owned: bool
+        field_values: list of TypeExpr
+        """
+        cdef cpp_vector[decl.ITypeExprP] vals_vec
+        raise Exception("TODO")
+        # for v in field_values:
+        #     v._owned = False
+        #     vals_vec.push_back(v.asExpr())
+        type._owned = False
+        return TypeExprStructLiteral.mk(
+            self._hndl.mkTypeExprStructLiteral(type.asTypeStruct(), type_owned, vals_vec),
+            True)
+
+    cpdef TypeExprSubField mkTypeExprSubField(self, TypeExpr root, bint owned, int32_t field_idx):
+        root._owned = False
+        return TypeExprSubField.mk(
+            self._hndl.mkTypeExprSubField(root.asExpr(), owned, field_idx),
+            True)
+
+    cpdef TypeExprUnary mkTypeExprUnary(self, op, TypeExpr expr, bint owned):
+        """
+        op: UnaryOp (int)
+        expr: TypeExpr
+        owned: bool
+        """
+        cdef int op_i = int(op)
+        expr._owned = False
+        return TypeExprUnary.mk(
+            self._hndl.mkTypeExprUnary(
+                expr.asExpr(), 
+                owned,
+                <decl.UnaryOp>(op_i)),
+            True)
+
+    cpdef TypeExprRef mkTypeExprRef(self, TypeExpr target, bint owned):
+        target._owned = False
+        return TypeExprRef.mk(
+            self._hndl.mkTypeExprRef(target.asExpr(), owned),
+            True)
         
     # cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx):
     #     cdef int root_kind_i = int(root_kind)
@@ -341,12 +435,14 @@ cdef class Context(object):
             True)
     
     cpdef TypeExprVal mkTypeExprVal(self, ValRef v):
-        print("TODO: implement mkTypeExprVal")
-#        pass
-#        if v is None:
-#            return TypeExprVal.mk(self._hndl.mkTypeExprVal(NULL), True)
-#        else:
-#            return TypeExprVal.mk(self._hndl.mkTypeExprVal(v._hndl), True)
+        """
+        v: ValRef
+        """
+        raise Exception("TODO")
+        # if v is None:
+        #     return TypeExprVal.mk(self._hndl.mkTypeExprVal(decl.ValRef()), True)
+        # else:
+        #     return TypeExprVal.mk(self._hndl.mkTypeExprVal(v.val), True)
         
     cpdef TypeFieldPhy mkTypeFieldPhy(self, 
                                 name, 
@@ -508,6 +604,28 @@ cdef class DataTypeEnum(DataType):
         ret._hndl = hndl
         ret._owned = owned
         return ret
+
+cdef class DataTypeArray(DataType):
+
+    cpdef DataType getElemType(self):
+        cdef decl.IDataType *elem = self.asTypeArray().getElemType()
+        if elem != NULL:
+            return DataType.mk(elem, False)
+        else:
+            return None
+
+    cpdef uint32_t getSize(self):
+        return self.asTypeArray().getSize()
+
+    @staticmethod
+    cdef mk(decl.IDataTypeArray *hndl, bool owned=True):
+        ret = DataTypeArray()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+    cdef decl.IDataTypeArray *asTypeArray(self):
+        return dynamic_cast[decl.IDataTypeArrayP](self._hndl)
 
 cdef class DataTypeInt(DataType):
 
@@ -1301,6 +1419,117 @@ cdef class TypeConstraintBlock(TypeConstraintScope):
 #********************************************************************
 #* TypeExpr
 #********************************************************************
+
+cdef class TypeExprArrayLiteral(TypeExpr):
+    cdef decl.ITypeExprArrayLiteral *asArrayLiteral(self):
+        return dynamic_cast[decl.ITypeExprArrayLiteralP](self._hndl)
+    @staticmethod
+    cdef TypeExprArrayLiteral mk(decl.ITypeExprArrayLiteral *hndl, bool owned=True):
+        ret = TypeExprArrayLiteral()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprArrIndex(TypeExpr):
+    cdef decl.ITypeExprArrIndex *asArrIndex(self):
+        return dynamic_cast[decl.ITypeExprArrIndexP](self._hndl)
+    @staticmethod
+    cdef TypeExprArrIndex mk(decl.ITypeExprArrIndex *hndl, bool owned=True):
+        ret = TypeExprArrIndex()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprRefBottomUp(TypeExpr):
+    cdef decl.ITypeExprRefBottomUp *asRefBottomUp(self):
+        return dynamic_cast[decl.ITypeExprRefBottomUpP](self._hndl)
+    @staticmethod
+    cdef TypeExprRefBottomUp mk(decl.ITypeExprRefBottomUp *hndl, bool owned=True):
+        ret = TypeExprRefBottomUp()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprRefInline(TypeExpr):
+    cdef decl.ITypeExprRefInline *asRefInline(self):
+        return dynamic_cast[decl.ITypeExprRefInlineP](self._hndl)
+    @staticmethod
+    cdef TypeExprRefInline mk(decl.ITypeExprRefInline *hndl, bool owned=True):
+        ret = TypeExprRefInline()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprRefPath(TypeExpr):
+    cdef decl.ITypeExprRefPath *asRefPath(self):
+        return dynamic_cast[decl.ITypeExprRefPathP](self._hndl)
+    @staticmethod
+    cdef TypeExprRefPath mk(decl.ITypeExprRefPath *hndl, bool owned=True):
+        ret = TypeExprRefPath()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprRefTopDown(TypeExpr):
+    cdef decl.ITypeExprRefTopDown *asRefTopDown(self):
+        return dynamic_cast[decl.ITypeExprRefTopDownP](self._hndl)
+    @staticmethod
+    cdef TypeExprRefTopDown mk(decl.ITypeExprRefTopDown *hndl, bool owned=True):
+        ret = TypeExprRefTopDown()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprStructLiteral(TypeExpr):
+    cdef decl.ITypeExprStructLiteral *asStructLiteral(self):
+        return dynamic_cast[decl.ITypeExprStructLiteralP](self._hndl)
+    @staticmethod
+    cdef TypeExprStructLiteral mk(decl.ITypeExprStructLiteral *hndl, bool owned=True):
+        ret = TypeExprStructLiteral()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprSubField(TypeExpr):
+    cdef decl.ITypeExprSubField *asSubField(self):
+        return dynamic_cast[decl.ITypeExprSubFieldP](self._hndl)
+    @staticmethod
+    cdef TypeExprSubField mk(decl.ITypeExprSubField *hndl, bool owned=True):
+        ret = TypeExprSubField()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprUnary(TypeExpr):
+    cdef decl.ITypeExprUnary *asUnary(self):
+        return dynamic_cast[decl.ITypeExprUnaryP](self._hndl)
+    @staticmethod
+    cdef TypeExprUnary mk(decl.ITypeExprUnary *hndl, bool owned=True):
+        ret = TypeExprUnary()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
+
+cdef class TypeExprRef(TypeExpr):
+    cpdef TypeExpr getTarget(self):
+        cdef decl.ITypeExpr *t = self.asRef().getTarget()
+        if t != NULL:
+            return TypeExpr.mk(t, False)
+        else:
+            return None
+
+    # cpdef bint owned(self):
+    #     return self.asRef().owned()
+
+    cdef decl.ITypeExprRef *asRef(self):
+        return dynamic_cast[decl.ITypeExprRefP](self._hndl)
+
+    @staticmethod
+    cdef TypeExprRef mk(decl.ITypeExprRef *hndl, bool owned=True):
+        ret = TypeExprRef()
+        ret._hndl = hndl
+        ret._owned = owned
+        return ret
 
 cdef class TypeExpr(ObjBase):
     

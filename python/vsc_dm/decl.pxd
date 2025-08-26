@@ -23,6 +23,7 @@ ctypedef IDataTypeEnum *IDataTypeEnumP
 ctypedef IDataTypeInt *IDataTypeIntP
 ctypedef IDataTypeStruct *IDataTypeStructP
 ctypedef IDataTypeVec *IDataTypeVecP
+ctypedef IDataTypeArray *IDataTypeArrayP
 ctypedef IFactory *IFactoryP
 ctypedef IModelConstraint *IModelConstraintP
 ctypedef IModelConstraintBlock *IModelConstraintBlockP
@@ -66,6 +67,16 @@ ctypedef ITypeExprEnumRef *ITypeExprEnumRefP
 ctypedef ITypeExprFieldRef *ITypeExprFieldRefP
 ctypedef ITypeExprRange *ITypeExprRangeP
 ctypedef ITypeExprRangelist *ITypeExprRangelistP
+ctypedef ITypeExprArrayLiteral *ITypeExprArrayLiteralP
+ctypedef ITypeExprArrIndex *ITypeExprArrIndexP
+ctypedef ITypeExprRefBottomUp *ITypeExprRefBottomUpP
+ctypedef ITypeExprRefInline *ITypeExprRefInlineP
+ctypedef ITypeExprRefPath *ITypeExprRefPathP
+ctypedef ITypeExprRefTopDown *ITypeExprRefTopDownP
+ctypedef ITypeExprStructLiteral *ITypeExprStructLiteralP
+ctypedef ITypeExprSubField *ITypeExprSubFieldP
+ctypedef ITypeExprUnary *ITypeExprUnaryP
+ctypedef ITypeExprRef *ITypeExprRefP
 ctypedef ITypeExprVal *ITypeExprValP
 ctypedef ITypeField *ITypeFieldP
 ctypedef ITypeFieldPhy *ITypeFieldPhyP
@@ -182,9 +193,47 @@ cdef extern from "vsc/dm/IContext.h" namespace "vsc::dm":
             const cpp_vector[ITypeExprP]    &exprs)
         ITypeExprBin *mkTypeExprBin(ITypeExpr *, BinOp, ITypeExpr *)
         ITypeExprEnumRef *mkTypeExprEnumRef(IDataTypeEnum *, int32_t)
+        ITypeExprFieldRef *mkTypeExprFieldRef(
+            TypeExprFieldRef_RootRefKind kind,
+            int32_t offset,
+            int32_t index)
         ITypeExprRange *mkTypeExprRange(bool, ITypeExpr *, ITypeExpr *)
         ITypeExprRangelist *mkTypeExprRangelist()
+        ITypeExprRef *mkTypeExprRef(
+            ITypeExpr *target,
+            bool owned)
+        ITypeExprRefBottomUp *mkTypeExprRefBottomUp(
+            int32_t scope_offset,
+            int32_t field_index)
+        ITypeExprRefInline *mkTypeExprRefInline()
+        ITypeExprRefPath *mkTypeExprRefPath(
+            ITypeExpr *root,
+            bool owned,
+            const cpp_vector[int32_t]& path)
+        ITypeExprRefTopDown *mkTypeExprRefTopDown()
+        ITypeExprStructLiteral *mkTypeExprStructLiteral(
+            IDataTypeStruct *type,
+            bool owned,
+            const cpp_vector[ITypeExprP]& elems)
+        ITypeExprSubField *mkTypeExprSubField(
+            ITypeExpr *root,
+            bool owned,
+            int32_t index)
+        ITypeExprUnary *mkTypeExprUnary(
+            ITypeExpr *target,
+            bool owned,
+            UnaryOp op)
         ITypeExprVal *mkTypeExprVal(IDataType *, ValData)
+        ITypeExprVal *mkTypeExprVal(const ValRef &v)
+        ITypeExprArrayLiteral *mkTypeExprArrayLiteral(
+            IDataTypeArray *arr_t,
+            bool arr_t_owned,
+            const cpp_vector[ITypeExprP]& vals)
+        ITypeExprArrIndex *mkTypeExprArrIndex(
+            ITypeExpr *root,
+            bool root_owned,
+            ITypeExpr *index,
+            bool index_owned)
         ITypeFieldPhy *mkTypeFieldPhy(
             const cpp_string &,
             IDataType *,
@@ -267,6 +316,10 @@ cdef extern from "vsc/dm/IDataTypeVec.h" namespace "vsc::dm":
     cdef cppclass IDataTypeVec(IDataType):
         IDataType *getElemType() const
 
+cdef extern from "vsc/dm/IDataTypeArray.h" namespace "vsc::dm":
+    cdef cppclass IDataTypeArray(IDataType):
+        IDataType *getElemType() const
+        uint32_t getSize() const
 #********************************************************************
 #* IFactory
 #********************************************************************
@@ -561,10 +614,51 @@ cdef extern from "vsc/dm/ITypeConstraintBlock.h" namespace "vsc::dm":
 #********************************************************************
 #* ITypeExpr
 #********************************************************************
-
 cdef extern from "vsc/dm/ITypeExpr.h" namespace "vsc::dm":
     cdef cppclass ITypeExpr(IAccept):
         pass
+
+cdef extern from "vsc/dm/ITypeExprArrayLiteral.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprArrayLiteral(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprArrIndex.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprArrIndex(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprRefBottomUp.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprRefBottomUp(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprRefInline.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprRefInline(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprRefPath.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprRefPath(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprRefTopDown.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprRefTopDown(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprStructLiteral.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprStructLiteral(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprSubField.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprSubField(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprUnary.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprUnary(ITypeExpr):
+        pass
+
+cdef extern from "vsc/dm/ITypeExprRef.h" namespace "vsc::dm":
+    cdef cppclass ITypeExprRef(ITypeExpr):
+        ITypeExpr *getTarget() const
+#        bool owned() const
+
     
 cdef extern from "vsc/dm/ITypeExprBin.h" namespace "vsc::dm":
     cdef cppclass ITypeExprBin(ITypeExpr):
@@ -675,4 +769,3 @@ cdef extern from "VscTasks.h" namespace "vsc::dm":
         IContext *ctxt,
         IDataType *dt, 
         const cpp_string &name)
-    

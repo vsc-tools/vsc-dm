@@ -65,6 +65,16 @@ cdef class Context(object):
     cpdef TypeConstraintUnique mkTypeConstraintUnique(self, exprs)
     cpdef TypeExprBin mkTypeExprBin(self, TypeExpr, op, TypeExpr)
     cpdef TypeExprEnumRef mkTypeExprEnumRef(self, DataTypeEnum, int32_t)
+    cpdef TypeExprArrayLiteral mkTypeExprArrayLiteral(self, DataTypeArray arr_t, bint arr_t_owned, vals)
+    cpdef TypeExprArrIndex mkTypeExprArrIndex(self, TypeExpr root, bint root_owned, TypeExpr index, bint index_owned)
+    cpdef TypeExprRef mkTypeExprRef(self, TypeExpr target, bint owned)
+    cpdef TypeExprRefBottomUp mkTypeExprRefBottomUp(self, int32_t scope_offset, int32_t field_index)
+    cpdef TypeExprRefInline mkTypeExprRefInline(self)
+    cpdef TypeExprRefPath mkTypeExprRefPath(self, TypeExpr root, bint owned, path)
+    cpdef TypeExprRefTopDown mkTypeExprRefTopDown(self)
+    cpdef TypeExprStructLiteral mkTypeExprStructLiteral(self, DataTypeStruct type, bint type_owned, field_values)
+    cpdef TypeExprSubField mkTypeExprSubField(self, TypeExpr root, bint owned, int32_t field_idx)
+    cpdef TypeExprUnary mkTypeExprUnary(self, op, TypeExpr expr, bint owned)
 #    cpdef TypeExprFieldRef mkTypeExprFieldRef(self, root_kind, int32_t root_idx)
     cpdef TypeExprRange mkTypeExprRange(self, bool, TypeExpr, TypeExpr)
     cpdef TypeExprRangelist mkTypeExprRangelist(self)
@@ -142,6 +152,15 @@ cdef class DataTypeInt(DataType):
     
     cdef decl.IDataTypeInt *asTypeInt(self)
     
+cdef class DataTypeArray(DataType):
+    cpdef DataType getElemType(self)
+    cpdef uint32_t getSize(self)
+
+    @staticmethod
+    cdef mk(decl.IDataTypeArray *, bool owned=*)
+
+    cdef decl.IDataTypeArray *asTypeArray(self)
+
 cdef class DataTypeStruct(DataType):
 
     cpdef name(self)
@@ -508,6 +527,59 @@ cdef class TypeExpr(ObjBase):
     
     @staticmethod
     cdef TypeExpr mk(decl.ITypeExpr *hndl, bool owned=*)
+
+cdef class TypeExprRef(TypeExpr):
+    cpdef TypeExpr getTarget(self)
+#    cpdef bint owned(self)
+    cdef decl.ITypeExprRef *asRef(self)
+    @staticmethod
+    cdef TypeExprRef mk(decl.ITypeExprRef *hndl, bool owned=*)
+
+cdef class TypeExprArrayLiteral(TypeExpr):
+    cdef decl.ITypeExprArrayLiteral *asArrayLiteral(self)
+    @staticmethod
+    cdef TypeExprArrayLiteral mk(decl.ITypeExprArrayLiteral *hndl, bool owned=*)
+
+cdef class TypeExprArrIndex(TypeExpr):
+    cdef decl.ITypeExprArrIndex *asArrIndex(self)
+    @staticmethod
+    cdef TypeExprArrIndex mk(decl.ITypeExprArrIndex *hndl, bool owned=*)
+
+cdef class TypeExprRefBottomUp(TypeExpr):
+    cdef decl.ITypeExprRefBottomUp *asRefBottomUp(self)
+    @staticmethod
+    cdef TypeExprRefBottomUp mk(decl.ITypeExprRefBottomUp *hndl, bool owned=*)
+
+cdef class TypeExprRefInline(TypeExpr):
+    cdef decl.ITypeExprRefInline *asRefInline(self)
+    @staticmethod
+    cdef TypeExprRefInline mk(decl.ITypeExprRefInline *hndl, bool owned=*)
+
+cdef class TypeExprRefPath(TypeExpr):
+    cdef decl.ITypeExprRefPath *asRefPath(self)
+    @staticmethod
+    cdef TypeExprRefPath mk(decl.ITypeExprRefPath *hndl, bool owned=*)
+
+cdef class TypeExprRefTopDown(TypeExpr):
+    cdef decl.ITypeExprRefTopDown *asRefTopDown(self)
+    @staticmethod
+    cdef TypeExprRefTopDown mk(decl.ITypeExprRefTopDown *hndl, bool owned=*)
+
+cdef class TypeExprStructLiteral(TypeExpr):
+    cdef decl.ITypeExprStructLiteral *asStructLiteral(self)
+    @staticmethod
+    cdef TypeExprStructLiteral mk(decl.ITypeExprStructLiteral *hndl, bool owned=*)
+
+cdef class TypeExprSubField(TypeExpr):
+    cdef decl.ITypeExprSubField *asSubField(self)
+    @staticmethod
+    cdef TypeExprSubField mk(decl.ITypeExprSubField *hndl, bool owned=*)
+
+cdef class TypeExprUnary(TypeExpr):
+    cdef decl.ITypeExprUnary *asUnary(self)
+    @staticmethod
+    cdef TypeExprUnary mk(decl.ITypeExprUnary *hndl, bool owned=*)
+
     
 cdef class TypeExprRange(TypeExpr):
 
