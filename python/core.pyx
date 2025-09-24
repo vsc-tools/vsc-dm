@@ -438,11 +438,10 @@ cdef class Context(object):
         """
         v: ValRef
         """
-        raise Exception("TODO")
-        # if v is None:
-        #     return TypeExprVal.mk(self._hndl.mkTypeExprVal(decl.ValRef()), True)
-        # else:
-        #     return TypeExprVal.mk(self._hndl.mkTypeExprVal(v.val), True)
+        if v is None:
+            raise Exception("Cannot pass null val")
+#            aeturn TypeExprVal.mk(self._hndl.mkTypeExprVal(decl.ValRef()), True)
+        return TypeExprVal.mk(self._hndl.mkTypeExprVal(v.val), True)
         
     cpdef TypeFieldPhy mkTypeFieldPhy(self, 
                                 name, 
@@ -524,8 +523,9 @@ cdef class Accept(object):
 cdef class ObjBase(object):
 
     def __dealloc__(self):
-        if self._owned:
+        if self._owned and self._hndl:
             del self._hndl
+            self._hndl = NULL
         pass
 
     def __hash__(self):
